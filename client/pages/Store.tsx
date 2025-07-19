@@ -282,17 +282,8 @@ export default function Store() {
           </div>
 
           <div className="container mx-auto px-4 py-5 pb-8">
-            {/* Hero Section - Desktop only */}
-            <div className="hidden lg:block text-center mb-12">
-              <h1 className="text-4xl font-bold mb-4">
-                Bem-vindo à Chinelos Store
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Descubra nossa coleção completa de chinelos. Todas as compras
-                são feitas por grades (kits) com quantidades obrigatórias por
-                tamanho.
-              </p>
-            </div>
+            {/* Hero Section - Removed */}
+            <div />
 
             {/* Info Cards - Desktop only */}
             <div className="hidden lg:grid md:grid-cols-3 gap-6 mb-12">
