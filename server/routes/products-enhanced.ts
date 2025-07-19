@@ -61,7 +61,7 @@ router.get("/:id", async (req, res) => {
 
     // Get associated grades
     const [gradeRows] = await db.execute(
-      `SELECT g.id, g.name, g.description, g.total_price
+      `SELECT g.id, g.name, g.description
        FROM grade_vendida g
        INNER JOIN product_grades pg ON g.id = pg.grade_id
        WHERE pg.product_id = ?`,
