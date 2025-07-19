@@ -6,7 +6,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import { AdminLayout } from "./components/AdminLayout";
+import Dashboard from "./pages/Dashboard";
+import Products from "./pages/Products";
+import Categories from "./pages/Categories";
+import Sizes from "./pages/Sizes";
+import Colors from "./pages/Colors";
+import Grades from "./pages/Grades";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -18,7 +24,54 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route
+            path="/"
+            element={
+              <AdminLayout>
+                <Dashboard />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <AdminLayout>
+                <Products />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/categories"
+            element={
+              <AdminLayout>
+                <Categories />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/sizes"
+            element={
+              <AdminLayout>
+                <Sizes />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/colors"
+            element={
+              <AdminLayout>
+                <Colors />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/grades"
+            element={
+              <AdminLayout>
+                <Grades />
+              </AdminLayout>
+            }
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
