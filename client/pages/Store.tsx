@@ -141,8 +141,7 @@ export default function Store() {
               {products.map((product) => (
                 <Card
                   key={product.id}
-                  className="overflow-hidden h-full transition-transform hover:scale-105 cursor-pointer"
-                  onClick={() => openModal(product.id)}
+                  className="overflow-hidden h-full transition-transform hover:scale-105"
                 >
                   <div className="aspect-square bg-muted flex items-center justify-center">
                     {product.photo ? (
