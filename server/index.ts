@@ -14,6 +14,7 @@ import { productsEnhancedRouter } from "./routes/products-enhanced";
 import { redesignRouter } from "./routes/redesign";
 import { gradesRedesignedRouter } from "./routes/grades-redesigned";
 import { storeRouter } from "./routes/store";
+import { storePaginatedRouter } from "./routes/store-paginated";
 import { adminOrdersRouter } from "./routes/admin-orders";
 import { adminCustomersRouter } from "./routes/admin-customers";
 import { expandedSeedRouter } from "./routes/expanded-seed";
