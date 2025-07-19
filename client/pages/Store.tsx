@@ -173,14 +173,10 @@ export default function Store() {
                           <div className="text-center border-t pt-2">
                             <p className="text-lg font-semibold text-green-600">
                               A partir de R${" "}
-                              {(
-                                parseFloat(product.base_price) *
-                                2 *
-                                0.9
-                              ).toFixed(2)}
+                              {(parseFloat(product.base_price) * 2).toFixed(2)}
                             </p>
                             <p className="text-xs text-muted-foreground">
-                              preço total da grade (com desconto)
+                              preço total da grade
                             </p>
                           </div>
                         )}
