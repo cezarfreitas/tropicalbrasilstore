@@ -244,13 +244,9 @@ export async function seedExpandedDatabase() {
 
       // Create product variants (random colors and sizes)
       const numColors = Math.floor(Math.random() * 5) + 2; // 2-6 colors per product
-      const availableColorIds = Array.from(
-        { length: colors.length },
-        (_, i) => i + 1,
-      );
-      const selectedColors = availableColorIds
+      const selectedColors = validColorIds
         .sort(() => 0.5 - Math.random())
-        .slice(0, numColors);
+        .slice(0, Math.min(numColors, validColorIds.length));
 
       for (const colorId of selectedColors) {
         // Each color has variants for sizes 36-42 (most common)
