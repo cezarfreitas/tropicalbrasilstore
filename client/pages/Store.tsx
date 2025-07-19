@@ -19,6 +19,12 @@ interface StoreProduct {
   total_stock: number;
 }
 
+interface FilterOption {
+  id: string;
+  name: string;
+  count?: number;
+}
+
 export default function Store() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [loading, setLoading] = useState(true);
