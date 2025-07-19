@@ -70,20 +70,7 @@ export default function Store() {
       const response = await fetch("/api/store/products");
       if (response.ok) {
         const data = await response.json();
-
-        // Add mock color data for testing (remove when real API provides colors)
-        const productsWithColors = data.map((product: StoreProduct) => ({
-          ...product,
-          available_colors: [
-            { id: 1, name: "Preto", hex_code: "#000000" },
-            { id: 2, name: "Branco", hex_code: "#FFFFFF" },
-            { id: 3, name: "Azul", hex_code: "#0066CC" },
-            { id: 4, name: "Vermelho", hex_code: "#CC0000" },
-            { id: 5, name: "Verde", hex_code: "#00CC66" },
-          ].slice(0, Math.floor(Math.random() * 5) + 1), // Random number of colors (1-5)
-        }));
-
-        setProducts(productsWithColors);
+        setProducts(data);
       }
     } catch (error) {
       console.error("Error fetching products:", error);
