@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
       SELECT 
         c.*,
         COUNT(o.id) as total_orders,
-        SUM(o.total_amount) as total_spent,
+        SUM(o.total_price) as total_spent,
         MAX(o.created_at) as last_order_date,
         COUNT(CASE WHEN o.status = 'delivered' THEN 1 END) as completed_orders
       FROM customers c
@@ -35,7 +35,7 @@ router.get("/:email", async (req, res) => {
       SELECT 
         c.*,
         COUNT(o.id) as total_orders,
-        SUM(o.total_amount) as total_spent,
+        SUM(o.total_price) as total_spent,
         MAX(o.created_at) as last_order_date,
         COUNT(CASE WHEN o.status = 'delivered' THEN 1 END) as completed_orders
       FROM customers c
@@ -57,7 +57,7 @@ router.get("/:email", async (req, res) => {
       `
       SELECT 
         o.id,
-        o.total_amount,
+        o.total_price,
         o.status,
         o.created_at,
         COUNT(oi.id) as item_count
