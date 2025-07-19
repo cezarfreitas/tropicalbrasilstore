@@ -122,76 +122,64 @@ export default function Store() {
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {products.map((product) => (
-                <Card key={product.id} className="overflow-hidden">
-                  <div className="aspect-square bg-muted flex items-center justify-center">
-                    {product.photo ? (
-                      <img
-                        src={product.photo}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <Package className="h-16 w-16 text-muted-foreground/50" />
-                    )}
-                  </div>
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg">
+                <Link
+                  key={product.id}
+                  to={`/loja/produto/${product.id}`}
+                  className="block transition-transform hover:scale-105"
+                >
+                  <Card className="overflow-hidden h-full cursor-pointer">
+                    <div className="aspect-square bg-muted flex items-center justify-center">
+                      {product.photo ? (
+                        <img
+                          src={product.photo}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <Package className="h-12 w-12 text-muted-foreground/50" />
+                      )}
+                    </div>
+                    <div className="p-3">
+                      <div className="mb-2">
+                        <h3 className="font-semibold text-sm line-clamp-2 mb-1">
                           {product.name}
-                        </CardTitle>
+                        </h3>
                         {product.category_name && (
-                          <Badge variant="secondary" className="mt-1">
+                          <Badge variant="secondary" className="text-xs">
                             {product.category_name}
                           </Badge>
                         )}
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="space-y-2">
-                        {product.base_price && (
-                          <div className="text-center">
-                            <p className="text-3xl font-bold text-primary">
-                              R$ {parseFloat(product.base_price).toFixed(2)}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              preço unitário
+
+                      {product.base_price && (
+                        <div className="text-center mb-2">
+                          <p className="text-xl font-bold text-primary">
+                            R$ {parseFloat(product.base_price).toFixed(2)}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            preço unitário
+                          </p>
+                        </div>
+                      )}
+
+                      {product.suggested_price &&
+                        product.suggested_price !== product.base_price && (
+                          <div className="text-center mb-2">
+                            <p className="text-xs text-muted-foreground">
+                              Sugerido: R${" "}
+                              {parseFloat(product.suggested_price).toFixed(2)}
                             </p>
                           </div>
                         )}
 
-                        {product.suggested_price &&
-                          product.suggested_price !== product.base_price && (
-                            <div className="text-center">
-                              <p className="text-sm text-muted-foreground">
-                                Preço sugerido: R${" "}
-                                {parseFloat(product.suggested_price).toFixed(2)}
-                              </p>
-                            </div>
-                          )}
-
-                        <div className="flex justify-between text-xs text-muted-foreground border-t pt-2">
-                          <span>{product.variant_count} Cores</span>
-                          <span></span>
-                        </div>
+                      <div className="flex justify-center text-xs text-muted-foreground border-t pt-2">
+                        <span>{product.variant_count} Cores</span>
                       </div>
-
-                      <Link
-                        to={`/loja/produto/${product.id}`}
-                        className="w-full"
-                      >
-                        <Button className="w-full">
-                          <Grid3x3 className="mr-2 h-4 w-4" />
-                          Ver Grades Disponíveis
-                        </Button>
-                      </Link>
                     </div>
-                  </CardContent>
-                </Card>
+                  </Card>
+                </Link>
               ))}
             </div>
           )}
