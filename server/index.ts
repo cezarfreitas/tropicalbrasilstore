@@ -16,6 +16,7 @@ import { gradesRedesignedRouter } from "./routes/grades-redesigned";
 import { storeRouter } from "./routes/store";
 import { adminOrdersRouter } from "./routes/admin-orders";
 import { adminCustomersRouter } from "./routes/admin-customers";
+import { expandedSeedRouter } from "./routes/expanded-seed";
 import { createStoreSchema } from "./lib/store-schema";
 import { fixOrdersTable } from "./lib/fix-orders-table";
 import { checkAndFixTables } from "./lib/check-tables";
