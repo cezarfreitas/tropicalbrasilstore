@@ -104,13 +104,12 @@ export default function Store() {
   const [gradeTypes, setGradeTypes] = useState<FilterOption[]>([]);
 
   useEffect(() => {
-    fetchProducts();
     fetchFilterData();
   }, []);
 
   useEffect(() => {
-    applyFilters();
-  }, [products, selectedCategory, selectedColor, selectedGradeType]);
+    fetchProducts();
+  }, [currentPage, selectedCategory, selectedColor, selectedGradeType]);
 
   const fetchProducts = async () => {
     try {
