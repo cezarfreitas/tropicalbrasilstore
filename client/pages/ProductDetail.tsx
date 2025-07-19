@@ -227,15 +227,28 @@ export default function ProductDetail() {
                                 <p className="text-xs text-muted-foreground">
                                   preço da grade
                                 </p>
-                                {product.suggested_price && (
-                                  <p className="text-xs text-muted-foreground">
-                                    Sugerido: R${" "}
-                                    {(
-                                      product.suggested_price *
-                                      grade.total_quantity
-                                    ).toFixed(2)}
+                                <div className="border-t pt-2 mt-2">
+                                  <p className="text-sm font-medium">
+                                    R${" "}
+                                    {parseFloat(product.base_price).toFixed(2)}
                                   </p>
-                                )}
+                                  <p className="text-xs text-muted-foreground">
+                                    preço unitário
+                                  </p>
+                                  {product.suggested_price && (
+                                    <>
+                                      <p className="text-sm text-muted-foreground mt-1">
+                                        R${" "}
+                                        {parseFloat(
+                                          product.suggested_price,
+                                        ).toFixed(2)}
+                                      </p>
+                                      <p className="text-xs text-muted-foreground">
+                                        preço sugerido
+                                      </p>
+                                    </>
+                                  )}
+                                </div>
                               </div>
                             )}
                           </div>
