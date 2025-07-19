@@ -157,24 +157,47 @@ export default function Store() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          {product.base_price && (
-                            <p className="text-lg font-bold">
+                      <div className="space-y-2">
+                        {product.base_price && (
+                          <div className="text-center">
+                            <p className="text-3xl font-bold text-primary">
                               R$ {parseFloat(product.base_price).toFixed(2)}
                             </p>
-                          )}
-                          {product.suggested_price &&
-                            product.suggested_price !== product.base_price && (
+                            <p className="text-sm text-muted-foreground">
+                              preço unitário
+                            </p>
+                          </div>
+                        )}
+
+                        {product.base_price && (
+                          <div className="text-center border-t pt-2">
+                            <p className="text-lg font-semibold text-green-600">
+                              A partir de R${" "}
+                              {(
+                                parseFloat(product.base_price) *
+                                2 *
+                                0.9
+                              ).toFixed(2)}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              preço total da grade (com desconto)
+                            </p>
+                          </div>
+                        )}
+
+                        {product.suggested_price &&
+                          product.suggested_price !== product.base_price && (
+                            <div className="text-center">
                               <p className="text-sm text-muted-foreground line-through">
-                                R${" "}
+                                Preço sugerido: R${" "}
                                 {parseFloat(product.suggested_price).toFixed(2)}
                               </p>
-                            )}
-                        </div>
-                        <div className="text-right text-sm text-muted-foreground">
-                          <p>{product.variant_count} variantes</p>
-                          <p>{product.total_stock} em estoque</p>
+                            </div>
+                          )}
+
+                        <div className="flex justify-between text-xs text-muted-foreground border-t pt-2">
+                          <span>{product.variant_count} variantes</span>
+                          <span>{product.total_stock} em estoque</span>
                         </div>
                       </div>
 
