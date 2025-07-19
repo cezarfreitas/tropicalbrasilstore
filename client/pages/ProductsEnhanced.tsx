@@ -79,7 +79,6 @@ interface CreateProductRequest {
   photo?: string;
   stock?: number;
   variants: ProductVariant[];
-  grades: number[];
 }
 
 export default function ProductsEnhanced() {
