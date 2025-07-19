@@ -239,81 +239,87 @@ export default function Store() {
 
         {/* Filters */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Filtrar Produtos</h3>
-            {hasActiveFilters && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={clearAllFilters}
-                className="text-xs"
-              >
-                Limpar Filtros
-              </Button>
-            )}
-          </div>
-          <div className="space-y-4">
-            {/* Category Filter */}
-            <div>
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">
-                Categoria
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
-                  <Button
-                    key={category.id}
-                    variant={
-                      selectedCategory === category.id ? "default" : "outline"
-                    }
-                    size="sm"
-                    onClick={() => setSelectedCategory(category.id)}
-                    className="text-xs"
-                  >
-                    {category.name}
-                  </Button>
-                ))}
+          <div className="bg-white border rounded-lg p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Filter className="h-5 w-5 text-muted-foreground" />
+                <h3 className="text-lg font-semibold">Filtrar Produtos</h3>
               </div>
+              {hasActiveFilters && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearAllFilters}
+                  className="text-xs"
+                >
+                  Limpar Filtros
+                </Button>
+              )}
             </div>
 
-            {/* Color Filter */}
-            <div>
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">
-                Cor
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {colors.map((color) => (
-                  <Button
-                    key={color.id}
-                    variant={selectedColor === color.id ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedColor(color.id)}
-                    className="text-xs"
-                  >
-                    {color.name}
-                  </Button>
-                ))}
+            {/* Horizontal Filter Bar */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Category Filter */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">
+                  Categoria
+                </label>
+                <Select
+                  value={selectedCategory}
+                  onValueChange={setSelectedCategory}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione uma categoria" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            </div>
 
-            {/* Grade Type Filter */}
-            <div>
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">
-                Tipo de Grade
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {gradeTypes.map((gradeType) => (
-                  <Button
-                    key={gradeType.id}
-                    variant={
-                      selectedGradeType === gradeType.id ? "default" : "outline"
-                    }
-                    size="sm"
-                    onClick={() => setSelectedGradeType(gradeType.id)}
-                    className="text-xs"
-                  >
-                    {gradeType.name}
-                  </Button>
-                ))}
+              {/* Color Filter */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">
+                  Cor
+                </label>
+                <Select value={selectedColor} onValueChange={setSelectedColor}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione uma cor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colors.map((color) => (
+                      <SelectItem key={color.id} value={color.id}>
+                        {color.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Grade Type Filter */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">
+                  Tipo de Grade
+                </label>
+                <Select
+                  value={selectedGradeType}
+                  onValueChange={setSelectedGradeType}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione um tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {gradeTypes.map((gradeType) => (
+                      <SelectItem key={gradeType.id} value={gradeType.id}>
+                        {gradeType.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
