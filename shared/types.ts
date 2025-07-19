@@ -26,7 +26,10 @@ export interface Product {
   description?: string;
   category_id?: number;
   base_price?: number;
+  suggested_price?: number;
   sku?: string;
+  photo?: string;
+  stock: number;
   active: boolean;
   created_at: string;
   updated_at: string;
@@ -75,7 +78,10 @@ export interface CreateProductRequest {
   description?: string;
   category_id?: number;
   base_price?: number;
+  suggested_price?: number;
   sku?: string;
+  photo?: string;
+  stock?: number;
 }
 
 export interface CreateGradeRequest {
