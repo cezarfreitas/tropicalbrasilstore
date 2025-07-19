@@ -49,6 +49,22 @@ const App = () => (
               }
             />
             <Route
+              path="/admin/orders"
+              element={
+                <AdminLayout>
+                  <Orders />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/admin/customers"
+              element={
+                <AdminLayout>
+                  <Customers />
+                </AdminLayout>
+              }
+            />
+            <Route
               path="/admin/products"
               element={
                 <AdminLayout>
