@@ -46,6 +46,39 @@ interface FilterOption {
   count?: number;
 }
 
+interface CategorySidebarProps {
+  categories: FilterOption[];
+  selectedCategory: string;
+  onCategorySelect: (categoryId: string) => void;
+}
+
+function CategorySidebar({
+  categories,
+  selectedCategory,
+  onCategorySelect,
+}: CategorySidebarProps) {
+  return (
+    <nav className="space-y-1">
+      {categories.map((category) => (
+        <button
+          key={category.id}
+          onClick={() => onCategorySelect(category.id)}
+          className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+            selectedCategory === category.id
+              ? "bg-primary text-primary-foreground"
+              : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+          }`}
+        >
+          <span>{category.name}</span>
+          {selectedCategory === category.id && (
+            <ChevronRight className="h-4 w-4" />
+          )}
+        </button>
+      ))}
+    </nav>
+  );
+}
+
 export default function Store() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<StoreProduct[]>([]);
