@@ -128,8 +128,8 @@ router.get("/stats/summary", async (req, res) => {
         COUNT(CASE WHEN status = 'shipped' THEN 1 END) as shipped_orders,
         COUNT(CASE WHEN status = 'delivered' THEN 1 END) as delivered_orders,
         COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled_orders,
-        SUM(total_amount) as total_revenue,
-        AVG(total_amount) as average_order_value,
+                SUM(total_price) as total_revenue,
+        AVG(total_price) as average_order_value,
         COUNT(CASE WHEN DATE(created_at) = CURDATE() THEN 1 END) as today_orders,
         COUNT(CASE WHEN created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN 1 END) as week_orders,
         COUNT(CASE WHEN created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN 1 END) as month_orders
