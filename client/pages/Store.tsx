@@ -281,7 +281,7 @@ export default function Store() {
             <h1 className="text-lg font-semibold">Chinelos Store</h1>
           </div>
 
-          <div className="container mx-auto px-4 py-8">
+          <div className="container mx-auto px-4 py-5 pb-8">
             {/* Hero Section - Hidden on mobile */}
             <div className="hidden lg:block text-center mb-12">
               <h1 className="text-4xl font-bold mb-4">
