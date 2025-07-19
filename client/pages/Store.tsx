@@ -282,7 +282,7 @@ export default function Store() {
           </div>
 
           <div className="container mx-auto px-4 py-5 pb-8">
-            {/* Hero Section - Hidden on mobile */}
+            {/* Hero Section - Desktop only */}
             <div className="hidden lg:block text-center mb-12">
               <h1 className="text-4xl font-bold mb-4">
                 Bem-vindo à Chinelos Store
@@ -294,7 +294,7 @@ export default function Store() {
               </p>
             </div>
 
-            {/* Info Cards - Hidden on mobile */}
+            {/* Info Cards - Desktop only */}
             <div className="hidden lg:grid md:grid-cols-3 gap-6 mb-12">
               <Card>
                 <CardHeader className="text-center">
