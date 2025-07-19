@@ -189,8 +189,35 @@ export default function Store() {
                           </div>
                         )}
 
-                      <div className="flex justify-center text-xs text-muted-foreground border-t pt-2">
+                      <div className="flex justify-center text-xs text-muted-foreground border-t pt-2 mb-3">
                         <span>{product.variant_count} Cores</span>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openModal(product.id);
+                          }}
+                          className="w-full"
+                          size="sm"
+                        >
+                          <ShoppingCart className="mr-2 h-3 w-3" />
+                          Adicionar ao Carrinho
+                        </Button>
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          asChild
+                        >
+                          <Link to={`/loja/produto/${product.id}`}>
+                            <Grid3x3 className="mr-2 h-3 w-3" />
+                            Ver Detalhes
+                          </Link>
+                        </Button>
                       </div>
                     </div>
                   </Card>
