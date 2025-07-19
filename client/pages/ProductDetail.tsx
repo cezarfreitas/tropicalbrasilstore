@@ -67,14 +67,21 @@ export default function ProductDetail() {
     }
   };
 
-  const getSelectedGradeDetails = () => {
-    if (!product || !selectedGrade) return null;
-    return product.available_grades.find((g) => g.id === selectedGrade);
+  const getGradeQuantity = (gradeId: number) => {
+    return quantities[gradeId] || 1;
   };
 
-  const addGradeToCart = () => {
-    const grade = getSelectedGradeDetails();
-    if (!grade || !product) return;
+  const updateGradeQuantity = (gradeId: number, quantity: number) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [gradeId]: Math.max(1, quantity),
+    }));
+  };
+
+  const addGradeToCart = (grade: AvailableGrade) => {
+    if (!product) return;
+
+    const quantity = getGradeQuantity(grade.id);
 
     // Calculate grade price - quantity times unit price
     const gradePrice = product.base_price
@@ -99,7 +106,8 @@ export default function ProductDetail() {
       description: `${quantity}x ${grade.name} - ${grade.color_name}`,
     });
 
-    setQuantity(1);
+    // Reset quantity for this grade
+    updateGradeQuantity(grade.id, 1);
   };
 
   if (loading) {
