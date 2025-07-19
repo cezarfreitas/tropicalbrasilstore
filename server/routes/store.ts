@@ -239,7 +239,7 @@ router.post("/orders", async (req, res) => {
             "individual",
           ],
         );
-            if (item.type === "grade") {
+      } else if (item.type === "grade") {
         // Grade item - update multiple variant stocks based on template
         const [templateRows] = await connection.execute(
           `SELECT gt.*, s.size FROM grade_templates gt

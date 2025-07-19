@@ -2,13 +2,15 @@ import { createContext, useContext, useReducer, ReactNode } from "react";
 
 interface CartItem {
   id: string;
-  type: "grade";
+  type: "individual" | "grade";
   productId: number;
   productName: string;
-  colorId: number;
-  colorName: string;
-  gradeId: number;
-  gradeName: string;
+  colorId?: number;
+  colorName?: string;
+  sizeId?: number;
+  sizeName?: string;
+  gradeId?: number;
+  gradeName?: string;
   quantity: number;
   unitPrice: number;
   totalPrice: number;
@@ -144,7 +146,7 @@ export function useCart() {
   const { state, dispatch } = context;
 
   const addItem = (item: Omit<CartItem, "id" | "totalPrice">) => {
-    const id = `grade-${item.productId}-${item.colorId}-${item.gradeId}`;
+    const id = `${item.type}-${item.productId}-${item.colorId || ""}-${item.sizeId || ""}-${item.gradeId || ""}`;
     dispatch({
       type: "ADD_ITEM",
       item: {
