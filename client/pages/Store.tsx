@@ -12,7 +12,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Package, Grid3x3, Star, ShoppingCart, Filter, Menu, X, ChevronRight } from "lucide-react";
+import {
+  Package,
+  Grid3x3,
+  Star,
+  ShoppingCart,
+  Filter,
+  Menu,
+  X,
+  ChevronRight,
+} from "lucide-react";
 
 interface StoreProduct {
   id: number;
@@ -41,7 +50,7 @@ export default function Store() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<StoreProduct[]>([]);
   const [loading, setLoading] = useState(true);
-    const [selectedProductId, setSelectedProductId] = useState<number | null>(
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -172,7 +181,7 @@ export default function Store() {
     );
   }
 
-    return (
+  return (
     <StoreLayout>
       <div className="flex h-screen bg-gray-50">
         {/* Mobile sidebar overlay */}
@@ -181,7 +190,10 @@ export default function Store() {
             sidebarOpen ? "block" : "hidden"
           }`}
         >
-          <div className="fixed inset-0 bg-black/20" onClick={() => setSidebarOpen(false)} />
+          <div
+            className="fixed inset-0 bg-black/20"
+            onClick={() => setSidebarOpen(false)}
+          />
           <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-lg font-semibold">Categorias</h2>
@@ -210,7 +222,9 @@ export default function Store() {
         <div className="hidden lg:flex lg:w-64 lg:flex-col">
           <div className="flex-1 bg-white border-r border-gray-200 pt-5 pb-4 overflow-y-auto">
             <div className="px-4">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Categorias</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Categorias
+              </h2>
               <CategorySidebar
                 categories={categories}
                 selectedCategory={selectedCategory}
@@ -235,285 +249,295 @@ export default function Store() {
           </div>
 
           <div className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">
-            Bem-vindo à Chinelos Store
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Descubra nossa coleção completa de chinelos. Todas as compras são
-            feitas por grades (kits) com quantidades obrigatórias por tamanho.
-          </p>
-        </div>
-
-        {/* Info Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
-          <Card>
-            <CardHeader className="text-center">
-              <Grid3x3 className="h-12 w-12 mx-auto text-primary mb-2" />
-              <CardTitle className="text-lg">Compra por Grade</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-sm text-muted-foreground">
-                Kits com quantidades obrigatórias por tamanho da mesma cor
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="text-center">
-              <Package className="h-12 w-12 mx-auto text-primary mb-2" />
-              <CardTitle className="text-lg">Uma Cor por Grade</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-sm text-muted-foreground">
-                Cada grade deve ser obrigatoriamente da mesma cor
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="text-center">
-              <Star className="h-12 w-12 mx-auto text-primary mb-2" />
-              <CardTitle className="text-lg">Qualidade</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-sm text-muted-foreground">
-                Produtos de alta qualidade das melhores marcas brasileiras
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filters */}
-        <div className="mb-8">
-          <div className="bg-white border rounded-lg p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Filter className="h-5 w-5 text-muted-foreground" />
-                <h3 className="text-lg font-semibold">Filtrar Produtos</h3>
-              </div>
-              {hasActiveFilters && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={clearAllFilters}
-                  className="text-xs"
-                >
-                  Limpar Filtros
-                </Button>
-              )}
-            </div>
-
-            {/* Horizontal Filter Bar */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Category Filter */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">
-                  Categoria
-                </label>
-                <Select
-                  value={selectedCategory}
-                  onValueChange={setSelectedCategory}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione uma categoria" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Color Filter */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">
-                  Cor
-                </label>
-                <Select value={selectedColor} onValueChange={setSelectedColor}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione uma cor" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {colors.map((color) => (
-                      <SelectItem key={color.id} value={color.id}>
-                        {color.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Grade Type Filter */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">
-                  Tipo de Grade
-                </label>
-                <Select
-                  value={selectedGradeType}
-                  onValueChange={setSelectedGradeType}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione um tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {gradeTypes.map((gradeType) => (
-                      <SelectItem key={gradeType.id} value={gradeType.id}>
-                        {gradeType.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Products Grid */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Nossos Produtos</h2>
-            <span className="text-sm text-muted-foreground">
-              {filteredProducts.length} produto
-              {filteredProducts.length !== 1 ? "s" : ""} encontrado
-              {filteredProducts.length !== 1 ? "s" : ""}
-            </span>
-          </div>
-          {filteredProducts.length === 0 ? (
-            <div className="text-center py-12">
-              <Package className="mx-auto h-16 w-16 text-muted-foreground/50" />
-              <h3 className="mt-4 text-lg font-semibold">
-                Nenhum produto disponível
-              </h3>
-              <p className="mt-2 text-muted-foreground">
-                No momento não temos produtos em estoque.
+            {/* Hero Section */}
+            <div className="text-center mb-12">
+              <h1 className="text-4xl font-bold mb-4">
+                Bem-vindo à Chinelos Store
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Descubra nossa coleção completa de chinelos. Todas as compras
+                são feitas por grades (kits) com quantidades obrigatórias por
+                tamanho.
               </p>
             </div>
-          ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {filteredProducts.map((product) => (
-                <Card
-                  key={product.id}
-                  className="overflow-hidden h-full transition-transform hover:scale-105"
-                >
-                  <div className="aspect-square bg-muted flex items-center justify-center">
-                    {product.photo ? (
-                      <img
-                        src={product.photo}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <Package className="h-12 w-12 text-muted-foreground/50" />
-                    )}
+
+            {/* Info Cards */}
+            <div className="grid md:grid-cols-3 gap-6 mb-12">
+              <Card>
+                <CardHeader className="text-center">
+                  <Grid3x3 className="h-12 w-12 mx-auto text-primary mb-2" />
+                  <CardTitle className="text-lg">Compra por Grade</CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Kits com quantidades obrigatórias por tamanho da mesma cor
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="text-center">
+                  <Package className="h-12 w-12 mx-auto text-primary mb-2" />
+                  <CardTitle className="text-lg">Uma Cor por Grade</CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Cada grade deve ser obrigatoriamente da mesma cor
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="text-center">
+                  <Star className="h-12 w-12 mx-auto text-primary mb-2" />
+                  <CardTitle className="text-lg">Qualidade</CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Produtos de alta qualidade das melhores marcas brasileiras
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Filters */}
+            <div className="mb-8">
+              <div className="bg-white border rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-5 w-5 text-muted-foreground" />
+                    <h3 className="text-lg font-semibold">Filtrar Produtos</h3>
                   </div>
-                  <div className="p-4 space-y-3">
-                    {/* Header - Nome e Categoria */}
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-sm line-clamp-2 leading-tight min-h-[32px]">
-                        {product.name}
-                      </h3>
-                      <div className="flex items-center justify-between">
-                        {product.category_name && (
-                          <Badge
-                            variant="secondary"
-                            className="text-xs px-2 py-1"
-                          >
-                            {product.category_name}
-                          </Badge>
+                  {hasActiveFilters && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={clearAllFilters}
+                      className="text-xs"
+                    >
+                      Limpar Filtros
+                    </Button>
+                  )}
+                </div>
+
+                {/* Horizontal Filter Bar */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Category Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Categoria
+                    </label>
+                    <Select
+                      value={selectedCategory}
+                      onValueChange={setSelectedCategory}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecione uma categoria" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Color Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Cor
+                    </label>
+                    <Select
+                      value={selectedColor}
+                      onValueChange={setSelectedColor}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecione uma cor" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {colors.map((color) => (
+                          <SelectItem key={color.id} value={color.id}>
+                            {color.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Grade Type Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Tipo de Grade
+                    </label>
+                    <Select
+                      value={selectedGradeType}
+                      onValueChange={setSelectedGradeType}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecione um tipo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {gradeTypes.map((gradeType) => (
+                          <SelectItem key={gradeType.id} value={gradeType.id}>
+                            {gradeType.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Products Grid */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">Nossos Produtos</h2>
+                <span className="text-sm text-muted-foreground">
+                  {filteredProducts.length} produto
+                  {filteredProducts.length !== 1 ? "s" : ""} encontrado
+                  {filteredProducts.length !== 1 ? "s" : ""}
+                </span>
+              </div>
+              {filteredProducts.length === 0 ? (
+                <div className="text-center py-12">
+                  <Package className="mx-auto h-16 w-16 text-muted-foreground/50" />
+                  <h3 className="mt-4 text-lg font-semibold">
+                    Nenhum produto disponível
+                  </h3>
+                  <p className="mt-2 text-muted-foreground">
+                    No momento não temos produtos em estoque.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  {filteredProducts.map((product) => (
+                    <Card
+                      key={product.id}
+                      className="overflow-hidden h-full transition-transform hover:scale-105"
+                    >
+                      <div className="aspect-square bg-muted flex items-center justify-center">
+                        {product.photo ? (
+                          <img
+                            src={product.photo}
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <Package className="h-12 w-12 text-muted-foreground/50" />
                         )}
-                        <div className="flex items-center justify-center gap-1">
-                          {product.available_colors &&
-                          product.available_colors.length > 0 ? (
-                            <div className="flex items-center gap-1.5">
-                              {product.available_colors
-                                .slice(0, 5)
-                                .map((color, index) => (
-                                  <div
-                                    key={color.id}
-                                    className="relative group"
-                                  >
-                                    <div
-                                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform cursor-pointer"
-                                      style={{
-                                        backgroundColor:
-                                          color.hex_code || "#999999",
-                                        boxShadow: "0 0 0 1px rgba(0,0,0,0.1)",
-                                      }}
-                                    />
-                                    <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
-                                      {color.name}
-                                    </div>
-                                  </div>
-                                ))}
-                              {product.available_colors.length > 5 && (
-                                <span className="text-xs text-muted-foreground font-medium ml-1">
-                                  +{product.available_colors.length - 5}
+                      </div>
+                      <div className="p-4 space-y-3">
+                        {/* Header - Nome e Categoria */}
+                        <div className="space-y-2">
+                          <h3 className="font-semibold text-sm line-clamp-2 leading-tight min-h-[32px]">
+                            {product.name}
+                          </h3>
+                          <div className="flex items-center justify-between">
+                            {product.category_name && (
+                              <Badge
+                                variant="secondary"
+                                className="text-xs px-2 py-1"
+                              >
+                                {product.category_name}
+                              </Badge>
+                            )}
+                            <div className="flex items-center justify-center gap-1">
+                              {product.available_colors &&
+                              product.available_colors.length > 0 ? (
+                                <div className="flex items-center gap-1.5">
+                                  {product.available_colors
+                                    .slice(0, 5)
+                                    .map((color, index) => (
+                                      <div
+                                        key={color.id}
+                                        className="relative group"
+                                      >
+                                        <div
+                                          className="w-4 h-4 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform cursor-pointer"
+                                          style={{
+                                            backgroundColor:
+                                              color.hex_code || "#999999",
+                                            boxShadow:
+                                              "0 0 0 1px rgba(0,0,0,0.1)",
+                                          }}
+                                        />
+                                        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                                          {color.name}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  {product.available_colors.length > 5 && (
+                                    <span className="text-xs text-muted-foreground font-medium ml-1">
+                                      +{product.available_colors.length - 5}
+                                    </span>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                                  {product.variant_count} cores
                                 </span>
                               )}
                             </div>
-                          ) : (
-                            <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
-                              {product.variant_count} cores
-                            </span>
-                          )}
+                          </div>
+                        </div>
+
+                        {/* Pricing Section */}
+                        <div className="text-center space-y-1">
+                          <div className="flex items-center justify-center gap-3">
+                            {product.base_price && (
+                              <div>
+                                <div className="text-2xl font-bold text-primary">
+                                  R$ {parseFloat(product.base_price).toFixed(2)}
+                                </div>
+                                <div className="text-xs text-muted-foreground font-medium">
+                                  UNITÁRIO
+                                </div>
+                              </div>
+                            )}
+
+                            {product.suggested_price &&
+                              product.suggested_price !==
+                                product.base_price && (
+                                <div className="text-right">
+                                  <div className="text-sm text-muted-foreground">
+                                    R${" "}
+                                    {parseFloat(
+                                      product.suggested_price,
+                                    ).toFixed(2)}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    sugerido
+                                  </div>
+                                </div>
+                              )}
+                          </div>
+                        </div>
+
+                        {/* Add to Cart Button */}
+                        <div className="border-t pt-3">
+                          <Button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              openModal(product.id);
+                            }}
+                            className="w-full h-8 text-xs font-medium"
+                            size="sm"
+                          >
+                            <ShoppingCart className="mr-2 h-3 w-3" />
+                            Adicionar ao Carrinho
+                          </Button>
                         </div>
                       </div>
-                    </div>
-
-                    {/* Pricing Section */}
-                    <div className="text-center space-y-1">
-                      <div className="flex items-center justify-center gap-3">
-                        {product.base_price && (
-                          <div>
-                            <div className="text-2xl font-bold text-primary">
-                              R$ {parseFloat(product.base_price).toFixed(2)}
-                            </div>
-                            <div className="text-xs text-muted-foreground font-medium">
-                              UNITÁRIO
-                            </div>
-                          </div>
-                        )}
-
-                        {product.suggested_price &&
-                          product.suggested_price !== product.base_price && (
-                            <div className="text-right">
-                              <div className="text-sm text-muted-foreground">
-                                R${" "}
-                                {parseFloat(product.suggested_price).toFixed(2)}
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                sugerido
-                              </div>
-                            </div>
-                          )}
-                      </div>
-                    </div>
-
-                    {/* Add to Cart Button */}
-                    <div className="border-t pt-3">
-                      <Button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          openModal(product.id);
-                        }}
-                        className="w-full h-8 text-xs font-medium"
-                        size="sm"
-                      >
-                        <ShoppingCart className="mr-2 h-3 w-3" />
-                        Adicionar ao Carrinho
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              ))}
+                    </Card>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
 
