@@ -18,6 +18,7 @@ import { adminOrdersRouter } from "./routes/admin-orders";
 import { adminCustomersRouter } from "./routes/admin-customers";
 import { createStoreSchema } from "./lib/store-schema";
 import { fixOrdersTable } from "./lib/fix-orders-table";
+import { checkAndFixTables } from "./lib/check-tables";
 
 export function createServer() {
   const app = express();
