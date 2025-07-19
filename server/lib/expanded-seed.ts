@@ -324,12 +324,24 @@ export async function seedExpandedDatabase() {
     ];
 
     for (const grade of gradeTemplates) {
-      const [result] = await db.execute(
-        "INSERT INTO grade_vendida (name, description, active) VALUES (?, ?, true)",
-        [grade.name, grade.description],
+      // Check if grade already exists
+      const [existingGrade] = await db.execute(
+        "SELECT id FROM grade_vendida WHERE name = ?",
+        [grade.name],
       );
 
-      const gradeId = (result as any).insertId;
+      let gradeId;
+      if ((existingGrade as any[]).length > 0) {
+        gradeId = (existingGrade as any)[0].id;
+        console.log(`Grade "${grade.name}" already exists with ID ${gradeId}`);
+      } else {
+        const [result] = await db.execute(
+          "INSERT INTO grade_vendida (name, description, active) VALUES (?, ?, true)",
+          [grade.name, grade.description],
+        );
+        gradeId = (result as any).insertId;
+        console.log(`Created grade "${grade.name}" with ID ${gradeId}`);
+      }
 
       // Create grade templates
       for (const sizeConfig of grade.sizes) {
