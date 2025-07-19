@@ -275,16 +275,14 @@ router.post("/orders", async (req, res) => {
       // Create order item for the grade
       await connection.execute(
         `INSERT INTO order_items (order_id, product_id, color_id, grade_id, quantity, price) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                  VALUES (?, ?, ?, ?, ?, ?)`,
         [
           orderId,
           item.productId,
           item.colorId,
           item.gradeId,
           item.quantity,
-          item.unitPrice,
           item.totalPrice,
-          "grade",
         ],
       );
     }
