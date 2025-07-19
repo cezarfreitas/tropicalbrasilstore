@@ -14,8 +14,6 @@ import {
 } from "@/components/ui/select";
 import {
   Package,
-  Grid3x3,
-  Star,
   ShoppingCart,
   Filter,
   Menu,
