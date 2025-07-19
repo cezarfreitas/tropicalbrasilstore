@@ -46,7 +46,12 @@ export default function Store() {
 
   useEffect(() => {
     fetchProducts();
+    fetchFilterData();
   }, []);
+
+  useEffect(() => {
+    applyFilters();
+  }, [products, selectedCategory, selectedColor, selectedGradeType]);
 
   const fetchProducts = async () => {
     try {
@@ -60,6 +65,62 @@ export default function Store() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchFilterData = async () => {
+    try {
+      // Fetch categories
+      const categoriesResponse = await fetch("/api/categories");
+      if (categoriesResponse.ok) {
+        const categoriesData = await categoriesResponse.json();
+        setCategories([
+          { id: "all", name: "Todas as Categorias" },
+          ...categoriesData.map((cat: any) => ({
+            id: cat.id.toString(),
+            name: cat.name,
+          })),
+        ]);
+      }
+
+      // Fetch colors
+      const colorsResponse = await fetch("/api/colors");
+      if (colorsResponse.ok) {
+        const colorsData = await colorsResponse.json();
+        setColors([
+          { id: "all", name: "Todas as Cores" },
+          ...colorsData.map((color: any) => ({
+            id: color.id.toString(),
+            name: color.name,
+          })),
+        ]);
+      }
+
+      // Mock grade types (you can replace with real API call)
+      setGradeTypes([
+        { id: "all", name: "Todos os Tipos" },
+        { id: "pequena", name: "Grade Pequena" },
+        { id: "media", name: "Grade Média" },
+        { id: "grande", name: "Grade Grande" },
+      ]);
+    } catch (error) {
+      console.error("Error fetching filter data:", error);
+    }
+  };
+
+  const applyFilters = () => {
+    let filtered = [...products];
+
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter((product) =>
+        product.category_name
+          ?.toLowerCase()
+          .includes(selectedCategory.toLowerCase()),
+      );
+    }
+
+    // Note: Color and grade type filtering would need additional product data
+    // For now, we'll just filter by category
+    setFilteredProducts(filtered);
   };
 
   const openModal = (productId: number) => {
