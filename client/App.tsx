@@ -14,6 +14,8 @@ import Categories from "./pages/Categories";
 import Sizes from "./pages/Sizes";
 import Colors from "./pages/Colors";
 import GradesRedesigned from "./pages/GradesRedesigned";
+import Orders from "./pages/Orders";
+import Customers from "./pages/Customers";
 import Store from "./pages/Store";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
