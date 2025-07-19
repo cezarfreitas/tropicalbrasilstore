@@ -130,11 +130,19 @@ export async function seedExpandedDatabase() {
       { size: "46", display_order: 14 },
     ];
 
+    // Add sizes only if they don't exist
     for (const size of sizes) {
-      await db.execute(
-        "INSERT INTO sizes (size, display_order) VALUES (?, ?)",
-        [size.size, size.display_order],
+      const [existing] = await db.execute(
+        "SELECT id FROM sizes WHERE size = ?",
+        [size.size],
       );
+
+      if ((existing as any[]).length === 0) {
+        await db.execute(
+          "INSERT INTO sizes (size, display_order) VALUES (?, ?)",
+          [size.size, size.display_order],
+        );
+      }
     }
 
     // Sample product names and descriptions
