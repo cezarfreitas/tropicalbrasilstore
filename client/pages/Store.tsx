@@ -365,31 +365,36 @@ export default function Store() {
                             {product.category_name}
                           </Badge>
                         )}
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center justify-center gap-1">
                           {product.available_colors &&
                           product.available_colors.length > 0 ? (
-                            <>
-                              <div className="flex items-center gap-1">
-                                {product.available_colors
-                                  .slice(0, 4)
-                                  .map((color, index) => (
+                            <div className="flex items-center gap-1.5">
+                              {product.available_colors
+                                .slice(0, 5)
+                                .map((color, index) => (
+                                  <div
+                                    key={color.id}
+                                    className="relative group"
+                                  >
                                     <div
-                                      key={color.id}
-                                      className="w-3 h-3 rounded-full border border-gray-300"
+                                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform cursor-pointer"
                                       style={{
                                         backgroundColor:
                                           color.hex_code || "#999999",
+                                        boxShadow: "0 0 0 1px rgba(0,0,0,0.1)",
                                       }}
-                                      title={color.name}
                                     />
-                                  ))}
-                                {product.available_colors.length > 4 && (
-                                  <span className="text-xs text-muted-foreground ml-1">
-                                    +{product.available_colors.length - 4}
-                                  </span>
-                                )}
-                              </div>
-                            </>
+                                    <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                                      {color.name}
+                                    </div>
+                                  </div>
+                                ))}
+                              {product.available_colors.length > 5 && (
+                                <span className="text-xs text-muted-foreground font-medium ml-1">
+                                  +{product.available_colors.length - 5}
+                                </span>
+                              )}
+                            </div>
                           ) : (
                             <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
                               {product.variant_count} cores
