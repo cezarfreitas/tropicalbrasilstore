@@ -222,9 +222,7 @@ export default function ProductDetail() {
                                 <p className="text-xl font-bold text-primary">
                                   R${" "}
                                   {(
-                                    product.base_price *
-                                    grade.total_quantity *
-                                    0.9
+                                    product.base_price * grade.total_quantity
                                   ).toFixed(2)}
                                 </p>
                                 <p className="text-xs text-muted-foreground">
