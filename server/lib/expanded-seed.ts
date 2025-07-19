@@ -198,15 +198,28 @@ export async function seedExpandedDatabase() {
       "https://images.unsplash.com/photo-1594736797933-d0f06ba42c25?w=400&h=400&fit=crop",
     ];
 
+    // Get actual category IDs from database
+    const [categoryRows] = await db.execute(
+      "SELECT id FROM categories ORDER BY id",
+    );
+    const validCategoryIds = (categoryRows as any[]).map((row) => row.id);
+
+    // Get actual color IDs from database
+    const [colorRows] = await db.execute("SELECT id FROM colors ORDER BY id");
+    const validColorIds = (colorRows as any[]).map((row) => row.id);
+
     // Generate 100 products
-    for (let i = 1; i <= 100; i++) {
+    const targetProducts = Math.max(100, productCount + 50); // Ensure we have at least 100 total
+
+    for (let i = productCount + 1; i <= targetProducts; i++) {
       const template =
         productTemplates[Math.floor(Math.random() * productTemplates.length)];
       const variation =
         template.variations[
           Math.floor(Math.random() * template.variations.length)
         ];
-      const categoryId = Math.floor(Math.random() * categories.length) + 1;
+      const categoryId =
+        validCategoryIds[Math.floor(Math.random() * validCategoryIds.length)];
       const basePrice = Math.floor(Math.random() * 50) + 15; // R$ 15-65
       const suggestedPrice =
         Math.floor(basePrice * 1.5) + Math.floor(Math.random() * 20); // Markup
