@@ -12,7 +12,7 @@ import ProductsEnhanced from "./pages/ProductsEnhanced";
 import Categories from "./pages/Categories";
 import Sizes from "./pages/Sizes";
 import Colors from "./pages/Colors";
-import Grades from "./pages/Grades";
+import GradesRedesigned from "./pages/GradesRedesigned";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -68,7 +68,7 @@ const App = () => (
             path="/grades"
             element={
               <AdminLayout>
-                <Grades />
+                <GradesRedesigned />
               </AdminLayout>
             }
           />
