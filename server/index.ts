@@ -7,6 +7,7 @@ import { sizesRouter } from "./routes/sizes";
 import { colorsRouter } from "./routes/colors";
 import { productsRouter } from "./routes/products";
 import { gradesRouter } from "./routes/grades";
+import { seedRouter } from "./routes/seed";
 
 export function createServer() {
   const app = express();
@@ -32,6 +33,7 @@ export function createServer() {
   app.use("/api/colors", colorsRouter);
   app.use("/api/products", productsRouter);
   app.use("/api/grades", gradesRouter);
+  app.use("/api/seed", seedRouter);
 
   return app;
 }
