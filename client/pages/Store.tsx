@@ -22,14 +22,16 @@ interface StoreProduct {
 export default function Store() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(
+    null,
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-    const fetchProducts = async () => {
+  const fetchProducts = async () => {
     try {
       const response = await fetch("/api/store/products");
       if (response.ok) {
@@ -135,88 +137,88 @@ export default function Store() {
               </p>
             </div>
           ) : (
-                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {products.map((product) => (
                 <Card
                   key={product.id}
                   className="overflow-hidden h-full transition-transform hover:scale-105"
                 >
-                    <div className="aspect-square bg-muted flex items-center justify-center">
-                      {product.photo ? (
-                        <img
-                          src={product.photo}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <Package className="h-12 w-12 text-muted-foreground/50" />
+                  <div className="aspect-square bg-muted flex items-center justify-center">
+                    {product.photo ? (
+                      <img
+                        src={product.photo}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <Package className="h-12 w-12 text-muted-foreground/50" />
+                    )}
+                  </div>
+                  <div className="p-3">
+                    <div className="mb-2">
+                      <h3 className="font-semibold text-sm line-clamp-2 mb-1">
+                        {product.name}
+                      </h3>
+                      {product.category_name && (
+                        <Badge variant="secondary" className="text-xs">
+                          {product.category_name}
+                        </Badge>
                       )}
                     </div>
-                    <div className="p-3">
-                      <div className="mb-2">
-                        <h3 className="font-semibold text-sm line-clamp-2 mb-1">
-                          {product.name}
-                        </h3>
-                        {product.category_name && (
-                          <Badge variant="secondary" className="text-xs">
-                            {product.category_name}
-                          </Badge>
-                        )}
-                      </div>
 
-                      {product.base_price && (
+                    {product.base_price && (
+                      <div className="text-center mb-2">
+                        <p className="text-xl font-bold text-primary">
+                          R$ {parseFloat(product.base_price).toFixed(2)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          preço unitário
+                        </p>
+                      </div>
+                    )}
+
+                    {product.suggested_price &&
+                      product.suggested_price !== product.base_price && (
                         <div className="text-center mb-2">
-                          <p className="text-xl font-bold text-primary">
-                            R$ {parseFloat(product.base_price).toFixed(2)}
-                          </p>
                           <p className="text-xs text-muted-foreground">
-                            preço unitário
+                            Sugerido: R${" "}
+                            {parseFloat(product.suggested_price).toFixed(2)}
                           </p>
                         </div>
                       )}
 
-                      {product.suggested_price &&
-                        product.suggested_price !== product.base_price && (
-                          <div className="text-center mb-2">
-                            <p className="text-xs text-muted-foreground">
-                              Sugerido: R$ {parseFloat(product.suggested_price).toFixed(2)}
-                            </p>
-                          </div>
-                        )}
-
-                                            <div className="flex justify-center text-xs text-muted-foreground border-t pt-2 mb-3">
-                        <span>{product.variant_count} Cores</span>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            openModal(product.id);
-                          }}
-                          className="w-full"
-                          size="sm"
-                        >
-                          <ShoppingCart className="mr-2 h-3 w-3" />
-                          Adicionar ao Carrinho
-                        </Button>
-
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-full"
-                          asChild
-                        >
-                          <Link to={`/loja/produto/${product.id}`}>
-                            <Grid3x3 className="mr-2 h-3 w-3" />
-                            Ver Detalhes
-                          </Link>
-                        </Button>
-                      </div>
+                    <div className="flex justify-center text-xs text-muted-foreground border-t pt-2 mb-3">
+                      <span>{product.variant_count} Cores</span>
                     </div>
-                  </Card>
-                </Link>
+
+                    <div className="space-y-2">
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          openModal(product.id);
+                        }}
+                        className="w-full"
+                        size="sm"
+                      >
+                        <ShoppingCart className="mr-2 h-3 w-3" />
+                        Adicionar ao Carrinho
+                      </Button>
+
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        asChild
+                      >
+                        <Link to={`/loja/produto/${product.id}`}>
+                          <Grid3x3 className="mr-2 h-3 w-3" />
+                          Ver Detalhes
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
               ))}
             </div>
           )}
