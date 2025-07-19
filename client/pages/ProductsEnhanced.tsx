@@ -351,10 +351,9 @@ export default function ProductsEnhanced() {
               </DialogHeader>
 
               <Tabs defaultValue="basic" className="py-4">
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="basic">Básico</TabsTrigger>
                   <TabsTrigger value="variants">Variantes</TabsTrigger>
-                  <TabsTrigger value="grades">Grades</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="basic" className="space-y-4">
