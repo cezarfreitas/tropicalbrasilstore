@@ -53,6 +53,19 @@ export async function checkAndFixTables() {
       console.log("grade_id column added to order_items!");
     }
 
+    // Make size_id nullable for grade purchases
+    const sizeIdCol = orderItemCols.find(
+      (col) => col.COLUMN_NAME === "size_id",
+    );
+    if (sizeIdCol && sizeIdCol.IS_NULLABLE === "NO") {
+      console.log("Making size_id column nullable for grade purchases...");
+      await db.execute(`
+        ALTER TABLE order_items
+        MODIFY COLUMN size_id INT NULL
+      `);
+      console.log("size_id column is now nullable!");
+    }
+
     // Check if there are any problematic columns and fix them
     const customerCols = customerColumns as any[];
     const hasCustomerName = customerCols.some(
