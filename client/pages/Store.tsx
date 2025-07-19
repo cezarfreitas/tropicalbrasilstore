@@ -155,41 +155,63 @@ export default function Store() {
                       <Package className="h-12 w-12 text-muted-foreground/50" />
                     )}
                   </div>
-                  <div className="p-3">
-                    <div className="mb-2">
-                      <h3 className="font-semibold text-sm line-clamp-2 mb-1">
+                  <div className="p-4 space-y-3">
+                    {/* Header - Nome e Categoria */}
+                    <div className="space-y-2">
+                      <h3 className="font-semibold text-sm line-clamp-2 leading-tight min-h-[32px]">
                         {product.name}
                       </h3>
-                      {product.category_name && (
-                        <Badge variant="secondary" className="text-xs">
-                          {product.category_name}
-                        </Badge>
-                      )}
+                      <div className="flex items-center justify-between">
+                        {product.category_name && (
+                          <Badge
+                            variant="secondary"
+                            className="text-xs px-2 py-1"
+                          >
+                            {product.category_name}
+                          </Badge>
+                        )}
+                        <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                          {product.variant_count} cores
+                        </span>
+                      </div>
                     </div>
 
-                    {product.base_price && (
-                      <div className="text-center mb-2">
-                        <p className="text-xl font-bold text-primary">
-                          R$ {parseFloat(product.base_price).toFixed(2)}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          preço unitário
-                        </p>
-                      </div>
-                    )}
-
-                    {product.suggested_price &&
-                      product.suggested_price !== product.base_price && (
-                        <div className="text-center mb-2">
-                          <p className="text-xs text-muted-foreground">
-                            Sugerido: R${" "}
-                            {parseFloat(product.suggested_price).toFixed(2)}
-                          </p>
+                    {/* Pricing Section */}
+                    <div className="space-y-2">
+                      {product.base_price && (
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-primary">
+                            R$ {parseFloat(product.base_price).toFixed(2)}
+                          </div>
+                          <div className="text-xs text-muted-foreground font-medium">
+                            PREÇO UNITÁRIO
+                          </div>
                         </div>
                       )}
 
-                    <div className="flex justify-center text-xs text-muted-foreground border-t pt-2">
-                      <span>{product.variant_count} Cores</span>
+                      {product.suggested_price &&
+                        product.suggested_price !== product.base_price && (
+                          <div className="text-center pt-1 border-t border-dashed">
+                            <div className="text-sm text-muted-foreground">
+                              Sugerido: R${" "}
+                              {parseFloat(product.suggested_price).toFixed(2)}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              preço de venda
+                            </div>
+                          </div>
+                        )}
+                    </div>
+
+                    {/* Footer Info */}
+                    <div className="flex items-center justify-between text-xs text-muted-foreground border-t pt-2">
+                      <span className="flex items-center gap-1">
+                        <Package className="h-3 w-3" />
+                        {product.total_stock} estoque
+                      </span>
+                      <span className="font-medium text-primary">
+                        Grade disponível
+                      </span>
                     </div>
                   </div>
                 </Card>
