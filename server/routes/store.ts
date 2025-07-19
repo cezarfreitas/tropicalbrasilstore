@@ -227,8 +227,10 @@ router.post("/orders", async (req, res) => {
 
     // Create order
     const [orderResult] = await connection.execute(
-      `INSERT INTO orders (customer_email, total_amount, status) VALUES (?, ?, ?)`,
+      `INSERT INTO orders (customer_name, customer_phone, customer_email, total_price, status) VALUES (?, ?, ?, ?, ?)`,
       [
+        customer.name,
+        customer.whatsapp,
         customer.email,
         items.reduce((sum: number, item: any) => sum + item.totalPrice, 0),
         "pending",
