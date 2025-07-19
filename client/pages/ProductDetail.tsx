@@ -229,8 +229,8 @@ export default function ProductDetail() {
                                   preço da grade
                                 </p>
                                 {product.suggested_price && (
-                                  <p className="text-xs text-muted-foreground line-through">
-                                    R${" "}
+                                  <p className="text-xs text-muted-foreground">
+                                    Sugerido: R${" "}
                                     {(
                                       product.suggested_price *
                                       grade.total_quantity
