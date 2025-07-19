@@ -169,18 +169,6 @@ export default function Store() {
                           </div>
                         )}
 
-                        {product.base_price && (
-                          <div className="text-center border-t pt-2">
-                            <p className="text-lg font-semibold text-green-600">
-                              R${" "}
-                              {(parseFloat(product.base_price) * 2).toFixed(2)}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              preço total da grade
-                            </p>
-                          </div>
-                        )}
-
                         {product.suggested_price &&
                           product.suggested_price !== product.base_price && (
                             <div className="text-center">
@@ -192,8 +180,8 @@ export default function Store() {
                           )}
 
                         <div className="flex justify-between text-xs text-muted-foreground border-t pt-2">
-                          <span>{product.variant_count} variantes</span>
-                          <span>{product.total_stock} em estoque</span>
+                          <span>{product.variant_count} Cores</span>
+                          <span></span>
                         </div>
                       </div>
 
