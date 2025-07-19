@@ -26,6 +26,33 @@ export async function checkAndFixTables() {
 
     console.log("Orders table columns:", orderColumns);
 
+    // Check order_items table structure
+    const [orderItemColumns] = await db.execute(`
+      SELECT COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'order_items'
+      ORDER BY ORDINAL_POSITION
+    `);
+
+    console.log("Order_items table columns:", orderItemColumns);
+
+    // Check if grade_id column exists in order_items
+    const orderItemCols = orderItemColumns as any[];
+    const hasGradeId = orderItemCols.some(
+      (col) => col.COLUMN_NAME === "grade_id",
+    );
+
+    if (!hasGradeId) {
+      console.log("Adding grade_id column to order_items table...");
+      await db.execute(`
+        ALTER TABLE order_items
+        ADD COLUMN grade_id INT NULL,
+        ADD FOREIGN KEY (grade_id) REFERENCES grade_vendida(id) ON DELETE SET NULL
+      `);
+      console.log("grade_id column added to order_items!");
+    }
+
     // Check if there are any problematic columns and fix them
     const customerCols = customerColumns as any[];
     const hasCustomerName = customerCols.some(
