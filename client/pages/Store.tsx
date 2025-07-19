@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ProductModal } from "@/components/ProductModal";
-import { Package, Grid3x3, Star, ShoppingCart } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Package, Grid3x3, Star, ShoppingCart, Filter } from "lucide-react";
 
 interface StoreProduct {
   id: number;
