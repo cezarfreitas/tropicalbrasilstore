@@ -102,7 +102,6 @@ export default function ProductsEnhanced() {
     photo: "",
     stock: 0,
     variants: [],
-    grades: [],
   });
   const { toast } = useToast();
 
