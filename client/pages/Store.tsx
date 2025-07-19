@@ -42,19 +42,6 @@ export default function Store() {
     }
   };
 
-  const quickAddToCart = (product: StoreProduct) => {
-    if (product.base_price) {
-      addItem({
-        type: "individual",
-        productId: product.id,
-        productName: product.name,
-        quantity: 1,
-        unitPrice: product.base_price,
-        photo: product.photo,
-      });
-    }
-  };
-
   if (loading) {
     return (
       <StoreLayout>
@@ -79,8 +66,8 @@ export default function Store() {
             Bem-vindo à Chinelos Store
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Discover our complete collection of sandals and flip-flops. Buy
-            individual pairs or save with our bundle deals (grades).
+            Descubra nossa coleção completa de chinelos. Todas as compras são
+            feitas por grades (kits) com quantidades obrigatórias por tamanho.
           </p>
         </div>
 
@@ -88,24 +75,24 @@ export default function Store() {
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           <Card>
             <CardHeader className="text-center">
-              <Package className="h-12 w-12 mx-auto text-primary mb-2" />
-              <CardTitle className="text-lg">Compra Individual</CardTitle>
+              <Grid3x3 className="h-12 w-12 mx-auto text-primary mb-2" />
+              <CardTitle className="text-lg">Compra por Grade</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-sm text-muted-foreground">
-                Escolha tamanhos e cores específicos para compra individual
+                Kits com quantidades obrigatórias por tamanho da mesma cor
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="text-center">
-              <Grid3x3 className="h-12 w-12 mx-auto text-primary mb-2" />
-              <CardTitle className="text-lg">Grade Vendida</CardTitle>
+              <Package className="h-12 w-12 mx-auto text-primary mb-2" />
+              <CardTitle className="text-lg">Uma Cor por Grade</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-sm text-muted-foreground">
-                Kits com quantidades obrigatórias por tamanho - melhores preços
+                Cada grade deve ser obrigatoriamente da mesma cor
               </p>
             </CardContent>
           </Card>
@@ -193,25 +180,15 @@ export default function Store() {
                         </div>
                       </div>
 
-                      <div className="flex gap-2">
-                        <Link
-                          to={`/loja/produto/${product.id}`}
-                          className="flex-1"
-                        >
-                          <Button variant="outline" className="w-full">
-                            Ver Detalhes
-                          </Button>
-                        </Link>
-                        {product.base_price && (
-                          <Button
-                            onClick={() => quickAddToCart(product)}
-                            size="icon"
-                            title="Adicionar ao carrinho"
-                          >
-                            <ShoppingCart className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
+                      <Link
+                        to={`/loja/produto/${product.id}`}
+                        className="w-full"
+                      >
+                        <Button className="w-full">
+                          <Grid3x3 className="mr-2 h-4 w-4" />
+                          Ver Grades Disponíveis
+                        </Button>
+                      </Link>
                     </div>
                   </CardContent>
                 </Card>
