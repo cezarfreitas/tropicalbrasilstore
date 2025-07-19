@@ -45,6 +45,16 @@ export default function Store() {
     }
   };
 
+  const openModal = (productId: number) => {
+    setSelectedProductId(productId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProductId(null);
+  };
+
   if (loading) {
     return (
       <StoreLayout>
