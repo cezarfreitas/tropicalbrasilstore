@@ -17,6 +17,11 @@ interface StoreProduct {
   category_name?: string;
   variant_count: number;
   total_stock: number;
+  available_colors?: Array<{
+    id: number;
+    name: string;
+    hex_code?: string;
+  }>;
 }
 
 interface FilterOption {
