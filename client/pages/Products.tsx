@@ -405,7 +405,7 @@ export default function Products() {
                     </TableCell>
                     <TableCell>
                       {product.base_price
-                        ? `R$ ${product.base_price.toFixed(2)}`
+                        ? `R$ ${parseFloat(product.base_price).toFixed(2)}`
                         : "—"}
                     </TableCell>
                     <TableCell>
