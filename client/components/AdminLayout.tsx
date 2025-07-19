@@ -11,6 +11,8 @@ import {
   Settings,
   Menu,
   X,
+  ShoppingCart,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
 
