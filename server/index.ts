@@ -13,6 +13,8 @@ import { enhanceRouter } from "./routes/enhance";
 import { productsEnhancedRouter } from "./routes/products-enhanced";
 import { redesignRouter } from "./routes/redesign";
 import { gradesRedesignedRouter } from "./routes/grades-redesigned";
+import { storeRouter } from "./routes/store";
+import { createStoreSchema } from "./lib/store-schema";
 
 export function createServer() {
   const app = express();
@@ -24,6 +26,7 @@ export function createServer() {
 
   // Initialize database on startup
   initDatabase().catch(console.error);
+  createStoreSchema().catch(console.error);
 
   // Example API routes
   app.get("/api/ping", (_req, res) => {
@@ -44,6 +47,7 @@ export function createServer() {
   app.use("/api/enhance", enhanceRouter);
   app.use("/api/redesign", redesignRouter);
   app.use("/api/grades-redesigned", gradesRedesignedRouter);
+  app.use("/api/store", storeRouter);
 
   return app;
 }
