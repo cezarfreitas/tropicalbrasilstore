@@ -167,7 +167,7 @@ router.get("/grades/:id", async (req, res) => {
   }
 });
 
-// Submit order
+// Submit order - only grade purchases allowed
 router.post("/orders", async (req, res) => {
   const connection = await db.getConnection();
   try {
@@ -183,6 +183,16 @@ router.post("/orders", async (req, res) => {
 
     if (!items || items.length === 0) {
       return res.status(400).json({ error: "No items in order" });
+    }
+
+    // Validate that all items are grades
+    for (const item of items) {
+      if (item.type !== "grade") {
+        return res.status(400).json({
+          error:
+            "Only grade purchases are allowed. Individual purchases are not permitted.",
+        });
+      }
     }
 
     // Create customer record
@@ -204,89 +214,54 @@ router.post("/orders", async (req, res) => {
 
     const orderId = (orderResult as any).insertId;
 
-    // Create order items and update stock
+    // Create order items and update stock - only grade purchases
     for (const item of items) {
-      if (item.type === "individual") {
-        // Individual item - update single variant stock
+      // Grade item - update multiple variant stocks based on template
+      const [templateRows] = await connection.execute(
+        `SELECT gt.*, s.size FROM grade_templates gt
+         LEFT JOIN sizes s ON gt.size_id = s.id
+         WHERE gt.grade_id = ?`,
+        [item.gradeId],
+      );
+
+      for (const template of templateRows as any[]) {
+        const requiredQuantity = template.required_quantity * item.quantity;
+
+        // Check stock
         const [variantRows] = await connection.execute(
           `SELECT stock FROM product_variants WHERE product_id = ? AND size_id = ? AND color_id = ?`,
-          [item.productId, item.sizeId, item.colorId],
+          [item.productId, template.size_id, item.colorId],
         );
 
         const variant = (variantRows as any)[0];
-        if (!variant || variant.stock < item.quantity) {
-          throw new Error(`Insufficient stock for ${item.productName}`);
+        if (!variant || variant.stock < requiredQuantity) {
+          throw new Error(
+            `Insufficient stock for ${item.productName} size ${template.size}`,
+          );
         }
 
         // Update stock
         await connection.execute(
           `UPDATE product_variants SET stock = stock - ? WHERE product_id = ? AND size_id = ? AND color_id = ?`,
-          [item.quantity, item.productId, item.sizeId, item.colorId],
-        );
-
-        // Create order item
-        await connection.execute(
-          `INSERT INTO order_items (order_id, product_id, size_id, color_id, quantity, unit_price, total_price, type) 
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          [
-            orderId,
-            item.productId,
-            item.sizeId,
-            item.colorId,
-            item.quantity,
-            item.unitPrice,
-            item.totalPrice,
-            "individual",
-          ],
-        );
-      } else if (item.type === "grade") {
-        // Grade item - update multiple variant stocks based on template
-        const [templateRows] = await connection.execute(
-          `SELECT gt.*, s.size FROM grade_templates gt
-           LEFT JOIN sizes s ON gt.size_id = s.id
-           WHERE gt.grade_id = ?`,
-          [item.gradeId],
-        );
-
-        for (const template of templateRows as any[]) {
-          const requiredQuantity = template.required_quantity * item.quantity;
-
-          // Check stock
-          const [variantRows] = await connection.execute(
-            `SELECT stock FROM product_variants WHERE product_id = ? AND size_id = ? AND color_id = ?`,
-            [item.productId, template.size_id, item.colorId],
-          );
-
-          const variant = (variantRows as any)[0];
-          if (!variant || variant.stock < requiredQuantity) {
-            throw new Error(
-              `Insufficient stock for ${item.productName} size ${template.size}`,
-            );
-          }
-
-          // Update stock
-          await connection.execute(
-            `UPDATE product_variants SET stock = stock - ? WHERE product_id = ? AND size_id = ? AND color_id = ?`,
-            [requiredQuantity, item.productId, template.size_id, item.colorId],
-          );
-        }
-
-        // Create order item for the grade
-        await connection.execute(
-          `INSERT INTO order_items (order_id, product_id, color_id, grade_id, quantity, unit_price, total_price, type) 
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          [
-            orderId,
-            item.productId,
-            item.colorId,
-            item.gradeId,
-            item.quantity,
-            item.unitPrice,
-            item.totalPrice,
-            "grade",
-          ],
+          [requiredQuantity, item.productId, template.size_id, item.colorId],
         );
       }
+
+      // Create order item for the grade
+      await connection.execute(
+        `INSERT INTO order_items (order_id, product_id, color_id, grade_id, quantity, unit_price, total_price, type) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          orderId,
+          item.productId,
+          item.colorId,
+          item.gradeId,
+          item.quantity,
+          item.unitPrice,
+          item.totalPrice,
+          "grade",
+        ],
+      );
     }
 
     await connection.commit();
@@ -318,15 +293,9 @@ function generateWhatsAppMessage(
 
   items.forEach((item, index) => {
     message += `\n${index + 1}. *${item.productName}*\n`;
-    if (item.type === "individual") {
-      message += `   • Cor: ${item.colorName}\n`;
-      message += `   • Tamanho: ${item.sizeName}\n`;
-      message += `   • Quantidade: ${item.quantity} un\n`;
-    } else {
-      message += `   • Grade: ${item.gradeName}\n`;
-      message += `   • Cor: ${item.colorName}\n`;
-      message += `   • Quantidade: ${item.quantity} kit(s)\n`;
-    }
+    message += `   • Grade: ${item.gradeName}\n`;
+    message += `   • Cor: ${item.colorName}\n`;
+    message += `   • Quantidade: ${item.quantity} kit(s)\n`;
     message += `   • Valor: R$ ${item.totalPrice.toFixed(2)}\n`;
   });
 
