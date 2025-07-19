@@ -77,10 +77,10 @@ export default function ProductDetail() {
     const grade = getSelectedGradeDetails();
     if (!grade || !product) return;
 
-    // Calculate grade price (you might want to set specific grade prices)
+    // Calculate grade price - quantity times unit price
     const gradePrice = product.base_price
-      ? product.base_price * grade.total_quantity * 0.9
-      : 0; // 10% discount for grades
+      ? product.base_price * grade.total_quantity
+      : 0;
 
     addItem({
       type: "grade",
