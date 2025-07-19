@@ -184,7 +184,7 @@ export default function Store() {
                         {product.suggested_price &&
                           product.suggested_price !== product.base_price && (
                             <div className="text-center">
-                              <p className="text-sm text-muted-foreground line-through">
+                              <p className="text-sm text-muted-foreground">
                                 Preço sugerido: R${" "}
                                 {parseFloat(product.suggested_price).toFixed(2)}
                               </p>
