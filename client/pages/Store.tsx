@@ -4,7 +4,8 @@ import { StoreLayout } from "@/components/StoreLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Package, Grid3x3, Star } from "lucide-react";
+import { ProductModal } from "@/components/ProductModal";
+import { Package, Grid3x3, Star, ShoppingCart } from "lucide-react";
 
 interface StoreProduct {
   id: number;
