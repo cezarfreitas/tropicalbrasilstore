@@ -42,7 +42,7 @@ export async function initDatabase() {
       )
     `);
 
-    // Create products table
+    // Create products table without foreign key initially
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS products (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -53,8 +53,7 @@ export async function initDatabase() {
         sku VARCHAR(100) UNIQUE,
         active BOOLEAN DEFAULT true,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
     `);
 
@@ -70,7 +69,7 @@ export async function initDatabase() {
       )
     `);
 
-    // Create grade_items table (individual items in a kit)
+    // Create grade_items table without foreign keys initially
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS grade_items (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -78,11 +77,7 @@ export async function initDatabase() {
         product_id INT NOT NULL,
         size_id INT NOT NULL,
         color_id INT NOT NULL,
-        quantity INT NOT NULL,
-        FOREIGN KEY (grade_id) REFERENCES grade_vendida(id) ON DELETE CASCADE,
-        FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-        FOREIGN KEY (size_id) REFERENCES sizes(id) ON DELETE CASCADE,
-        FOREIGN KEY (color_id) REFERENCES colors(id) ON DELETE CASCADE
+        quantity INT NOT NULL
       )
     `);
 
