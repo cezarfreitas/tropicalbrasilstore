@@ -187,22 +187,6 @@ export default function Store() {
     }
   };
 
-  const applyFilters = () => {
-    let filtered = [...products];
-
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter((product) =>
-        product.category_name
-          ?.toLowerCase()
-          .includes(selectedCategory.toLowerCase()),
-      );
-    }
-
-    // Note: Color and grade type filtering would need additional product data
-    // For now, we'll just filter by category
-    setFilteredProducts(filtered);
-  };
-
   const openModal = (productId: number) => {
     setSelectedProductId(productId);
     setIsModalOpen(true);
@@ -217,6 +201,12 @@ export default function Store() {
     setSelectedCategory("all");
     setSelectedColor("all");
     setSelectedGradeType("all");
+    setCurrentPage(1); // Reset to first page when clearing filters
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const hasActiveFilters =
