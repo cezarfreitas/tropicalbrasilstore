@@ -293,7 +293,7 @@ export default function Store() {
             </div>
           ) : (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <Card
                   key={product.id}
                   className="overflow-hidden h-full transition-transform hover:scale-105"
