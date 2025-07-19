@@ -123,31 +123,33 @@ export default function Store() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      // Build query parameters
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: productsPerPage.toString(),
-      });
-
-      if (selectedCategory !== "all") {
-        params.set("category", selectedCategory);
-      }
-      if (selectedColor !== "all") {
-        params.set("color", selectedColor);
-      }
-      if (selectedGradeType !== "all") {
-        params.set("gradeType", selectedGradeType);
-      }
-
-      const response = await fetch(`/api/store/products?${params.toString()}`);
+      // Use working API and implement client-side pagination
+      const response = await fetch("/api/store-old/products");
       if (response.ok) {
-        const data = await response.json();
-        setProducts(data.products || data); // Handle both paginated and non-paginated responses
-        setTotalProducts(data.total || data.length || 0);
-        setTotalPages(
-          Math.ceil((data.total || data.length || 0) / productsPerPage),
-        );
-        setFilteredProducts(data.products || data);
+        const allProducts = await response.json();
+
+        // Apply filters client-side
+        let filtered = [...allProducts];
+
+        if (selectedCategory !== "all") {
+          filtered = filtered.filter((product) =>
+            product.category_name
+              ?.toLowerCase()
+              .includes(selectedCategory.toLowerCase()),
+          );
+        }
+
+        // Calculate pagination
+        const total = filtered.length;
+        const totalPages = Math.ceil(total / productsPerPage);
+        const startIndex = (currentPage - 1) * productsPerPage;
+        const endIndex = startIndex + productsPerPage;
+        const paginatedProducts = filtered.slice(startIndex, endIndex);
+
+        setProducts(allProducts);
+        setFilteredProducts(paginatedProducts);
+        setTotalProducts(total);
+        setTotalPages(totalPages);
       }
     } catch (error) {
       console.error("Error fetching products:", error);
