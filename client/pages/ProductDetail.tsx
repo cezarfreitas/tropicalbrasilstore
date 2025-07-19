@@ -192,7 +192,7 @@ export default function ProductDetail() {
                     >
                       <CardHeader>
                         <div className="flex items-center justify-between">
-                          <div>
+                          <div className="flex-1">
                             <CardTitle className="text-lg">
                               {grade.name}
                             </CardTitle>
@@ -207,16 +207,42 @@ export default function ProductDetail() {
                                 {grade.color_name}
                               </span>
                             </div>
+                            {grade.description && (
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {grade.description}
+                              </p>
+                            )}
                           </div>
-                          <Badge variant="outline">
-                            {grade.total_quantity} peças
-                          </Badge>
+                          <div className="text-right">
+                            <Badge variant="outline" className="mb-2">
+                              {grade.total_quantity} peças
+                            </Badge>
+                            {product.base_price && (
+                              <div className="space-y-1">
+                                <p className="text-xl font-bold text-primary">
+                                  R${" "}
+                                  {(
+                                    product.base_price *
+                                    grade.total_quantity *
+                                    0.9
+                                  ).toFixed(2)}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  preço da grade
+                                </p>
+                                {product.suggested_price && (
+                                  <p className="text-xs text-muted-foreground line-through">
+                                    R${" "}
+                                    {(
+                                      product.suggested_price *
+                                      grade.total_quantity
+                                    ).toFixed(2)}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        {grade.description && (
-                          <p className="text-sm text-muted-foreground">
-                            {grade.description}
-                          </p>
-                        )}
                       </CardHeader>
                       <CardContent>
                         <div className="grid grid-cols-2 gap-2">
