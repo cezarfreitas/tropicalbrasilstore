@@ -38,8 +38,8 @@ router.get("/:email", async (req, res) => {
         SUM(o.total_price) as total_spent,
         MAX(o.created_at) as last_order_date,
         COUNT(CASE WHEN o.status = 'delivered' THEN 1 END) as completed_orders
-      FROM customers c
-      LEFT JOIN orders o ON c.email = o.customer_email
+            FROM customers c
+      LEFT JOIN orders o ON c.email COLLATE utf8mb4_unicode_ci = o.customer_email COLLATE utf8mb4_unicode_ci
       WHERE c.email = ?
       GROUP BY c.email
     `,
