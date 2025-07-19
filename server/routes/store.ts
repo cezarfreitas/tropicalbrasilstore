@@ -27,7 +27,30 @@ router.get("/products", async (req, res) => {
       ORDER BY p.name
     `);
 
-    res.json(products);
+    // For each product, get available colors
+    const productsWithColors = [];
+    for (const product of products as any[]) {
+      const [colorRows] = await db.execute(
+        `
+        SELECT DISTINCT
+          co.id,
+          co.name,
+          co.hex_code
+        FROM product_variants pv
+        LEFT JOIN colors co ON pv.color_id = co.id
+        WHERE pv.product_id = ? AND pv.stock > 0 AND co.id IS NOT NULL
+        ORDER BY co.name
+      `,
+        [product.id],
+      );
+
+      productsWithColors.push({
+        ...product,
+        available_colors: colorRows,
+      });
+    }
+
+    res.json(productsWithColors);
   } catch (error) {
     console.error("Error fetching store products:", error);
     res.status(500).json({ error: "Failed to fetch products" });
