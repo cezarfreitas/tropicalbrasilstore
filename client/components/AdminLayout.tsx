@@ -22,6 +22,16 @@ interface AdminLayoutProps {
 
 const navigation = [
   {
+    name: "Pedidos",
+    href: "/admin/orders",
+    icon: ShoppingCart,
+  },
+  {
+    name: "Clientes",
+    href: "/admin/customers",
+    icon: Users,
+  },
+  {
     name: "Produtos",
     href: "/admin/products",
     icon: Package,
