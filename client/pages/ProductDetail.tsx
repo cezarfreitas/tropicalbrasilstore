@@ -188,17 +188,9 @@ export default function ProductDetail() {
               ) : (
                 <div className="space-y-4">
                   {product.available_grades.map((grade) => (
-                    <Card
-                      key={grade.id}
-                      className={`cursor-pointer transition-colors ${
-                        selectedGrade === grade.id
-                          ? "border-primary bg-primary/5"
-                          : ""
-                      }`}
-                      onClick={() => setSelectedGrade(grade.id)}
-                    >
+                    <Card key={grade.id} className="border">
                       <CardHeader>
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <CardTitle className="text-lg">
                               {grade.name}
@@ -213,6 +205,9 @@ export default function ProductDetail() {
                               <span className="text-sm text-muted-foreground">
                                 {grade.color_name}
                               </span>
+                              <Badge variant="outline" className="ml-2">
+                                {grade.total_quantity} peças
+                              </Badge>
                             </div>
                             {grade.description && (
                               <p className="text-sm text-muted-foreground mt-1">
@@ -221,9 +216,6 @@ export default function ProductDetail() {
                             )}
                           </div>
                           <div className="text-right">
-                            <Badge variant="outline" className="mb-2">
-                              {grade.total_quantity} peças
-                            </Badge>
                             {product.base_price && (
                               <div className="space-y-1">
                                 <p className="text-xl font-bold text-primary">
@@ -250,11 +242,11 @@ export default function ProductDetail() {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-2 gap-2 mb-4">
                           {grade.templates.map((template) => (
                             <div
                               key={template.size_id}
-                              className="flex justify-between text-sm"
+                              className="flex justify-between text-sm p-2 bg-muted rounded"
                             >
                               <span>Tamanho {template.size}:</span>
                               <span className="font-medium">
@@ -263,51 +255,61 @@ export default function ProductDetail() {
                             </div>
                           ))}
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
 
-                  {selectedGrade && (
-                    <Card>
-                      <CardContent className="pt-6">
-                        <div className="flex items-center gap-4 mb-4">
-                          <Label>Quantidade de Kits</Label>
+                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
+                            <Label className="text-sm">Quantidade:</Label>
                             <Button
                               variant="outline"
                               size="icon"
+                              className="h-8 w-8"
                               onClick={() =>
-                                setQuantity(Math.max(1, quantity - 1))
+                                updateGradeQuantity(
+                                  grade.id,
+                                  getGradeQuantity(grade.id) - 1,
+                                )
                               }
                             >
-                              <Minus className="h-4 w-4" />
+                              <Minus className="h-3 w-3" />
                             </Button>
                             <Input
                               type="number"
                               min="1"
-                              value={quantity}
+                              value={getGradeQuantity(grade.id)}
                               onChange={(e) =>
-                                setQuantity(parseInt(e.target.value) || 1)
+                                updateGradeQuantity(
+                                  grade.id,
+                                  parseInt(e.target.value) || 1,
+                                )
                               }
-                              className="w-20 text-center"
+                              className="w-16 h-8 text-center text-sm"
                             />
                             <Button
                               variant="outline"
                               size="icon"
-                              onClick={() => setQuantity(quantity + 1)}
+                              className="h-8 w-8"
+                              onClick={() =>
+                                updateGradeQuantity(
+                                  grade.id,
+                                  getGradeQuantity(grade.id) + 1,
+                                )
+                              }
                             >
-                              <Plus className="h-4 w-4" />
+                              <Plus className="h-3 w-3" />
                             </Button>
                           </div>
-                        </div>
 
-                        <Button onClick={addGradeToCart} className="w-full">
-                          <ShoppingCart className="mr-2 h-4 w-4" />
-                          Adicionar Grade ao Carrinho
-                        </Button>
+                          <Button
+                            onClick={() => addGradeToCart(grade)}
+                            className="ml-4"
+                          >
+                            <ShoppingCart className="mr-2 h-4 w-4" />
+                            Adicionar ao Carrinho
+                          </Button>
+                        </div>
                       </CardContent>
                     </Card>
-                  )}
+                  ))}
                 </div>
               )}
             </div>
