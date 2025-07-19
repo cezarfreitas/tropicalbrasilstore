@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { addSampleProducts } from "../lib/simple-seed";
+import { addSampleGrades } from "../lib/add-grades";
 
 const router = Router();
 
