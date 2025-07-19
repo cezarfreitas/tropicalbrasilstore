@@ -55,7 +55,7 @@ export function createServer() {
   app.use("/api/enhance", enhanceRouter);
   app.use("/api/redesign", redesignRouter);
   app.use("/api/grades-redesigned", gradesRedesignedRouter);
-  app.use("/api/store", storePaginatedRouter);
+  app.use("/api/store", storeSimpleRouter);
   app.use("/api/store-old", storeRouter);
   app.use("/api/admin/orders", adminOrdersRouter);
   app.use("/api/admin/customers", adminCustomersRouter);
