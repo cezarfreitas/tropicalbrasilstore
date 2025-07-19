@@ -205,9 +205,20 @@ export default function Store() {
                       </div>
                     </div>
 
-                    {/* Footer Info */}
-                    <div className="flex items-center justify-center text-xs text-primary font-medium border-t pt-2">
-                      <span>Grade disponível</span>
+                    {/* Add to Cart Button */}
+                    <div className="border-t pt-3">
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          openModal(product.id);
+                        }}
+                        className="w-full h-8 text-xs font-medium"
+                        size="sm"
+                      >
+                        <ShoppingCart className="mr-2 h-3 w-3" />
+                        Adicionar ao Carrinho
+                      </Button>
                     </div>
                   </div>
                 </Card>
