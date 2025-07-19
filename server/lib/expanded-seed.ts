@@ -343,12 +343,19 @@ export async function seedExpandedDatabase() {
         console.log(`Created grade "${grade.name}" with ID ${gradeId}`);
       }
 
-      // Create grade templates
+      // Create grade templates only if they don't exist
       for (const sizeConfig of grade.sizes) {
-        await db.execute(
-          "INSERT INTO grade_templates (grade_id, size_id, required_quantity) VALUES (?, ?, ?)",
-          [gradeId, sizeConfig.size_id, sizeConfig.quantity],
+        const [existingTemplate] = await db.execute(
+          "SELECT id FROM grade_templates WHERE grade_id = ? AND size_id = ?",
+          [gradeId, sizeConfig.size_id],
         );
+
+        if ((existingTemplate as any[]).length === 0) {
+          await db.execute(
+            "INSERT INTO grade_templates (grade_id, size_id, required_quantity) VALUES (?, ?, ?)",
+            [gradeId, sizeConfig.size_id, sizeConfig.quantity],
+          );
+        }
       }
 
       // Associate grades with random products and colors
