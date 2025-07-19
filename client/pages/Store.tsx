@@ -27,11 +27,22 @@ interface FilterOption {
 
 export default function Store() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<StoreProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Filter states
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedColor, setSelectedColor] = useState<string>("all");
+  const [selectedGradeType, setSelectedGradeType] = useState<string>("all");
+
+  // Filter options
+  const [categories, setCategories] = useState<FilterOption[]>([]);
+  const [colors, setColors] = useState<FilterOption[]>([]);
+  const [gradeTypes, setGradeTypes] = useState<FilterOption[]>([]);
 
   useEffect(() => {
     fetchProducts();
