@@ -54,6 +54,7 @@ export default function Store() {
     null,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Filter states
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
