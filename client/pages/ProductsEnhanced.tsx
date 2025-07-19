@@ -111,20 +111,18 @@ export default function ProductsEnhanced() {
 
   const fetchData = async () => {
     try {
-      const [productsRes, categoriesRes, sizesRes, colorsRes, gradesRes] =
+      const [productsRes, categoriesRes, sizesRes, colorsRes] =
         await Promise.all([
           fetch("/api/products-enhanced"),
           fetch("/api/categories"),
           fetch("/api/sizes"),
           fetch("/api/colors"),
-          fetch("/api/grades"),
         ]);
 
       if (productsRes.ok) setProducts(await productsRes.json());
       if (categoriesRes.ok) setCategories(await categoriesRes.json());
       if (sizesRes.ok) setSizes(await sizesRes.json());
       if (colorsRes.ok) setColors(await colorsRes.json());
-      if (gradesRes.ok) setGrades(await gradesRes.json());
     } catch (error) {
       console.error("Error fetching data:", error);
       toast({
