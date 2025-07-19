@@ -12,16 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Package,
-  Grid3x3,
-  Star,
-  ShoppingCart,
-  Filter,
-  Menu,
-  X,
-  ChevronRight,
-} from "lucide-react";
+import { Package, Grid3x3, Star, ShoppingCart, Filter, Menu, X, ChevronRight } from "lucide-react";
 
 interface StoreProduct {
   id: number;
@@ -50,7 +41,7 @@ export default function Store() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<StoreProduct[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(
+    const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -181,9 +172,69 @@ export default function Store() {
     );
   }
 
-  return (
+    return (
     <StoreLayout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="flex h-screen bg-gray-50">
+        {/* Mobile sidebar overlay */}
+        <div
+          className={`fixed inset-0 z-50 lg:hidden ${
+            sidebarOpen ? "block" : "hidden"
+          }`}
+        >
+          <div className="fixed inset-0 bg-black/20" onClick={() => setSidebarOpen(false)} />
+          <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="text-lg font-semibold">Categorias</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="p-4">
+              <CategorySidebar
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onCategorySelect={(categoryId) => {
+                  setSelectedCategory(categoryId);
+                  setSidebarOpen(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop sidebar */}
+        <div className="hidden lg:flex lg:w-64 lg:flex-col">
+          <div className="flex-1 bg-white border-r border-gray-200 pt-5 pb-4 overflow-y-auto">
+            <div className="px-4">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Categorias</h2>
+              <CategorySidebar
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onCategorySelect={setSelectedCategory}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Main content */}
+        <div className="flex-1 overflow-auto">
+          <div className="lg:hidden flex items-center justify-between p-4 bg-white border-b">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="h-4 w-4 mr-2" />
+              Categorias
+            </Button>
+            <h1 className="text-lg font-semibold">Chinelos Store</h1>
+          </div>
+
+          <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">
