@@ -43,8 +43,7 @@ export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
-  const [quantity, setQuantity] = useState(1);
+  const [quantities, setQuantities] = useState<Record<number, number>>({});
   const { addItem } = useCart();
   const { toast } = useToast();
 
