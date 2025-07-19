@@ -32,6 +32,7 @@ export function createServer() {
   initDatabase().catch(console.error);
   createStoreSchema().catch(console.error);
   fixOrdersTable().catch(console.error);
+  checkAndFixTables().catch(console.error);
 
   // Example API routes
   app.get("/api/ping", (_req, res) => {
