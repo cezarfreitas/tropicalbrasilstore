@@ -4,41 +4,26 @@ export async function enhanceDatabase() {
   try {
     console.log("Enhancing database schema...");
 
-    // Add new columns to products table
-    await db.execute(`
-      ALTER TABLE products 
-      ADD COLUMN IF NOT EXISTS photo LONGTEXT,
-      ADD COLUMN IF NOT EXISTS suggested_price DECIMAL(10,2),
-      ADD COLUMN IF NOT EXISTS stock INT DEFAULT 0
-    `);
+    // Add new columns to products table (check if they exist first)
+    try {
+      await db.execute(`ALTER TABLE products ADD COLUMN photo LONGTEXT`);
+    } catch (error: any) {
+      if (error.code !== "ER_DUP_FIELDNAME") throw error;
+    }
 
-    // Create product_sizes junction table (many-to-many relationship)
-    await db.execute(`
-      CREATE TABLE IF NOT EXISTS product_sizes (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        product_id INT NOT NULL,
-        size_id INT NOT NULL,
-        stock INT DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-        FOREIGN KEY (size_id) REFERENCES sizes(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_product_size (product_id, size_id)
-      )
-    `);
+    try {
+      await db.execute(
+        `ALTER TABLE products ADD COLUMN suggested_price DECIMAL(10,2)`,
+      );
+    } catch (error: any) {
+      if (error.code !== "ER_DUP_FIELDNAME") throw error;
+    }
 
-    // Create product_colors junction table (many-to-many relationship)
-    await db.execute(`
-      CREATE TABLE IF NOT EXISTS product_colors (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        product_id INT NOT NULL,
-        color_id INT NOT NULL,
-        stock INT DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-        FOREIGN KEY (color_id) REFERENCES colors(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_product_color (product_id, color_id)
-      )
-    `);
+    try {
+      await db.execute(`ALTER TABLE products ADD COLUMN stock INT DEFAULT 0`);
+    } catch (error: any) {
+      if (error.code !== "ER_DUP_FIELDNAME") throw error;
+    }
 
     // Create product_variants table (combination of size, color, and stock)
     await db.execute(`
@@ -92,16 +77,16 @@ async function addSampleEnhancedData() {
 
     // Update products with photos and suggested prices
     const products = [
-      { id: 1, suggested_price: 180.0, stock: 50 },
-      { id: 2, suggested_price: 210.0, stock: 30 },
-      { id: 3, suggested_price: 190.0, stock: 25 },
-      { id: 4, suggested_price: 250.0, stock: 40 },
-      { id: 5, suggested_price: 650.0, stock: 15 },
-      { id: 6, suggested_price: 150.0, stock: 60 },
-      { id: 7, suggested_price: 890.0, stock: 8 },
-      { id: 8, suggested_price: 180.0, stock: 35 },
-      { id: 9, suggested_price: 320.0, stock: 20 },
-      { id: 10, suggested_price: 450.0, stock: 12 },
+      { id: 1, suggested_price: 35.0, stock: 50 },
+      { id: 2, suggested_price: 39.0, stock: 30 },
+      { id: 3, suggested_price: 42.0, stock: 25 },
+      { id: 4, suggested_price: 49.0, stock: 40 },
+      { id: 5, suggested_price: 120.0, stock: 15 },
+      { id: 6, suggested_price: 29.0, stock: 60 },
+      { id: 7, suggested_price: 199.0, stock: 8 },
+      { id: 8, suggested_price: 37.0, stock: 35 },
+      { id: 9, suggested_price: 59.0, stock: 20 },
+      { id: 10, suggested_price: 89.0, stock: 12 },
     ];
 
     for (const product of products) {
