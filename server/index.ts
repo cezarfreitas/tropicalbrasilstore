@@ -11,6 +11,8 @@ import { seedRouter } from "./routes/seed";
 import { statsRouter } from "./routes/stats";
 import { enhanceRouter } from "./routes/enhance";
 import { productsEnhancedRouter } from "./routes/products-enhanced";
+import { redesignRouter } from "./routes/redesign";
+import { gradesRedesignedRouter } from "./routes/grades-redesigned";
 
 export function createServer() {
   const app = express();
@@ -40,6 +42,8 @@ export function createServer() {
   app.use("/api/seed", seedRouter);
   app.use("/api/stats", statsRouter);
   app.use("/api/enhance", enhanceRouter);
+  app.use("/api/redesign", redesignRouter);
+  app.use("/api/grades-redesigned", gradesRedesignedRouter);
 
   return app;
 }
