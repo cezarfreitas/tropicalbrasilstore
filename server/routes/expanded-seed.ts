@@ -1,21 +1,28 @@
 import { Router } from "express";
-import { seedExpandedDatabase } from "../lib/expanded-seed";
+import { addSampleProducts } from "../lib/simple-seed";
 
 const router = Router();
 
 router.post("/run", async (req, res) => {
   try {
-    console.log("Starting expanded database seeding...");
-    await seedExpandedDatabase();
-    res.json({
-      success: true,
-      message: "Expanded database seeded successfully with 100 products!",
-    });
+    console.log("Adding sample products...");
+    const success = await addSampleProducts();
+    if (success) {
+      res.json({
+        success: true,
+        message: "Sample products added successfully!",
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Could not add products - check basic data exists",
+      });
+    }
   } catch (error) {
-    console.error("Error seeding expanded database:", error);
+    console.error("Error adding sample products:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to seed expanded database",
+      error: "Failed to add sample products",
       details: error instanceof Error ? error.message : String(error),
     });
   }
