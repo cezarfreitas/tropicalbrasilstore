@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AdminLayout } from "./components/AdminLayout";
 import Dashboard from "./pages/Dashboard";
-import Products from "./pages/Products";
+import ProductsEnhanced from "./pages/ProductsEnhanced";
 import Categories from "./pages/Categories";
 import Sizes from "./pages/Sizes";
 import Colors from "./pages/Colors";
@@ -36,7 +36,7 @@ const App = () => (
             path="/products"
             element={
               <AdminLayout>
-                <Products />
+                <ProductsEnhanced />
               </AdminLayout>
             }
           />
