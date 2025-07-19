@@ -216,7 +216,6 @@ export default function ProductsEnhanced() {
           photo: detailedProduct.photo || "",
           stock: detailedProduct.stock || 0,
           variants: detailedProduct.variants || [],
-          grades: detailedProduct.grades?.map((g: any) => g.id) || [],
         });
         setDialogOpen(true);
       }
