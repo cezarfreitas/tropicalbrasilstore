@@ -205,17 +205,15 @@ export default function Store() {
                         Adicionar ao Carrinho
                       </Button>
 
-                      <Button
-                        variant="outline"
-                        size="sm"
+                      <Link
+                        to={`/loja/produto/${product.id}`}
                         className="w-full"
-                        asChild
                       >
-                        <Link to={`/loja/produto/${product.id}`}>
+                        <Button variant="outline" size="sm" className="w-full">
                           <Grid3x3 className="mr-2 h-3 w-3" />
                           Ver Detalhes
-                        </Link>
-                      </Button>
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </Card>
