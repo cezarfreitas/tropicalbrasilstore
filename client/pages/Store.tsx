@@ -282,8 +282,8 @@ export default function Store() {
           </div>
 
           <div className="container mx-auto px-4 py-8">
-            {/* Hero Section */}
-            <div className="text-center mb-12">
+            {/* Hero Section - Hidden on mobile */}
+            <div className="hidden lg:block text-center mb-12">
               <h1 className="text-4xl font-bold mb-4">
                 Bem-vindo à Chinelos Store
               </h1>
@@ -294,8 +294,8 @@ export default function Store() {
               </p>
             </div>
 
-            {/* Info Cards */}
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
+            {/* Info Cards - Hidden on mobile */}
+            <div className="hidden lg:grid md:grid-cols-3 gap-6 mb-12">
               <Card>
                 <CardHeader className="text-center">
                   <Grid3x3 className="h-12 w-12 mx-auto text-primary mb-2" />
