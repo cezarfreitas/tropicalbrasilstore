@@ -1,38 +1,8 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, Palette, Ruler, Grid3x3, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-
-const stats = [
-  {
-    name: "Produtos",
-    value: "0",
-    icon: Package,
-    href: "/products",
-    description: "Gerencie seus produtos",
-  },
-  {
-    name: "Categorias",
-    value: "0",
-    icon: ShoppingBag,
-    href: "/categories",
-    description: "Organize por categorias",
-  },
-  {
-    name: "Tamanhos",
-    value: "0",
-    icon: Ruler,
-    href: "/sizes",
-    description: "Configure os tamanhos",
-  },
-  {
-    name: "Cores",
-    value: "0",
-    icon: Palette,
-    href: "/colors",
-    description: "Paleta de cores",
-  },
-];
 
 const quickActions = [
   {
@@ -56,6 +26,64 @@ const quickActions = [
 ];
 
 export default function Dashboard() {
+  const [stats, setStats] = useState({
+    products: 0,
+    categories: 0,
+    sizes: 0,
+    colors: 0,
+    grades: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch("/api/stats");
+      if (response.ok) {
+        const data = await response.json();
+        setStats(data);
+      }
+    } catch (error) {
+      console.error("Error fetching stats:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const statCards = [
+    {
+      name: "Produtos",
+      value: stats.products.toString(),
+      icon: Package,
+      href: "/products",
+      description: "Gerencie seus produtos",
+    },
+    {
+      name: "Categorias",
+      value: stats.categories.toString(),
+      icon: ShoppingBag,
+      href: "/categories",
+      description: "Organize por categorias",
+    },
+    {
+      name: "Tamanhos",
+      value: stats.sizes.toString(),
+      icon: Ruler,
+      href: "/sizes",
+      description: "Configure os tamanhos",
+    },
+    {
+      name: "Cores",
+      value: stats.colors.toString(),
+      icon: Palette,
+      href: "/colors",
+      description: "Paleta de cores",
+    },
+  ];
+
   return (
     <div className="space-y-8">
       <div>
@@ -67,7 +95,7 @@ export default function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => {
+        {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
             <Card key={stat.name} className="transition-colors hover:bg-accent">
@@ -79,7 +107,9 @@ export default function Dashboard() {
                   <Icon className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stat.value}</div>
+                  <div className="text-2xl font-bold">
+                    {loading ? "..." : stat.value}
+                  </div>
                   <p className="text-xs text-muted-foreground">
                     {stat.description}
                   </p>
