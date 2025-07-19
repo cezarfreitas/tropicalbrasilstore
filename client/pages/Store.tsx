@@ -149,11 +149,6 @@ export default function Store() {
                         )}
                       </div>
                     </div>
-                    {product.description && (
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {product.description}
-                      </p>
-                    )}
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
