@@ -12,7 +12,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Package, Grid3x3, Star, ShoppingCart, Filter } from "lucide-react";
+import {
+  Package,
+  Grid3x3,
+  Star,
+  ShoppingCart,
+  Filter,
+  Menu,
+  X,
+  ChevronRight,
+} from "lucide-react";
 
 interface StoreProduct {
   id: number;
