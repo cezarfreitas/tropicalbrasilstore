@@ -4,17 +4,24 @@ export async function seedExpandedDatabase() {
   try {
     console.log("Starting expanded database seeding with 100 products...");
 
-    // Clear existing data but preserve structure
-    await db.execute("SET FOREIGN_KEY_CHECKS = 0");
-    await db.execute("DELETE FROM grade_templates");
-    await db.execute("DELETE FROM product_color_grades");
-    await db.execute("DELETE FROM grade_vendida");
-    await db.execute("DELETE FROM product_variants");
-    await db.execute("DELETE FROM products");
-    await db.execute("DELETE FROM categories");
-    await db.execute("DELETE FROM sizes");
-    await db.execute("DELETE FROM colors");
-    await db.execute("SET FOREIGN_KEY_CHECKS = 1");
+    // Check existing data counts
+    const [existingProducts] = await db.execute(
+      "SELECT COUNT(*) as count FROM products",
+    );
+    const [existingCategories] = await db.execute(
+      "SELECT COUNT(*) as count FROM categories",
+    );
+    const [existingColors] = await db.execute(
+      "SELECT COUNT(*) as count FROM colors",
+    );
+
+    const productCount = (existingProducts as any)[0].count;
+    const categoryCount = (existingCategories as any)[0].count;
+    const colorCount = (existingColors as any)[0].count;
+
+    console.log(
+      `Found ${productCount} existing products, ${categoryCount} categories, ${colorCount} colors`,
+    );
 
     // Sample categories
     const categories = [
