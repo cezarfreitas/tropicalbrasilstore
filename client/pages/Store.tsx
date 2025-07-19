@@ -22,16 +22,14 @@ interface StoreProduct {
 export default function Store() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(
-    null,
-  );
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  const fetchProducts = async () => {
+    const fetchProducts = async () => {
     try {
       const response = await fetch("/api/store/products");
       if (response.ok) {
@@ -137,14 +135,12 @@ export default function Store() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {products.map((product) => (
-                <Link
+                <Card
                   key={product.id}
-                  to={`/loja/produto/${product.id}`}
-                  className="block transition-transform hover:scale-105"
+                  className="overflow-hidden h-full transition-transform hover:scale-105"
                 >
-                  <Card className="overflow-hidden h-full cursor-pointer">
                     <div className="aspect-square bg-muted flex items-center justify-center">
                       {product.photo ? (
                         <img
@@ -183,13 +179,12 @@ export default function Store() {
                         product.suggested_price !== product.base_price && (
                           <div className="text-center mb-2">
                             <p className="text-xs text-muted-foreground">
-                              Sugerido: R${" "}
-                              {parseFloat(product.suggested_price).toFixed(2)}
+                              Sugerido: R$ {parseFloat(product.suggested_price).toFixed(2)}
                             </p>
                           </div>
                         )}
 
-                      <div className="flex justify-center text-xs text-muted-foreground border-t pt-2 mb-3">
+                                            <div className="flex justify-center text-xs text-muted-foreground border-t pt-2 mb-3">
                         <span>{product.variant_count} Cores</span>
                       </div>
 
