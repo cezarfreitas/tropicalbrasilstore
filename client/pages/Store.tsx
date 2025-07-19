@@ -285,45 +285,6 @@ export default function Store() {
             {/* Hero Section - Removed */}
             <div />
 
-            {/* Info Cards - Desktop only */}
-            <div className="hidden lg:grid md:grid-cols-3 gap-6 mb-12">
-              <Card>
-                <CardHeader className="text-center">
-                  <Grid3x3 className="h-12 w-12 mx-auto text-primary mb-2" />
-                  <CardTitle className="text-lg">Compra por Grade</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Kits com quantidades obrigatórias por tamanho da mesma cor
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="text-center">
-                  <Package className="h-12 w-12 mx-auto text-primary mb-2" />
-                  <CardTitle className="text-lg">Uma Cor por Grade</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Cada grade deve ser obrigatoriamente da mesma cor
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="text-center">
-                  <Star className="h-12 w-12 mx-auto text-primary mb-2" />
-                  <CardTitle className="text-lg">Qualidade</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Produtos de alta qualidade das melhores marcas brasileiras
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
             {/* Additional Filters */}
             <div className="mb-8">
               <div className="flex flex-wrap items-center gap-4 bg-white border rounded-lg p-4 shadow-sm">
