@@ -87,6 +87,12 @@ export default function Store() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const productsPerPage = 20;
+
   // Filter states
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedColor, setSelectedColor] = useState<string>("all");
