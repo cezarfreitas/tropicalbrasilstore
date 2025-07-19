@@ -578,7 +578,7 @@ export default function Grades() {
                       <div className="flex items-center gap-2">
                         {grade.total_price && (
                           <Badge variant="outline">
-                            R$ {grade.total_price.toFixed(2)}
+                            R$ {parseFloat(grade.total_price).toFixed(2)}
                           </Badge>
                         )}
                         <Badge variant={grade.active ? "default" : "secondary"}>
