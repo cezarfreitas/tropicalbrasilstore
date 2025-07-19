@@ -112,11 +112,33 @@ export default function Store() {
   }, [currentPage, selectedCategory, selectedColor, selectedGradeType]);
 
   const fetchProducts = async () => {
+    setLoading(true);
     try {
-      const response = await fetch("/api/store/products");
+      // Build query parameters
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: productsPerPage.toString(),
+      });
+
+      if (selectedCategory !== "all") {
+        params.set("category", selectedCategory);
+      }
+      if (selectedColor !== "all") {
+        params.set("color", selectedColor);
+      }
+      if (selectedGradeType !== "all") {
+        params.set("gradeType", selectedGradeType);
+      }
+
+      const response = await fetch(`/api/store/products?${params.toString()}`);
       if (response.ok) {
         const data = await response.json();
-        setProducts(data);
+        setProducts(data.products || data); // Handle both paginated and non-paginated responses
+        setTotalProducts(data.total || data.length || 0);
+        setTotalPages(
+          Math.ceil((data.total || data.length || 0) / productsPerPage),
+        );
+        setFilteredProducts(data.products || data);
       }
     } catch (error) {
       console.error("Error fetching products:", error);
