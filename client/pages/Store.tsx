@@ -214,7 +214,19 @@ export default function Store() {
 
         {/* Filters */}
         <div className="mb-8">
-          <h3 className="text-lg font-semibold mb-4">Filtrar Produtos</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Filtrar Produtos</h3>
+            {hasActiveFilters && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearAllFilters}
+                className="text-xs"
+              >
+                Limpar Filtros
+              </Button>
+            )}
+          </div>
           <div className="space-y-4">
             {/* Category Filter */}
             <div>
