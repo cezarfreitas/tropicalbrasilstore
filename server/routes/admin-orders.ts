@@ -17,8 +17,7 @@ router.get("/", async (req, res) => {
                 o.customer_name,
         o.customer_phone as customer_whatsapp,
         COUNT(oi.id) as item_count
-      FROM orders o
-      LEFT JOIN customers c ON o.customer_email = c.email
+            FROM orders o
       LEFT JOIN order_items oi ON o.id = oi.order_id
       GROUP BY o.id
       ORDER BY o.created_at DESC
