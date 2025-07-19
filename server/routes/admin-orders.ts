@@ -38,10 +38,9 @@ router.get("/:id", async (req, res) => {
       `
       SELECT 
         o.*,
-        c.name as customer_name,
-        c.whatsapp as customer_whatsapp
+                o.customer_phone as customer_whatsapp,
+        o.total_price as total_amount
       FROM orders o
-      LEFT JOIN customers c ON o.customer_email = c.email
       WHERE o.id = ?
     `,
       [req.params.id],
