@@ -201,10 +201,87 @@ export default function Store() {
           </Card>
         </div>
 
+        {/* Filters */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-4">Filtrar Produtos</h3>
+          <div className="space-y-4">
+            {/* Category Filter */}
+            <div>
+              <h4 className="text-sm font-medium text-muted-foreground mb-2">
+                Categoria
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <Button
+                    key={category.id}
+                    variant={
+                      selectedCategory === category.id ? "default" : "outline"
+                    }
+                    size="sm"
+                    onClick={() => setSelectedCategory(category.id)}
+                    className="text-xs"
+                  >
+                    {category.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Color Filter */}
+            <div>
+              <h4 className="text-sm font-medium text-muted-foreground mb-2">
+                Cor
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {colors.map((color) => (
+                  <Button
+                    key={color.id}
+                    variant={selectedColor === color.id ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedColor(color.id)}
+                    className="text-xs"
+                  >
+                    {color.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Grade Type Filter */}
+            <div>
+              <h4 className="text-sm font-medium text-muted-foreground mb-2">
+                Tipo de Grade
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {gradeTypes.map((gradeType) => (
+                  <Button
+                    key={gradeType.id}
+                    variant={
+                      selectedGradeType === gradeType.id ? "default" : "outline"
+                    }
+                    size="sm"
+                    onClick={() => setSelectedGradeType(gradeType.id)}
+                    className="text-xs"
+                  >
+                    {gradeType.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Products Grid */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-6">Nossos Produtos</h2>
-          {products.length === 0 ? (
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Nossos Produtos</h2>
+            <span className="text-sm text-muted-foreground">
+              {filteredProducts.length} produto
+              {filteredProducts.length !== 1 ? "s" : ""} encontrado
+              {filteredProducts.length !== 1 ? "s" : ""}
+            </span>
+          </div>
+          {filteredProducts.length === 0 ? (
             <div className="text-center py-12">
               <Package className="mx-auto h-16 w-16 text-muted-foreground/50" />
               <h3 className="mt-4 text-lg font-semibold">
