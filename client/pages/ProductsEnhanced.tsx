@@ -649,48 +649,6 @@ export default function ProductsEnhanced() {
                     </div>
                   )}
                 </TabsContent>
-
-                <TabsContent value="grades" className="space-y-4">
-                  <Label className="text-base">
-                    Grades Vendidas Associadas
-                  </Label>
-                  <div className="grid grid-cols-2 gap-4">
-                    {grades.map((grade) => (
-                      <div
-                        key={grade.id}
-                        className="flex items-center space-x-2"
-                      >
-                        <input
-                          type="checkbox"
-                          id={`grade-${grade.id}`}
-                          checked={formData.grades.includes(grade.id)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setFormData({
-                                ...formData,
-                                grades: [...formData.grades, grade.id],
-                              });
-                            } else {
-                              setFormData({
-                                ...formData,
-                                grades: formData.grades.filter(
-                                  (id) => id !== grade.id,
-                                ),
-                              });
-                            }
-                          }}
-                          className="rounded"
-                        />
-                        <Label
-                          htmlFor={`grade-${grade.id}`}
-                          className="text-sm"
-                        >
-                          {grade.name}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </TabsContent>
               </Tabs>
 
               <DialogFooter>
