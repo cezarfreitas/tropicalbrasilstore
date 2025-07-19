@@ -21,27 +21,27 @@ interface AdminLayoutProps {
 const navigation = [
   {
     name: "Produtos",
-    href: "/products",
+    href: "/admin/products",
     icon: Package,
   },
   {
     name: "Categorias",
-    href: "/categories",
+    href: "/admin/categories",
     icon: ShoppingBag,
   },
   {
     name: "Tamanhos",
-    href: "/sizes",
+    href: "/admin/sizes",
     icon: Ruler,
   },
   {
     name: "Cores",
-    href: "/colors",
+    href: "/admin/colors",
     icon: Palette,
   },
   {
     name: "Grade Vendida",
-    href: "/grades",
+    href: "/admin/grades",
     icon: Grid3x3,
   },
 ];
@@ -106,7 +106,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-card px-6 py-8 shadow-sm">
-          <div className="flex h-16 shrink-0 items-center gap-2">
+          <Link to="/admin" className="flex h-16 shrink-0 items-center gap-2">
             <div className="rounded-xl bg-primary p-3">
               <Package className="h-8 w-8 text-primary-foreground" />
             </div>
@@ -114,7 +114,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               <span className="text-2xl font-bold text-primary">Chinelos</span>
               <span className="text-sm text-muted-foreground">Admin Panel</span>
             </div>
-          </div>
+          </Link>
           <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
               <li>
