@@ -97,11 +97,19 @@ export async function seedExpandedDatabase() {
       { name: "Ciano", hex_code: "#00FFFF" },
     ];
 
+    // Add colors only if they don't exist
     for (const color of colors) {
-      await db.execute("INSERT INTO colors (name, hex_code) VALUES (?, ?)", [
-        color.name,
-        color.hex_code,
-      ]);
+      const [existing] = await db.execute(
+        "SELECT id FROM colors WHERE name = ?",
+        [color.name],
+      );
+
+      if ((existing as any[]).length === 0) {
+        await db.execute("INSERT INTO colors (name, hex_code) VALUES (?, ?)", [
+          color.name,
+          color.hex_code,
+        ]);
+      }
     }
 
     // Sample sizes
