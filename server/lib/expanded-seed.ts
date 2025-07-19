@@ -58,11 +58,19 @@ export async function seedExpandedDatabase() {
       },
     ];
 
+    // Add categories only if they don't exist
     for (const category of categories) {
-      await db.execute(
-        "INSERT INTO categories (name, description) VALUES (?, ?)",
-        [category.name, category.description],
+      const [existing] = await db.execute(
+        "SELECT id FROM categories WHERE name = ?",
+        [category.name],
       );
+
+      if ((existing as any[]).length === 0) {
+        await db.execute(
+          "INSERT INTO categories (name, description) VALUES (?, ?)",
+          [category.name, category.description],
+        );
+      }
     }
 
     // Sample colors with hex codes
