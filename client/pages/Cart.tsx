@@ -65,26 +65,15 @@ export default function Cart() {
                     <div className="flex-1">
                       <h3 className="font-semibold">{item.productName}</h3>
                       <div className="flex items-center gap-2 mt-1">
-                        {item.type === "individual" ? (
-                          <Package className="h-4 w-4 text-muted-foreground" />
-                        ) : (
-                          <Grid3x3 className="h-4 w-4 text-muted-foreground" />
-                        )}
+                        <Grid3x3 className="h-4 w-4 text-muted-foreground" />
                         <span className="text-sm text-muted-foreground">
-                          {item.type === "individual"
-                            ? "Compra Individual"
-                            : "Grade Vendida"}
+                          Grade Vendida
                         </span>
                       </div>
 
                       <div className="text-sm text-muted-foreground mt-1">
-                        {item.colorName && <span>Cor: {item.colorName}</span>}
-                        {item.sizeName && (
-                          <span className="ml-3">Tamanho: {item.sizeName}</span>
-                        )}
-                        {item.gradeName && (
-                          <span className="ml-3">Grade: {item.gradeName}</span>
-                        )}
+                        <span>Cor: {item.colorName}</span>
+                        <span className="ml-3">Grade: {item.gradeName}</span>
                       </div>
 
                       <p className="font-semibold mt-2">
@@ -176,10 +165,8 @@ export default function Cart() {
                 </div>
 
                 <div className="text-xs text-muted-foreground">
-                  <p>
-                    • Produtos individuais podem ser comprados separadamente
-                  </p>
-                  <p>• Grades vendidas são kits com quantidades obrigatórias</p>
+                  <p>• Todas as compras são feitas por grades (kits)</p>
+                  <p>• Cada grade deve ser obrigatoriamente da mesma cor</p>
                   <p>• Entrega via WhatsApp após confirmação do pedido</p>
                 </div>
               </CardContent>
