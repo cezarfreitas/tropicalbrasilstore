@@ -359,11 +359,18 @@ export async function seedExpandedDatabase() {
       }
 
       // Associate grades with random products and colors
+      const [productIds] = await db.execute(
+        "SELECT id FROM products ORDER BY id",
+      );
+      const validProductIds = (productIds as any[]).map((row) => row.id);
+
       const numAssociations = Math.floor(Math.random() * 30) + 20; // 20-50 products per grade
 
       for (let j = 0; j < numAssociations; j++) {
-        const productId = Math.floor(Math.random() * 100) + 1;
-        const colorId = Math.floor(Math.random() * colors.length) + 1;
+        const productId =
+          validProductIds[Math.floor(Math.random() * validProductIds.length)];
+        const colorId =
+          validColorIds[Math.floor(Math.random() * validColorIds.length)];
 
         // Check if this combination already exists
         const [existing] = await db.execute(
