@@ -17,6 +17,7 @@ import { storeRouter } from "./routes/store";
 import { adminOrdersRouter } from "./routes/admin-orders";
 import { adminCustomersRouter } from "./routes/admin-customers";
 import { createStoreSchema } from "./lib/store-schema";
+import { fixOrdersTable } from "./lib/fix-orders-table";
 
 export function createServer() {
   const app = express();
