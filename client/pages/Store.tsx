@@ -352,9 +352,37 @@ export default function Store() {
                             {product.category_name}
                           </Badge>
                         )}
-                        <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
-                          {product.variant_count} cores
-                        </span>
+                        <div className="flex items-center gap-1">
+                          {product.available_colors &&
+                          product.available_colors.length > 0 ? (
+                            <>
+                              <div className="flex items-center gap-1">
+                                {product.available_colors
+                                  .slice(0, 4)
+                                  .map((color, index) => (
+                                    <div
+                                      key={color.id}
+                                      className="w-3 h-3 rounded-full border border-gray-300"
+                                      style={{
+                                        backgroundColor:
+                                          color.hex_code || "#999999",
+                                      }}
+                                      title={color.name}
+                                    />
+                                  ))}
+                                {product.available_colors.length > 4 && (
+                                  <span className="text-xs text-muted-foreground ml-1">
+                                    +{product.available_colors.length - 4}
+                                  </span>
+                                )}
+                              </div>
+                            </>
+                          ) : (
+                            <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                              {product.variant_count} cores
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
 
