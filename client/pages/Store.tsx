@@ -172,7 +172,7 @@ export default function Store() {
                         {product.base_price && (
                           <div className="text-center border-t pt-2">
                             <p className="text-lg font-semibold text-green-600">
-                              A partir de R${" "}
+                              R${" "}
                               {(parseFloat(product.base_price) * 2).toFixed(2)}
                             </p>
                             <p className="text-xs text-muted-foreground">
