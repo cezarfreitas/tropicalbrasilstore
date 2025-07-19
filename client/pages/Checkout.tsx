@@ -238,26 +238,14 @@ export default function Checkout() {
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-muted rounded flex items-center justify-center">
-                        {item.type === "individual" ? (
-                          <Package className="h-5 w-5 text-muted-foreground" />
-                        ) : (
-                          <Grid3x3 className="h-5 w-5 text-muted-foreground" />
-                        )}
+                        <Grid3x3 className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div>
                         <p className="font-medium text-sm">
                           {item.productName}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {item.type === "individual" ? (
-                            <>
-                              {item.colorName} - {item.sizeName}
-                            </>
-                          ) : (
-                            <>
-                              Grade: {item.gradeName} - {item.colorName}
-                            </>
-                          )}
+                          Grade: {item.gradeName} - {item.colorName}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           Qtd: {item.quantity}
