@@ -133,6 +133,17 @@ export default function Store() {
     setSelectedProductId(null);
   };
 
+  const clearAllFilters = () => {
+    setSelectedCategory("all");
+    setSelectedColor("all");
+    setSelectedGradeType("all");
+  };
+
+  const hasActiveFilters =
+    selectedCategory !== "all" ||
+    selectedColor !== "all" ||
+    selectedGradeType !== "all";
+
   if (loading) {
     return (
       <StoreLayout>
