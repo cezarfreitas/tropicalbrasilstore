@@ -29,6 +29,8 @@ import {
   Menu,
   X,
   ChevronRight,
+  Lock,
+  User,
 } from "lucide-react";
 
 interface StoreProduct {
