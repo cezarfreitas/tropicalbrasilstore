@@ -577,17 +577,23 @@ export default function Store() {
           </div>
         </div>
 
-        {/* Desktop sidebar */}
+                {/* Desktop sidebar */}
         <div className="hidden lg:flex lg:w-64 lg:flex-col">
           <div className="flex-1 bg-white border-r border-gray-200 pt-5 pb-4 overflow-y-auto">
             <div className="px-4">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Categorias
-              </h2>
-              <CategorySidebar
+              <FiltersSidebar
                 categories={categories}
+                colors={colors}
                 selectedCategory={selectedCategory}
-                onCategorySelect={setSelectedCategory}
+                selectedColors={selectedColors}
+                selectedGrades={selectedGrades}
+                priceRange={priceRange}
+                maxPrice={maxPrice}
+                onCategorySelect={handleCategorySelect}
+                onColorToggle={handleColorToggle}
+                onGradeToggle={handleGradeToggle}
+                onPriceRangeChange={handlePriceRangeChange}
+                onClearFilters={clearAllFilters}
               />
             </div>
           </div>
