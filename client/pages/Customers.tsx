@@ -85,6 +85,9 @@ export default function Customers() {
   const [editingCustomer, setEditingCustomer] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ name: "", whatsapp: "" });
   const [updating, setUpdating] = useState(false);
+  const [isAddingCustomer, setIsAddingCustomer] = useState(false);
+  const [addForm, setAddForm] = useState({ email: "", name: "", whatsapp: "" });
+  const [adding, setAdding] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -199,6 +202,51 @@ export default function Customers() {
     }
   };
 
+  const addCustomer = async () => {
+    setAdding(true);
+    try {
+      const response = await fetch("/api/admin/customers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(addForm),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Sucesso",
+          description: "Cliente criado com sucesso",
+        });
+        setIsAddingCustomer(false);
+        setAddForm({ email: "", name: "", whatsapp: "" });
+        fetchCustomers();
+        fetchStats();
+      } else {
+        const error = await response.json();
+        toast({
+          title: "Erro",
+          description: error.error || "Não foi possível criar o cliente",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error creating customer:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível criar o cliente",
+        variant: "destructive",
+      });
+    } finally {
+      setAdding(false);
+    }
+  };
+
+  const cancelAdd = () => {
+    setIsAddingCustomer(false);
+    setAddForm({ email: "", name: "", whatsapp: "" });
+  };
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("pt-BR", {
       style: "currency",
@@ -260,6 +308,76 @@ export default function Customers() {
             Gerencie a base de clientes da loja
           </p>
         </div>
+        <Dialog open={isAddingCustomer} onOpenChange={setIsAddingCustomer}>
+          <DialogTrigger asChild>
+            <Button>
+              <UserPlus className="h-4 w-4 mr-2" />
+              Adicionar Cliente
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Adicionar Novo Cliente</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="email">Email *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={addForm.email}
+                  onChange={(e) =>
+                    setAddForm({ ...addForm, email: e.target.value })
+                  }
+                  placeholder="cliente@exemplo.com"
+                />
+              </div>
+              <div>
+                <Label htmlFor="name">Nome *</Label>
+                <Input
+                  id="name"
+                  value={addForm.name}
+                  onChange={(e) =>
+                    setAddForm({ ...addForm, name: e.target.value })
+                  }
+                  placeholder="Nome do cliente"
+                />
+              </div>
+              <div>
+                <Label htmlFor="whatsapp">WhatsApp</Label>
+                <Input
+                  id="whatsapp"
+                  value={addForm.whatsapp}
+                  onChange={(e) =>
+                    setAddForm({ ...addForm, whatsapp: e.target.value })
+                  }
+                  placeholder="(11) 99999-9999"
+                />
+              </div>
+              <div className="flex gap-2 pt-4">
+                <Button
+                  onClick={addCustomer}
+                  disabled={adding || !addForm.email || !addForm.name}
+                  className="flex-1"
+                >
+                  {adding ? (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  ) : (
+                    <UserPlus className="h-4 w-4 mr-2" />
+                  )}
+                  Criar Cliente
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={cancelAdd}
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Statistics Cards */}
