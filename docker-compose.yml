@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: chinelos_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-chinelos_root_2024}
+      MYSQL_DATABASE: ${DB_NAME:-chinelos_store}
+      MYSQL_USER: ${DB_USER:-chinelos_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-chinelos_pass_2024}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+
+  # Application
+  app:
+    build: .
+    container_name: chinelos_app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-chinelos_store}
+      DB_USER: ${DB_USER:-chinelos_user}
+      DB_PASSWORD: ${DB_PASSWORD:-chinelos_pass_2024}
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  mysql_data:
