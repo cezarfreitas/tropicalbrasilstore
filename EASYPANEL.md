@@ -45,11 +45,12 @@ dist/
 
 ## 🐛 Troubleshooting
 
-### Erro "Not a directory"
+### Erro "Not a directory" / Undefined Variable
 
-- ✅ Removido Dockerfile conflitante
-- ✅ Configuração Nixpacks simplificada
+- ✅ Removido Dockerfile conflitante (renomeado para Dockerfile.docker-compose)
+- ✅ Configuração Nixpacks simplificada no nixpacks.toml
 - ✅ Scripts de build otimizados
+- ✅ EasyPanel usa apenas Nixpacks (não Docker)
 
 ### Database Connection
 
