@@ -255,6 +255,9 @@ export default function Store() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Customer authentication
+  const { isAuthenticated, isApproved, customer } = useCustomerAuth();
+
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
