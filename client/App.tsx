@@ -105,6 +105,14 @@ const App = () => (
                 </AdminLayout>
               }
             />
+            <Route
+              path="/admin/settings"
+              element={
+                <AdminLayout>
+                  <Settings />
+                </AdminLayout>
+              }
+            />
             {/* Legacy admin routes (backward compatibility) */}
             <Route
               path="/products"
