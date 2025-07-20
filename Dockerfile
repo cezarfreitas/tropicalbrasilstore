@@ -1,3 +1,6 @@
+# This Dockerfile is for Docker Compose deployment
+# For EasyPanel deployment, use Nixpacks (see nixpacks.toml)
+
 # Use Node.js 18 LTS
 FROM node:18-alpine
 
