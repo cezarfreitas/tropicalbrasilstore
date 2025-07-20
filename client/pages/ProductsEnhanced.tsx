@@ -1544,7 +1544,9 @@ export default function ProductsEnhanced() {
                           {product.suggested_price && (
                             <div className="text-sm text-muted-foreground">
                               Sugerido: R${" "}
-                              {parseFloat(product.suggested_price).toFixed(2)}
+                              {parseFloat(
+                                product.suggested_price.toString(),
+                              ).toFixed(2)}
                             </div>
                           )}
                         </div>
