@@ -1180,7 +1180,7 @@ export default function ProductsEnhanced() {
                         <Grid3x3 className="mx-auto h-8 w-8 mb-2" />
                         <p>Crie uma grade baseada nas variantes do produto</p>
                         <p className="text-sm">
-                          A grade será automaticamente configurada com base nos
+                          A grade ser�� automaticamente configurada com base nos
                           tamanhos e quantidades das variantes
                         </p>
                       </div>
@@ -1328,13 +1328,15 @@ export default function ProductsEnhanced() {
               <Label htmlFor="filter-category">Categoria</Label>
               <Select
                 value={selectedCategory}
-                onValueChange={setSelectedCategory}
+                onValueChange={(value) =>
+                  setSelectedCategory(value === "all" ? "" : value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Todas as categorias" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todas as categorias</SelectItem>
+                  <SelectItem value="all">Todas as categorias</SelectItem>
                   {categories.map((category) => (
                     <SelectItem
                       key={category.id}
@@ -1349,12 +1351,17 @@ export default function ProductsEnhanced() {
 
             <div>
               <Label htmlFor="filter-status">Status</Label>
-              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <Select
+                value={selectedStatus}
+                onValueChange={(value) =>
+                  setSelectedStatus(value === "all" ? "" : value)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Todos os status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
                   <SelectItem value="active">Ativo</SelectItem>
                   <SelectItem value="inactive">Inativo</SelectItem>
                 </SelectContent>
