@@ -288,7 +288,31 @@ router.post("/orders", async (req, res) => {
       );
     }
 
-    await connection.commit();
+        await connection.commit();
+
+    // Prepare notification data
+    const totalPrice = items.reduce((sum: number, item: any) => sum + item.totalPrice, 0);
+    const notificationItems = items.map((item: any) => ({
+      product_name: item.productName,
+      color_name: item.colorName,
+      grade_name: item.gradeName,
+      quantity: item.quantity,
+      price: item.totalPrice
+    }));
+
+    // Send notifications asynchronously (don't wait for them)
+    sendOrderNotifications({
+      orderId: orderId.toString(),
+      customerName: customer.name,
+      customerEmail: customer.email,
+      customerWhatsapp: customer.whatsapp,
+      items: notificationItems,
+      totalPrice: totalPrice,
+      orderDate: new Date().toISOString(),
+      status: "pending"
+    }).catch(error => {
+      console.error("Failed to send notifications:", error);
+    });
 
     res.status(201).json({
       orderId,
