@@ -59,12 +59,14 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route
+                        <Route
               path="/admin/orders"
               element={
-                <AdminLayout>
-                  <Orders />
-                </AdminLayout>
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <Orders />
+                  </AdminLayout>
+                </ProtectedRoute>
               }
             />
             <Route
