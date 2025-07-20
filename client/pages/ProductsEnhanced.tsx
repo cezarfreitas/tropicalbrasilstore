@@ -1206,77 +1206,53 @@ export default function ProductsEnhanced() {
         </Dialog>
       </div>
 
-      {/* Grade Creation Dialog */}
+      {/* Grade Selection Dialog */}
       <Dialog open={gradeDialogOpen} onOpenChange={setGradeDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle>Criar Nova Grade</DialogTitle>
+            <DialogTitle>Selecionar Grades</DialogTitle>
             <DialogDescription>
-              Grade baseada nas variantes do produto
+              Escolha as grades que este produto deve usar
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
-            <div>
-              <Label htmlFor="grade_name">Nome da Grade</Label>
-              <Input
-                id="grade_name"
-                value={gradeFormData.name}
-                onChange={(e) =>
-                  setGradeFormData({ ...gradeFormData, name: e.target.value })
-                }
-                placeholder="Nome da grade"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="grade_description">Descrição</Label>
-              <Textarea
-                id="grade_description"
-                value={gradeFormData.description}
-                onChange={(e) =>
-                  setGradeFormData({
-                    ...gradeFormData,
-                    description: e.target.value,
-                  })
-                }
-                placeholder="Descrição da grade"
-                rows={3}
-              />
-            </div>
-
-            <div>
-              <Label>Configuração da Grade</Label>
-              <div className="mt-2 space-y-2">
-                {gradeFormData.templates.map((template, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 border rounded"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline">{template.size}</Badge>
-                      <span className="text-sm">
-                        Quantidade: {template.required_quantity}
-                      </span>
+            <div className="max-h-80 overflow-y-auto">
+              {grades.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Grid3x3 className="mx-auto h-8 w-8 mb-2" />
+                  <p>Nenhuma grade cadastrada</p>
+                  <p className="text-sm">
+                    Cadastre grades primeiro na seção "Grade Vendida"
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {grades.map((grade) => (
+                    <div
+                      key={grade.id}
+                      className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-accent cursor-pointer"
+                      onClick={() => toggleGradeSelection(grade.id)}
+                    >
+                      <Checkbox
+                        checked={selectedGrades.includes(grade.id)}
+                        onCheckedChange={() => toggleGradeSelection(grade.id)}
+                      />
+                      <div className="flex-1">
+                        <div className="font-medium">{grade.name}</div>
+                        {grade.description && (
+                          <div className="text-sm text-muted-foreground">
+                            {grade.description}
+                          </div>
+                        )}
+                      </div>
+                      <Badge variant={grade.active ? "default" : "secondary"}>
+                        {grade.active ? "Ativa" : "Inativa"}
+                      </Badge>
                     </div>
-                    <Input
-                      type="number"
-                      min="1"
-                      className="h-8 w-20"
-                      value={template.required_quantity}
-                      onChange={(e) => {
-                        const newTemplates = [...gradeFormData.templates];
-                        newTemplates[index].required_quantity =
-                          parseInt(e.target.value) || 1;
-                        setGradeFormData({
-                          ...gradeFormData,
-                          templates: newTemplates,
-                        });
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -1288,13 +1264,8 @@ export default function ProductsEnhanced() {
             >
               Cancelar
             </Button>
-            <Button
-              onClick={createGrade}
-              disabled={
-                !gradeFormData.name || gradeFormData.templates.length === 0
-              }
-            >
-              Criar Grade
+            <Button onClick={saveGradeSelection}>
+              Salvar Seleção ({selectedGrades.length})
             </Button>
           </DialogFooter>
         </DialogContent>
