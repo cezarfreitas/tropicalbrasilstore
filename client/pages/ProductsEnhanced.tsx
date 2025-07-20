@@ -56,6 +56,11 @@ import {
   Eye,
   EyeOff,
   Palette,
+  Search,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
+  ArrowUpDown,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -113,6 +118,20 @@ interface CreateGradeRequest {
   templates: GradeTemplate[];
 }
 
+interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+interface ProductsResponse {
+  data: EnhancedProduct[];
+  pagination: PaginationInfo;
+}
+
 export default function ProductsEnhanced() {
   const [products, setProducts] = useState<EnhancedProduct[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -124,6 +143,17 @@ export default function ProductsEnhanced() {
   const [variantViewMode, setVariantViewMode] = useState<"table" | "grid">(
     "grid",
   );
+
+  // Pagination and filtering states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+  const [pagination, setPagination] = useState<PaginationInfo | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [sortBy, setSortBy] = useState("name");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
   const [editingProduct, setEditingProduct] = useState<EnhancedProduct | null>(
     null,
   );
@@ -149,32 +179,78 @@ export default function ProductsEnhanced() {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchData();
+    fetchCategories();
+    fetchSizes();
+    fetchColors();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const [productsRes, categoriesRes, sizesRes, colorsRes] =
-        await Promise.all([
-          fetch("/api/products-enhanced"),
-          fetch("/api/categories"),
-          fetch("/api/sizes"),
-          fetch("/api/colors"),
-        ]);
+  useEffect(() => {
+    fetchProducts();
+  }, [
+    currentPage,
+    pageSize,
+    searchTerm,
+    selectedCategory,
+    selectedStatus,
+    sortBy,
+    sortOrder,
+  ]);
 
-      if (productsRes.ok) setProducts(await productsRes.json());
-      if (categoriesRes.ok) setCategories(await categoriesRes.json());
-      if (sizesRes.ok) setSizes(await sizesRes.json());
-      if (colorsRes.ok) setColors(await colorsRes.json());
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: pageSize.toString(),
+        search: searchTerm,
+        category: selectedCategory,
+        status: selectedStatus,
+        sortBy: sortBy,
+        sortOrder: sortOrder,
+      });
+
+      const response = await fetch(`/api/products-enhanced?${params}`);
+      if (response.ok) {
+        const data: ProductsResponse = await response.json();
+        setProducts(data.data);
+        setPagination(data.pagination);
+      }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching products:", error);
       toast({
         title: "Erro",
-        description: "Não foi possível carregar os dados",
+        description: "Não foi possível carregar os produtos",
         variant: "destructive",
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("/api/categories");
+      if (response.ok) setCategories(await response.json());
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  const fetchSizes = async () => {
+    try {
+      const response = await fetch("/api/sizes");
+      if (response.ok) setSizes(await response.json());
+    } catch (error) {
+      console.error("Error fetching sizes:", error);
+    }
+  };
+
+  const fetchColors = async () => {
+    try {
+      const response = await fetch("/api/colors");
+      if (response.ok) setColors(await response.json());
+    } catch (error) {
+      console.error("Error fetching colors:", error);
     }
   };
 
@@ -213,7 +289,7 @@ export default function ProductsEnhanced() {
         });
         setDialogOpen(false);
         resetForm();
-        fetchData();
+        fetchProducts();
       } else {
         const error = await response.json();
         throw new Error(error.error || "Erro desconhecido");
@@ -283,7 +359,7 @@ export default function ProductsEnhanced() {
           title: "Sucesso",
           description: "Produto excluído com sucesso",
         });
-        fetchData();
+        fetchProducts();
       } else {
         throw new Error("Erro ao excluir produto");
       }
@@ -337,7 +413,6 @@ export default function ProductsEnhanced() {
 
     sizes.forEach((size) => {
       colors.forEach((color) => {
-        // Check if this combination already exists
         const exists = formData.variants.some(
           (v) => v.size_id === size.id && v.color_id === color.id,
         );
@@ -393,7 +468,6 @@ export default function ProductsEnhanced() {
       return;
     }
 
-    // Generate templates from current variants grouped by size
     const sizeQuantities = formData.variants.reduce(
       (acc, variant) => {
         if (variant.size_id && variant.stock > 0) {
@@ -461,7 +535,69 @@ export default function ProductsEnhanced() {
     return size?.size || "";
   };
 
-  if (loading) {
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleSort = (column: string) => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSelectedCategory("");
+    setSelectedStatus("");
+    setSortBy("name");
+    setSortOrder("asc");
+    setCurrentPage(1);
+  };
+
+  const generatePageNumbers = () => {
+    if (!pagination) return [];
+
+    const pages = [];
+    const maxVisible = 5;
+    const totalPages = pagination.totalPages;
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= Math.min(maxVisible, totalPages); i++) {
+          pages.push(i);
+        }
+        if (totalPages > maxVisible) {
+          pages.push("...");
+          pages.push(totalPages);
+        }
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push("...");
+        for (let i = totalPages - maxVisible + 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("...");
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      }
+    }
+
+    return pages;
+  };
+
+  if (loading && !pagination) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
@@ -1164,132 +1300,311 @@ export default function ProductsEnhanced() {
         </DialogContent>
       </Dialog>
 
+      {/* Filters and Search */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            Filtros e Busca
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+              <Label htmlFor="search">Buscar</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="search"
+                  placeholder="Nome, SKU ou descrição..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="filter-category">Categoria</Label>
+              <Select
+                value={selectedCategory}
+                onValueChange={setSelectedCategory}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Todas as categorias" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todas as categorias</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem
+                      key={category.id}
+                      value={category.id.toString()}
+                    >
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="filter-status">Status</Label>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Todos os status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todos</SelectItem>
+                  <SelectItem value="active">Ativo</SelectItem>
+                  <SelectItem value="inactive">Inativo</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="page-size">Itens por página</Label>
+              <Select
+                value={pageSize.toString()}
+                onValueChange={(value) => {
+                  setPageSize(parseInt(value));
+                  setCurrentPage(1);
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="20">20</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 mt-4">
+            <Button variant="outline" size="sm" onClick={clearFilters}>
+              <X className="h-4 w-4 mr-2" />
+              Limpar Filtros
+            </Button>
+            {pagination && (
+              <div className="text-sm text-muted-foreground">
+                Mostrando {(currentPage - 1) * pageSize + 1} a{" "}
+                {Math.min(currentPage * pageSize, pagination.total)} de{" "}
+                {pagination.total} produtos
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Products Table */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Package className="h-5 w-5" />
-            Lista de Produtos Completos
+            Lista de Produtos
           </CardTitle>
           <CardDescription>
-            {products.length === 0
-              ? "Nenhum produto cadastrado"
-              : `${products.length} produto${products.length !== 1 ? "s" : ""} cadastrado${products.length !== 1 ? "s" : ""}`}
+            {pagination
+              ? `${pagination.total} produto${pagination.total !== 1 ? "s" : ""} encontrado${pagination.total !== 1 ? "s" : ""}`
+              : "Carregando..."}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {products.length === 0 ? (
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          ) : products.length === 0 ? (
             <div className="text-center py-8">
               <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
               <h3 className="mt-2 text-sm font-semibold">
-                Nenhum produto cadastrado
+                Nenhum produto encontrado
               </h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Comece criando seu primeiro produto completo.
+                Tente ajustar os filtros ou criar um novo produto.
               </p>
-              <div className="mt-6">
-                <Button onClick={handleNewProduct}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Novo Produto
-                </Button>
-              </div>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Produto</TableHead>
-                  <TableHead>Categoria</TableHead>
-                  <TableHead>Preços</TableHead>
-                  <TableHead>Estoque</TableHead>
-                  <TableHead>Variantes</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="w-[100px]">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {products.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        {product.photo && (
-                          <img
-                            src={product.photo}
-                            alt={product.name}
-                            className="w-12 h-12 rounded object-cover border"
-                          />
-                        )}
-                        <div>
-                          <div className="font-medium">{product.name}</div>
-                          <div className="text-sm text-muted-foreground">
-                            {product.sku && `SKU: ${product.sku}`}
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {product.category_name ? (
-                        <Badge variant="secondary">
-                          {product.category_name}
-                        </Badge>
-                      ) : (
-                        "—"
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        {product.base_price && (
-                          <div className="text-sm">
-                            Base: R$ {parseFloat(product.base_price).toFixed(2)}
-                          </div>
-                        )}
-                        {product.suggested_price && (
-                          <div className="text-sm text-muted-foreground">
-                            Sugerido: R${" "}
-                            {parseFloat(product.suggested_price).toFixed(2)}
-                          </div>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-center">
-                        <div className="font-medium">{product.total_stock}</div>
-                        <div className="text-xs text-muted-foreground">
-                          total
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">
-                        {product.variant_count} variantes
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={product.active ? "default" : "secondary"}>
-                        {product.active ? "Ativo" : "Inativo"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleEdit(product)}
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleDelete(product.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>
+                      <Button
+                        variant="ghost"
+                        className="h-auto p-0 font-semibold"
+                        onClick={() => handleSort("name")}
+                      >
+                        Produto
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </TableHead>
+                    <TableHead>Categoria</TableHead>
+                    <TableHead>
+                      <Button
+                        variant="ghost"
+                        className="h-auto p-0 font-semibold"
+                        onClick={() => handleSort("base_price")}
+                      >
+                        Preços
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button
+                        variant="ghost"
+                        className="h-auto p-0 font-semibold"
+                        onClick={() => handleSort("total_stock")}
+                      >
+                        Estoque
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </TableHead>
+                    <TableHead>Variantes</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="w-[100px]">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {products.map((product) => (
+                    <TableRow key={product.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          {product.photo && (
+                            <img
+                              src={product.photo}
+                              alt={product.name}
+                              className="w-12 h-12 rounded object-cover border"
+                            />
+                          )}
+                          <div>
+                            <div className="font-medium">{product.name}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {product.sku && `SKU: ${product.sku}`}
+                            </div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {product.category_name ? (
+                          <Badge variant="secondary">
+                            {product.category_name}
+                          </Badge>
+                        ) : (
+                          "—"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="space-y-1">
+                          {product.base_price && (
+                            <div className="text-sm">
+                              Base: R${" "}
+                              {parseFloat(product.base_price).toFixed(2)}
+                            </div>
+                          )}
+                          {product.suggested_price && (
+                            <div className="text-sm text-muted-foreground">
+                              Sugerido: R${" "}
+                              {parseFloat(product.suggested_price).toFixed(2)}
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-center">
+                          <div className="font-medium">
+                            {product.total_stock}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            total
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">
+                          {product.variant_count} variantes
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={product.active ? "default" : "secondary"}
+                        >
+                          {product.active ? "Ativo" : "Inativo"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleEdit(product)}
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleDelete(product.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+
+              {/* Pagination */}
+              {pagination && pagination.totalPages > 1 && (
+                <div className="flex items-center justify-between mt-6">
+                  <div className="text-sm text-muted-foreground">
+                    Página {pagination.page} de {pagination.totalPages}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(pagination.page - 1)}
+                      disabled={!pagination.hasPrevPage}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      Anterior
+                    </Button>
+
+                    <div className="flex gap-1">
+                      {generatePageNumbers().map((page, index) => (
+                        <Button
+                          key={index}
+                          variant={page === currentPage ? "default" : "outline"}
+                          size="sm"
+                          onClick={() =>
+                            typeof page === "number" && handlePageChange(page)
+                          }
+                          disabled={page === "..."}
+                          className="w-10"
+                        >
+                          {page}
+                        </Button>
+                      ))}
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(pagination.page + 1)}
+                      disabled={!pagination.hasNextPage}
+                    >
+                      Próxima
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
