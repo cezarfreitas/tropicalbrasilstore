@@ -245,15 +245,17 @@ export default function Store() {
   const [totalPages, setTotalPages] = useState(0);
   const productsPerPage = 20;
 
-  // Filter states
+    // Filter states
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedColor, setSelectedColor] = useState<string>("all");
-  const [selectedGradeType, setSelectedGradeType] = useState<string>("all");
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [selectedGrades, setSelectedGrades] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
+  const [maxPrice, setMaxPrice] = useState<number>(200);
 
   // Filter options
   const [categories, setCategories] = useState<FilterOption[]>([]);
   const [colors, setColors] = useState<FilterOption[]>([]);
-  const [gradeTypes, setGradeTypes] = useState<FilterOption[]>([]);
+  const [allProducts, setAllProducts] = useState<StoreProduct[]>([]);
 
   useEffect(() => {
     fetchFilterData();
