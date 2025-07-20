@@ -555,14 +555,23 @@ export default function Store() {
                 <X className="h-4 w-4" />
               </Button>
             </div>
-            <div className="p-4">
-              <CategorySidebar
+                        <div className="p-4">
+              <FiltersSidebar
                 categories={categories}
+                colors={colors}
                 selectedCategory={selectedCategory}
+                selectedColors={selectedColors}
+                selectedGrades={selectedGrades}
+                priceRange={priceRange}
+                maxPrice={maxPrice}
                 onCategorySelect={(categoryId) => {
-                  setSelectedCategory(categoryId);
+                  handleCategorySelect(categoryId);
                   setSidebarOpen(false);
                 }}
+                onColorToggle={handleColorToggle}
+                onGradeToggle={handleGradeToggle}
+                onPriceRangeChange={handlePriceRangeChange}
+                onClearFilters={clearAllFilters}
               />
             </div>
           </div>
