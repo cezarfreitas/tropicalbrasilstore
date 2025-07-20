@@ -265,42 +265,116 @@ export default function Store() {
     applyFilters();
   }, [currentPage, selectedCategory, selectedColors, selectedGrades, priceRange, allProducts]);
 
-  const fetchProducts = async () => {
+    const fetchProducts = async () => {
     setLoading(true);
     try {
-      // Use working API and implement client-side pagination
       const response = await fetch("/api/store-old/products");
       if (response.ok) {
-        const allProducts = await response.json();
+        const productsData = await response.json();
+        setAllProducts(productsData);
 
-        // Apply filters client-side
-        let filtered = [...allProducts];
+        // Extract filter options
+        const uniqueCategories = new Set<string>();
+        const uniqueColors = new Set<string>();
+        let maxProductPrice = 0;
 
-        if (selectedCategory !== "all") {
-          filtered = filtered.filter((product) =>
-            product.category_name
-              ?.toLowerCase()
-              .includes(selectedCategory.toLowerCase()),
-          );
-        }
+        productsData.forEach((product: StoreProduct) => {
+          if (product.category_name) {
+            uniqueCategories.add(product.category_name);
+          }
+          if (product.available_colors) {
+            product.available_colors.forEach(color => uniqueColors.add(color.name));
+          }
+          const price = product.suggested_price || product.base_price || 0;
+          maxProductPrice = Math.max(maxProductPrice, price);
+        });
 
-        // Calculate pagination
-        const total = filtered.length;
-        const totalPages = Math.ceil(total / productsPerPage);
-        const startIndex = (currentPage - 1) * productsPerPage;
-        const endIndex = startIndex + productsPerPage;
-        const paginatedProducts = filtered.slice(startIndex, endIndex);
+        setCategories([
+          { id: "all", name: "Todas as Categorias", count: productsData.length },
+          ...Array.from(uniqueCategories).map(cat => ({
+            id: cat.toLowerCase(),
+            name: cat,
+            count: productsData.filter((p: StoreProduct) => p.category_name === cat).length
+          }))
+        ]);
 
-        setProducts(allProducts);
-        setFilteredProducts(paginatedProducts);
-        setTotalProducts(total);
-        setTotalPages(totalPages);
+        setColors([
+          ...Array.from(uniqueColors).map(color => ({
+            id: color.toLowerCase(),
+            name: color,
+            count: productsData.filter((p: StoreProduct) =>
+              p.available_colors?.some(c => c.name === color)
+            ).length
+          }))
+        ]);
+
+        setMaxPrice(Math.ceil(maxProductPrice));
+        setPriceRange([0, Math.ceil(maxProductPrice)]);
       }
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const applyFilters = () => {
+    let filtered = [...allProducts];
+
+    // Category filter
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter((product) =>
+        product.category_name?.toLowerCase() === selectedCategory
+      );
+    }
+
+    // Color filter
+    if (selectedColors.length > 0) {
+      filtered = filtered.filter((product) =>
+        product.available_colors?.some(color =>
+          selectedColors.includes(color.name.toLowerCase())
+        )
+      );
+    }
+
+    // Grade/Type filter
+    if (selectedGrades.length > 0) {
+      filtered = filtered.filter((product) => {
+        const productName = product.name.toLowerCase();
+        return selectedGrades.some(grade => {
+          switch (grade) {
+            case "feminino":
+              return productName.includes("feminino") || productName.includes("mulher");
+            case "masculino":
+              return productName.includes("masculino") || productName.includes("homem");
+            case "infantil":
+              return productName.includes("infantil") || productName.includes("criança");
+            case "premium":
+              return productName.includes("premium") || productName.includes("confort");
+            default:
+              return false;
+          }
+        });
+      });
+    }
+
+    // Price filter
+    filtered = filtered.filter((product) => {
+      const price = product.suggested_price || product.base_price || 0;
+      return price >= priceRange[0] && price <= priceRange[1];
+    });
+
+    // Apply pagination
+    const total = filtered.length;
+    const totalPages = Math.ceil(total / productsPerPage);
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    const paginatedProducts = filtered.slice(startIndex, endIndex);
+
+    setProducts(filtered);
+    setFilteredProducts(paginatedProducts);
+    setTotalProducts(total);
+    setTotalPages(totalPages);
   };
 
   const fetchFilterData = async () => {
