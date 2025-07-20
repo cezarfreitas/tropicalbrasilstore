@@ -426,12 +426,7 @@ export default function Store() {
     setSelectedProductId(null);
   };
 
-  const clearAllFilters = () => {
-    setSelectedCategory("all");
-    setSelectedColor("all");
-    setSelectedGradeType("all");
-    setCurrentPage(1); // Reset to first page when clearing filters
-  };
+  
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
