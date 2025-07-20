@@ -18,6 +18,7 @@ import { storeSimpleRouter } from "./routes/store-simple";
 import { adminOrdersRouter } from "./routes/admin-orders";
 import { adminCustomersRouter } from "./routes/admin-customers";
 import { expandedSeedRouter } from "./routes/expanded-seed";
+import { settingsRouter } from "./routes/settings";
 import { createStoreSchema } from "./lib/store-schema";
 import { fixOrdersTable } from "./lib/fix-orders-table";
 import { checkAndFixTables } from "./lib/check-tables";
