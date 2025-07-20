@@ -346,68 +346,7 @@ export default function Store() {
             {/* Hero Section - Removed */}
             <div />
 
-            {/* Additional Filters */}
-            <div className="mb-8">
-              <div className="flex flex-wrap items-center gap-4 bg-white border rounded-lg p-4 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <Filter className="h-5 w-5 text-muted-foreground" />
-                  <span className="text-sm font-medium">
-                    Filtros adicionais:
-                  </span>
-                </div>
-
-                {/* Color Filter */}
-                <div className="flex items-center gap-2">
-                  <label className="text-sm text-muted-foreground">Cor:</label>
-                  <Select
-                    value={selectedColor}
-                    onValueChange={setSelectedColor}
-                  >
-                    <SelectTrigger className="w-40">
-                      <SelectValue placeholder="Todas" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {colors.map((color) => (
-                        <SelectItem key={color.id} value={color.id}>
-                          {color.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Grade Type Filter */}
-                <div className="flex items-center gap-2">
-                  <label className="text-sm text-muted-foreground">Tipo:</label>
-                  <Select
-                    value={selectedGradeType}
-                    onValueChange={setSelectedGradeType}
-                  >
-                    <SelectTrigger className="w-40">
-                      <SelectValue placeholder="Todos" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {gradeTypes.map((gradeType) => (
-                        <SelectItem key={gradeType.id} value={gradeType.id}>
-                          {gradeType.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {hasActiveFilters && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={clearAllFilters}
-                    className="text-xs ml-auto"
-                  >
-                    Limpar Filtros
-                  </Button>
-                )}
-              </div>
-            </div>
+            
 
             {/* Products Grid */}
             <div className="mb-8">
