@@ -1352,7 +1352,7 @@ export default function ProductsEnhanced() {
             <div>
               <Label htmlFor="filter-status">Status</Label>
               <Select
-                value={selectedStatus}
+                value={selectedStatus || "all"}
                 onValueChange={(value) =>
                   setSelectedStatus(value === "all" ? "" : value)
                 }
