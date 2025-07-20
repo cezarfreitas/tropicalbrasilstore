@@ -55,7 +55,7 @@ router.get("/", async (req, res) => {
       orderByClause = `ORDER BY total_stock ${orderDirection}`;
     }
 
-    // Get total count
+    // Get total count first
     const [countRows] = await db.execute(
       `SELECT COUNT(DISTINCT p.id) as total
        FROM products p 
@@ -67,9 +67,9 @@ router.get("/", async (req, res) => {
 
     const total = (countRows as any)[0].total;
 
-    // Get paginated results
-    const [rows] = await db.execute(
-      `SELECT 
+    // Get paginated results using template literals for LIMIT/OFFSET
+    const paginatedQuery = `
+      SELECT 
         p.*,
         c.name as category_name,
         COUNT(DISTINCT pv.id) as variant_count,
@@ -80,9 +80,10 @@ router.get("/", async (req, res) => {
       ${whereClause}
       GROUP BY p.id
       ${orderByClause}
-      LIMIT ? OFFSET ?`,
-      [...params, limit, offset],
-    );
+      LIMIT ${limit} OFFSET ${offset}
+    `;
+
+    const [rows] = await db.execute(paginatedQuery, params);
 
     res.json({
       data: rows,
