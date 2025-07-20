@@ -1,0 +1,16 @@
+node_modules
+.git
+.env
+.env.local
+.env.example
+dist
+coverage
+.vscode
+.idea
+*.log
+Dockerfile.docker-compose
+docker-compose.yml
+.dockerignore
+README.md
+DEPLOY.md
+EASYPANEL.md
