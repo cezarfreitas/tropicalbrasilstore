@@ -535,8 +535,7 @@ export default function Notifications() {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
+                </Tabs>
       </div>
-    </AdminLayout>
-  );
+    );
 }
