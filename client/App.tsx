@@ -17,6 +17,7 @@ import GradesRedesigned from "./pages/GradesRedesigned";
 import Orders from "./pages/Orders";
 import Customers from "./pages/Customers";
 import Settings from "./pages/Settings";
+import Notifications from "./pages/Notifications";
 import Store from "./pages/Store";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
