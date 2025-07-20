@@ -53,36 +53,179 @@ interface FilterOption {
   count?: number;
 }
 
-interface CategorySidebarProps {
+interface FiltersSidebarProps {
   categories: FilterOption[];
+  colors: FilterOption[];
   selectedCategory: string;
+  selectedColors: string[];
+  selectedGrades: string[];
+  priceRange: [number, number];
+  maxPrice: number;
   onCategorySelect: (categoryId: string) => void;
+  onColorToggle: (colorId: string) => void;
+  onGradeToggle: (gradeId: string) => void;
+  onPriceRangeChange: (range: [number, number]) => void;
+  onClearFilters: () => void;
 }
 
-function CategorySidebar({
+function FiltersSidebar({
   categories,
+  colors,
   selectedCategory,
+  selectedColors,
+  selectedGrades,
+  priceRange,
+  maxPrice,
   onCategorySelect,
-}: CategorySidebarProps) {
+  onColorToggle,
+  onGradeToggle,
+  onPriceRangeChange,
+  onClearFilters,
+}: FiltersSidebarProps) {
+  const hasActiveFilters =
+    selectedCategory !== "all" ||
+    selectedColors.length > 0 ||
+    selectedGrades.length > 0 ||
+    (priceRange[0] > 0 || priceRange[1] < maxPrice);
+
+  const gradeOptions = [
+    { id: "feminino", name: "Feminino" },
+    { id: "masculino", name: "Masculino" },
+    { id: "infantil", name: "Infantil" },
+    { id: "premium", name: "Premium" },
+  ];
+
   return (
-    <nav className="space-y-1">
-      {categories.map((category) => (
-        <button
-          key={category.id}
-          onClick={() => onCategorySelect(category.id)}
-          className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-            selectedCategory === category.id
-              ? "bg-primary text-primary-foreground"
-              : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
-          }`}
-        >
-          <span>{category.name}</span>
-          {selectedCategory === category.id && (
-            <ChevronRight className="h-4 w-4" />
-          )}
-        </button>
-      ))}
-    </nav>
+    <div className="space-y-6">
+      {/* Clear Filters Button */}
+      {hasActiveFilters && (
+        <div className="pb-4 border-b">
+          <Button
+            onClick={onClearFilters}
+            variant="outline"
+            size="sm"
+            className="w-full"
+          >
+            <X className="h-4 w-4 mr-2" />
+            Limpar Filtros
+          </Button>
+        </div>
+      )}
+
+      {/* Categories */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Categorias</h3>
+        <nav className="space-y-1">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => onCategorySelect(category.id)}
+              className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                selectedCategory === category.id
+                  ? "bg-primary text-primary-foreground"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+              }`}
+            >
+              <span>{category.name}</span>
+              {category.count && (
+                <span className="text-xs text-muted-foreground">
+                  {category.count}
+                </span>
+              )}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Colors */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Cores</h3>
+        <div className="space-y-2">
+          {colors.map((color) => (
+            <label
+              key={color.id}
+              className="flex items-center space-x-3 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                checked={selectedColors.includes(color.id)}
+                onChange={() => onColorToggle(color.id)}
+                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+              />
+              <span className="text-sm text-gray-700">{color.name}</span>
+              {color.count && (
+                <span className="text-xs text-muted-foreground ml-auto">
+                  {color.count}
+                </span>
+              )}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Grades/Types */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Tipos</h3>
+        <div className="space-y-2">
+          {gradeOptions.map((grade) => (
+            <label
+              key={grade.id}
+              className="flex items-center space-x-3 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                checked={selectedGrades.includes(grade.id)}
+                onChange={() => onGradeToggle(grade.id)}
+                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+              />
+              <span className="text-sm text-gray-700">{grade.name}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Price Range */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Preço</h3>
+        <div className="space-y-4">
+          <div className="px-2">
+            <input
+              type="range"
+              min="0"
+              max={maxPrice}
+              value={priceRange[1]}
+              onChange={(e) => onPriceRangeChange([priceRange[0], parseInt(e.target.value)])}
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+          </div>
+          <div className="flex items-center justify-between text-sm text-gray-600">
+            <span>R$ {priceRange[0].toFixed(2)}</span>
+            <span>R$ {priceRange[1].toFixed(2)}</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <input
+              type="number"
+              min="0"
+              max={maxPrice}
+              value={priceRange[0]}
+              onChange={(e) => onPriceRangeChange([parseInt(e.target.value) || 0, priceRange[1]])}
+              placeholder="Min"
+              className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
+            />
+            <span className="text-gray-500">-</span>
+            <input
+              type="number"
+              min="0"
+              max={maxPrice}
+              value={priceRange[1]}
+              onChange={(e) => onPriceRangeChange([priceRange[0], parseInt(e.target.value) || maxPrice])}
+              placeholder="Max"
+              className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
