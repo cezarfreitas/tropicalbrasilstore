@@ -19,8 +19,7 @@
     "start:prod": "NODE_ENV=production node dist/server/production.mjs",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
-    "typecheck": "tsc",
-    "postinstall": "npm run typecheck"
+        "typecheck": "tsc"
   },
   "dependencies": {
     "express": "^4.18.2",
