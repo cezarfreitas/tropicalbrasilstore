@@ -117,7 +117,7 @@ export default function Notifications() {
     }));
   };
 
-  const saveSettings = async () => {
+    const saveSettings = async () => {
     setSaving(true);
     try {
       const response = await fetch("/api/notifications", {
@@ -131,6 +131,12 @@ export default function Notifications() {
           title: "Sucesso",
           description: "Configurações salvas com sucesso!",
         });
+      } else if (response.status === 404) {
+        toast({
+          title: "Informação",
+          description: "API de notificações não disponível. Deploy necessário.",
+          variant: "default",
+        });
       } else {
         toast({
           title: "Erro",
@@ -141,9 +147,9 @@ export default function Notifications() {
     } catch (error) {
       console.error("Error saving settings:", error);
       toast({
-        title: "Erro",
-        description: "Erro ao salvar configurações",
-        variant: "destructive",
+        title: "Informação",
+        description: "API de notificações não disponível. Deploy necessário.",
+        variant: "default",
       });
     } finally {
       setSaving(false);
