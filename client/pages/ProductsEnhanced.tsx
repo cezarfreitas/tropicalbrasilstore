@@ -912,12 +912,16 @@ export default function ProductsEnhanced() {
                                 <div>
                                   <Label className="text-xs">Tamanho</Label>
                                   <Select
-                                    value={variant.size_id.toString()}
+                                    value={
+                                      variant.size_id > 0
+                                        ? variant.size_id.toString()
+                                        : ""
+                                    }
                                     onValueChange={(value) =>
                                       updateVariant(
                                         index,
                                         "size_id",
-                                        parseInt(value),
+                                        parseInt(value) || 0,
                                       )
                                     }
                                   >
