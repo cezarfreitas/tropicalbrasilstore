@@ -468,10 +468,7 @@ export default function Store() {
     return pages;
   };
 
-  const hasActiveFilters =
-    selectedCategory !== "all" ||
-    selectedColor !== "all" ||
-    selectedGradeType !== "all";
+  
 
   if (loading) {
     return (
