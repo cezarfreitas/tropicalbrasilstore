@@ -2,13 +2,13 @@ import db from "./db";
 
 export async function createNotificationSettings() {
   const connection = await db.getConnection();
-  
+
   try {
     await connection.beginTransaction();
 
     // Check if notification_settings table exists
     const [tables] = await connection.execute(
-      "SHOW TABLES LIKE 'notification_settings'"
+      "SHOW TABLES LIKE 'notification_settings'",
     );
 
     if ((tables as any[]).length === 0) {
@@ -29,41 +29,41 @@ export async function createNotificationSettings() {
       const defaultSettings = [
         // Email SMTP Settings
         {
-          key: 'smtp_host',
-          value: ''
+          key: "smtp_host",
+          value: "",
         },
         {
-          key: 'smtp_port',
-          value: '587'
+          key: "smtp_port",
+          value: "587",
         },
         {
-          key: 'smtp_user',
-          value: ''
+          key: "smtp_user",
+          value: "",
         },
         {
-          key: 'smtp_password',
-          value: ''
+          key: "smtp_password",
+          value: "",
         },
         {
-          key: 'smtp_from_email',
-          value: ''
+          key: "smtp_from_email",
+          value: "",
         },
         {
-          key: 'smtp_from_name',
-          value: 'Chinelos Store'
+          key: "smtp_from_name",
+          value: "Chinelos Store",
         },
         {
-          key: 'email_enabled',
-          value: 'false'
+          key: "email_enabled",
+          value: "false",
         },
-        
+
         // Email Template
         {
-          key: 'email_subject',
-          value: '🎉 Novo Pedido Recebido - Chinelos Store'
+          key: "email_subject",
+          value: "🎉 Novo Pedido Recebido - Chinelos Store",
         },
         {
-          key: 'email_template',
+          key: "email_template",
           value: `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -119,28 +119,28 @@ export async function createNotificationSettings() {
         </div>
     </div>
 </body>
-</html>`
+</html>`,
         },
-        
+
         // Webhook Settings
         {
-          key: 'webhook_enabled',
-          value: 'false'
+          key: "webhook_enabled",
+          value: "false",
         },
         {
-          key: 'webhook_url',
-          value: ''
+          key: "webhook_url",
+          value: "",
         },
         {
-          key: 'webhook_method',
-          value: 'POST'
+          key: "webhook_method",
+          value: "POST",
         },
         {
-          key: 'webhook_headers',
-          value: '{"Content-Type": "application/json"}'
+          key: "webhook_headers",
+          value: '{"Content-Type": "application/json"}',
         },
         {
-          key: 'webhook_template',
+          key: "webhook_template",
           value: `{
   "type": "new_order",
   "timestamp": "{{TIMESTAMP}}",
@@ -160,15 +160,15 @@ export async function createNotificationSettings() {
     "name": "Chinelos Store",
     "message": "🎉 Novo pedido recebido! Total: R$ {{TOTAL_PRICE}}"
   }
-}`
-        }
+}`,
+        },
       ];
 
       // Insert all default settings
       for (const setting of defaultSettings) {
         await connection.execute(
           "INSERT INTO notification_settings (setting_key, setting_value) VALUES (?, ?)",
-          [setting.key, setting.value]
+          [setting.key, setting.value],
         );
       }
 
@@ -188,11 +188,13 @@ export async function createNotificationSettings() {
 }
 
 // Helper function to get a setting value
-export async function getNotificationSetting(key: string): Promise<string | null> {
+export async function getNotificationSetting(
+  key: string,
+): Promise<string | null> {
   try {
     const [rows] = await db.execute(
       "SELECT setting_value FROM notification_settings WHERE setting_key = ?",
-      [key]
+      [key],
     );
 
     const result = rows as any[];
@@ -204,11 +206,14 @@ export async function getNotificationSetting(key: string): Promise<string | null
 }
 
 // Helper function to update a setting value
-export async function updateNotificationSetting(key: string, value: string): Promise<void> {
+export async function updateNotificationSetting(
+  key: string,
+  value: string,
+): Promise<void> {
   try {
     await db.execute(
       "INSERT INTO notification_settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?",
-      [key, value, value]
+      [key, value, value],
     );
   } catch (error) {
     console.error(`Error updating setting ${key}:`, error);
@@ -217,14 +222,16 @@ export async function updateNotificationSetting(key: string, value: string): Pro
 }
 
 // Get all notification settings
-export async function getAllNotificationSettings(): Promise<Record<string, string>> {
+export async function getAllNotificationSettings(): Promise<
+  Record<string, string>
+> {
   try {
     const [rows] = await db.execute(
-      "SELECT setting_key, setting_value FROM notification_settings"
+      "SELECT setting_key, setting_value FROM notification_settings",
     );
 
     const settings: Record<string, string> = {};
-    (rows as any[]).forEach(row => {
+    (rows as any[]).forEach((row) => {
       settings[row.setting_key] = row.setting_value;
     });
 

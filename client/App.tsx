@@ -106,7 +106,7 @@ const App = () => (
                 </AdminLayout>
               }
             />
-                        <Route
+            <Route
               path="/admin/settings"
               element={
                 <AdminLayout>

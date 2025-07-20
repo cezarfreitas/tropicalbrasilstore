@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { 
-  getAllNotificationSettings, 
+import {
+  getAllNotificationSettings,
   updateNotificationSetting,
-  getNotificationSetting 
+  getNotificationSetting,
 } from "../lib/notification-settings";
 
 const router = Router();
@@ -22,14 +22,14 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const settings = req.body;
-    
-    if (!settings || typeof settings !== 'object') {
+
+    if (!settings || typeof settings !== "object") {
       return res.status(400).json({ error: "Invalid settings data" });
     }
 
     // Update each setting
     for (const [key, value] of Object.entries(settings)) {
-      if (typeof value === 'string') {
+      if (typeof value === "string") {
         await updateNotificationSetting(key, value);
       }
     }
@@ -46,11 +46,11 @@ router.get("/:key", async (req, res) => {
   try {
     const { key } = req.params;
     const value = await getNotificationSetting(key);
-    
+
     if (value === null) {
       return res.status(404).json({ error: "Setting not found" });
     }
-    
+
     res.json({ key, value });
   } catch (error) {
     console.error(`Error getting setting ${req.params.key}:`, error);
@@ -63,11 +63,11 @@ router.put("/:key", async (req, res) => {
   try {
     const { key } = req.params;
     const { value } = req.body;
-    
-    if (typeof value !== 'string') {
+
+    if (typeof value !== "string") {
       return res.status(400).json({ error: "Value must be a string" });
     }
-    
+
     await updateNotificationSetting(key, value);
     res.json({ message: "Setting updated successfully" });
   } catch (error) {
@@ -79,28 +79,32 @@ router.put("/:key", async (req, res) => {
 // Test email configuration
 router.post("/test-email", async (req, res) => {
   try {
-    const { sendEmailNotification } = await import("../lib/notification-service");
-    
+    const { sendEmailNotification } = await import(
+      "../lib/notification-service"
+    );
+
     // Test data
     const testData = {
       orderId: "TEST-" + Date.now(),
       customerName: "Cliente Teste",
       customerEmail: "teste@email.com",
       customerWhatsapp: "(11) 99999-9999",
-      items: [{
-        product_name: "Produto Teste",
-        color_name: "Cor Teste",
-        grade_name: "Grade Teste",
-        quantity: 1,
-        price: 29.90
-      }],
-      totalPrice: 29.90,
+      items: [
+        {
+          product_name: "Produto Teste",
+          color_name: "Cor Teste",
+          grade_name: "Grade Teste",
+          quantity: 1,
+          price: 29.9,
+        },
+      ],
+      totalPrice: 29.9,
       orderDate: new Date().toISOString(),
-      status: "pending"
+      status: "pending",
     };
 
     const success = await sendEmailNotification(testData);
-    
+
     if (success) {
       res.json({ message: "Test email sent successfully" });
     } else {
@@ -115,28 +119,32 @@ router.post("/test-email", async (req, res) => {
 // Test webhook configuration
 router.post("/test-webhook", async (req, res) => {
   try {
-    const { sendWebhookNotification } = await import("../lib/notification-service");
-    
+    const { sendWebhookNotification } = await import(
+      "../lib/notification-service"
+    );
+
     // Test data
     const testData = {
       orderId: "TEST-" + Date.now(),
       customerName: "Cliente Teste",
       customerEmail: "teste@email.com",
       customerWhatsapp: "(11) 99999-9999",
-      items: [{
-        product_name: "Produto Teste",
-        color_name: "Cor Teste",
-        grade_name: "Grade Teste",
-        quantity: 1,
-        price: 29.90
-      }],
-      totalPrice: 29.90,
+      items: [
+        {
+          product_name: "Produto Teste",
+          color_name: "Cor Teste",
+          grade_name: "Grade Teste",
+          quantity: 1,
+          price: 29.9,
+        },
+      ],
+      totalPrice: 29.9,
       orderDate: new Date().toISOString(),
-      status: "pending"
+      status: "pending",
     };
 
     const success = await sendWebhookNotification(testData);
-    
+
     if (success) {
       res.json({ message: "Test webhook sent successfully" });
     } else {

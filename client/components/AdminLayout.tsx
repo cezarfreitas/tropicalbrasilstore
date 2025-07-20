@@ -57,7 +57,7 @@ const navigation = [
     href: "/admin/grades",
     icon: Grid3x3,
   },
-    {
+  {
     name: "Notificações",
     href: "/admin/notifications",
     icon: Bell,

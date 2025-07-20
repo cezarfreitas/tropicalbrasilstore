@@ -8,15 +8,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  Mail, 
-  Webhook, 
-  Save, 
+import {
+  Mail,
+  Webhook,
+  Save,
   TestTube,
   Bell,
   Settings,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 
 interface NotificationSettings {
@@ -30,7 +30,7 @@ interface NotificationSettings {
   smtp_from_name: string;
   email_subject: string;
   email_template: string;
-  
+
   // Webhook settings
   webhook_enabled: string;
   webhook_url: string;
@@ -41,22 +41,22 @@ interface NotificationSettings {
 
 export default function Notifications() {
   const [settings, setSettings] = useState<NotificationSettings>({
-    email_enabled: 'false',
-    smtp_host: '',
-    smtp_port: '587',
-    smtp_user: '',
-    smtp_password: '',
-    smtp_from_email: '',
-    smtp_from_name: 'Chinelos Store',
-    email_subject: '🎉 Novo Pedido Recebido - Chinelos Store',
-    email_template: '',
-    webhook_enabled: 'false',
-    webhook_url: '',
-    webhook_method: 'POST',
+    email_enabled: "false",
+    smtp_host: "",
+    smtp_port: "587",
+    smtp_user: "",
+    smtp_password: "",
+    smtp_from_email: "",
+    smtp_from_name: "Chinelos Store",
+    email_subject: "🎉 Novo Pedido Recebido - Chinelos Store",
+    email_template: "",
+    webhook_enabled: "false",
+    webhook_url: "",
+    webhook_method: "POST",
     webhook_headers: '{"Content-Type": "application/json"}',
-    webhook_template: ''
+    webhook_template: "",
   });
-  
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [testingEmail, setTestingEmail] = useState(false);
@@ -68,7 +68,7 @@ export default function Notifications() {
     loadSettings();
   }, []);
 
-    const loadSettings = async () => {
+  const loadSettings = async () => {
     try {
       const response = await fetch("/api/notifications");
       if (response.ok) {
@@ -79,7 +79,8 @@ export default function Notifications() {
         console.log("Notifications API not available, using defaults");
         toast({
           title: "Informação",
-          description: "Sistema de notificações será configurado após o próximo deploy",
+          description:
+            "Sistema de notificações será configurado após o próximo deploy",
           variant: "default",
         });
       } else {
@@ -95,7 +96,8 @@ export default function Notifications() {
       console.log("Using default settings due to error");
       toast({
         title: "Informação",
-        description: "Sistema de notificações será configurado após o próximo deploy",
+        description:
+          "Sistema de notificações será configurado após o próximo deploy",
         variant: "default",
       });
     } finally {
@@ -103,21 +105,27 @@ export default function Notifications() {
     }
   };
 
-  const handleInputChange = (key: keyof NotificationSettings, value: string) => {
-    setSettings(prev => ({
+  const handleInputChange = (
+    key: keyof NotificationSettings,
+    value: string,
+  ) => {
+    setSettings((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
   };
 
-  const handleSwitchChange = (key: keyof NotificationSettings, checked: boolean) => {
-    setSettings(prev => ({
+  const handleSwitchChange = (
+    key: keyof NotificationSettings,
+    checked: boolean,
+  ) => {
+    setSettings((prev) => ({
       ...prev,
-      [key]: checked ? 'true' : 'false'
+      [key]: checked ? "true" : "false",
     }));
   };
 
-    const saveSettings = async () => {
+  const saveSettings = async () => {
     setSaving(true);
     try {
       const response = await fetch("/api/notifications", {
@@ -156,7 +164,7 @@ export default function Notifications() {
     }
   };
 
-    const testEmail = async () => {
+  const testEmail = async () => {
     setTestingEmail(true);
     try {
       const response = await fetch("/api/notifications/test-email", {
@@ -194,7 +202,7 @@ export default function Notifications() {
     }
   };
 
-    const testWebhook = async () => {
+  const testWebhook = async () => {
     setTestingWebhook(true);
     try {
       const response = await fetch("/api/notifications/test-webhook", {
@@ -284,11 +292,13 @@ export default function Notifications() {
                   Configurações de Email
                   <div className="ml-auto flex items-center gap-2">
                     <Switch
-                      checked={settings.email_enabled === 'true'}
-                      onCheckedChange={(checked) => handleSwitchChange('email_enabled', checked)}
+                      checked={settings.email_enabled === "true"}
+                      onCheckedChange={(checked) =>
+                        handleSwitchChange("email_enabled", checked)
+                      }
                     />
                     <span className="text-sm">
-                      {settings.email_enabled === 'true' ? (
+                      {settings.email_enabled === "true" ? (
                         <span className="text-green-600 flex items-center gap-1">
                           <CheckCircle className="h-4 w-4" />
                           Ativo
@@ -310,7 +320,9 @@ export default function Notifications() {
                     <Input
                       id="smtp_host"
                       value={settings.smtp_host}
-                      onChange={(e) => handleInputChange('smtp_host', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("smtp_host", e.target.value)
+                      }
                       placeholder="smtp.gmail.com"
                     />
                   </div>
@@ -319,7 +331,9 @@ export default function Notifications() {
                     <Input
                       id="smtp_port"
                       value={settings.smtp_port}
-                      onChange={(e) => handleInputChange('smtp_port', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("smtp_port", e.target.value)
+                      }
                       placeholder="587"
                     />
                   </div>
@@ -331,7 +345,9 @@ export default function Notifications() {
                     <Input
                       id="smtp_user"
                       value={settings.smtp_user}
-                      onChange={(e) => handleInputChange('smtp_user', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("smtp_user", e.target.value)
+                      }
                       placeholder="seu-email@gmail.com"
                     />
                   </div>
@@ -341,7 +357,9 @@ export default function Notifications() {
                       id="smtp_password"
                       type="password"
                       value={settings.smtp_password}
-                      onChange={(e) => handleInputChange('smtp_password', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("smtp_password", e.target.value)
+                      }
                       placeholder="sua-senha-de-app"
                     />
                   </div>
@@ -353,7 +371,9 @@ export default function Notifications() {
                     <Input
                       id="smtp_from_email"
                       value={settings.smtp_from_email}
-                      onChange={(e) => handleInputChange('smtp_from_email', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("smtp_from_email", e.target.value)
+                      }
                       placeholder="loja@chinelos.com"
                     />
                   </div>
@@ -362,7 +382,9 @@ export default function Notifications() {
                     <Input
                       id="smtp_from_name"
                       value={settings.smtp_from_name}
-                      onChange={(e) => handleInputChange('smtp_from_name', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("smtp_from_name", e.target.value)
+                      }
                       placeholder="Chinelos Store"
                     />
                   </div>
@@ -373,7 +395,9 @@ export default function Notifications() {
                   <Input
                     id="email_subject"
                     value={settings.email_subject}
-                    onChange={(e) => handleInputChange('email_subject', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("email_subject", e.target.value)
+                    }
                     placeholder="🎉 Novo Pedido Recebido - Chinelos Store"
                   />
                 </div>
@@ -383,21 +407,24 @@ export default function Notifications() {
                   <Textarea
                     id="email_template"
                     value={settings.email_template}
-                    onChange={(e) => handleInputChange('email_template', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("email_template", e.target.value)
+                    }
                     placeholder="Template HTML..."
                     rows={10}
                     className="font-mono text-sm"
                   />
-                                    <p className="text-xs text-muted-foreground mt-1">
-                    Variáveis disponíveis: {`{{ORDER_ID}}, {{CUSTOMER_NAME}}, {{CUSTOMER_EMAIL}}, {{CUSTOMER_WHATSAPP}}, {{TOTAL_PRICE}}, {{ORDER_DATE}}, {{ORDER_STATUS}}, {{ORDER_ITEMS}}, {{EMAIL_DATE}}`}
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Variáveis disponíveis:{" "}
+                    {`{{ORDER_ID}}, {{CUSTOMER_NAME}}, {{CUSTOMER_EMAIL}}, {{CUSTOMER_WHATSAPP}}, {{TOTAL_PRICE}}, {{ORDER_DATE}}, {{ORDER_STATUS}}, {{ORDER_ITEMS}}, {{EMAIL_DATE}}`}
                   </p>
                 </div>
 
                 <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    onClick={testEmail} 
-                    disabled={testingEmail || settings.email_enabled !== 'true'}
+                  <Button
+                    variant="outline"
+                    onClick={testEmail}
+                    disabled={testingEmail || settings.email_enabled !== "true"}
                     className="gap-2"
                   >
                     <TestTube className="h-4 w-4" />
@@ -416,11 +443,13 @@ export default function Notifications() {
                   Configurações de Webhook
                   <div className="ml-auto flex items-center gap-2">
                     <Switch
-                      checked={settings.webhook_enabled === 'true'}
-                      onCheckedChange={(checked) => handleSwitchChange('webhook_enabled', checked)}
+                      checked={settings.webhook_enabled === "true"}
+                      onCheckedChange={(checked) =>
+                        handleSwitchChange("webhook_enabled", checked)
+                      }
                     />
                     <span className="text-sm">
-                      {settings.webhook_enabled === 'true' ? (
+                      {settings.webhook_enabled === "true" ? (
                         <span className="text-green-600 flex items-center gap-1">
                           <CheckCircle className="h-4 w-4" />
                           Ativo
@@ -441,7 +470,9 @@ export default function Notifications() {
                   <Input
                     id="webhook_url"
                     value={settings.webhook_url}
-                    onChange={(e) => handleInputChange('webhook_url', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("webhook_url", e.target.value)
+                    }
                     placeholder="https://seu-webhook.com/novo-pedido"
                   />
                 </div>
@@ -452,7 +483,9 @@ export default function Notifications() {
                     <Input
                       id="webhook_method"
                       value={settings.webhook_method}
-                      onChange={(e) => handleInputChange('webhook_method', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("webhook_method", e.target.value)
+                      }
                       placeholder="POST"
                     />
                   </div>
@@ -461,32 +494,41 @@ export default function Notifications() {
                     <Input
                       id="webhook_headers"
                       value={settings.webhook_headers}
-                      onChange={(e) => handleInputChange('webhook_headers', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("webhook_headers", e.target.value)
+                      }
                       placeholder='{"Content-Type": "application/json"}'
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="webhook_template">Template JSON do Webhook</Label>
+                  <Label htmlFor="webhook_template">
+                    Template JSON do Webhook
+                  </Label>
                   <Textarea
                     id="webhook_template"
                     value={settings.webhook_template}
-                    onChange={(e) => handleInputChange('webhook_template', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("webhook_template", e.target.value)
+                    }
                     placeholder="Template JSON..."
                     rows={10}
                     className="font-mono text-sm"
                   />
-                                    <p className="text-xs text-muted-foreground mt-1">
-                    Variáveis disponíveis: {`{{ORDER_ID}}, {{CUSTOMER_NAME}}, {{CUSTOMER_EMAIL}}, {{CUSTOMER_WHATSAPP}}, {{TOTAL_PRICE}}, {{ORDER_DATE}}, {{ORDER_STATUS}}, {{ORDER_ITEMS_JSON}}, {{TIMESTAMP}}`}
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Variáveis disponíveis:{" "}
+                    {`{{ORDER_ID}}, {{CUSTOMER_NAME}}, {{CUSTOMER_EMAIL}}, {{CUSTOMER_WHATSAPP}}, {{TOTAL_PRICE}}, {{ORDER_DATE}}, {{ORDER_STATUS}}, {{ORDER_ITEMS_JSON}}, {{TIMESTAMP}}`}
                   </p>
                 </div>
 
                 <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    onClick={testWebhook} 
-                    disabled={testingWebhook || settings.webhook_enabled !== 'true'}
+                  <Button
+                    variant="outline"
+                    onClick={testWebhook}
+                    disabled={
+                      testingWebhook || settings.webhook_enabled !== "true"
+                    }
                     className="gap-2"
                   >
                     <TestTube className="h-4 w-4" />
@@ -496,7 +538,7 @@ export default function Notifications() {
               </CardContent>
             </Card>
           </TabsContent>
-                </Tabs>
+        </Tabs>
       </div>
     </AdminLayout>
   );
