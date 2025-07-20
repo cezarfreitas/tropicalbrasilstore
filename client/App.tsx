@@ -106,11 +106,19 @@ const App = () => (
                 </AdminLayout>
               }
             />
-            <Route
+                        <Route
               path="/admin/settings"
               element={
                 <AdminLayout>
                   <Settings />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/admin/notifications"
+              element={
+                <AdminLayout>
+                  <Notifications />
                 </AdminLayout>
               }
             />
