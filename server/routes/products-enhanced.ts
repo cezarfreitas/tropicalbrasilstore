@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
 
     if (category) {
       conditions.push("p.category_id = ?");
-      params.push(category);
+      params.push(parseInt(category));
     }
 
     if (status === "active") {
@@ -41,25 +41,27 @@ router.get("/", async (req, res) => {
     const whereClause =
       conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
-    // Valid sort columns
-    const validSortColumns = [
-      "name",
-      "created_at",
-      "base_price",
-      "total_stock",
-    ];
-    const sortColumn = validSortColumns.includes(sortBy) ? sortBy : "name";
-    const orderDirection = sortOrder.toLowerCase() === "desc" ? "DESC" : "ASC";
+    // Valid sort columns and build ORDER BY clause safely
+    const validSortColumns = ["name", "created_at", "base_price"];
+    let orderByClause = "ORDER BY p.name ASC";
+
+    if (validSortColumns.includes(sortBy)) {
+      const orderDirection =
+        sortOrder.toLowerCase() === "desc" ? "DESC" : "ASC";
+      orderByClause = `ORDER BY p.${sortBy} ${orderDirection}`;
+    } else if (sortBy === "total_stock") {
+      const orderDirection =
+        sortOrder.toLowerCase() === "desc" ? "DESC" : "ASC";
+      orderByClause = `ORDER BY total_stock ${orderDirection}`;
+    }
 
     // Get total count
     const [countRows] = await db.execute(
-      `
-      SELECT COUNT(DISTINCT p.id) as total
-      FROM products p 
-      LEFT JOIN categories c ON p.category_id = c.id 
-      LEFT JOIN product_variants pv ON p.id = pv.product_id
-      ${whereClause}
-    `,
+      `SELECT COUNT(DISTINCT p.id) as total
+       FROM products p 
+       LEFT JOIN categories c ON p.category_id = c.id 
+       LEFT JOIN product_variants pv ON p.id = pv.product_id
+       ${whereClause}`,
       params,
     );
 
@@ -67,20 +69,18 @@ router.get("/", async (req, res) => {
 
     // Get paginated results
     const [rows] = await db.execute(
-      `
-      SELECT 
+      `SELECT 
         p.*,
         c.name as category_name,
         COUNT(DISTINCT pv.id) as variant_count,
-        SUM(pv.stock) as total_stock
+        COALESCE(SUM(pv.stock), 0) as total_stock
       FROM products p 
       LEFT JOIN categories c ON p.category_id = c.id 
       LEFT JOIN product_variants pv ON p.id = pv.product_id
       ${whereClause}
       GROUP BY p.id
-      ORDER BY p.${sortColumn} ${orderDirection}
-      LIMIT ? OFFSET ?
-    `,
+      ${orderByClause}
+      LIMIT ? OFFSET ?`,
       [...params, limit, offset],
     );
 
@@ -197,18 +197,20 @@ router.post("/", async (req, res) => {
 
     // Create variants if provided
     for (const variant of variants) {
-      await connection.execute(
-        `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override, sku_variant) 
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [
-          productId,
-          variant.size_id,
-          variant.color_id,
-          variant.stock || 0,
-          variant.price_override || null,
-          variant.sku_variant || null,
-        ],
-      );
+      if (variant.size_id && variant.color_id) {
+        await connection.execute(
+          `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override, sku_variant) 
+           VALUES (?, ?, ?, ?, ?, ?)`,
+          [
+            productId,
+            variant.size_id,
+            variant.color_id,
+            variant.stock || 0,
+            variant.price_override || null,
+            variant.sku_variant || null,
+          ],
+        );
+      }
     }
 
     // Associate with grades if provided
@@ -288,13 +290,13 @@ router.put("/:id", async (req, res) => {
     );
 
     // Update variants - delete existing and create new ones
-    if (variants.length > 0) {
-      await connection.execute(
-        `DELETE FROM product_variants WHERE product_id = ?`,
-        [req.params.id],
-      );
+    await connection.execute(
+      `DELETE FROM product_variants WHERE product_id = ?`,
+      [req.params.id],
+    );
 
-      for (const variant of variants) {
+    for (const variant of variants) {
+      if (variant.size_id && variant.color_id) {
         await connection.execute(
           `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override, sku_variant) 
            VALUES (?, ?, ?, ?, ?, ?)`,
@@ -311,18 +313,16 @@ router.put("/:id", async (req, res) => {
     }
 
     // Update grade associations
-    if (grades.length >= 0) {
-      await connection.execute(
-        `DELETE FROM product_grades WHERE product_id = ?`,
-        [req.params.id],
-      );
+    await connection.execute(
+      `DELETE FROM product_grades WHERE product_id = ?`,
+      [req.params.id],
+    );
 
-      for (const gradeId of grades) {
-        await connection.execute(
-          `INSERT IGNORE INTO product_grades (product_id, grade_id) VALUES (?, ?)`,
-          [req.params.id, gradeId],
-        );
-      }
+    for (const gradeId of grades) {
+      await connection.execute(
+        `INSERT IGNORE INTO product_grades (product_id, grade_id) VALUES (?, ?)`,
+        [req.params.id, gradeId],
+      );
     }
 
     await connection.commit();
