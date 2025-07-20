@@ -60,6 +60,7 @@ export function createServer() {
   app.use("/api/store-old", storeRouter);
   app.use("/api/admin/orders", adminOrdersRouter);
   app.use("/api/admin/customers", adminCustomersRouter);
+  app.use("/api/settings", settingsRouter);
   app.use("/api/expanded-seed", expandedSeedRouter);
 
   return app;
