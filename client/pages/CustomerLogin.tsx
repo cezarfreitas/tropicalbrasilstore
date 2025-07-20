@@ -1,41 +1,81 @@
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Package, Lock, Mail, Eye, EyeOff, UserPlus } from "lucide-react";
+import { Package, Lock, Phone, Eye, EyeOff, UserPlus } from "lucide-react";
 
 export default function CustomerLogin() {
-  const [email, setEmail] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { login, isAuthenticated } = useCustomerAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Redirect if already authenticated
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
+  const formatWhatsApp = (value: string) => {
+    // Remove non-digits
+    const digits = value.replace(/\D/g, '');
+    
+    // Apply mask (11) 99999-9999
+    if (digits.length <= 2) {
+      return `(${digits}`;
+    } else if (digits.length <= 7) {
+      return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    } else {
+      return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
+    }
+  };
+
+  const handleWhatsAppChange = (value: string) => {
+    const formatted = formatWhatsApp(value);
+    setWhatsapp(formatted);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const success = await login(email, password);
+    // Extract only digits from WhatsApp
+    const whatsappDigits = whatsapp.replace(/\D/g, '');
     
-    if (success) {
+    if (whatsappDigits.length !== 11) {
+      toast({
+        title: "Erro no WhatsApp",
+        description: "Por favor, insira um número de WhatsApp válido com 11 dígitos.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    const result = await login(whatsappDigits, password);
+    
+    if (result.success) {
       toast({
         title: "Login realizado com sucesso!",
         description: "Bem-vindo de volta à Chinelos Store.",
       });
+      
+      // Check if it's first login and redirect to password change
+      if (result.isFirstLogin) {
+        navigate("/change-password");
+      } else {
+        navigate("/");
+      }
     } else {
       toast({
         title: "Erro de autenticação",
-        description: "Email ou senha incorretos. Verifique se sua conta foi aprovada.",
+        description: "WhatsApp ou senha incorretos. Verifique se sua conta foi aprovada.",
         variant: "destructive",
       });
     }
@@ -64,20 +104,23 @@ export default function CustomerLogin() {
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="whatsapp">WhatsApp</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="seu@email.com"
+                    id="whatsapp"
+                    type="tel"
+                    value={whatsapp}
+                    onChange={(e) => handleWhatsAppChange(e.target.value)}
+                    placeholder="(11) 99999-9999"
                     className="pl-10"
                     required
                     disabled={isLoading}
                   />
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  Use seu número de WhatsApp cadastrado
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -119,7 +162,7 @@ export default function CustomerLogin() {
               <Button 
                 type="submit" 
                 className="w-full" 
-                disabled={isLoading || !email || password.length !== 4}
+                disabled={isLoading || whatsapp.replace(/\D/g, '').length !== 11 || password.length !== 4}
               >
                 {isLoading ? (
                   <>
