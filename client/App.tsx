@@ -45,13 +45,18 @@ const App = () => (
             <Route path="/loja/carrinho" element={<Cart />} />
             <Route path="/loja/checkout" element={<Checkout />} />
 
-            {/* Admin Routes */}
+                        {/* Admin Login Route (Public) */}
+            <Route path="/admin/login" element={<Login />} />
+
+            {/* Admin Routes (Protected) */}
             <Route
               path="/admin"
               element={
-                <AdminLayout>
-                  <Dashboard />
-                </AdminLayout>
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <Dashboard />
+                  </AdminLayout>
+                </ProtectedRoute>
               }
             />
             <Route
