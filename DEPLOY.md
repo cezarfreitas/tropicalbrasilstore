@@ -256,9 +256,9 @@ npm run typecheck
 
 ## 📁 Arquivos de Configuração
 
-- `nixpacks.toml` - Configuração do Nixpacks
-- `docker-compose.yml` - Configuração Docker para Easy Panel
-- `Dockerfile` - Backup para deploy Docker manual
+- `nixpacks.toml` - Configuração do Nixpacks (para EasyPanel e outras plataformas)
+- `docker-compose.yml` - Configuração Docker Compose (desenvolvimento/self-hosting)
+- `Dockerfile.docker-compose` - Dockerfile específico para Docker Compose
 - `.env.example` - Template de variáveis de ambiente
 - `deploy.sh` - Script de verificação pré-deploy
 
