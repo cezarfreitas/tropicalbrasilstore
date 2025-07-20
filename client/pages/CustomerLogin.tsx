@@ -100,8 +100,8 @@ export default function CustomerLogin() {
 
         <Card className="shadow-lg border-0">
           <CardHeader className="space-y-1 pb-6">
-            <CardTitle className="text-2xl font-semibold text-center flex items-center justify-center gap-2">
-              <Lock className="h-5 w-5" />
+                        <CardTitle className="text-xl sm:text-2xl font-semibold text-center flex items-center justify-center gap-2">
+              <Lock className="h-4 w-4 sm:h-5 sm:w-5" />
               Entrar
             </CardTitle>
           </CardHeader>
