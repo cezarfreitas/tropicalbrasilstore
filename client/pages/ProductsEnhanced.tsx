@@ -1145,28 +1145,45 @@ export default function ProductsEnhanced() {
 
                 <TabsContent value="grades" className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <Label className="text-base">Criar Grade do Produto</Label>
+                    <Label className="text-base">Grades do Produto</Label>
                     <Button
                       type="button"
-                      onClick={openCreateGradeDialog}
+                      onClick={openGradeSelectionDialog}
                       size="sm"
-                      disabled={formData.variants.length === 0}
                     >
                       <Grid3x3 className="mr-1 h-3 w-3" />
-                      Criar Grade
+                      Selecionar Grades
                     </Button>
                   </div>
 
                   <Card>
                     <CardContent className="pt-6">
-                      <div className="text-center text-muted-foreground">
-                        <Grid3x3 className="mx-auto h-8 w-8 mb-2" />
-                        <p>Crie uma grade baseada nas variantes do produto</p>
-                        <p className="text-sm">
-                          A grade será automaticamente configurada com base nos
-                          tamanhos e quantidades das variantes
-                        </p>
-                      </div>
+                      {selectedGrades.length > 0 ? (
+                        <div className="space-y-2">
+                          <Label>Grades Selecionadas:</Label>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedGrades.map((gradeId) => {
+                              const grade = grades.find(
+                                (g) => g.id === gradeId,
+                              );
+                              return grade ? (
+                                <Badge key={gradeId} variant="default">
+                                  {grade.name}
+                                </Badge>
+                              ) : null;
+                            })}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center text-muted-foreground">
+                          <Grid3x3 className="mx-auto h-8 w-8 mb-2" />
+                          <p>Nenhuma grade selecionada</p>
+                          <p className="text-sm">
+                            Clique em "Selecionar Grades" para escolher grades
+                            existentes
+                          </p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </TabsContent>
