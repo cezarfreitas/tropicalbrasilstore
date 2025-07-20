@@ -30,10 +30,11 @@ console.log("�� Serving static files from:", staticPath);
 app.use(express.static(staticPath));
 
 // Serve index.html for all non-API routes (SPA routing)
-app.get("*", (req, res, next) => {
-  // Skip API routes
+// This must be AFTER all API routes are registered
+app.get("*", (req, res) => {
+  // Skip API routes (they should already be handled above)
   if (req.path.startsWith("/api/")) {
-    return next();
+    return res.status(404).json({ error: "API endpoint not found" });
   }
 
   // Serve index.html for all other routes
