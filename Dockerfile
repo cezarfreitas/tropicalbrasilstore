@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Delete package-lock.json if it exists and install dependencies with legacy peer deps
-RUN rm -f package-lock.json && npm install --legacy-peer-deps
+RUN rm -f package-lock.json && npm cache clean --force && npm install --legacy-peer-deps
 
 # Copy source code
 COPY . .
