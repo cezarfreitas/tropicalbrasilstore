@@ -34,9 +34,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Edit2, Trash2, Package, Upload, X } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+import {
+  Plus,
+  Edit2,
+  Trash2,
+  Package,
+  Upload,
+  X,
+  Copy,
+  Grid3x3,
+  Wand2,
+  Eye,
+  EyeOff,
+  Palette,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ProductVariant {
@@ -81,6 +101,18 @@ interface CreateProductRequest {
   variants: ProductVariant[];
 }
 
+interface GradeTemplate {
+  size_id: number;
+  required_quantity: number;
+  size?: string;
+}
+
+interface CreateGradeRequest {
+  name: string;
+  description: string;
+  templates: GradeTemplate[];
+}
+
 export default function ProductsEnhanced() {
   const [products, setProducts] = useState<EnhancedProduct[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -88,6 +120,10 @@ export default function ProductsEnhanced() {
   const [colors, setColors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [gradeDialogOpen, setGradeDialogOpen] = useState(false);
+  const [variantViewMode, setVariantViewMode] = useState<"table" | "grid">(
+    "grid",
+  );
   const [editingProduct, setEditingProduct] = useState<EnhancedProduct | null>(
     null,
   );
@@ -102,6 +138,14 @@ export default function ProductsEnhanced() {
     stock: 0,
     variants: [],
   });
+  const [gradeFormData, setGradeFormData] = useState<CreateGradeRequest>({
+    name: "",
+    description: "",
+    templates: [],
+  });
+  const [selectedVariantsForGrade, setSelectedVariantsForGrade] = useState<
+    ProductVariant[]
+  >([]);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -199,7 +243,6 @@ export default function ProductsEnhanced() {
   };
 
   const handleEdit = async (product: EnhancedProduct) => {
-    // Fetch detailed product info including variants
     try {
       const response = await fetch(`/api/products-enhanced/${product.id}`);
       if (response.ok) {
@@ -289,6 +332,46 @@ export default function ProductsEnhanced() {
     setFormData({ ...formData, variants: newVariants });
   };
 
+  const bulkCreateVariants = () => {
+    const newVariants: ProductVariant[] = [];
+
+    sizes.forEach((size) => {
+      colors.forEach((color) => {
+        // Check if this combination already exists
+        const exists = formData.variants.some(
+          (v) => v.size_id === size.id && v.color_id === color.id,
+        );
+
+        if (!exists) {
+          newVariants.push({
+            size_id: size.id,
+            color_id: color.id,
+            stock: 0,
+          });
+        }
+      });
+    });
+
+    setFormData({
+      ...formData,
+      variants: [...formData.variants, ...newVariants],
+    });
+
+    toast({
+      title: "Sucesso",
+      description: `${newVariants.length} variantes criadas`,
+    });
+  };
+
+  const duplicateVariant = (index: number) => {
+    const variant = formData.variants[index];
+    const newVariant = { ...variant, id: undefined };
+    setFormData({
+      ...formData,
+      variants: [...formData.variants, newVariant],
+    });
+  };
+
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -298,6 +381,84 @@ export default function ProductsEnhanced() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const openCreateGradeDialog = () => {
+    if (formData.variants.length === 0) {
+      toast({
+        title: "Erro",
+        description: "Adicione variantes primeiro para criar uma grade",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Generate templates from current variants grouped by size
+    const sizeQuantities = formData.variants.reduce(
+      (acc, variant) => {
+        if (variant.size_id && variant.stock > 0) {
+          acc[variant.size_id] = (acc[variant.size_id] || 0) + variant.stock;
+        }
+        return acc;
+      },
+      {} as Record<number, number>,
+    );
+
+    const templates = Object.entries(sizeQuantities).map(
+      ([sizeId, quantity]) => ({
+        size_id: parseInt(sizeId),
+        required_quantity: quantity,
+        size: sizes.find((s) => s.id === parseInt(sizeId))?.size || "",
+      }),
+    );
+
+    setGradeFormData({
+      name: `Grade ${formData.name}`,
+      description: `Grade baseada no produto ${formData.name}`,
+      templates,
+    });
+
+    setGradeDialogOpen(true);
+  };
+
+  const createGrade = async () => {
+    try {
+      const response = await fetch("/api/grades-redesigned", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(gradeFormData),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Sucesso",
+          description: "Grade criada com sucesso",
+        });
+        setGradeDialogOpen(false);
+        setGradeFormData({ name: "", description: "", templates: [] });
+      } else {
+        const error = await response.json();
+        throw new Error(error.error || "Erro ao criar grade");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const getColorFromVariant = (variant: ProductVariant) => {
+    const color = colors.find((c) => c.id === variant.color_id);
+    return color?.hex_code || "#999999";
+  };
+
+  const getSizeFromVariant = (variant: ProductVariant) => {
+    const size = sizes.find((s) => s.id === variant.size_id);
+    return size?.size || "";
   };
 
   if (loading) {
@@ -321,8 +482,7 @@ export default function ProductsEnhanced() {
             Produtos Completos
           </h1>
           <p className="text-muted-foreground">
-            Sistema completo de gestão de produtos com fotos, variantes e
-            estoque
+            Sistema completo de gestão de produtos com variantes e grades
           </p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -332,21 +492,25 @@ export default function ProductsEnhanced() {
               Novo Produto
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[1200px] max-h-[90vh] overflow-y-auto">
             <form onSubmit={handleSubmit}>
               <DialogHeader>
                 <DialogTitle>
                   {editingProduct ? "Editar Produto" : "Novo Produto"}
                 </DialogTitle>
                 <DialogDescription>
-                  Sistema completo com foto, variantes de tamanho/cor e estoque
+                  Sistema completo com foto, variantes de tamanho/cor e criação
+                  de grades
                 </DialogDescription>
               </DialogHeader>
 
               <Tabs defaultValue="basic" className="py-4">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="basic">Básico</TabsTrigger>
-                  <TabsTrigger value="variants">Variantes</TabsTrigger>
+                  <TabsTrigger value="variants">
+                    Variantes ({formData.variants.length})
+                  </TabsTrigger>
+                  <TabsTrigger value="grades">Grades</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="basic" className="space-y-4">
@@ -508,13 +672,48 @@ export default function ProductsEnhanced() {
 
                 <TabsContent value="variants" className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <Label className="text-base">
-                      Variantes (Tamanho + Cor + Estoque)
-                    </Label>
-                    <Button type="button" onClick={addVariant} size="sm">
-                      <Plus className="mr-1 h-3 w-3" />
-                      Adicionar Variante
-                    </Button>
+                    <div className="flex items-center gap-4">
+                      <Label className="text-base">
+                        Variantes ({formData.variants.length})
+                      </Label>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          type="button"
+                          variant={
+                            variantViewMode === "grid" ? "default" : "outline"
+                          }
+                          size="sm"
+                          onClick={() => setVariantViewMode("grid")}
+                        >
+                          Grid
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={
+                            variantViewMode === "table" ? "default" : "outline"
+                          }
+                          size="sm"
+                          onClick={() => setVariantViewMode("table")}
+                        >
+                          Tabela
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        onClick={bulkCreateVariants}
+                        size="sm"
+                        variant="outline"
+                      >
+                        <Wand2 className="mr-1 h-3 w-3" />
+                        Criar Todas
+                      </Button>
+                      <Button type="button" onClick={addVariant} size="sm">
+                        <Plus className="mr-1 h-3 w-3" />
+                        Adicionar
+                      </Button>
+                    </div>
                   </div>
 
                   {formData.variants.length === 0 ? (
@@ -523,15 +722,184 @@ export default function ProductsEnhanced() {
                       <p className="mt-2 text-sm text-muted-foreground">
                         Nenhuma variante configurada
                       </p>
+                      <Button
+                        type="button"
+                        onClick={bulkCreateVariants}
+                        className="mt-4"
+                        variant="outline"
+                      >
+                        <Wand2 className="mr-2 h-4 w-4" />
+                        Criar Todas as Combinações
+                      </Button>
+                    </div>
+                  ) : variantViewMode === "grid" ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {formData.variants.map((variant, index) => (
+                        <Card key={index} className="relative">
+                          <CardContent className="pt-4">
+                            <div className="absolute top-2 right-2 flex gap-1">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => duplicateVariant(index)}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => removeVariant(index)}
+                              >
+                                <X className="h-3 w-3" />
+                              </Button>
+                            </div>
+
+                            <div className="space-y-3">
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className="w-6 h-6 rounded border-2"
+                                  style={{
+                                    backgroundColor:
+                                      getColorFromVariant(variant),
+                                  }}
+                                />
+                                <div className="font-medium">
+                                  {getSizeFromVariant(variant)}
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                  <Label className="text-xs">Tamanho</Label>
+                                  <Select
+                                    value={variant.size_id.toString()}
+                                    onValueChange={(value) =>
+                                      updateVariant(
+                                        index,
+                                        "size_id",
+                                        parseInt(value),
+                                      )
+                                    }
+                                  >
+                                    <SelectTrigger className="h-8">
+                                      <SelectValue placeholder="Tamanho" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {sizes.map((size) => (
+                                        <SelectItem
+                                          key={size.id}
+                                          value={size.id.toString()}
+                                        >
+                                          {size.size}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+
+                                <div>
+                                  <Label className="text-xs">Cor</Label>
+                                  <Select
+                                    value={variant.color_id.toString()}
+                                    onValueChange={(value) =>
+                                      updateVariant(
+                                        index,
+                                        "color_id",
+                                        parseInt(value),
+                                      )
+                                    }
+                                  >
+                                    <SelectTrigger className="h-8">
+                                      <SelectValue placeholder="Cor" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {colors.map((color) => (
+                                        <SelectItem
+                                          key={color.id}
+                                          value={color.id.toString()}
+                                        >
+                                          <div className="flex items-center gap-2">
+                                            <div
+                                              className="w-3 h-3 rounded border"
+                                              style={{
+                                                backgroundColor:
+                                                  color.hex_code || "#999999",
+                                              }}
+                                            />
+                                            {color.name}
+                                          </div>
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                  <Label className="text-xs">Estoque</Label>
+                                  <Input
+                                    type="number"
+                                    min="0"
+                                    className="h-8"
+                                    value={variant.stock}
+                                    onChange={(e) =>
+                                      updateVariant(
+                                        index,
+                                        "stock",
+                                        parseInt(e.target.value) || 0,
+                                      )
+                                    }
+                                  />
+                                </div>
+                                <div>
+                                  <Label className="text-xs">
+                                    Preço Override
+                                  </Label>
+                                  <Input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    className="h-8"
+                                    value={variant.price_override || ""}
+                                    onChange={(e) =>
+                                      updateVariant(
+                                        index,
+                                        "price_override",
+                                        e.target.value
+                                          ? parseFloat(e.target.value)
+                                          : undefined,
+                                      )
+                                    }
+                                    placeholder="Opcional"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
                   ) : (
-                    <div className="space-y-4">
-                      {formData.variants.map((variant, index) => (
-                        <Card key={index}>
-                          <CardContent className="pt-4">
-                            <div className="grid grid-cols-5 gap-4 items-end">
-                              <div className="grid gap-2">
-                                <Label>Tamanho</Label>
+                    <div className="border rounded-lg">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Tamanho</TableHead>
+                            <TableHead>Cor</TableHead>
+                            <TableHead>Estoque</TableHead>
+                            <TableHead>Preço Override</TableHead>
+                            <TableHead className="w-[100px]">Ações</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {formData.variants.map((variant, index) => (
+                            <TableRow key={index}>
+                              <TableCell>
                                 <Select
                                   value={variant.size_id.toString()}
                                   onValueChange={(value) =>
@@ -542,7 +910,7 @@ export default function ProductsEnhanced() {
                                     )
                                   }
                                 >
-                                  <SelectTrigger>
+                                  <SelectTrigger className="h-8">
                                     <SelectValue placeholder="Tamanho" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -556,9 +924,8 @@ export default function ProductsEnhanced() {
                                     ))}
                                   </SelectContent>
                                 </Select>
-                              </div>
-                              <div className="grid gap-2">
-                                <Label>Cor</Label>
+                              </TableCell>
+                              <TableCell>
                                 <Select
                                   value={variant.color_id.toString()}
                                   onValueChange={(value) =>
@@ -569,7 +936,7 @@ export default function ProductsEnhanced() {
                                     )
                                   }
                                 >
-                                  <SelectTrigger>
+                                  <SelectTrigger className="h-8">
                                     <SelectValue placeholder="Cor" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -580,24 +947,24 @@ export default function ProductsEnhanced() {
                                       >
                                         <div className="flex items-center gap-2">
                                           <div
-                                            className="w-4 h-4 rounded border"
+                                            className="w-3 h-3 rounded border"
                                             style={{
                                               backgroundColor:
                                                 color.hex_code || "#999999",
                                             }}
-                                          ></div>
+                                          />
                                           {color.name}
                                         </div>
                                       </SelectItem>
                                     ))}
                                   </SelectContent>
                                 </Select>
-                              </div>
-                              <div className="grid gap-2">
-                                <Label>Estoque</Label>
+                              </TableCell>
+                              <TableCell>
                                 <Input
                                   type="number"
                                   min="0"
+                                  className="h-8"
                                   value={variant.stock}
                                   onChange={(e) =>
                                     updateVariant(
@@ -607,13 +974,13 @@ export default function ProductsEnhanced() {
                                     )
                                   }
                                 />
-                              </div>
-                              <div className="grid gap-2">
-                                <Label>Preço Override</Label>
+                              </TableCell>
+                              <TableCell>
                                 <Input
                                   type="number"
                                   step="0.01"
                                   min="0"
+                                  className="h-8"
                                   value={variant.price_override || ""}
                                   onChange={(e) =>
                                     updateVariant(
@@ -626,21 +993,63 @@ export default function ProductsEnhanced() {
                                   }
                                   placeholder="Opcional"
                                 />
-                              </div>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="icon"
-                                onClick={() => removeVariant(index)}
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={() => duplicateVariant(index)}
+                                  >
+                                    <Copy className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={() => removeVariant(index)}
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </div>
                   )}
+                </TabsContent>
+
+                <TabsContent value="grades" className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-base">Criar Grade do Produto</Label>
+                    <Button
+                      type="button"
+                      onClick={openCreateGradeDialog}
+                      size="sm"
+                      disabled={formData.variants.length === 0}
+                    >
+                      <Grid3x3 className="mr-1 h-3 w-3" />
+                      Criar Grade
+                    </Button>
+                  </div>
+
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="text-center text-muted-foreground">
+                        <Grid3x3 className="mx-auto h-8 w-8 mb-2" />
+                        <p>Crie uma grade baseada nas variantes do produto</p>
+                        <p className="text-sm">
+                          A grade será automaticamente configurada com base nos
+                          tamanhos e quantidades das variantes
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </TabsContent>
               </Tabs>
 
@@ -660,6 +1069,100 @@ export default function ProductsEnhanced() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Grade Creation Dialog */}
+      <Dialog open={gradeDialogOpen} onOpenChange={setGradeDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Criar Nova Grade</DialogTitle>
+            <DialogDescription>
+              Grade baseada nas variantes do produto
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="grade_name">Nome da Grade</Label>
+              <Input
+                id="grade_name"
+                value={gradeFormData.name}
+                onChange={(e) =>
+                  setGradeFormData({ ...gradeFormData, name: e.target.value })
+                }
+                placeholder="Nome da grade"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="grade_description">Descrição</Label>
+              <Textarea
+                id="grade_description"
+                value={gradeFormData.description}
+                onChange={(e) =>
+                  setGradeFormData({
+                    ...gradeFormData,
+                    description: e.target.value,
+                  })
+                }
+                placeholder="Descrição da grade"
+                rows={3}
+              />
+            </div>
+
+            <div>
+              <Label>Configuração da Grade</Label>
+              <div className="mt-2 space-y-2">
+                {gradeFormData.templates.map((template, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 border rounded"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline">{template.size}</Badge>
+                      <span className="text-sm">
+                        Quantidade: {template.required_quantity}
+                      </span>
+                    </div>
+                    <Input
+                      type="number"
+                      min="1"
+                      className="h-8 w-20"
+                      value={template.required_quantity}
+                      onChange={(e) => {
+                        const newTemplates = [...gradeFormData.templates];
+                        newTemplates[index].required_quantity =
+                          parseInt(e.target.value) || 1;
+                        setGradeFormData({
+                          ...gradeFormData,
+                          templates: newTemplates,
+                        });
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setGradeDialogOpen(false)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={createGrade}
+              disabled={
+                !gradeFormData.name || gradeFormData.templates.length === 0
+              }
+            >
+              Criar Grade
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Card>
         <CardHeader>
