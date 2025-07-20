@@ -531,9 +531,9 @@ export default function Store() {
     );
   }
 
-  return (
+    return (
     <StoreLayout>
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50">
         {/* Mobile sidebar overlay */}
         <div
           className={`fixed inset-0 z-50 lg:hidden ${
@@ -601,27 +601,28 @@ export default function Store() {
 
         {/* Main content */}
         <div className="flex-1 overflow-auto">
-          <div className="lg:hidden flex items-center justify-between p-4 bg-white border-b">
+                    <div className="lg:hidden flex items-center justify-between p-3 sm:p-4 bg-white border-b">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setSidebarOpen(true)}
+              className="h-9"
             >
               <Menu className="h-4 w-4 mr-2" />
-              Categorias
+              Filtros
             </Button>
-            <h1 className="text-lg font-semibold">Chinelos Store</h1>
+            <h1 className="text-base sm:text-lg font-semibold">Chinelos Store</h1>
           </div>
 
-          <div className="container mx-auto px-4 py-5 pb-8">
+                    <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-5 pb-6 sm:pb-8">
             {/* Hero Section - Removed */}
             <div />
 
             {/* Products Grid */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">Nossos Produtos</h2>
-                <span className="text-sm text-muted-foreground">
+                        <div className="mb-6 sm:mb-8">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold">Nossos Produtos</h2>
+                <span className="text-xs sm:text-sm text-muted-foreground">
                   {filteredProducts.length} produto
                   {filteredProducts.length !== 1 ? "s" : ""} encontrado
                   {filteredProducts.length !== 1 ? "s" : ""}
@@ -638,7 +639,7 @@ export default function Store() {
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                   {filteredProducts.map((product) => (
                     <Card
                       key={product.id}
@@ -655,17 +656,17 @@ export default function Store() {
                           <Package className="h-12 w-12 text-muted-foreground/50" />
                         )}
                       </div>
-                      <div className="p-4 space-y-3">
+                                            <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
                         {/* Header - Nome e Categoria */}
                         <div className="space-y-2">
-                          <h3 className="font-semibold text-sm line-clamp-2 leading-tight min-h-[32px]">
+                                                    <h3 className="font-semibold text-xs sm:text-sm line-clamp-2 leading-tight min-h-[28px] sm:min-h-[32px]">
                             {product.name}
                           </h3>
                           <div className="flex items-center justify-between">
                             {product.category_name && (
-                              <Badge
+                                                            <Badge
                                 variant="secondary"
-                                className="text-xs px-2 py-1"
+                                className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1"
                               >
                                 {product.category_name}
                               </Badge>
@@ -681,8 +682,8 @@ export default function Store() {
                                         key={color.id}
                                         className="relative group"
                                       >
-                                        <div
-                                          className="w-4 h-4 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform cursor-pointer"
+                                                                                <div
+                                          className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform cursor-pointer"
                                           style={{
                                             backgroundColor:
                                               color.hex_code || "#999999",
@@ -696,13 +697,13 @@ export default function Store() {
                                       </div>
                                     ))}
                                   {product.available_colors.length > 5 && (
-                                    <span className="text-xs text-muted-foreground font-medium ml-1">
+                                                                        <span className="text-[10px] sm:text-xs text-muted-foreground font-medium ml-1">
                                       +{product.available_colors.length - 5}
                                     </span>
                                   )}
                                 </div>
                               ) : (
-                                <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                                                                <span className="text-[10px] sm:text-xs text-muted-foreground bg-muted px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
                                   {product.variant_count} cores
                                 </span>
                               )}
@@ -716,11 +717,11 @@ export default function Store() {
                             <div className="flex items-center justify-center gap-3">
                               {product.base_price && (
                                 <div>
-                                  <div className="text-2xl font-bold text-primary">
+                                                                    <div className="text-lg sm:text-2xl font-bold text-primary">
                                     R${" "}
                                     {parseFloat(product.base_price).toFixed(2)}
                                   </div>
-                                  <div className="text-xs text-muted-foreground font-medium">
+                                  <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">
                                     UNITÁRIO
                                   </div>
                                 </div>
@@ -730,23 +731,23 @@ export default function Store() {
                                 product.suggested_price !==
                                   product.base_price && (
                                   <div className="text-right">
-                                    <div className="text-sm text-muted-foreground">
+                                                                        <div className="text-xs sm:text-sm text-muted-foreground">
                                       R${" "}
                                       {parseFloat(
                                         product.suggested_price,
                                       ).toFixed(2)}
                                     </div>
-                                    <div className="text-xs text-muted-foreground">
+                                    <div className="text-[10px] sm:text-xs text-muted-foreground">
                                       sugerido
                                     </div>
                                   </div>
                                 )}
                             </div>
                           ) : (
-                            <div className="flex items-center justify-center gap-2 py-4 px-3 bg-gray-50 border border-gray-200 rounded-lg">
+                                                        <div className="flex items-center justify-center gap-2 py-3 sm:py-4 px-2 sm:px-3 bg-gray-50 border border-gray-200 rounded-lg">
                               <Lock className="h-4 w-4 text-muted-foreground" />
                               <div className="text-center">
-                                <div className="text-sm font-medium text-muted-foreground">
+                                                                <div className="text-xs sm:text-sm font-medium text-muted-foreground text-center">
                                   {isAuthenticated
                                     ? customer?.status === "pending"
                                       ? "Aguardando aprovação"
@@ -756,7 +757,7 @@ export default function Store() {
                                     : "Faça login para ver preços"}
                                 </div>
                                 {!isAuthenticated && (
-                                  <div className="text-xs text-muted-foreground mt-1">
+                                                                    <div className="text-[10px] sm:text-xs text-muted-foreground mt-1">
                                     <Link
                                       to="/login"
                                       className="text-primary hover:underline"
@@ -773,17 +774,17 @@ export default function Store() {
                         {/* Add to Cart Button */}
                         <div className="border-t pt-3">
                           {isApproved ? (
-                            <Button
+                                                        <Button
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 openModal(product.id);
                               }}
-                              className="w-full h-8 text-xs font-medium"
+                              className="w-full h-8 sm:h-9 text-[10px] sm:text-xs font-medium"
                               size="sm"
                             >
-                              <ShoppingCart className="mr-2 h-3 w-3" />
-                              Adicionar ao Carrinho
+                              <ShoppingCart className="mr-1 sm:mr-2 h-3 w-3" />
+                              <span className="hidden sm:inline">Adicionar ao </span>Carrinho
                             </Button>
                           ) : (
                             <Button
@@ -792,7 +793,7 @@ export default function Store() {
                                 e.stopPropagation();
                               }}
                               variant="outline"
-                              className="w-full h-8 text-xs font-medium cursor-not-allowed"
+                                                            className="w-full h-8 sm:h-9 text-[10px] sm:text-xs font-medium cursor-not-allowed"
                               size="sm"
                               disabled
                               asChild
