@@ -20,10 +20,12 @@ import { adminCustomersRouter } from "./routes/admin-customers";
 import { expandedSeedRouter } from "./routes/expanded-seed";
 import { settingsRouter } from "./routes/settings";
 import { notificationsRouter } from "./routes/notifications";
+import { customerAuthRouter } from "./routes/customer-auth";
 import { createStoreSchema } from "./lib/store-schema";
 import { fixOrdersTable } from "./lib/fix-orders-table";
 import { checkAndFixTables } from "./lib/check-tables";
 import { createNotificationSettings } from "./lib/notification-settings";
+import { createCustomerAuthTable } from "./lib/create-customer-auth-table";
 
 export function createServer() {
   const app = express();
