@@ -194,7 +194,7 @@ export default function Notifications() {
     }
   };
 
-  const testWebhook = async () => {
+    const testWebhook = async () => {
     setTestingWebhook(true);
     try {
       const response = await fetch("/api/notifications/test-webhook", {
@@ -205,6 +205,12 @@ export default function Notifications() {
         toast({
           title: "Sucesso",
           description: "Webhook de teste enviado com sucesso!",
+        });
+      } else if (response.status === 404) {
+        toast({
+          title: "Informação",
+          description: "API de notificações não disponível. Deploy necessário.",
+          variant: "default",
         });
       } else {
         const error = await response.json();
@@ -217,9 +223,9 @@ export default function Notifications() {
     } catch (error) {
       console.error("Error testing webhook:", error);
       toast({
-        title: "Erro",
-        description: "Erro ao testar webhook",
-        variant: "destructive",
+        title: "Informação",
+        description: "API de notificações não disponível. Deploy necessário.",
+        variant: "default",
       });
     } finally {
       setTestingWebhook(false);
