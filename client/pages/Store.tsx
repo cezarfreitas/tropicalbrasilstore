@@ -257,13 +257,13 @@ export default function Store() {
   const [colors, setColors] = useState<FilterOption[]>([]);
   const [allProducts, setAllProducts] = useState<StoreProduct[]>([]);
 
-  useEffect(() => {
-    fetchFilterData();
+    useEffect(() => {
+    fetchProducts();
   }, []);
 
   useEffect(() => {
-    fetchProducts();
-  }, [currentPage, selectedCategory, selectedColor, selectedGradeType]);
+    applyFilters();
+  }, [currentPage, selectedCategory, selectedColors, selectedGrades, priceRange, allProducts]);
 
   const fetchProducts = async () => {
     setLoading(true);
