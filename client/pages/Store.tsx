@@ -544,18 +544,26 @@ export default function Store() {
             className="fixed inset-0 bg-black/20"
             onClick={() => setSidebarOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl">
+                    <div className="fixed inset-y-0 left-0 z-50 w-72 sm:w-80 bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-lg font-semibold">Categorias</h2>
+              <h2 className="text-lg font-semibold">Filtros</h2>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setSidebarOpen(false)}
+                className="h-8 w-8 p-0"
               >
-                <X className="h-4 w-4" />
+                <X className="h-5 w-5" />
               </Button>
             </div>
-            <div className="p-4">
+            <div className="p-4 overflow-y-auto max-h-[calc(100vh-80px)]">
+              <Button
+                variant="outline"
+                onClick={() => setSidebarOpen(false)}
+                className="w-full mb-4 h-10"
+              >
+                Aplicar Filtros
+              </Button>
               <FiltersSidebar
                 categories={categories}
                 colors={colors}
