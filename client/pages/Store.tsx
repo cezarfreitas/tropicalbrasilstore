@@ -86,7 +86,8 @@ function FiltersSidebar({
     selectedCategory !== "all" ||
     selectedColors.length > 0 ||
     selectedGrades.length > 0 ||
-    (priceRange[0] > 0 || priceRange[1] < maxPrice);
+    priceRange[0] > 0 ||
+    priceRange[1] < maxPrice;
 
   const gradeOptions = [
     { id: "feminino", name: "Feminino" },
@@ -194,7 +195,9 @@ function FiltersSidebar({
               min="0"
               max={maxPrice}
               value={priceRange[1]}
-              onChange={(e) => onPriceRangeChange([priceRange[0], parseInt(e.target.value)])}
+              onChange={(e) =>
+                onPriceRangeChange([priceRange[0], parseInt(e.target.value)])
+              }
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
             />
           </div>
@@ -208,7 +211,12 @@ function FiltersSidebar({
               min="0"
               max={maxPrice}
               value={priceRange[0]}
-              onChange={(e) => onPriceRangeChange([parseInt(e.target.value) || 0, priceRange[1]])}
+              onChange={(e) =>
+                onPriceRangeChange([
+                  parseInt(e.target.value) || 0,
+                  priceRange[1],
+                ])
+              }
               placeholder="Min"
               className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
             />
@@ -218,7 +226,12 @@ function FiltersSidebar({
               min="0"
               max={maxPrice}
               value={priceRange[1]}
-              onChange={(e) => onPriceRangeChange([priceRange[0], parseInt(e.target.value) || maxPrice])}
+              onChange={(e) =>
+                onPriceRangeChange([
+                  priceRange[0],
+                  parseInt(e.target.value) || maxPrice,
+                ])
+              }
               placeholder="Max"
               className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
             />
@@ -245,7 +258,7 @@ export default function Store() {
   const [totalPages, setTotalPages] = useState(0);
   const productsPerPage = 20;
 
-    // Filter states
+  // Filter states
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedGrades, setSelectedGrades] = useState<string[]>([]);
@@ -257,15 +270,22 @@ export default function Store() {
   const [colors, setColors] = useState<FilterOption[]>([]);
   const [allProducts, setAllProducts] = useState<StoreProduct[]>([]);
 
-    useEffect(() => {
+  useEffect(() => {
     fetchProducts();
   }, []);
 
   useEffect(() => {
     applyFilters();
-  }, [currentPage, selectedCategory, selectedColors, selectedGrades, priceRange, allProducts]);
+  }, [
+    currentPage,
+    selectedCategory,
+    selectedColors,
+    selectedGrades,
+    priceRange,
+    allProducts,
+  ]);
 
-    const fetchProducts = async () => {
+  const fetchProducts = async () => {
     setLoading(true);
     try {
       const response = await fetch("/api/store-old/products");
@@ -283,29 +303,37 @@ export default function Store() {
             uniqueCategories.add(product.category_name);
           }
           if (product.available_colors) {
-            product.available_colors.forEach(color => uniqueColors.add(color.name));
+            product.available_colors.forEach((color) =>
+              uniqueColors.add(color.name),
+            );
           }
           const price = product.suggested_price || product.base_price || 0;
           maxProductPrice = Math.max(maxProductPrice, price);
         });
 
         setCategories([
-          { id: "all", name: "Todas as Categorias", count: productsData.length },
-          ...Array.from(uniqueCategories).map(cat => ({
+          {
+            id: "all",
+            name: "Todas as Categorias",
+            count: productsData.length,
+          },
+          ...Array.from(uniqueCategories).map((cat) => ({
             id: cat.toLowerCase(),
             name: cat,
-            count: productsData.filter((p: StoreProduct) => p.category_name === cat).length
-          }))
+            count: productsData.filter(
+              (p: StoreProduct) => p.category_name === cat,
+            ).length,
+          })),
         ]);
 
         setColors([
-          ...Array.from(uniqueColors).map(color => ({
+          ...Array.from(uniqueColors).map((color) => ({
             id: color.toLowerCase(),
             name: color,
             count: productsData.filter((p: StoreProduct) =>
-              p.available_colors?.some(c => c.name === color)
-            ).length
-          }))
+              p.available_colors?.some((c) => c.name === color),
+            ).length,
+          })),
         ]);
 
         setMaxPrice(Math.ceil(maxProductPrice));
@@ -323,17 +351,17 @@ export default function Store() {
 
     // Category filter
     if (selectedCategory !== "all") {
-      filtered = filtered.filter((product) =>
-        product.category_name?.toLowerCase() === selectedCategory
+      filtered = filtered.filter(
+        (product) => product.category_name?.toLowerCase() === selectedCategory,
       );
     }
 
     // Color filter
     if (selectedColors.length > 0) {
       filtered = filtered.filter((product) =>
-        product.available_colors?.some(color =>
-          selectedColors.includes(color.name.toLowerCase())
-        )
+        product.available_colors?.some((color) =>
+          selectedColors.includes(color.name.toLowerCase()),
+        ),
       );
     }
 
@@ -341,16 +369,28 @@ export default function Store() {
     if (selectedGrades.length > 0) {
       filtered = filtered.filter((product) => {
         const productName = product.name.toLowerCase();
-        return selectedGrades.some(grade => {
+        return selectedGrades.some((grade) => {
           switch (grade) {
             case "feminino":
-              return productName.includes("feminino") || productName.includes("mulher");
+              return (
+                productName.includes("feminino") ||
+                productName.includes("mulher")
+              );
             case "masculino":
-              return productName.includes("masculino") || productName.includes("homem");
+              return (
+                productName.includes("masculino") ||
+                productName.includes("homem")
+              );
             case "infantil":
-              return productName.includes("infantil") || productName.includes("criança");
+              return (
+                productName.includes("infantil") ||
+                productName.includes("criança")
+              );
             case "premium":
-              return productName.includes("premium") || productName.includes("confort");
+              return (
+                productName.includes("premium") ||
+                productName.includes("confort")
+              );
             default:
               return false;
           }
@@ -377,21 +417,21 @@ export default function Store() {
     setTotalPages(totalPages);
   };
 
-    // Filter manipulation functions
+  // Filter manipulation functions
   const handleColorToggle = (colorId: string) => {
-    setSelectedColors(prev =>
+    setSelectedColors((prev) =>
       prev.includes(colorId)
-        ? prev.filter(id => id !== colorId)
-        : [...prev, colorId]
+        ? prev.filter((id) => id !== colorId)
+        : [...prev, colorId],
     );
     setCurrentPage(1);
   };
 
   const handleGradeToggle = (gradeId: string) => {
-    setSelectedGrades(prev =>
+    setSelectedGrades((prev) =>
       prev.includes(gradeId)
-        ? prev.filter(id => id !== gradeId)
-        : [...prev, gradeId]
+        ? prev.filter((id) => id !== gradeId)
+        : [...prev, gradeId],
     );
     setCurrentPage(1);
   };
@@ -414,8 +454,6 @@ export default function Store() {
     setCurrentPage(1);
   };
 
-  
-
   const openModal = (productId: number) => {
     setSelectedProductId(productId);
     setIsModalOpen(true);
@@ -425,8 +463,6 @@ export default function Store() {
     setIsModalOpen(false);
     setSelectedProductId(null);
   };
-
-  
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -468,8 +504,6 @@ export default function Store() {
     return pages;
   };
 
-  
-
   if (loading) {
     return (
       <StoreLayout>
@@ -509,7 +543,7 @@ export default function Store() {
                 <X className="h-4 w-4" />
               </Button>
             </div>
-                        <div className="p-4">
+            <div className="p-4">
               <FiltersSidebar
                 categories={categories}
                 colors={colors}
@@ -531,7 +565,7 @@ export default function Store() {
           </div>
         </div>
 
-                {/* Desktop sidebar */}
+        {/* Desktop sidebar */}
         <div className="hidden lg:flex lg:w-64 lg:flex-col">
           <div className="flex-1 bg-white border-r border-gray-200 pt-5 pb-4 overflow-y-auto">
             <div className="px-4">
@@ -570,8 +604,6 @@ export default function Store() {
           <div className="container mx-auto px-4 py-5 pb-8">
             {/* Hero Section - Removed */}
             <div />
-
-            
 
             {/* Products Grid */}
             <div className="mb-8">

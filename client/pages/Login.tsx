@@ -26,10 +26,10 @@ export default function Login() {
     setIsLoading(true);
 
     // Simulate loading for better UX
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     const success = login(username, password);
-    
+
     if (success) {
       toast({
         title: "Login realizado com sucesso!",
@@ -43,7 +43,7 @@ export default function Login() {
         variant: "destructive",
       });
     }
-    
+
     setIsLoading(false);
   };
 
@@ -55,7 +55,9 @@ export default function Login() {
             <Package className="h-8 w-8 text-primary-foreground" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Chinelos Admin</h1>
-          <p className="text-gray-600 mt-2">Faça login para acessar o painel administrativo</p>
+          <p className="text-gray-600 mt-2">
+            Faça login para acessar o painel administrativo
+          </p>
         </div>
 
         <Card className="shadow-lg border-0">
@@ -115,9 +117,9 @@ export default function Login() {
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full" 
+              <Button
+                type="submit"
+                className="w-full"
                 disabled={isLoading || !username || !password}
               >
                 {isLoading ? (

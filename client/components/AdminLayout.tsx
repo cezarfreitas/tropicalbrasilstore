@@ -134,7 +134,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   {item.name}
                 </Link>
               );
-                        })}
+            })}
             <div className="mt-8 pt-4 border-t">
               <Button
                 variant="ghost"
@@ -186,7 +186,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                     );
                   })}
                 </ul>
-                            </li>
+              </li>
               <li className="mt-auto">
                 <Button
                   variant="ghost"
