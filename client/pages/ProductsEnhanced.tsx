@@ -471,71 +471,25 @@ export default function ProductsEnhanced() {
     }
   };
 
-  const openCreateGradeDialog = () => {
-    if (formData.variants.length === 0) {
-      toast({
-        title: "Erro",
-        description: "Adicione variantes primeiro para criar uma grade",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const sizeQuantities = formData.variants.reduce(
-      (acc, variant) => {
-        if (variant.size_id && variant.stock > 0) {
-          acc[variant.size_id] = (acc[variant.size_id] || 0) + variant.stock;
-        }
-        return acc;
-      },
-      {} as Record<number, number>,
-    );
-
-    const templates = Object.entries(sizeQuantities).map(
-      ([sizeId, quantity]) => ({
-        size_id: parseInt(sizeId),
-        required_quantity: quantity,
-        size: sizes.find((s) => s.id === parseInt(sizeId))?.size || "",
-      }),
-    );
-
-    setGradeFormData({
-      name: `Grade ${formData.name}`,
-      description: `Grade baseada no produto ${formData.name}`,
-      templates,
-    });
-
+  const openGradeSelectionDialog = () => {
     setGradeDialogOpen(true);
   };
 
-  const createGrade = async () => {
-    try {
-      const response = await fetch("/api/grades-redesigned", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(gradeFormData),
-      });
+  const toggleGradeSelection = (gradeId: number) => {
+    const newSelectedGrades = selectedGrades.includes(gradeId)
+      ? selectedGrades.filter((id) => id !== gradeId)
+      : [...selectedGrades, gradeId];
 
-      if (response.ok) {
-        toast({
-          title: "Sucesso",
-          description: "Grade criada com sucesso",
-        });
-        setGradeDialogOpen(false);
-        setGradeFormData({ name: "", description: "", templates: [] });
-      } else {
-        const error = await response.json();
-        throw new Error(error.error || "Erro ao criar grade");
-      }
-    } catch (error: any) {
-      toast({
-        title: "Erro",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
+    setSelectedGrades(newSelectedGrades);
+    setFormData({ ...formData, grades: newSelectedGrades });
+  };
+
+  const saveGradeSelection = () => {
+    setGradeDialogOpen(false);
+    toast({
+      title: "Sucesso",
+      description: `${selectedGrades.length} grade(s) selecionada(s)`,
+    });
   };
 
   const getColorFromVariant = (variant: ProductVariant) => {
