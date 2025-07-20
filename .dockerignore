@@ -8,7 +8,7 @@ README.md
 .env.local
 .env.example
 .DS_Store
-Dockerfile
+Dockerfile.docker-compose
 docker-compose.yml
 *.log
 coverage
