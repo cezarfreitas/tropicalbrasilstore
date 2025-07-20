@@ -1,9 +1,19 @@
 import path from "path";
 import { createServer } from "./index";
 import * as express from "express";
+import { fileURLToPath } from "url";
 
 const app = createServer();
 const port = process.env.PORT || 3000;
+
+// Production environment checks
+if (process.env.NODE_ENV === "production") {
+  console.log("🌍 Production mode enabled");
+  console.log(
+    "📊 Database URL configured:",
+    process.env.DATABASE_URL ? "✅" : "❌",
+  );
+}
 
 // In production, serve the built SPA files
 const __dirname = import.meta.dirname;
