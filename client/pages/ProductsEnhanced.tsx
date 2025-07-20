@@ -1045,12 +1045,16 @@ export default function ProductsEnhanced() {
                             <TableRow key={index}>
                               <TableCell>
                                 <Select
-                                  value={variant.size_id.toString()}
+                                  value={
+                                    variant.size_id > 0
+                                      ? variant.size_id.toString()
+                                      : ""
+                                  }
                                   onValueChange={(value) =>
                                     updateVariant(
                                       index,
                                       "size_id",
-                                      parseInt(value),
+                                      parseInt(value) || 0,
                                     )
                                   }
                                 >
@@ -1071,12 +1075,16 @@ export default function ProductsEnhanced() {
                               </TableCell>
                               <TableCell>
                                 <Select
-                                  value={variant.color_id.toString()}
+                                  value={
+                                    variant.color_id > 0
+                                      ? variant.color_id.toString()
+                                      : ""
+                                  }
                                   onValueChange={(value) =>
                                     updateVariant(
                                       index,
                                       "color_id",
-                                      parseInt(value),
+                                      parseInt(value) || 0,
                                     )
                                   }
                                 >
