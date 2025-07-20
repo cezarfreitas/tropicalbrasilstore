@@ -271,7 +271,7 @@ export default function CustomerChangePassword() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 pt-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
                 <Button
                   type="submit"
                   disabled={
@@ -280,6 +280,7 @@ export default function CustomerChangePassword() {
                     !newPassword ||
                     !confirmPassword
                   }
+                  className="h-11 text-base"
                 >
                   {isLoading && !keepDefault ? (
                     <>
@@ -296,6 +297,7 @@ export default function CustomerChangePassword() {
                   variant="outline"
                   onClick={handleKeepDefault}
                   disabled={isLoading}
+                  className="h-11 text-base"
                 >
                   {isLoading && keepDefault ? (
                     <>
