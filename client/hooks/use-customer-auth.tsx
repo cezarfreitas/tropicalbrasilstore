@@ -6,15 +6,18 @@ interface Customer {
   email: string;
   whatsapp: string;
   status: 'pending' | 'approved' | 'rejected';
+  is_first_login: boolean;
 }
 
 interface CustomerAuthContextType {
   customer: Customer | null;
   isAuthenticated: boolean;
   isApproved: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  isFirstLogin: boolean;
+  login: (whatsapp: string, password: string) => Promise<{ success: boolean; isFirstLogin?: boolean }>;
   logout: () => void;
   register: (name: string, email: string, whatsapp: string) => Promise<{ success: boolean; message: string }>;
+  changePassword: (newPassword: string) => Promise<{ success: boolean; message: string }>;
   loading: boolean;
 }
 
@@ -32,6 +35,7 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
 
   const isAuthenticated = customer !== null;
   const isApproved = customer?.status === 'approved';
+  const isFirstLogin = customer?.is_first_login === true;
 
   // Check if customer is already authenticated on mount
   useEffect(() => {
@@ -47,24 +51,24 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
     setLoading(false);
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (whatsapp: string, password: string): Promise<{ success: boolean; isFirstLogin?: boolean }> => {
     try {
       const response = await fetch("/api/customers/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ whatsapp, password }),
       });
 
       if (response.ok) {
         const customerData = await response.json();
         setCustomer(customerData);
         localStorage.setItem(CUSTOMER_AUTH_KEY, JSON.stringify(customerData));
-        return true;
+        return { success: true, isFirstLogin: customerData.is_first_login };
       }
-      return false;
+      return { success: false };
     } catch (error) {
       console.error("Login error:", error);
-      return false;
+      return { success: false };
     }
   };
 
@@ -89,6 +93,33 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
     }
   };
 
+  const changePassword = async (newPassword: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const response = await fetch("/api/customers/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newPassword }),
+      });
+
+      const result = await response.json();
+      
+      if (response.ok) {
+        // Update customer state to mark first login as complete
+        if (customer) {
+          const updatedCustomer = { ...customer, is_first_login: false };
+          setCustomer(updatedCustomer);
+          localStorage.setItem(CUSTOMER_AUTH_KEY, JSON.stringify(updatedCustomer));
+        }
+        return { success: true, message: "Senha alterada com sucesso!" };
+      } else {
+        return { success: false, message: result.error || "Erro ao alterar senha." };
+      }
+    } catch (error) {
+      console.error("Change password error:", error);
+      return { success: false, message: "Erro de conexão. Tente novamente." };
+    }
+  };
+
   const logout = () => {
     setCustomer(null);
     localStorage.removeItem(CUSTOMER_AUTH_KEY);
@@ -99,9 +130,11 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
       customer, 
       isAuthenticated, 
       isApproved, 
+      isFirstLogin,
       login, 
       logout, 
       register, 
+      changePassword,
       loading 
     }}>
       {children}
