@@ -1180,7 +1180,7 @@ export default function ProductsEnhanced() {
                         <Grid3x3 className="mx-auto h-8 w-8 mb-2" />
                         <p>Crie uma grade baseada nas variantes do produto</p>
                         <p className="text-sm">
-                          A grade ser�� automaticamente configurada com base nos
+                          A grade será automaticamente configurada com base nos
                           tamanhos e quantidades das variantes
                         </p>
                       </div>
@@ -1327,7 +1327,7 @@ export default function ProductsEnhanced() {
             <div>
               <Label htmlFor="filter-category">Categoria</Label>
               <Select
-                value={selectedCategory}
+                value={selectedCategory || "all"}
                 onValueChange={(value) =>
                   setSelectedCategory(value === "all" ? "" : value)
                 }
