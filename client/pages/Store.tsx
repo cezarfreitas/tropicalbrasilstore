@@ -255,8 +255,13 @@ export default function Store() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Customer authentication
-  const { isAuthenticated, isApproved, customer } = useCustomerAuth();
+    // Customer authentication
+  const { isAuthenticated, isApproved, isFirstLogin, customer } = useCustomerAuth();
+
+  // Redirect to password change if first login
+  if (isAuthenticated && isFirstLogin) {
+    return <Navigate to="/change-password" replace />;
+  }
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
