@@ -37,6 +37,16 @@ export function createServer() {
   fixOrdersTable().catch(console.error);
   checkAndFixTables().catch(console.error);
 
+  // Health check endpoint
+  app.get("/health", (_req, res) => {
+    res.status(200).json({
+      status: "healthy",
+      timestamp: new Date().toISOString(),
+      version: "1.0.0",
+      environment: process.env.NODE_ENV || "development",
+    });
+  });
+
   // Example API routes
   app.get("/api/ping", (_req, res) => {
     res.json({ message: "Chinelos Admin API v1.0" });
