@@ -361,7 +361,7 @@ export default function Notifications() {
                     className="font-mono text-sm"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    Variáveis disponíveis: {{ORDER_ID}}, {{CUSTOMER_NAME}}, {{CUSTOMER_EMAIL}}, {{CUSTOMER_WHATSAPP}}, {{TOTAL_PRICE}}, {{ORDER_DATE}}, {{ORDER_STATUS}}, {{ORDER_ITEMS}}, {{EMAIL_DATE}}
+                    Variáveis dispon��veis: {{ORDER_ID}}, {{CUSTOMER_NAME}}, {{CUSTOMER_EMAIL}}, {{CUSTOMER_WHATSAPP}}, {{TOTAL_PRICE}}, {{ORDER_DATE}}, {{ORDER_STATUS}}, {{ORDER_ITEMS}}, {{EMAIL_DATE}}
                   </p>
                 </div>
 
@@ -468,7 +468,7 @@ export default function Notifications() {
               </CardContent>
             </Card>
           </TabsContent>
-        </tabs>
+                </Tabs>
       </div>
     </AdminLayout>
   );
