@@ -138,6 +138,7 @@ export default function ProductsEnhanced() {
   const [categories, setCategories] = useState<any[]>([]);
   const [sizes, setSizes] = useState<any[]>([]);
   const [colors, setColors] = useState<any[]>([]);
+  const [grades, setGrades] = useState<ExistingGrade[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [gradeDialogOpen, setGradeDialogOpen] = useState(false);
