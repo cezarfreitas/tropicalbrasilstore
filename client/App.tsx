@@ -89,12 +89,14 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route
+                        <Route
               path="/admin/categories"
               element={
-                <AdminLayout>
-                  <Categories />
-                </AdminLayout>
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <Categories />
+                  </AdminLayout>
+                </ProtectedRoute>
               }
             />
             <Route
