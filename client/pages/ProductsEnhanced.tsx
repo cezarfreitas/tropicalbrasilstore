@@ -944,12 +944,16 @@ export default function ProductsEnhanced() {
                                 <div>
                                   <Label className="text-xs">Cor</Label>
                                   <Select
-                                    value={variant.color_id.toString()}
+                                    value={
+                                      variant.color_id > 0
+                                        ? variant.color_id.toString()
+                                        : ""
+                                    }
                                     onValueChange={(value) =>
                                       updateVariant(
                                         index,
                                         "color_id",
-                                        parseInt(value),
+                                        parseInt(value) || 0,
                                       )
                                     }
                                   >
