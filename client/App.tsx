@@ -150,16 +150,7 @@ const App = () => (
                   </AdminLayout>
                 }
               />
-              <Route
-                path="/admin/customer-approval"
-                element={
-                  <ProtectedRoute>
-                    <AdminLayout>
-                      <CustomerApproval />
-                    </AdminLayout>
-                  </ProtectedRoute>
-                }
-              />
+              
               {/* Legacy admin routes (backward compatibility) */}
               <Route
                 path="/products"
