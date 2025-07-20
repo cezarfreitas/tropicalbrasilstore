@@ -414,45 +414,7 @@ export default function Store() {
     setCurrentPage(1);
   };
 
-  const fetchFilterData = async () => {
-    try {
-      // Fetch categories
-      const categoriesResponse = await fetch("/api/categories");
-      if (categoriesResponse.ok) {
-        const categoriesData = await categoriesResponse.json();
-        setCategories([
-          { id: "all", name: "Todas as Categorias" },
-          ...categoriesData.map((cat: any) => ({
-            id: cat.id.toString(),
-            name: cat.name,
-          })),
-        ]);
-      }
-
-      // Fetch colors
-      const colorsResponse = await fetch("/api/colors");
-      if (colorsResponse.ok) {
-        const colorsData = await colorsResponse.json();
-        setColors([
-          { id: "all", name: "Todas as Cores" },
-          ...colorsData.map((color: any) => ({
-            id: color.id.toString(),
-            name: color.name,
-          })),
-        ]);
-      }
-
-      // Mock grade types (you can replace with real API call)
-      setGradeTypes([
-        { id: "all", name: "Todos os Tipos" },
-        { id: "pequena", name: "Grade Pequena" },
-        { id: "media", name: "Grade Média" },
-        { id: "grande", name: "Grade Grande" },
-      ]);
-    } catch (error) {
-      console.error("Error fetching filter data:", error);
-    }
-  };
+  
 
   const openModal = (productId: number) => {
     setSelectedProductId(productId);
