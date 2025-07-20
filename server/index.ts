@@ -22,6 +22,7 @@ import { settingsRouter } from "./routes/settings";
 import { createStoreSchema } from "./lib/store-schema";
 import { fixOrdersTable } from "./lib/fix-orders-table";
 import { checkAndFixTables } from "./lib/check-tables";
+import { createNotificationSettings } from "./lib/notification-settings";
 
 export function createServer() {
   const app = express();
