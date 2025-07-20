@@ -3,15 +3,15 @@ import path from "path";
 
 // Server build configuration
 export default defineConfig({
-  build: {
+    build: {
     lib: {
-      entry: path.resolve(__dirname, "server/node-build.ts"),
+      entry: path.resolve(__dirname, "server/production.ts"),
       name: "server",
       fileName: "production",
       formats: ["es"],
     },
     outDir: "dist/server",
-    target: "node22",
+    target: "node18",
     ssr: true,
     rollupOptions: {
       external: [
@@ -32,10 +32,11 @@ export default defineConfig({
         // External dependencies that should not be bundled
         "express",
         "cors",
+        "mysql2",
       ],
       output: {
         format: "es",
-        entryFileNames: "[name].mjs",
+        entryFileNames: "[name].js",
       },
     },
     minify: false, // Keep readable for debugging
