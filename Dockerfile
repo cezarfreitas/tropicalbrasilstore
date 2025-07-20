@@ -13,8 +13,8 @@ RUN rm -f package-lock.json && npm install --legacy-peer-deps
 # Copy source code
 COPY . .
 
-# Build the application
-RUN npm run build
+# Build the application with verbose output
+RUN npm run build --verbose
 
 # Remove dev dependencies after build to reduce image size
 RUN npm prune --production
