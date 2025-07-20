@@ -24,6 +24,7 @@ import Notifications from "./pages/Notifications";
 import Login from "./pages/Login";
 import CustomerLogin from "./pages/CustomerLogin";
 import CustomerRegister from "./pages/CustomerRegister";
+import CustomerChangePassword from "./pages/CustomerChangePassword";
 import CustomerApproval from "./pages/CustomerApproval";
 import Store from "./pages/Store";
 import ProductDetail from "./pages/ProductDetail";
