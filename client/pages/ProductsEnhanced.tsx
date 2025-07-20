@@ -252,6 +252,15 @@ export default function ProductsEnhanced() {
     }
   };
 
+  const fetchGrades = async () => {
+    try {
+      const response = await fetch("/api/grades-redesigned");
+      if (response.ok) setGrades(await response.json());
+    } catch (error) {
+      console.error("Error fetching grades:", error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
