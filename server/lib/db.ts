@@ -1,47 +1,68 @@
 import mysql from "mysql2/promise";
 
-<<<<<<< HEAD
-// Database configuration with environment variables
-const dbConfig = {
-  host: process.env.DB_HOST || "localhost",
-  port: parseInt(process.env.DB_PORT || "3306"),
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "chinelos_store",
-=======
-// Database configuration with fallback to environment variables
-const dbConfig = {
-  // Primary: Use DATABASE_URL if provided
-  uri:
-    process.env.DATABASE_URL ||
-    // Fallback: Use individual environment variables
-    `mysql://${process.env.MYSQL_USER || "mysql"}:${process.env.MYSQL_PASSWORD || "eA1mPCW1xwJE31nJOxZixcHdIB68WwQ0Gqe7wAdRw7FqclRQYfOINf7p9vHAAXSN"}@${process.env.MYSQL_HOST || "5.161.52.206"}:${process.env.MYSQL_PORT || "5435"}/${process.env.MYSQL_DATABASE || "default"}`,
->>>>>>> c72c1b6292519beaaf381a21765f20e08bcdca45
-  waitForConnections: true,
-  connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "10"),
-  queueLimit: 0,
-<<<<<<< HEAD
-  charset: "utf8mb4",
-  collation: "utf8mb4_unicode_ci",
-};
-
-// Fallback to original URI if environment variables are not set
-const connection = process.env.DB_HOST
-  ? mysql.createPool(dbConfig)
-  : mysql.createPool({
-      uri: "mysql://mysql:eA1mPCW1xwJE31nJOxZixcHdIB68WwQ0Gqe7wAdRw7FqclRQYfOINf7p9vHAAXSN@5.161.52.206:5435/default",
+// Database configuration with multiple fallback options
+const createConnection = () => {
+  // Option 1: Use DATABASE_URL if provided (for cloud platforms)
+  if (process.env.DATABASE_URL) {
+    return mysql.createPool({
+      uri: process.env.DATABASE_URL,
       waitForConnections: true,
-      connectionLimit: 10,
+      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "10"),
       queueLimit: 0,
+      acquireTimeout: 60000,
+      timeout: 60000,
+      reconnect: true,
+      charset: "utf8mb4",
+      collation: "utf8mb4_unicode_ci",
     });
-=======
-  acquireTimeout: 60000,
-  timeout: 60000,
-  reconnect: true,
+  }
+
+  // Option 2: Use individual MYSQL_* environment variables
+  if (process.env.MYSQL_HOST) {
+    return mysql.createPool({
+      host: process.env.MYSQL_HOST,
+      port: parseInt(process.env.MYSQL_PORT || "3306"),
+      user: process.env.MYSQL_USER || "mysql",
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE || "default",
+      waitForConnections: true,
+      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "10"),
+      queueLimit: 0,
+      acquireTimeout: 60000,
+      timeout: 60000,
+      reconnect: true,
+      charset: "utf8mb4",
+      collation: "utf8mb4_unicode_ci",
+    });
+  }
+
+  // Option 3: Use Docker-style DB_* environment variables
+  if (process.env.DB_HOST) {
+    return mysql.createPool({
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || "3306"),
+      user: process.env.DB_USER || "root",
+      password: process.env.DB_PASSWORD || "",
+      database: process.env.DB_NAME || "chinelos_store",
+      waitForConnections: true,
+      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "10"),
+      queueLimit: 0,
+      charset: "utf8mb4",
+      collation: "utf8mb4_unicode_ci",
+    });
+  }
+
+  // Fallback: Use original connection string for development
+  console.log("Using fallback database configuration");
+  return mysql.createPool({
+    uri: "mysql://mysql:eA1mPCW1xwJE31nJOxZixcHdIB68WwQ0Gqe7wAdRw7FqclRQYfOINf7p9vHAAXSN@5.161.52.206:5435/default",
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+  });
 };
 
-const connection = mysql.createPool(dbConfig);
->>>>>>> c72c1b6292519beaaf381a21765f20e08bcdca45
+const connection = createConnection();
 
 export default connection;
 
