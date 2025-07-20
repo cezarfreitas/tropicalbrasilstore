@@ -35,12 +35,13 @@ export function createServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // Initialize database on startup
+    // Initialize database on startup
   initDatabase().catch(console.error);
   createStoreSchema().catch(console.error);
   fixOrdersTable().catch(console.error);
   checkAndFixTables().catch(console.error);
   createNotificationSettings().catch(console.error);
+  createCustomerAuthTable().catch(console.error);
 
   // Health check endpoint
   app.get("/health", (_req, res) => {
