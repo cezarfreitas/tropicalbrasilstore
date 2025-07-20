@@ -104,6 +104,7 @@ interface CreateProductRequest {
   photo?: string;
   stock?: number;
   variants: ProductVariant[];
+  grades: number[];
 }
 
 interface GradeTemplate {
