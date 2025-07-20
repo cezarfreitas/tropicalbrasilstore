@@ -51,9 +51,10 @@ const App = () => (
               <Route path="/loja/carrinho" element={<Cart />} />
                             <Route path="/loja/checkout" element={<Checkout />} />
 
-              {/* Customer Authentication Routes */}
+                            {/* Customer Authentication Routes */}
               <Route path="/login" element={<CustomerLogin />} />
               <Route path="/cadastro" element={<CustomerRegister />} />
+              <Route path="/change-password" element={<CustomerChangePassword />} />
 
               {/* Admin Login Route (Public) */}
               <Route path="/admin/login" element={<Login />} />
