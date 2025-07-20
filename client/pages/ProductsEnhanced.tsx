@@ -333,6 +333,9 @@ export default function ProductsEnhanced() {
       if (response.ok) {
         const detailedProduct = await response.json();
         setEditingProduct(detailedProduct);
+        const productGrades =
+          detailedProduct.grades?.map((g: any) => g.id) || [];
+        setSelectedGrades(productGrades);
         setFormData({
           name: detailedProduct.name,
           description: detailedProduct.description || "",
@@ -343,6 +346,7 @@ export default function ProductsEnhanced() {
           photo: detailedProduct.photo || "",
           stock: detailedProduct.stock || 0,
           variants: detailedProduct.variants || [],
+          grades: productGrades,
         });
         setDialogOpen(true);
       }
