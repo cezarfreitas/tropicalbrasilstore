@@ -67,12 +67,19 @@ export default function Notifications() {
     loadSettings();
   }, []);
 
-  const loadSettings = async () => {
+    const loadSettings = async () => {
     try {
       const response = await fetch("/api/notifications");
       if (response.ok) {
-        const data = await response.json();
-        setSettings(data);
+        // Check if response is actually JSON
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await response.json();
+          setSettings(data);
+        } else {
+          // Not JSON, API not ready
+          throw new Error("API not ready");
+        }
       } else if (response.status === 404) {
         // API not available yet, use defaults
         console.log("Notifications API not available, using defaults");
@@ -91,14 +98,8 @@ export default function Notifications() {
       }
     } catch (error) {
       console.error("Error loading settings:", error);
-      // Use defaults on error
-      console.log("Using default settings due to error");
-      toast({
-        title: "Informação",
-        description:
-          "Sistema de notificações será configurado após o próximo deploy",
-        variant: "default",
-      });
+      // Use defaults on error - don't show error to user since API is expected to be missing
+      console.log("Using default settings - API not deployed yet");
     } finally {
       setLoading(false);
     }
