@@ -123,14 +123,21 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
     }
   };
 
-  const changePassword = async (
+    const changePassword = async (
     newPassword: string,
   ): Promise<{ success: boolean; message: string }> => {
     try {
+      if (!customer || !customer.whatsapp) {
+        return { success: false, message: "Cliente não autenticado." };
+      }
+
+      // Extract digits from customer's WhatsApp
+      const cleanWhatsapp = customer.whatsapp.replace(/\D/g, '');
+
       const response = await fetch("/api/customers/change-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ newPassword }),
+        body: JSON.stringify({ newPassword, whatsapp: cleanWhatsapp }),
       });
 
       const result = await response.json();
