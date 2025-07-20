@@ -176,6 +176,16 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                     );
                   })}
                 </ul>
+                            </li>
+              <li className="mt-auto">
+                <Button
+                  variant="ghost"
+                  onClick={handleLogout}
+                  className="w-full justify-start gap-x-3 text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                >
+                  <LogOut className="h-6 w-6 shrink-0" />
+                  Sair
+                </Button>
               </li>
             </ul>
           </nav>
