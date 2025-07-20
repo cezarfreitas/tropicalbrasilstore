@@ -3,7 +3,7 @@ import path from "path";
 
 // Server build configuration
 export default defineConfig({
-    build: {
+  build: {
     lib: {
       entry: path.resolve(__dirname, "server/production.ts"),
       name: "server",
