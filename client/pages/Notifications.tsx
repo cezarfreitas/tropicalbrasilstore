@@ -156,7 +156,7 @@ export default function Notifications() {
     }
   };
 
-  const testEmail = async () => {
+    const testEmail = async () => {
     setTestingEmail(true);
     try {
       const response = await fetch("/api/notifications/test-email", {
@@ -167,6 +167,12 @@ export default function Notifications() {
         toast({
           title: "Sucesso",
           description: "Email de teste enviado com sucesso!",
+        });
+      } else if (response.status === 404) {
+        toast({
+          title: "Informação",
+          description: "API de notificações não disponível. Deploy necessário.",
+          variant: "default",
         });
       } else {
         const error = await response.json();
@@ -179,9 +185,9 @@ export default function Notifications() {
     } catch (error) {
       console.error("Error testing email:", error);
       toast({
-        title: "Erro",
-        description: "Erro ao testar email",
-        variant: "destructive",
+        title: "Informação",
+        description: "API de notificações não disponível. Deploy necessário.",
+        variant: "default",
       });
     } finally {
       setTestingEmail(false);
