@@ -704,36 +704,64 @@ export default function Store() {
                           </div>
                         </div>
 
-                        {/* Pricing Section */}
+                                                {/* Pricing Section */}
                         <div className="text-center space-y-1">
-                          <div className="flex items-center justify-center gap-3">
-                            {product.base_price && (
-                              <div>
-                                <div className="text-2xl font-bold text-primary">
-                                  R$ {parseFloat(product.base_price).toFixed(2)}
-                                </div>
-                                <div className="text-xs text-muted-foreground font-medium">
-                                  UNITÁRIO
-                                </div>
-                              </div>
-                            )}
-
-                            {product.suggested_price &&
-                              product.suggested_price !==
-                                product.base_price && (
-                                <div className="text-right">
-                                  <div className="text-sm text-muted-foreground">
-                                    R${" "}
-                                    {parseFloat(
-                                      product.suggested_price,
-                                    ).toFixed(2)}
+                          {isApproved ? (
+                            <div className="flex items-center justify-center gap-3">
+                              {product.base_price && (
+                                <div>
+                                  <div className="text-2xl font-bold text-primary">
+                                    R$ {parseFloat(product.base_price).toFixed(2)}
                                   </div>
-                                  <div className="text-xs text-muted-foreground">
-                                    sugerido
+                                  <div className="text-xs text-muted-foreground font-medium">
+                                    UNITÁRIO
                                   </div>
                                 </div>
                               )}
-                          </div>
+
+                              {product.suggested_price &&
+                                product.suggested_price !==
+                                  product.base_price && (
+                                  <div className="text-right">
+                                    <div className="text-sm text-muted-foreground">
+                                      R${" "}
+                                      {parseFloat(
+                                        product.suggested_price,
+                                      ).toFixed(2)}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground">
+                                      sugerido
+                                    </div>
+                                  </div>
+                                )}
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-center gap-2 py-4 px-3 bg-gray-50 border border-gray-200 rounded-lg">
+                              <Lock className="h-4 w-4 text-muted-foreground" />
+                              <div className="text-center">
+                                <div className="text-sm font-medium text-muted-foreground">
+                                  {isAuthenticated ? (
+                                    customer?.status === 'pending' ? (
+                                      "Aguardando aprovação"
+                                    ) : customer?.status === 'rejected' ? (
+                                      "Cadastro rejeitado"
+                                    ) : (
+                                      "Faça login para ver preços"
+                                    )
+                                  ) : (
+                                    "Faça login para ver preços"
+                                  )}
+                                </div>
+                                {!isAuthenticated && (
+                                  <div className="text-xs text-muted-foreground mt-1">
+                                    <Link to="/login" className="text-primary hover:underline">
+                                      Clique para entrar
+                                    </Link>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
 
                         {/* Add to Cart Button */}
