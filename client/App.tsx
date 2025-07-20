@@ -140,12 +140,22 @@ const App = () => (
                   </AdminLayout>
                 }
               />
-              <Route
+                            <Route
                 path="/admin/notifications"
                 element={
                   <AdminLayout>
                     <Notifications />
                   </AdminLayout>
+                }
+              />
+              <Route
+                path="/admin/customer-approval"
+                element={
+                  <ProtectedRoute>
+                    <AdminLayout>
+                      <CustomerApproval />
+                    </AdminLayout>
+                  </ProtectedRoute>
                 }
               />
               {/* Legacy admin routes (backward compatibility) */}
