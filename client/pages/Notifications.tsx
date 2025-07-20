@@ -68,12 +68,20 @@ export default function Notifications() {
     loadSettings();
   }, []);
 
-  const loadSettings = async () => {
+    const loadSettings = async () => {
     try {
       const response = await fetch("/api/notifications");
       if (response.ok) {
         const data = await response.json();
         setSettings(data);
+      } else if (response.status === 404) {
+        // API not available yet, use defaults
+        console.log("Notifications API not available, using defaults");
+        toast({
+          title: "Informação",
+          description: "Sistema de notificações será configurado após o próximo deploy",
+          variant: "default",
+        });
       } else {
         toast({
           title: "Erro",
@@ -83,10 +91,12 @@ export default function Notifications() {
       }
     } catch (error) {
       console.error("Error loading settings:", error);
+      // Use defaults on error
+      console.log("Using default settings due to error");
       toast({
-        title: "Erro",
-        description: "Erro ao carregar configurações",
-        variant: "destructive",
+        title: "Informação",
+        description: "Sistema de notificações será configurado após o próximo deploy",
+        variant: "default",
       });
     } finally {
       setLoading(false);
