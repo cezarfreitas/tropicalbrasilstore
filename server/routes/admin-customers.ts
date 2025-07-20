@@ -79,6 +79,43 @@ router.get("/:email", async (req, res) => {
   }
 });
 
+// Create new customer
+router.post("/", async (req, res) => {
+  try {
+    const { email, name, whatsapp } = req.body;
+
+    if (!email || !name) {
+      return res.status(400).json({ error: "Email e nome são obrigatórios" });
+    }
+
+    // Check if customer already exists
+    const [existingCustomer] = await db.execute(
+      "SELECT email FROM customers WHERE email = ?",
+      [email],
+    );
+
+    if ((existingCustomer as any[]).length > 0) {
+      return res
+        .status(409)
+        .json({ error: "Cliente já existe com este email" });
+    }
+
+    // Insert new customer
+    await db.execute(
+      `
+      INSERT INTO customers (email, name, whatsapp, created_at, updated_at)
+      VALUES (?, ?, ?, NOW(), NOW())
+    `,
+      [email, name, whatsapp || null],
+    );
+
+    res.status(201).json({ message: "Cliente criado com sucesso" });
+  } catch (error) {
+    console.error("Error creating customer:", error);
+    res.status(500).json({ error: "Falha ao criar cliente" });
+  }
+});
+
 // Update customer information
 router.patch("/:email", async (req, res) => {
   try {
