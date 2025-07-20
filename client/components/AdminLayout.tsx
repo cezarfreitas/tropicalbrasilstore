@@ -56,6 +56,11 @@ const navigation = [
     href: "/admin/grades",
     icon: Grid3x3,
   },
+  {
+    name: "Configurações",
+    href: "/admin/settings",
+    icon: Settings,
+  },
 ];
 
 export function AdminLayout({ children }: AdminLayoutProps) {
