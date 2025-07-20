@@ -135,7 +135,7 @@ interface ProductsResponse {
 }
 
 export default function ProductsEnhanced() {
-  const [products, setProducts] = useState<EnhancedProduct[]>([]);
+    const [products, setProducts] = useState<EnhancedProduct[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [sizes, setSizes] = useState<any[]>([]);
   const [colors, setColors] = useState<any[]>([]);
@@ -160,7 +160,7 @@ export default function ProductsEnhanced() {
   const [editingProduct, setEditingProduct] = useState<EnhancedProduct | null>(
     null,
   );
-  const [formData, setFormData] = useState<CreateProductRequest>({
+    const [formData, setFormData] = useState<CreateProductRequest>({
     name: "",
     description: "",
     category_id: undefined,
@@ -175,7 +175,7 @@ export default function ProductsEnhanced() {
   const [selectedGrades, setSelectedGrades] = useState<number[]>([]);
   const { toast } = useToast();
 
-  useEffect(() => {
+    useEffect(() => {
     fetchCategories();
     fetchSizes();
     fetchColors();
@@ -243,7 +243,7 @@ export default function ProductsEnhanced() {
     }
   };
 
-  const fetchColors = async () => {
+    const fetchColors = async () => {
     try {
       const response = await fetch("/api/colors");
       if (response.ok) setColors(await response.json());
@@ -310,7 +310,7 @@ export default function ProductsEnhanced() {
     }
   };
 
-  const resetForm = () => {
+    const resetForm = () => {
     setEditingProduct(null);
     setSelectedGrades([]);
     setFormData({
@@ -327,14 +327,13 @@ export default function ProductsEnhanced() {
     });
   };
 
-  const handleEdit = async (product: EnhancedProduct) => {
+    const handleEdit = async (product: EnhancedProduct) => {
     try {
       const response = await fetch(`/api/products-enhanced/${product.id}`);
       if (response.ok) {
         const detailedProduct = await response.json();
         setEditingProduct(detailedProduct);
-        const productGrades =
-          detailedProduct.grades?.map((g: any) => g.id) || [];
+        const productGrades = detailedProduct.grades?.map((g: any) => g.id) || [];
         setSelectedGrades(productGrades);
         setFormData({
           name: detailedProduct.name,
@@ -421,7 +420,7 @@ export default function ProductsEnhanced() {
     setFormData({ ...formData, variants: newVariants });
   };
 
-  const bulkCreateVariants = () => {
+    const bulkCreateVariants = () => {
     const newVariants: ProductVariant[] = [];
 
     // Organize by color first, then add all sizes for each color
@@ -443,15 +442,15 @@ export default function ProductsEnhanced() {
 
     // Sort variants by color name, then by size display_order
     newVariants.sort((a, b) => {
-      const colorA = colors.find((c) => c.id === a.color_id)?.name || "";
-      const colorB = colors.find((c) => c.id === b.color_id)?.name || "";
+      const colorA = colors.find(c => c.id === a.color_id)?.name || "";
+      const colorB = colors.find(c => c.id === b.color_id)?.name || "";
 
       if (colorA !== colorB) {
         return colorA.localeCompare(colorB);
       }
 
-      const sizeA = sizes.find((s) => s.id === a.size_id)?.display_order || 0;
-      const sizeB = sizes.find((s) => s.id === b.size_id)?.display_order || 0;
+      const sizeA = sizes.find(s => s.id === a.size_id)?.display_order || 0;
+      const sizeB = sizes.find(s => s.id === b.size_id)?.display_order || 0;
       return sizeA - sizeB;
     });
 
@@ -486,13 +485,13 @@ export default function ProductsEnhanced() {
     }
   };
 
-  const openGradeSelectionDialog = () => {
+    const openGradeSelectionDialog = () => {
     setGradeDialogOpen(true);
   };
 
   const toggleGradeSelection = (gradeId: number) => {
     const newSelectedGrades = selectedGrades.includes(gradeId)
-      ? selectedGrades.filter((id) => id !== gradeId)
+      ? selectedGrades.filter(id => id !== gradeId)
       : [...selectedGrades, gradeId];
 
     setSelectedGrades(newSelectedGrades);
@@ -850,55 +849,73 @@ export default function ProductsEnhanced() {
                         Criar Todas as Combinações
                       </Button>
                     </div>
-                  ) : variantViewMode === "grid" ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {formData.variants.map((variant, index) => (
-                        <Card key={index} className="relative">
-                          <CardContent className="pt-4">
-                            <div className="absolute top-2 right-2 flex gap-1">
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                onClick={() => duplicateVariant(index)}
-                              >
-                                <Copy className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                onClick={() => removeVariant(index)}
-                              >
-                                <X className="h-3 w-3" />
-                              </Button>
+                                    ) : variantViewMode === "grid" ? (
+                    <div className="space-y-6">
+                      {/* Group variants by color */}
+                      {colors.map((color) => {
+                        const colorVariants = formData.variants.filter(
+                          (v) => v.color_id === color.id
+                        );
+
+                        if (colorVariants.length === 0) return null;
+
+                        return (
+                          <div key={color.id} className="space-y-3">
+                            <div className="flex items-center gap-3 pb-2 border-b">
+                              <div
+                                className="w-8 h-8 rounded-full border-2"
+                                style={{
+                                  backgroundColor: color.hex_code || "#999999",
+                                }}
+                              />
+                              <h3 className="text-lg font-semibold">{color.name}</h3>
+                              <Badge variant="outline">
+                                {colorVariants.length} tamanhos
+                              </Badge>
                             </div>
 
-                            <div className="space-y-3">
-                              <div className="flex items-center gap-2">
-                                <div
-                                  className="w-6 h-6 rounded border-2"
-                                  style={{
-                                    backgroundColor:
-                                      getColorFromVariant(variant),
-                                  }}
-                                />
-                                <div className="font-medium">
-                                  {getSizeFromVariant(variant)}
-                                </div>
-                              </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                              {colorVariants.map((variant) => {
+                                const variantIndex = formData.variants.findIndex(
+                                  (v) => v.size_id === variant.size_id && v.color_id === variant.color_id
+                                );
+
+                                return (
+                                  <Card key={`${variant.size_id}-${variant.color_id}`} className="relative">
+                                    <CardContent className="pt-4">
+                                      <div className="absolute top-2 right-2 flex gap-1">
+                                        <Button
+                                          type="button"
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6"
+                                          onClick={() => duplicateVariant(variantIndex)}
+                                        >
+                                          <Copy className="h-3 w-3" />
+                                        </Button>
+                                        <Button
+                                          type="button"
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6"
+                                          onClick={() => removeVariant(variantIndex)}
+                                        >
+                                          <X className="h-3 w-3" />
+                                        </Button>
+                                      </div>
+
+                                      <div className="space-y-3">
+                                        <div className="flex items-center gap-2">
+                                          <div className="font-medium text-lg">
+                                            {getSizeFromVariant(variant)}
+                                          </div>
+                                        </div>
 
                               <div className="grid grid-cols-2 gap-2">
                                 <div>
                                   <Label className="text-xs">Tamanho</Label>
-                                  <Select
-                                    value={
-                                      variant.size_id > 0
-                                        ? variant.size_id.toString()
-                                        : ""
-                                    }
+                                                                    <Select
+                                    value={variant.size_id > 0 ? variant.size_id.toString() : ""}
                                     onValueChange={(value) =>
                                       updateVariant(
                                         index,
@@ -925,12 +942,8 @@ export default function ProductsEnhanced() {
 
                                 <div>
                                   <Label className="text-xs">Cor</Label>
-                                  <Select
-                                    value={
-                                      variant.color_id > 0
-                                        ? variant.color_id.toString()
-                                        : ""
-                                    }
+                                                                    <Select
+                                    value={variant.color_id > 0 ? variant.color_id.toString() : ""}
                                     onValueChange={(value) =>
                                       updateVariant(
                                         index,
@@ -1025,13 +1038,9 @@ export default function ProductsEnhanced() {
                         <TableBody>
                           {formData.variants.map((variant, index) => (
                             <TableRow key={index}>
-                              <TableCell>
+                                                            <TableCell>
                                 <Select
-                                  value={
-                                    variant.size_id > 0
-                                      ? variant.size_id.toString()
-                                      : ""
-                                  }
+                                  value={variant.size_id > 0 ? variant.size_id.toString() : ""}
                                   onValueChange={(value) =>
                                     updateVariant(
                                       index,
@@ -1057,11 +1066,7 @@ export default function ProductsEnhanced() {
                               </TableCell>
                               <TableCell>
                                 <Select
-                                  value={
-                                    variant.color_id > 0
-                                      ? variant.color_id.toString()
-                                      : ""
-                                  }
+                                  value={variant.color_id > 0 ? variant.color_id.toString() : ""}
                                   onValueChange={(value) =>
                                     updateVariant(
                                       index,
@@ -1158,7 +1163,7 @@ export default function ProductsEnhanced() {
                   )}
                 </TabsContent>
 
-                <TabsContent value="grades" className="space-y-4">
+                                <TabsContent value="grades" className="space-y-4">
                   <div className="flex items-center justify-between">
                     <Label className="text-base">Grades do Produto</Label>
                     <Button
@@ -1178,9 +1183,7 @@ export default function ProductsEnhanced() {
                           <Label>Grades Selecionadas:</Label>
                           <div className="flex flex-wrap gap-2">
                             {selectedGrades.map((gradeId) => {
-                              const grade = grades.find(
-                                (g) => g.id === gradeId,
-                              );
+                              const grade = grades.find(g => g.id === gradeId);
                               return grade ? (
                                 <Badge key={gradeId} variant="default">
                                   {grade.name}
@@ -1194,8 +1197,7 @@ export default function ProductsEnhanced() {
                           <Grid3x3 className="mx-auto h-8 w-8 mb-2" />
                           <p>Nenhuma grade selecionada</p>
                           <p className="text-sm">
-                            Clique em "Selecionar Grades" para escolher grades
-                            existentes
+                            Clique em "Selecionar Grades" para escolher grades existentes
                           </p>
                         </div>
                       )}
@@ -1221,7 +1223,7 @@ export default function ProductsEnhanced() {
         </Dialog>
       </div>
 
-      {/* Grade Selection Dialog */}
+            {/* Grade Selection Dialog */}
       <Dialog open={gradeDialogOpen} onOpenChange={setGradeDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
@@ -1310,13 +1312,11 @@ export default function ProductsEnhanced() {
               </div>
             </div>
 
-            <div>
+                        <div>
               <Label htmlFor="filter-category">Categoria</Label>
-              <Select
+                            <Select
                 value={selectedCategory || "all"}
-                onValueChange={(value) =>
-                  setSelectedCategory(value === "all" ? "" : value)
-                }
+                onValueChange={(value) => setSelectedCategory(value === "all" ? "" : value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Todas as categorias" />
@@ -1337,11 +1337,9 @@ export default function ProductsEnhanced() {
 
             <div>
               <Label htmlFor="filter-status">Status</Label>
-              <Select
+                            <Select
                 value={selectedStatus || "all"}
-                onValueChange={(value) =>
-                  setSelectedStatus(value === "all" ? "" : value)
-                }
+                onValueChange={(value) => setSelectedStatus(value === "all" ? "" : value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Todos os status" />
