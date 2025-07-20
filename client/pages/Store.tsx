@@ -377,6 +377,43 @@ export default function Store() {
     setTotalPages(totalPages);
   };
 
+    // Filter manipulation functions
+  const handleColorToggle = (colorId: string) => {
+    setSelectedColors(prev =>
+      prev.includes(colorId)
+        ? prev.filter(id => id !== colorId)
+        : [...prev, colorId]
+    );
+    setCurrentPage(1);
+  };
+
+  const handleGradeToggle = (gradeId: string) => {
+    setSelectedGrades(prev =>
+      prev.includes(gradeId)
+        ? prev.filter(id => id !== gradeId)
+        : [...prev, gradeId]
+    );
+    setCurrentPage(1);
+  };
+
+  const handlePriceRangeChange = (range: [number, number]) => {
+    setPriceRange(range);
+    setCurrentPage(1);
+  };
+
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    setCurrentPage(1);
+  };
+
+  const clearAllFilters = () => {
+    setSelectedCategory("all");
+    setSelectedColors([]);
+    setSelectedGrades([]);
+    setPriceRange([0, maxPrice]);
+    setCurrentPage(1);
+  };
+
   const fetchFilterData = async () => {
     try {
       // Fetch categories
