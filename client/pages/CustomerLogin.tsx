@@ -107,8 +107,8 @@ export default function CustomerLogin() {
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="whatsapp">WhatsApp</Label>
+                            <div className="space-y-2">
+                <Label htmlFor="whatsapp" className="text-sm">WhatsApp</Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -117,7 +117,7 @@ export default function CustomerLogin() {
                     value={whatsapp}
                     onChange={(e) => handleWhatsAppChange(e.target.value)}
                     placeholder="(11) 99999-9999"
-                    className="pl-10"
+                    className="pl-10 h-11 text-base"
                     required
                     disabled={isLoading}
                   />
