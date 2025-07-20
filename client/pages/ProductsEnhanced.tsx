@@ -1533,20 +1533,24 @@ export default function ProductsEnhanced() {
                       </TableCell>
                       <TableCell>
                         <div className="space-y-1">
-                                                    {product.base_price && (
+                          {product.base_price && (
                             <div className="text-sm">
                               Base: R${" "}
-                              {typeof product.base_price === 'number'
+                              {typeof product.base_price === "number"
                                 ? product.base_price.toFixed(2)
-                                : parseFloat(product.base_price.toString()).toFixed(2)}
+                                : parseFloat(
+                                    product.base_price.toString(),
+                                  ).toFixed(2)}
                             </div>
                           )}
                           {product.suggested_price && (
                             <div className="text-sm text-muted-foreground">
                               Sugerido: R${" "}
-                              {typeof product.suggested_price === 'number'
+                              {typeof product.suggested_price === "number"
                                 ? product.suggested_price.toFixed(2)
-                                : parseFloat(product.suggested_price.toString()).toFixed(2)}
+                                : parseFloat(
+                                    product.suggested_price.toString(),
+                                  ).toFixed(2)}
                             </div>
                           )}
                         </div>

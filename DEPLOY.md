@@ -5,7 +5,9 @@ Este projeto suporta múltiplas formas de deploy:
 ## 🎯 Opções de Deploy
 
 ### 1. **Nixpacks** (Railway, Render, Fly.io) - Recomendado
+
 ### 2. **Easy Panel** (Docker Compose)
+
 ### 3. **Docker** (Manual)
 
 ---

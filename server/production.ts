@@ -10,7 +10,9 @@ if (process.env.NODE_ENV === "production") {
   console.log("🌍 Production mode enabled");
   console.log(
     "📊 Database configured:",
-    process.env.DATABASE_URL || process.env.MYSQL_HOST || process.env.DB_HOST ? "✅" : "❌",
+    process.env.DATABASE_URL || process.env.MYSQL_HOST || process.env.DB_HOST
+      ? "✅"
+      : "❌",
   );
 }
 
