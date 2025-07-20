@@ -189,9 +189,9 @@ export default function CustomerRegister() {
                 </div>
               </div>
 
-              <Button
+                            <Button
                 type="submit"
-                className="w-full"
+                className="w-full h-11 text-base"
                 disabled={isLoading || !isFormValid}
               >
                 {isLoading ? (
