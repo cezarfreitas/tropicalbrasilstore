@@ -1,0 +1,18 @@
+[variables]
+NODE_ENV = "production"
+
+[phases.setup]
+nixPkgs = ["nodejs_22", "npm"]
+aptPkgs = ["python3", "python3-pip", "build-essential"]
+
+[phases.install]
+cmds = ["npm ci --include=dev"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[phases.start]
+cmd = "npm start"
+
+[staticAssets]
+"dist/spa" = "/"
