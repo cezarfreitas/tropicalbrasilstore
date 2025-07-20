@@ -240,21 +240,18 @@ export default function Notifications() {
     }
   };
 
-  if (loading) {
+    if (loading) {
     return (
-      <AdminLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <Settings className="h-8 w-8 animate-spin mx-auto mb-4" />
-            <p>Carregando configurações...</p>
-          </div>
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <Settings className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p>Carregando configurações...</p>
         </div>
-      </AdminLayout>
+      </div>
     );
   }
 
   return (
-    <AdminLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
