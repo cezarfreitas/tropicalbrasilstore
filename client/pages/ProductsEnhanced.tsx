@@ -170,15 +170,9 @@ export default function ProductsEnhanced() {
     photo: "",
     stock: 0,
     variants: [],
+    grades: [],
   });
-  const [gradeFormData, setGradeFormData] = useState<CreateGradeRequest>({
-    name: "",
-    description: "",
-    templates: [],
-  });
-  const [selectedVariantsForGrade, setSelectedVariantsForGrade] = useState<
-    ProductVariant[]
-  >([]);
+  const [selectedGrades, setSelectedGrades] = useState<number[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
