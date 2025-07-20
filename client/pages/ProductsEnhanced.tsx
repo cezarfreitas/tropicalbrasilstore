@@ -424,8 +424,9 @@ export default function ProductsEnhanced() {
   const bulkCreateVariants = () => {
     const newVariants: ProductVariant[] = [];
 
-    sizes.forEach((size) => {
-      colors.forEach((color) => {
+    // Organize by color first, then add all sizes for each color
+    colors.forEach((color) => {
+      sizes.forEach((size) => {
         const exists = formData.variants.some(
           (v) => v.size_id === size.id && v.color_id === color.id,
         );
@@ -440,6 +441,20 @@ export default function ProductsEnhanced() {
       });
     });
 
+    // Sort variants by color name, then by size display_order
+    newVariants.sort((a, b) => {
+      const colorA = colors.find((c) => c.id === a.color_id)?.name || "";
+      const colorB = colors.find((c) => c.id === b.color_id)?.name || "";
+
+      if (colorA !== colorB) {
+        return colorA.localeCompare(colorB);
+      }
+
+      const sizeA = sizes.find((s) => s.id === a.size_id)?.display_order || 0;
+      const sizeB = sizes.find((s) => s.id === b.size_id)?.display_order || 0;
+      return sizeA - sizeB;
+    });
+
     setFormData({
       ...formData,
       variants: [...formData.variants, ...newVariants],
@@ -447,7 +462,7 @@ export default function ProductsEnhanced() {
 
     toast({
       title: "Sucesso",
-      description: `${newVariants.length} variantes criadas`,
+      description: `${newVariants.length} variantes criadas, organizadas por cor`,
     });
   };
 
