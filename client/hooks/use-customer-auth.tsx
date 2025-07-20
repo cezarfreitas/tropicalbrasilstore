@@ -1,11 +1,17 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 interface Customer {
   id: number;
   name: string;
   email: string;
   whatsapp: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: "pending" | "approved" | "rejected";
   is_first_login: boolean;
 }
 
@@ -14,14 +20,25 @@ interface CustomerAuthContextType {
   isAuthenticated: boolean;
   isApproved: boolean;
   isFirstLogin: boolean;
-  login: (whatsapp: string, password: string) => Promise<{ success: boolean; isFirstLogin?: boolean }>;
+  login: (
+    whatsapp: string,
+    password: string,
+  ) => Promise<{ success: boolean; isFirstLogin?: boolean }>;
   logout: () => void;
-  register: (name: string, email: string, whatsapp: string) => Promise<{ success: boolean; message: string }>;
-  changePassword: (newPassword: string) => Promise<{ success: boolean; message: string }>;
+  register: (
+    name: string,
+    email: string,
+    whatsapp: string,
+  ) => Promise<{ success: boolean; message: string }>;
+  changePassword: (
+    newPassword: string,
+  ) => Promise<{ success: boolean; message: string }>;
   loading: boolean;
 }
 
-const CustomerAuthContext = createContext<CustomerAuthContextType | undefined>(undefined);
+const CustomerAuthContext = createContext<CustomerAuthContextType | undefined>(
+  undefined,
+);
 
 const CUSTOMER_AUTH_KEY = "chinelos_customer_auth";
 
@@ -34,7 +51,7 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
   const [loading, setLoading] = useState(true);
 
   const isAuthenticated = customer !== null;
-  const isApproved = customer?.status === 'approved';
+  const isApproved = customer?.status === "approved";
   const isFirstLogin = customer?.is_first_login === true;
 
   // Check if customer is already authenticated on mount
@@ -51,7 +68,10 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
     setLoading(false);
   }, []);
 
-  const login = async (whatsapp: string, password: string): Promise<{ success: boolean; isFirstLogin?: boolean }> => {
+  const login = async (
+    whatsapp: string,
+    password: string,
+  ): Promise<{ success: boolean; isFirstLogin?: boolean }> => {
     try {
       const response = await fetch("/api/customers/login", {
         method: "POST",
@@ -72,7 +92,11 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
     }
   };
 
-  const register = async (name: string, email: string, whatsapp: string): Promise<{ success: boolean; message: string }> => {
+  const register = async (
+    name: string,
+    email: string,
+    whatsapp: string,
+  ): Promise<{ success: boolean; message: string }> => {
     try {
       const response = await fetch("/api/customers/register", {
         method: "POST",
@@ -81,11 +105,17 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
       });
 
       const result = await response.json();
-      
+
       if (response.ok) {
-        return { success: true, message: "Cadastro realizado! Aguarde aprovação do administrador." };
+        return {
+          success: true,
+          message: "Cadastro realizado! Aguarde aprovação do administrador.",
+        };
       } else {
-        return { success: false, message: result.error || "Erro ao realizar cadastro." };
+        return {
+          success: false,
+          message: result.error || "Erro ao realizar cadastro.",
+        };
       }
     } catch (error) {
       console.error("Register error:", error);
@@ -93,7 +123,9 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
     }
   };
 
-  const changePassword = async (newPassword: string): Promise<{ success: boolean; message: string }> => {
+  const changePassword = async (
+    newPassword: string,
+  ): Promise<{ success: boolean; message: string }> => {
     try {
       const response = await fetch("/api/customers/change-password", {
         method: "POST",
@@ -102,17 +134,23 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
       });
 
       const result = await response.json();
-      
+
       if (response.ok) {
         // Update customer state to mark first login as complete
         if (customer) {
           const updatedCustomer = { ...customer, is_first_login: false };
           setCustomer(updatedCustomer);
-          localStorage.setItem(CUSTOMER_AUTH_KEY, JSON.stringify(updatedCustomer));
+          localStorage.setItem(
+            CUSTOMER_AUTH_KEY,
+            JSON.stringify(updatedCustomer),
+          );
         }
         return { success: true, message: "Senha alterada com sucesso!" };
       } else {
-        return { success: false, message: result.error || "Erro ao alterar senha." };
+        return {
+          success: false,
+          message: result.error || "Erro ao alterar senha.",
+        };
       }
     } catch (error) {
       console.error("Change password error:", error);
@@ -126,17 +164,19 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
   };
 
   return (
-    <CustomerAuthContext.Provider value={{ 
-      customer, 
-      isAuthenticated, 
-      isApproved, 
-      isFirstLogin,
-      login, 
-      logout, 
-      register, 
-      changePassword,
-      loading 
-    }}>
+    <CustomerAuthContext.Provider
+      value={{
+        customer,
+        isAuthenticated,
+        isApproved,
+        isFirstLogin,
+        login,
+        logout,
+        register,
+        changePassword,
+        loading,
+      }}
+    >
       {children}
     </CustomerAuthContext.Provider>
   );
@@ -145,7 +185,9 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
 export function useCustomerAuth() {
   const context = useContext(CustomerAuthContext);
   if (context === undefined) {
-    throw new Error("useCustomerAuth must be used within a CustomerAuthProvider");
+    throw new Error(
+      "useCustomerAuth must be used within a CustomerAuthProvider",
+    );
   }
   return context;
 }

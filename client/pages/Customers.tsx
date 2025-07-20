@@ -62,7 +62,7 @@ interface Customer {
   total_spent: number;
   last_order_date: string;
   completed_orders: number;
-  status?: 'pending' | 'approved' | 'rejected';
+  status?: "pending" | "approved" | "rejected";
   id?: number;
 }
 
@@ -91,7 +91,7 @@ interface PendingCustomer {
   name: string;
   email: string;
   whatsapp: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: "pending" | "approved" | "rejected";
   created_at: string;
 }
 
@@ -112,11 +112,14 @@ const customerStatusConfig = {
 
 export default function Customers() {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [pendingCustomers, setPendingCustomers] = useState<PendingCustomer[]>([]);
+  const [pendingCustomers, setPendingCustomers] = useState<PendingCustomer[]>(
+    [],
+  );
   const [stats, setStats] = useState<CustomerStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [pendingLoading, setPendingLoading] = useState(true);
-  const [selectedCustomer, setSelectedCustomer] = useState<CustomerDetails | null>(null);
+  const [selectedCustomer, setSelectedCustomer] =
+    useState<CustomerDetails | null>(null);
   const [customerDetailsLoading, setCustomerDetailsLoading] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ name: "", whatsapp: "" });
@@ -124,7 +127,9 @@ export default function Customers() {
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
   const [addForm, setAddForm] = useState({ email: "", name: "", whatsapp: "" });
   const [adding, setAdding] = useState(false);
-  const [approvingCustomer, setApprovingCustomer] = useState<number | null>(null);
+  const [approvingCustomer, setApprovingCustomer] = useState<number | null>(
+    null,
+  );
   const { toast } = useToast();
 
   useEffect(() => {
@@ -200,7 +205,10 @@ export default function Customers() {
     }
   };
 
-  const handleCustomerApproval = async (customerId: number, status: 'approved' | 'rejected') => {
+  const handleCustomerApproval = async (
+    customerId: number,
+    status: "approved" | "rejected",
+  ) => {
     setApprovingCustomer(customerId);
     try {
       const response = await fetch(`/api/customers/${customerId}/status`, {
@@ -213,20 +221,21 @@ export default function Customers() {
 
       if (response.ok) {
         // Remove from pending list
-        setPendingCustomers(prev => prev.filter(c => c.id !== customerId));
-        
+        setPendingCustomers((prev) => prev.filter((c) => c.id !== customerId));
+
         // Refresh stats
         fetchStats();
-        
+
         toast({
           title: "Sucesso",
-          description: `Cliente ${status === 'approved' ? 'aprovado' : 'rejeitado'} com sucesso`,
+          description: `Cliente ${status === "approved" ? "aprovado" : "rejeitado"} com sucesso`,
         });
       } else {
         const error = await response.json();
         toast({
           title: "Erro",
-          description: error.error || "Não foi possível atualizar o status do cliente",
+          description:
+            error.error || "Não foi possível atualizar o status do cliente",
           variant: "destructive",
         });
       }
@@ -243,7 +252,7 @@ export default function Customers() {
   };
 
   const getCustomerPassword = (whatsapp: string) => {
-    const digits = whatsapp.replace(/\D/g, '');
+    const digits = whatsapp.replace(/\D/g, "");
     return digits.slice(-4);
   };
 
@@ -385,7 +394,9 @@ export default function Customers() {
     );
   };
 
-  const getCustomerStatusBadge = (status: 'pending' | 'approved' | 'rejected') => {
+  const getCustomerStatusBadge = (
+    status: "pending" | "approved" | "rejected",
+  ) => {
     const config = customerStatusConfig[status];
     const Icon = config.icon;
 
@@ -396,7 +407,10 @@ export default function Customers() {
     };
 
     return (
-      <Badge variant={variants[config.color]} className="flex items-center gap-1">
+      <Badge
+        variant={variants[config.color]}
+        className="flex items-center gap-1"
+      >
         <Icon className="h-3 w-3" />
         {config.label}
       </Badge>
@@ -651,7 +665,10 @@ export default function Customers() {
                           <Input
                             value={editForm.whatsapp}
                             onChange={(e) =>
-                              setEditForm({ ...editForm, whatsapp: e.target.value })
+                              setEditForm({
+                                ...editForm,
+                                whatsapp: e.target.value,
+                              })
                             }
                             className="h-8"
                             placeholder="(11) 99999-9999"
@@ -665,14 +682,20 @@ export default function Customers() {
                       </TableCell>
                       <TableCell>
                         <div>
-                          <div className="font-medium">{customer.total_orders}</div>
+                          <div className="font-medium">
+                            {customer.total_orders}
+                          </div>
                           <div className="text-sm text-muted-foreground">
                             {customer.completed_orders} concluídos
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{formatCurrency(customer.total_spent)}</TableCell>
-                      <TableCell>{formatDate(customer.last_order_date)}</TableCell>
+                      <TableCell>
+                        {formatCurrency(customer.total_spent)}
+                      </TableCell>
+                      <TableCell>
+                        {formatDate(customer.last_order_date)}
+                      </TableCell>
                       <TableCell>{formatDate(customer.created_at)}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
@@ -798,8 +821,11 @@ export default function Customers() {
                                                       Pedido #{order.id}
                                                     </div>
                                                     <div className="text-sm text-muted-foreground">
-                                                      {order.item_count} item(s) •{" "}
-                                                      {formatDate(order.created_at)}
+                                                      {order.item_count} item(s)
+                                                      •{" "}
+                                                      {formatDate(
+                                                        order.created_at,
+                                                      )}
                                                     </div>
                                                   </div>
                                                   <div className="text-right">
@@ -809,7 +835,9 @@ export default function Customers() {
                                                       )}
                                                     </div>
                                                     <div className="text-sm">
-                                                      {getStatusBadge(order.status)}
+                                                      {getStatusBadge(
+                                                        order.status,
+                                                      )}
                                                     </div>
                                                   </div>
                                                 </div>
@@ -841,7 +869,8 @@ export default function Customers() {
                     Nenhum cliente encontrado
                   </h3>
                   <p className="mt-2 text-muted-foreground">
-                    Os clientes aprovados aparecerão aqui quando fizerem o primeiro pedido.
+                    Os clientes aprovados aparecerão aqui quando fizerem o
+                    primeiro pedido.
                   </p>
                 </div>
               )}
@@ -920,16 +949,24 @@ export default function Customers() {
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Aprovar Cliente</AlertDialogTitle>
+                                <AlertDialogTitle>
+                                  Aprovar Cliente
+                                </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Tem certeza que deseja aprovar o cliente {customer.name}?
-                                  Após a aprovação, ele poderá fazer login e ver os preços.
+                                  Tem certeza que deseja aprovar o cliente{" "}
+                                  {customer.name}? Após a aprovação, ele poderá
+                                  fazer login e ver os preços.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
                                 <AlertDialogAction
-                                  onClick={() => handleCustomerApproval(customer.id, 'approved')}
+                                  onClick={() =>
+                                    handleCustomerApproval(
+                                      customer.id,
+                                      "approved",
+                                    )
+                                  }
                                   className="bg-green-600 hover:bg-green-700"
                                 >
                                   Aprovar
@@ -951,16 +988,24 @@ export default function Customers() {
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Rejeitar Cliente</AlertDialogTitle>
+                                <AlertDialogTitle>
+                                  Rejeitar Cliente
+                                </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Tem certeza que deseja rejeitar o cadastro de {customer.name}?
-                                  Esta ação não poderá ser desfeita.
+                                  Tem certeza que deseja rejeitar o cadastro de{" "}
+                                  {customer.name}? Esta ação não poderá ser
+                                  desfeita.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
                                 <AlertDialogAction
-                                  onClick={() => handleCustomerApproval(customer.id, 'rejected')}
+                                  onClick={() =>
+                                    handleCustomerApproval(
+                                      customer.id,
+                                      "rejected",
+                                    )
+                                  }
                                   className="bg-red-600 hover:bg-red-700"
                                 >
                                   Rejeitar
@@ -981,7 +1026,8 @@ export default function Customers() {
                     Nenhum cadastro pendente
                   </h3>
                   <p className="mt-2 text-muted-foreground">
-                    Quando clientes se cadastrarem, eles aparecerão aqui para aprovação.
+                    Quando clientes se cadastrarem, eles aparecerão aqui para
+                    aprovação.
                   </p>
                 </div>
               )}

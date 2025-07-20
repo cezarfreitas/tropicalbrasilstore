@@ -29,7 +29,7 @@ interface Customer {
   name: string;
   email: string;
   whatsapp: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: "pending" | "approved" | "rejected";
   created_at: string;
 }
 
@@ -67,7 +67,10 @@ export default function CustomerApproval() {
     }
   };
 
-  const updateCustomerStatus = async (customerId: number, status: 'approved' | 'rejected') => {
+  const updateCustomerStatus = async (
+    customerId: number,
+    status: "approved" | "rejected",
+  ) => {
     try {
       const response = await fetch(`/api/customers/${customerId}/status`, {
         method: "PUT",
@@ -78,7 +81,7 @@ export default function CustomerApproval() {
       if (response.ok) {
         toast({
           title: "Sucesso",
-          description: `Cliente ${status === 'approved' ? 'aprovado' : 'rejeitado'} com sucesso!`,
+          description: `Cliente ${status === "approved" ? "aprovado" : "rejeitado"} com sucesso!`,
         });
         fetchCustomers(); // Reload the list
       } else {
@@ -100,24 +103,48 @@ export default function CustomerApproval() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'pending':
-        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200"><Clock className="h-3 w-3 mr-1" />Pendente</Badge>;
-      case 'approved':
-        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200"><Check className="h-3 w-3 mr-1" />Aprovado</Badge>;
-      case 'rejected':
-        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200"><X className="h-3 w-3 mr-1" />Rejeitado</Badge>;
+      case "pending":
+        return (
+          <Badge
+            variant="outline"
+            className="bg-yellow-50 text-yellow-700 border-yellow-200"
+          >
+            <Clock className="h-3 w-3 mr-1" />
+            Pendente
+          </Badge>
+        );
+      case "approved":
+        return (
+          <Badge
+            variant="outline"
+            className="bg-green-50 text-green-700 border-green-200"
+          >
+            <Check className="h-3 w-3 mr-1" />
+            Aprovado
+          </Badge>
+        );
+      case "rejected":
+        return (
+          <Badge
+            variant="outline"
+            className="bg-red-50 text-red-700 border-red-200"
+          >
+            <X className="h-3 w-3 mr-1" />
+            Rejeitado
+          </Badge>
+        );
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -132,8 +159,8 @@ export default function CustomerApproval() {
     return whatsapp.slice(-4);
   };
 
-  const pendingCustomers = customers.filter(c => c.status === 'pending');
-  const processedCustomers = customers.filter(c => c.status !== 'pending');
+  const pendingCustomers = customers.filter((c) => c.status === "pending");
+  const processedCustomers = customers.filter((c) => c.status !== "pending");
 
   if (loading) {
     return (
@@ -191,7 +218,9 @@ export default function CustomerApproval() {
                           <User className="h-4 w-4 text-muted-foreground" />
                           <div>
                             <div className="font-medium">{customer.name}</div>
-                            <div className="text-sm text-muted-foreground">ID: {customer.id}</div>
+                            <div className="text-sm text-muted-foreground">
+                              ID: {customer.id}
+                            </div>
                           </div>
                         </div>
                       </TableCell>
@@ -219,26 +248,40 @@ export default function CustomerApproval() {
                         <div className="flex gap-2">
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button size="sm" variant="outline" className="text-green-600 border-green-200 hover:bg-green-50">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-green-600 border-green-200 hover:bg-green-50"
+                              >
                                 <Check className="h-3 w-3 mr-1" />
                                 Aprovar
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Aprovar Cliente</AlertDialogTitle>
+                                <AlertDialogTitle>
+                                  Aprovar Cliente
+                                </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Tem certeza que deseja aprovar o cliente <strong>{customer.name}</strong>?
-                                  <br /><br />
+                                  Tem certeza que deseja aprovar o cliente{" "}
+                                  <strong>{customer.name}</strong>?
+                                  <br />
+                                  <br />
                                   O cliente poderá fazer login com:
                                   <br />• Email: {customer.email}
-                                  <br />• Senha: {getPassword(customer.whatsapp)}
+                                  <br />• Senha:{" "}
+                                  {getPassword(customer.whatsapp)}
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                <AlertDialogAction 
-                                  onClick={() => updateCustomerStatus(customer.id, 'approved')}
+                                <AlertDialogAction
+                                  onClick={() =>
+                                    updateCustomerStatus(
+                                      customer.id,
+                                      "approved",
+                                    )
+                                  }
                                   className="bg-green-600 hover:bg-green-700"
                                 >
                                   Aprovar
@@ -249,23 +292,35 @@ export default function CustomerApproval() {
 
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-red-600 border-red-200 hover:bg-red-50"
+                              >
                                 <X className="h-3 w-3 mr-1" />
                                 Rejeitar
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Rejeitar Cliente</AlertDialogTitle>
+                                <AlertDialogTitle>
+                                  Rejeitar Cliente
+                                </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Tem certeza que deseja rejeitar o cliente <strong>{customer.name}</strong>?
-                                  Esta ação pode ser revertida posteriormente.
+                                  Tem certeza que deseja rejeitar o cliente{" "}
+                                  <strong>{customer.name}</strong>? Esta ação
+                                  pode ser revertida posteriormente.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                <AlertDialogAction 
-                                  onClick={() => updateCustomerStatus(customer.id, 'rejected')}
+                                <AlertDialogAction
+                                  onClick={() =>
+                                    updateCustomerStatus(
+                                      customer.id,
+                                      "rejected",
+                                    )
+                                  }
                                   className="bg-red-600 hover:bg-red-700"
                                 >
                                   Rejeitar
@@ -317,7 +372,9 @@ export default function CustomerApproval() {
                           <User className="h-4 w-4 text-muted-foreground" />
                           <div>
                             <div className="font-medium">{customer.name}</div>
-                            <div className="text-sm text-muted-foreground">ID: {customer.id}</div>
+                            <div className="text-sm text-muted-foreground">
+                              ID: {customer.id}
+                            </div>
                           </div>
                         </div>
                       </TableCell>
@@ -333,30 +390,32 @@ export default function CustomerApproval() {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>
-                        {getStatusBadge(customer.status)}
-                      </TableCell>
+                      <TableCell>{getStatusBadge(customer.status)}</TableCell>
                       <TableCell className="text-sm">
                         {formatDate(customer.created_at)}
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          {customer.status === 'rejected' && (
-                            <Button 
-                              size="sm" 
-                              variant="outline" 
-                              onClick={() => updateCustomerStatus(customer.id, 'approved')}
+                          {customer.status === "rejected" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                updateCustomerStatus(customer.id, "approved")
+                              }
                               className="text-green-600 border-green-200 hover:bg-green-50"
                             >
                               <Check className="h-3 w-3 mr-1" />
                               Aprovar
                             </Button>
                           )}
-                          {customer.status === 'approved' && (
-                            <Button 
-                              size="sm" 
-                              variant="outline" 
-                              onClick={() => updateCustomerStatus(customer.id, 'rejected')}
+                          {customer.status === "approved" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                updateCustomerStatus(customer.id, "rejected")
+                              }
                               className="text-red-600 border-red-200 hover:bg-red-50"
                             >
                               <X className="h-3 w-3 mr-1" />

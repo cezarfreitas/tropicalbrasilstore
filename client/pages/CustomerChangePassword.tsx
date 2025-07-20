@@ -17,8 +17,15 @@ export default function CustomerChangePassword() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [keepDefault, setKeepDefault] = useState(false);
-  
-  const { customer, isAuthenticated, isApproved, isFirstLogin, changePassword, logout } = useCustomerAuth();
+
+  const {
+    customer,
+    isAuthenticated,
+    isApproved,
+    isFirstLogin,
+    changePassword,
+    logout,
+  } = useCustomerAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -35,7 +42,7 @@ export default function CustomerChangePassword() {
   const getDefaultPassword = () => {
     if (customer?.whatsapp) {
       // Get last 4 digits from WhatsApp number
-      const digits = customer.whatsapp.replace(/\D/g, '');
+      const digits = customer.whatsapp.replace(/\D/g, "");
       return digits.slice(-4);
     }
     return "";
@@ -46,13 +53,14 @@ export default function CustomerChangePassword() {
   const handleKeepDefault = () => {
     setKeepDefault(true);
     setIsLoading(true);
-    
+
     // Just mark first login as complete without changing password
     changePassword(defaultPassword).then((result) => {
       if (result.success) {
         toast({
           title: "Senha mantida!",
-          description: "Você manteve a senha padrão. Bem-vindo à Chinelos Store!",
+          description:
+            "Você manteve a senha padrão. Bem-vindo à Chinelos Store!",
         });
         navigate("/");
       } else {
@@ -75,7 +83,8 @@ export default function CustomerChangePassword() {
     if (currentPassword !== defaultPassword) {
       toast({
         title: "Senha atual incorreta",
-        description: "A senha atual deve ser os 4 últimos dígitos do seu celular.",
+        description:
+          "A senha atual deve ser os 4 últimos dígitos do seu celular.",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -104,11 +113,12 @@ export default function CustomerChangePassword() {
     }
 
     const result = await changePassword(newPassword);
-    
+
     if (result.success) {
       toast({
         title: "Senha alterada!",
-        description: "Sua senha foi alterada com sucesso. Bem-vindo à Chinelos Store!",
+        description:
+          "Sua senha foi alterada com sucesso. Bem-vindo à Chinelos Store!",
       });
       navigate("/");
     } else {
@@ -118,7 +128,7 @@ export default function CustomerChangePassword() {
         variant: "destructive",
       });
     }
-    
+
     setIsLoading(false);
   };
 
@@ -130,7 +140,9 @@ export default function CustomerChangePassword() {
             <Package className="h-8 w-8 text-primary-foreground" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Chinelos Store</h1>
-          <p className="text-gray-600 mt-2">Primeiro acesso - Configure sua senha</p>
+          <p className="text-gray-600 mt-2">
+            Primeiro acesso - Configure sua senha
+          </p>
         </div>
 
         <Card className="shadow-lg border-0">
@@ -163,7 +175,9 @@ export default function CustomerChangePassword() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="currentPassword">Senha Atual ({defaultPassword})</Label>
+                <Label htmlFor="currentPassword">
+                  Senha Atual ({defaultPassword})
+                </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -258,9 +272,14 @@ export default function CustomerChangePassword() {
               </div>
 
               <div className="grid grid-cols-2 gap-3 pt-4">
-                <Button 
-                  type="submit" 
-                  disabled={isLoading || !currentPassword || !newPassword || !confirmPassword}
+                <Button
+                  type="submit"
+                  disabled={
+                    isLoading ||
+                    !currentPassword ||
+                    !newPassword ||
+                    !confirmPassword
+                  }
                 >
                   {isLoading && !keepDefault ? (
                     <>
@@ -271,8 +290,8 @@ export default function CustomerChangePassword() {
                     "Alterar Senha"
                   )}
                 </Button>
-                
-                <Button 
+
+                <Button
                   type="button"
                   variant="outline"
                   onClick={handleKeepDefault}

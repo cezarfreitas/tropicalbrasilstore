@@ -20,13 +20,13 @@ export default function CustomerRegister() {
   const navigate = useNavigate();
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const formatWhatsApp = (value: string) => {
     // Remove non-digits
-    const digits = value.replace(/\D/g, '');
-    
+    const digits = value.replace(/\D/g, "");
+
     // Apply mask (11) 99999-9999
     if (digits.length <= 2) {
       return `(${digits}`;
@@ -39,7 +39,7 @@ export default function CustomerRegister() {
 
   const handleWhatsAppChange = (value: string) => {
     const formatted = formatWhatsApp(value);
-    handleInputChange('whatsapp', formatted);
+    handleInputChange("whatsapp", formatted);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,20 +47,25 @@ export default function CustomerRegister() {
     setIsLoading(true);
 
     // Extract only digits from WhatsApp
-    const whatsappDigits = formData.whatsapp.replace(/\D/g, '');
-    
+    const whatsappDigits = formData.whatsapp.replace(/\D/g, "");
+
     if (whatsappDigits.length !== 11) {
       toast({
         title: "Erro no WhatsApp",
-        description: "Por favor, insira um número de WhatsApp válido com 11 dígitos.",
+        description:
+          "Por favor, insira um número de WhatsApp válido com 11 dígitos.",
         variant: "destructive",
       });
       setIsLoading(false);
       return;
     }
 
-    const result = await register(formData.name, formData.email, whatsappDigits);
-    
+    const result = await register(
+      formData.name,
+      formData.email,
+      whatsappDigits,
+    );
+
     if (result.success) {
       toast({
         title: "Cadastro realizado!",
@@ -74,11 +79,14 @@ export default function CustomerRegister() {
         variant: "destructive",
       });
     }
-    
+
     setIsLoading(false);
   };
 
-  const isFormValid = formData.name && formData.email && formData.whatsapp.replace(/\D/g, '').length === 11;
+  const isFormValid =
+    formData.name &&
+    formData.email &&
+    formData.whatsapp.replace(/\D/g, "").length === 11;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
@@ -88,7 +96,9 @@ export default function CustomerRegister() {
             <Package className="h-8 w-8 text-primary-foreground" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Chinelos Store</h1>
-          <p className="text-gray-600 mt-2">Cadastre-se para acessar preços exclusivos</p>
+          <p className="text-gray-600 mt-2">
+            Cadastre-se para acessar preços exclusivos
+          </p>
         </div>
 
         <Card className="shadow-lg border-0">
@@ -108,7 +118,7 @@ export default function CustomerRegister() {
                     id="name"
                     type="text"
                     value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
                     placeholder="João Silva"
                     className="pl-10"
                     required
@@ -125,7 +135,7 @@ export default function CustomerRegister() {
                     id="email"
                     type="email"
                     value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                     placeholder="joao@exemplo.com"
                     className="pl-10"
                     required
@@ -167,17 +177,21 @@ export default function CustomerRegister() {
                       <ul className="list-disc pl-5 space-y-1">
                         <li>Seu cadastro será enviado para aprovação</li>
                         <li>Você receberá uma confirmação por WhatsApp</li>
-                        <li>Sua senha será os 4 últimos dígitos do seu celular</li>
-                        <li>Após aprovação, você poderá ver preços exclusivos</li>
+                        <li>
+                          Sua senha será os 4 últimos dígitos do seu celular
+                        </li>
+                        <li>
+                          Após aprovação, você poderá ver preços exclusivos
+                        </li>
                       </ul>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full" 
+              <Button
+                type="submit"
+                className="w-full"
                 disabled={isLoading || !isFormValid}
               >
                 {isLoading ? (
@@ -202,15 +216,13 @@ export default function CustomerRegister() {
                   Já tem conta? Entrar
                 </Link>
               </Button>
-              
+
               <Button
                 variant="link"
                 className="text-sm text-muted-foreground"
                 asChild
               >
-                <Link to="/">
-                  Voltar para a loja
-                </Link>
+                <Link to="/">Voltar para a loja</Link>
               </Button>
             </div>
           </CardContent>

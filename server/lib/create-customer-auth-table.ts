@@ -35,7 +35,7 @@ export async function createCustomerAuthTable() {
         FROM customers
         WHERE email IS NOT NULL AND whatsapp IS NOT NULL
       `);
-      
+
       console.log("Migrated existing customers to customer_auth table");
     }
 

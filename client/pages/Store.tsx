@@ -255,8 +255,9 @@ export default function Store() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    // Customer authentication
-  const { isAuthenticated, isApproved, isFirstLogin, customer } = useCustomerAuth();
+  // Customer authentication
+  const { isAuthenticated, isApproved, isFirstLogin, customer } =
+    useCustomerAuth();
 
   // Redirect to password change if first login
   if (isAuthenticated && isFirstLogin) {
@@ -709,14 +710,15 @@ export default function Store() {
                           </div>
                         </div>
 
-                                                {/* Pricing Section */}
+                        {/* Pricing Section */}
                         <div className="text-center space-y-1">
                           {isApproved ? (
                             <div className="flex items-center justify-center gap-3">
                               {product.base_price && (
                                 <div>
                                   <div className="text-2xl font-bold text-primary">
-                                    R$ {parseFloat(product.base_price).toFixed(2)}
+                                    R${" "}
+                                    {parseFloat(product.base_price).toFixed(2)}
                                   </div>
                                   <div className="text-xs text-muted-foreground font-medium">
                                     UNITÁRIO
@@ -745,21 +747,20 @@ export default function Store() {
                               <Lock className="h-4 w-4 text-muted-foreground" />
                               <div className="text-center">
                                 <div className="text-sm font-medium text-muted-foreground">
-                                  {isAuthenticated ? (
-                                    customer?.status === 'pending' ? (
-                                      "Aguardando aprovação"
-                                    ) : customer?.status === 'rejected' ? (
-                                      "Cadastro rejeitado"
-                                    ) : (
-                                      "Faça login para ver preços"
-                                    )
-                                  ) : (
-                                    "Faça login para ver preços"
-                                  )}
+                                  {isAuthenticated
+                                    ? customer?.status === "pending"
+                                      ? "Aguardando aprovação"
+                                      : customer?.status === "rejected"
+                                        ? "Cadastro rejeitado"
+                                        : "Faça login para ver preços"
+                                    : "Faça login para ver preços"}
                                 </div>
                                 {!isAuthenticated && (
                                   <div className="text-xs text-muted-foreground mt-1">
-                                    <Link to="/login" className="text-primary hover:underline">
+                                    <Link
+                                      to="/login"
+                                      className="text-primary hover:underline"
+                                    >
                                       Clique para entrar
                                     </Link>
                                   </div>
@@ -769,7 +770,7 @@ export default function Store() {
                           )}
                         </div>
 
-                                                {/* Add to Cart Button */}
+                        {/* Add to Cart Button */}
                         <div className="border-t pt-3">
                           {isApproved ? (
                             <Button
@@ -798,15 +799,11 @@ export default function Store() {
                             >
                               <Link to="/login">
                                 <User className="mr-2 h-3 w-3" />
-                                {isAuthenticated ? (
-                                  customer?.status === 'pending' ? (
-                                    "Aguardando Aprovação"
-                                  ) : (
-                                    "Não Autorizado"
-                                  )
-                                ) : (
-                                  "Faça Login"
-                                )}
+                                {isAuthenticated
+                                  ? customer?.status === "pending"
+                                    ? "Aguardando Aprovação"
+                                    : "Não Autorizado"
+                                  : "Faça Login"}
                               </Link>
                             </Button>
                           )}

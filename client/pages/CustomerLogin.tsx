@@ -24,8 +24,8 @@ export default function CustomerLogin() {
 
   const formatWhatsApp = (value: string) => {
     // Remove non-digits
-    const digits = value.replace(/\D/g, '');
-    
+    const digits = value.replace(/\D/g, "");
+
     // Apply mask (11) 99999-9999
     if (digits.length <= 2) {
       return `(${digits}`;
@@ -46,12 +46,13 @@ export default function CustomerLogin() {
     setIsLoading(true);
 
     // Extract only digits from WhatsApp
-    const whatsappDigits = whatsapp.replace(/\D/g, '');
-    
+    const whatsappDigits = whatsapp.replace(/\D/g, "");
+
     if (whatsappDigits.length !== 11) {
       toast({
         title: "Erro no WhatsApp",
-        description: "Por favor, insira um número de WhatsApp válido com 11 dígitos.",
+        description:
+          "Por favor, insira um número de WhatsApp válido com 11 dígitos.",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -59,13 +60,13 @@ export default function CustomerLogin() {
     }
 
     const result = await login(whatsappDigits, password);
-    
+
     if (result.success) {
       toast({
         title: "Login realizado com sucesso!",
         description: "Bem-vindo de volta à Chinelos Store.",
       });
-      
+
       // Check if it's first login and redirect to password change
       if (result.isFirstLogin) {
         navigate("/change-password");
@@ -75,11 +76,12 @@ export default function CustomerLogin() {
     } else {
       toast({
         title: "Erro de autenticação",
-        description: "WhatsApp ou senha incorretos. Verifique se sua conta foi aprovada.",
+        description:
+          "WhatsApp ou senha incorretos. Verifique se sua conta foi aprovada.",
         variant: "destructive",
       });
     }
-    
+
     setIsLoading(false);
   };
 
@@ -91,7 +93,9 @@ export default function CustomerLogin() {
             <Package className="h-8 w-8 text-primary-foreground" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Chinelos Store</h1>
-          <p className="text-gray-600 mt-2">Entre para ver preços e fazer pedidos</p>
+          <p className="text-gray-600 mt-2">
+            Entre para ver preços e fazer pedidos
+          </p>
         </div>
 
         <Card className="shadow-lg border-0">
@@ -124,7 +128,9 @@ export default function CustomerLogin() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Senha (4 últimos dígitos do celular)</Label>
+                <Label htmlFor="password">
+                  Senha (4 últimos dígitos do celular)
+                </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -159,10 +165,14 @@ export default function CustomerLogin() {
                 </p>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={isLoading || whatsapp.replace(/\D/g, '').length !== 11 || password.length !== 4}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={
+                  isLoading ||
+                  whatsapp.replace(/\D/g, "").length !== 11 ||
+                  password.length !== 4
+                }
               >
                 {isLoading ? (
                   <>
@@ -184,11 +194,7 @@ export default function CustomerLogin() {
               </div>
             </div>
 
-            <Button
-              variant="outline"
-              className="w-full"
-              asChild
-            >
+            <Button variant="outline" className="w-full" asChild>
               <Link to="/cadastro" className="flex items-center gap-2">
                 <UserPlus className="h-4 w-4" />
                 Cadastrar-se
@@ -201,9 +207,7 @@ export default function CustomerLogin() {
                 className="text-sm text-muted-foreground"
                 asChild
               >
-                <Link to="/">
-                  Voltar para a loja
-                </Link>
+                <Link to="/">Voltar para a loja</Link>
               </Button>
             </div>
           </CardContent>
