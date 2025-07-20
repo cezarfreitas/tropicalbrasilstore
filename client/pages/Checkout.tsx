@@ -46,7 +46,7 @@ export default function Checkout() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/store/orders", {
+            const response = await fetch("/api/store-old/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
