@@ -134,7 +134,17 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   {item.name}
                 </Link>
               );
-            })}
+                        })}
+            <div className="mt-8 pt-4 border-t">
+              <Button
+                variant="ghost"
+                onClick={handleLogout}
+                className="w-full justify-start gap-3 text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              >
+                <LogOut className="h-4 w-4" />
+                Sair
+              </Button>
+            </div>
           </nav>
         </div>
       </div>
