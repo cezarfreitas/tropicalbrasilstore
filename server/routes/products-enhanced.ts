@@ -6,7 +6,68 @@ const router = Router();
 // Get all products with complete information including variants
 router.get("/", async (req, res) => {
   try {
-    const [rows] = await db.execute(`
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const offset = (page - 1) * limit;
+
+    const search = (req.query.search as string) || "";
+    const category = (req.query.category as string) || "";
+    const status = (req.query.status as string) || "";
+    const sortBy = (req.query.sortBy as string) || "name";
+    const sortOrder = (req.query.sortOrder as string) || "asc";
+
+    // Build WHERE conditions
+    const conditions = [];
+    const params = [];
+
+    if (search) {
+      conditions.push(
+        "(p.name LIKE ? OR p.sku LIKE ? OR p.description LIKE ?)",
+      );
+      params.push(`%${search}%`, `%${search}%`, `%${search}%`);
+    }
+
+    if (category) {
+      conditions.push("p.category_id = ?");
+      params.push(category);
+    }
+
+    if (status === "active") {
+      conditions.push("p.active = 1");
+    } else if (status === "inactive") {
+      conditions.push("p.active = 0");
+    }
+
+    const whereClause =
+      conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+    // Valid sort columns
+    const validSortColumns = [
+      "name",
+      "created_at",
+      "base_price",
+      "total_stock",
+    ];
+    const sortColumn = validSortColumns.includes(sortBy) ? sortBy : "name";
+    const orderDirection = sortOrder.toLowerCase() === "desc" ? "DESC" : "ASC";
+
+    // Get total count
+    const [countRows] = await db.execute(
+      `
+      SELECT COUNT(DISTINCT p.id) as total
+      FROM products p 
+      LEFT JOIN categories c ON p.category_id = c.id 
+      LEFT JOIN product_variants pv ON p.id = pv.product_id
+      ${whereClause}
+    `,
+      params,
+    );
+
+    const total = (countRows as any)[0].total;
+
+    // Get paginated results
+    const [rows] = await db.execute(
+      `
       SELECT 
         p.*,
         c.name as category_name,
@@ -15,10 +76,25 @@ router.get("/", async (req, res) => {
       FROM products p 
       LEFT JOIN categories c ON p.category_id = c.id 
       LEFT JOIN product_variants pv ON p.id = pv.product_id
+      ${whereClause}
       GROUP BY p.id
-      ORDER BY p.name
-    `);
-    res.json(rows);
+      ORDER BY p.${sortColumn} ${orderDirection}
+      LIMIT ? OFFSET ?
+    `,
+      [...params, limit, offset],
+    );
+
+    res.json({
+      data: rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasNextPage: page < Math.ceil(total / limit),
+        hasPrevPage: page > 1,
+      },
+    });
   } catch (error) {
     console.error("Error fetching products:", error);
     res.status(500).json({ error: "Failed to fetch products" });
