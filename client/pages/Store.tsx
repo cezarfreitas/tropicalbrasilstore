@@ -764,20 +764,47 @@ export default function Store() {
                           )}
                         </div>
 
-                        {/* Add to Cart Button */}
+                                                {/* Add to Cart Button */}
                         <div className="border-t pt-3">
-                          <Button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              openModal(product.id);
-                            }}
-                            className="w-full h-8 text-xs font-medium"
-                            size="sm"
-                          >
-                            <ShoppingCart className="mr-2 h-3 w-3" />
-                            Adicionar ao Carrinho
-                          </Button>
+                          {isApproved ? (
+                            <Button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                openModal(product.id);
+                              }}
+                              className="w-full h-8 text-xs font-medium"
+                              size="sm"
+                            >
+                              <ShoppingCart className="mr-2 h-3 w-3" />
+                              Adicionar ao Carrinho
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }}
+                              variant="outline"
+                              className="w-full h-8 text-xs font-medium cursor-not-allowed"
+                              size="sm"
+                              disabled
+                              asChild
+                            >
+                              <Link to="/login">
+                                <User className="mr-2 h-3 w-3" />
+                                {isAuthenticated ? (
+                                  customer?.status === 'pending' ? (
+                                    "Aguardando Aprovação"
+                                  ) : (
+                                    "Não Autorizado"
+                                  )
+                                ) : (
+                                  "Faça Login"
+                                )}
+                              </Link>
+                            </Button>
+                          )}
                         </div>
                       </div>
                     </Card>
