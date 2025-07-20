@@ -75,6 +75,16 @@ const navigation = [
 export function AdminLayout({ children }: AdminLayoutProps) {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { logout } = useAuth();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Logout realizado",
+      description: "Você foi desconectado com sucesso.",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
