@@ -30,14 +30,9 @@ const navigation = [
     href: "/admin/orders",
     icon: ShoppingCart,
   },
-    {
+      {
     name: "Clientes",
     href: "/admin/customers",
-    icon: Users,
-  },
-  {
-    name: "Aprovação",
-    href: "/admin/customer-approval",
     icon: Users,
   },
   {
