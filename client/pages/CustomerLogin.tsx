@@ -127,8 +127,8 @@ export default function CustomerLogin() {
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">
+                            <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm">
                   Senha (4 últimos dígitos do celular)
                 </Label>
                 <div className="relative">
@@ -139,7 +139,7 @@ export default function CustomerLogin() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="1234"
-                    className="pl-10 pr-10"
+                    className="pl-10 pr-12 h-11 text-base text-center"
                     maxLength={4}
                     pattern="[0-9]{4}"
                     required
@@ -149,7 +149,7 @@ export default function CustomerLogin() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                    className="absolute right-0 top-0 h-11 w-12 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={isLoading}
                   >
@@ -167,7 +167,7 @@ export default function CustomerLogin() {
 
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full h-11 text-base"
                 disabled={
                   isLoading ||
                   whatsapp.replace(/\D/g, "").length !== 11 ||
