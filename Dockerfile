@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package files first for better Docker layer caching
 COPY package*.json ./
 
-# Install all dependencies (including dev dependencies needed for build)
-RUN npm ci
+# Delete package-lock.json if it exists and install dependencies with legacy peer deps
+RUN rm -f package-lock.json && npm install --legacy-peer-deps
 
 # Copy source code
 COPY . .
