@@ -17,8 +17,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Users,
   Eye,
@@ -32,6 +44,11 @@ import {
   Save,
   X,
   Loader2,
+  Check,
+  XCircle,
+  Clock,
+  UserCheck,
+  Key,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -45,6 +62,8 @@ interface Customer {
   total_spent: number;
   last_order_date: string;
   completed_orders: number;
+  status?: 'pending' | 'approved' | 'rejected';
+  id?: number;
 }
 
 interface CustomerOrder {
@@ -64,6 +83,16 @@ interface CustomerStats {
   new_customers_week: number;
   new_customers_month: number;
   active_customers_month: number;
+  pending_approvals: number;
+}
+
+interface PendingCustomer {
+  id: number;
+  name: string;
+  email: string;
+  whatsapp: string;
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
 }
 
 const statusConfig = {
@@ -75,12 +104,19 @@ const statusConfig = {
   cancelled: { label: "Cancelado", color: "red" as const },
 };
 
+const customerStatusConfig = {
+  pending: { label: "Aguardando Aprovação", color: "yellow", icon: Clock },
+  approved: { label: "Aprovado", color: "green", icon: Check },
+  rejected: { label: "Rejeitado", color: "red", icon: XCircle },
+};
+
 export default function Customers() {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [pendingCustomers, setPendingCustomers] = useState<PendingCustomer[]>([]);
   const [stats, setStats] = useState<CustomerStats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedCustomer, setSelectedCustomer] =
-    useState<CustomerDetails | null>(null);
+  const [pendingLoading, setPendingLoading] = useState(true);
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerDetails | null>(null);
   const [customerDetailsLoading, setCustomerDetailsLoading] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ name: "", whatsapp: "" });
@@ -88,11 +124,13 @@ export default function Customers() {
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
   const [addForm, setAddForm] = useState({ email: "", name: "", whatsapp: "" });
   const [adding, setAdding] = useState(false);
+  const [approvingCustomer, setApprovingCustomer] = useState<number | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     fetchCustomers();
     fetchStats();
+    fetchPendingCustomers();
   }, []);
 
   const fetchCustomers = async () => {
@@ -111,6 +149,20 @@ export default function Customers() {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchPendingCustomers = async () => {
+    try {
+      const response = await fetch("/api/customers/pending");
+      if (response.ok) {
+        const data = await response.json();
+        setPendingCustomers(data);
+      }
+    } catch (error) {
+      console.error("Error fetching pending customers:", error);
+    } finally {
+      setPendingLoading(false);
     }
   };
 
@@ -146,6 +198,53 @@ export default function Customers() {
     } finally {
       setCustomerDetailsLoading(false);
     }
+  };
+
+  const handleCustomerApproval = async (customerId: number, status: 'approved' | 'rejected') => {
+    setApprovingCustomer(customerId);
+    try {
+      const response = await fetch(`/api/customers/${customerId}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      if (response.ok) {
+        // Remove from pending list
+        setPendingCustomers(prev => prev.filter(c => c.id !== customerId));
+        
+        // Refresh stats
+        fetchStats();
+        
+        toast({
+          title: "Sucesso",
+          description: `Cliente ${status === 'approved' ? 'aprovado' : 'rejeitado'} com sucesso`,
+        });
+      } else {
+        const error = await response.json();
+        toast({
+          title: "Erro",
+          description: error.error || "Não foi possível atualizar o status do cliente",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating customer status:", error);
+      toast({
+        title: "Erro",
+        description: "Erro de conexão. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setApprovingCustomer(null);
+    }
+  };
+
+  const getCustomerPassword = (whatsapp: string) => {
+    const digits = whatsapp.replace(/\D/g, '');
+    return digits.slice(-4);
   };
 
   const startEdit = (customer: Customer) => {
@@ -286,7 +385,25 @@ export default function Customers() {
     );
   };
 
-  if (loading) {
+  const getCustomerStatusBadge = (status: 'pending' | 'approved' | 'rejected') => {
+    const config = customerStatusConfig[status];
+    const Icon = config.icon;
+
+    const variants = {
+      yellow: "secondary" as const,
+      green: "default" as const,
+      red: "destructive" as const,
+    };
+
+    return (
+      <Badge variant={variants[config.color]} className="flex items-center gap-1">
+        <Icon className="h-3 w-3" />
+        {config.label}
+      </Badge>
+    );
+  };
+
+  if (loading && pendingLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
@@ -305,7 +422,7 @@ export default function Customers() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Clientes</h1>
           <p className="text-muted-foreground">
-            Gerencie a base de clientes da loja
+            Gerencie a base de clientes e aprovações da loja
           </p>
         </div>
         <Dialog open={isAddingCustomer} onOpenChange={setIsAddingCustomer}>
@@ -382,7 +499,7 @@ export default function Customers() {
 
       {/* Statistics Cards */}
       {stats && (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -394,6 +511,23 @@ export default function Customers() {
               <div className="text-2xl font-bold">{stats.total_customers}</div>
               <p className="text-xs text-muted-foreground">
                 {stats.new_customers_week} novos esta semana
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Aguardando Aprovação
+              </CardTitle>
+              <UserCheck className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-orange-600">
+                {stats.pending_approvals || pendingCustomers.length}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Cadastros pendentes
               </p>
             </CardContent>
           </Card>
@@ -455,246 +589,406 @@ export default function Customers() {
         </div>
       )}
 
-      {/* Customers Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Lista de Clientes</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Cliente</TableHead>
-                <TableHead>Contato</TableHead>
-                <TableHead>Pedidos</TableHead>
-                <TableHead>Total Gasto</TableHead>
-                <TableHead>Último Pedido</TableHead>
-                <TableHead>Cadastro</TableHead>
-                <TableHead className="w-[150px]">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {customers.map((customer) => (
-                <TableRow key={customer.email}>
-                  <TableCell>
-                    {editingCustomer === customer.email ? (
-                      <Input
-                        value={editForm.name}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, name: e.target.value })
-                        }
-                        className="h-8"
-                      />
-                    ) : (
-                      <div>
-                        <div className="font-medium">{customer.name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {customer.email}
+      {/* Tabs for Customers and Pending Approvals */}
+      <Tabs defaultValue="customers" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="customers" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Clientes Aprovados
+          </TabsTrigger>
+          <TabsTrigger value="pending" className="flex items-center gap-2">
+            <UserCheck className="h-4 w-4" />
+            Aguardando Aprovação
+            {pendingCustomers.length > 0 && (
+              <Badge variant="secondary" className="ml-1">
+                {pendingCustomers.length}
+              </Badge>
+            )}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="customers">
+          <Card>
+            <CardHeader>
+              <CardTitle>Lista de Clientes Aprovados</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Cliente</TableHead>
+                    <TableHead>Contato</TableHead>
+                    <TableHead>Pedidos</TableHead>
+                    <TableHead>Total Gasto</TableHead>
+                    <TableHead>Último Pedido</TableHead>
+                    <TableHead>Cadastro</TableHead>
+                    <TableHead className="w-[150px]">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {customers.map((customer) => (
+                    <TableRow key={customer.email}>
+                      <TableCell>
+                        {editingCustomer === customer.email ? (
+                          <Input
+                            value={editForm.name}
+                            onChange={(e) =>
+                              setEditForm({ ...editForm, name: e.target.value })
+                            }
+                            className="h-8"
+                          />
+                        ) : (
+                          <div>
+                            <div className="font-medium">{customer.name}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {customer.email}
+                            </div>
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {editingCustomer === customer.email ? (
+                          <Input
+                            value={editForm.whatsapp}
+                            onChange={(e) =>
+                              setEditForm({ ...editForm, whatsapp: e.target.value })
+                            }
+                            className="h-8"
+                            placeholder="(11) 99999-9999"
+                          />
+                        ) : (
+                          <div className="flex items-center gap-1">
+                            <Phone className="h-3 w-3" />
+                            {customer.whatsapp}
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{customer.total_orders}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {customer.completed_orders} concluídos
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {editingCustomer === customer.email ? (
-                      <Input
-                        value={editForm.whatsapp}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, whatsapp: e.target.value })
-                        }
-                        className="h-8"
-                        placeholder="(11) 99999-9999"
-                      />
-                    ) : (
-                      <div className="flex items-center gap-1">
-                        <Phone className="h-3 w-3" />
-                        {customer.whatsapp}
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{customer.total_orders}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {customer.completed_orders} concluídos
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{formatCurrency(customer.total_spent)}</TableCell>
-                  <TableCell>{formatDate(customer.last_order_date)}</TableCell>
-                  <TableCell>{formatDate(customer.created_at)}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      {editingCustomer === customer.email ? (
-                        <>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => saveCustomer(customer.email)}
-                            disabled={updating}
-                          >
-                            {updating ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Save className="h-4 w-4" />
-                            )}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={cancelEdit}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => startEdit(customer)}
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Dialog>
-                            <DialogTrigger asChild>
+                      </TableCell>
+                      <TableCell>{formatCurrency(customer.total_spent)}</TableCell>
+                      <TableCell>{formatDate(customer.last_order_date)}</TableCell>
+                      <TableCell>{formatDate(customer.created_at)}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          {editingCustomer === customer.email ? (
+                            <>
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() =>
-                                  fetchCustomerDetails(customer.email)
-                                }
+                                onClick={() => saveCustomer(customer.email)}
+                                disabled={updating}
                               >
-                                <Eye className="h-4 w-4" />
+                                {updating ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Save className="h-4 w-4" />
+                                )}
                               </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-                              <DialogHeader>
-                                <DialogTitle>
-                                  Detalhes do Cliente: {customer.name}
-                                </DialogTitle>
-                              </DialogHeader>
-                              {customerDetailsLoading ? (
-                                <div className="flex items-center justify-center p-8">
-                                  <Loader2 className="h-8 w-8 animate-spin" />
-                                </div>
-                              ) : selectedCustomer ? (
-                                <div className="space-y-6">
-                                  {/* Customer Info */}
-                                  <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                      <h4 className="font-semibold mb-2">
-                                        Informações de Contato
-                                      </h4>
-                                      <div className="space-y-2 text-sm">
-                                        <div className="flex items-center gap-2">
-                                          <Mail className="h-4 w-4" />
-                                          {selectedCustomer.email}
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                          <Phone className="h-4 w-4" />
-                                          {selectedCustomer.whatsapp}
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                          <Calendar className="h-4 w-4" />
-                                          Cliente desde{" "}
-                                          {formatDate(
-                                            selectedCustomer.created_at,
-                                          )}
-                                        </div>
-                                      </div>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={cancelEdit}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => startEdit(customer)}
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() =>
+                                      fetchCustomerDetails(customer.email)
+                                    }
+                                  >
+                                    <Eye className="h-4 w-4" />
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+                                  <DialogHeader>
+                                    <DialogTitle>
+                                      Detalhes do Cliente: {customer.name}
+                                    </DialogTitle>
+                                  </DialogHeader>
+                                  {customerDetailsLoading ? (
+                                    <div className="flex items-center justify-center p-8">
+                                      <Loader2 className="h-8 w-8 animate-spin" />
                                     </div>
-                                    <div>
-                                      <h4 className="font-semibold mb-2">
-                                        Estatísticas
-                                      </h4>
-                                      <div className="space-y-2 text-sm">
+                                  ) : selectedCustomer ? (
+                                    <div className="space-y-6">
+                                      {/* Customer Info */}
+                                      <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                          Total de pedidos:{" "}
-                                          {selectedCustomer.total_orders}
-                                        </div>
-                                        <div>
-                                          Total gasto:{" "}
-                                          {formatCurrency(
-                                            selectedCustomer.total_spent,
-                                          )}
-                                        </div>
-                                        <div>
-                                          Último pedido:{" "}
-                                          {formatDate(
-                                            selectedCustomer.last_order_date,
-                                          )}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/* Order History */}
-                                  <div>
-                                    <h4 className="font-semibold mb-2">
-                                      Histórico de Pedidos
-                                    </h4>
-                                    {selectedCustomer.orders.length > 0 ? (
-                                      <div className="space-y-2">
-                                        {selectedCustomer.orders.map(
-                                          (order) => (
-                                            <div
-                                              key={order.id}
-                                              className="flex items-center justify-between p-3 border rounded-lg"
-                                            >
-                                              <div>
-                                                <div className="font-medium">
-                                                  Pedido #{order.id}
-                                                </div>
-                                                <div className="text-sm text-muted-foreground">
-                                                  {order.item_count} item(s) •{" "}
-                                                  {formatDate(order.created_at)}
-                                                </div>
-                                              </div>
-                                              <div className="text-right">
-                                                <div className="font-medium">
-                                                  {formatCurrency(
-                                                    order.total_amount,
-                                                  )}
-                                                </div>
-                                                <div className="text-sm">
-                                                  {getStatusBadge(order.status)}
-                                                </div>
-                                              </div>
+                                          <h4 className="font-semibold mb-2">
+                                            Informações de Contato
+                                          </h4>
+                                          <div className="space-y-2 text-sm">
+                                            <div className="flex items-center gap-2">
+                                              <Mail className="h-4 w-4" />
+                                              {selectedCustomer.email}
                                             </div>
-                                          ),
+                                            <div className="flex items-center gap-2">
+                                              <Phone className="h-4 w-4" />
+                                              {selectedCustomer.whatsapp}
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                              <Calendar className="h-4 w-4" />
+                                              Cliente desde{" "}
+                                              {formatDate(
+                                                selectedCustomer.created_at,
+                                              )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <h4 className="font-semibold mb-2">
+                                            Estatísticas
+                                          </h4>
+                                          <div className="space-y-2 text-sm">
+                                            <div>
+                                              Total de pedidos:{" "}
+                                              {selectedCustomer.total_orders}
+                                            </div>
+                                            <div>
+                                              Total gasto:{" "}
+                                              {formatCurrency(
+                                                selectedCustomer.total_spent,
+                                              )}
+                                            </div>
+                                            <div>
+                                              Último pedido:{" "}
+                                              {formatDate(
+                                                selectedCustomer.last_order_date,
+                                              )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      {/* Order History */}
+                                      <div>
+                                        <h4 className="font-semibold mb-2">
+                                          Histórico de Pedidos
+                                        </h4>
+                                        {selectedCustomer.orders.length > 0 ? (
+                                          <div className="space-y-2">
+                                            {selectedCustomer.orders.map(
+                                              (order) => (
+                                                <div
+                                                  key={order.id}
+                                                  className="flex items-center justify-between p-3 border rounded-lg"
+                                                >
+                                                  <div>
+                                                    <div className="font-medium">
+                                                      Pedido #{order.id}
+                                                    </div>
+                                                    <div className="text-sm text-muted-foreground">
+                                                      {order.item_count} item(s) •{" "}
+                                                      {formatDate(order.created_at)}
+                                                    </div>
+                                                  </div>
+                                                  <div className="text-right">
+                                                    <div className="font-medium">
+                                                      {formatCurrency(
+                                                        order.total_amount,
+                                                      )}
+                                                    </div>
+                                                    <div className="text-sm">
+                                                      {getStatusBadge(order.status)}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              ),
+                                            )}
+                                          </div>
+                                        ) : (
+                                          <p className="text-muted-foreground">
+                                            Nenhum pedido encontrado.
+                                          </p>
                                         )}
                                       </div>
-                                    ) : (
-                                      <p className="text-muted-foreground">
-                                        Nenhum pedido encontrado.
-                                      </p>
-                                    )}
-                                  </div>
-                                </div>
-                              ) : null}
-                            </DialogContent>
-                          </Dialog>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {customers.length === 0 && (
-            <div className="text-center py-8">
-              <Users className="mx-auto h-12 w-12 text-muted-foreground/50" />
-              <h3 className="mt-4 text-lg font-semibold">
-                Nenhum cliente encontrado
-              </h3>
-              <p className="mt-2 text-muted-foreground">
-                Os clientes aparecerão aqui quando fizerem o primeiro pedido.
+                                    </div>
+                                  ) : null}
+                                </DialogContent>
+                              </Dialog>
+                            </>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              {customers.length === 0 && (
+                <div className="text-center py-8">
+                  <Users className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                  <h3 className="mt-4 text-lg font-semibold">
+                    Nenhum cliente encontrado
+                  </h3>
+                  <p className="mt-2 text-muted-foreground">
+                    Os clientes aprovados aparecerão aqui quando fizerem o primeiro pedido.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="pending">
+          <Card>
+            <CardHeader>
+              <CardTitle>Clientes Aguardando Aprovação</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Analise e aprove novos cadastros de clientes
               </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Cliente</TableHead>
+                    <TableHead>Contato</TableHead>
+                    <TableHead>Senha Padrão</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Data do Cadastro</TableHead>
+                    <TableHead className="w-[200px]">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pendingCustomers.map((customer) => (
+                    <TableRow key={customer.id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{customer.name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {customer.email}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <Phone className="h-3 w-3" />
+                          {customer.whatsapp}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <Key className="h-3 w-3" />
+                          <code className="bg-muted px-2 py-1 rounded text-sm">
+                            {getCustomerPassword(customer.whatsapp)}
+                          </code>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          4 últimos dígitos do celular
+                        </p>
+                      </TableCell>
+                      <TableCell>
+                        {getCustomerStatusBadge(customer.status)}
+                      </TableCell>
+                      <TableCell>{formatDate(customer.created_at)}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={approvingCustomer === customer.id}
+                              >
+                                {approvingCustomer === customer.id ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Check className="h-4 w-4" />
+                                )}
+                                Aprovar
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Aprovar Cliente</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Tem certeza que deseja aprovar o cliente {customer.name}?
+                                  Após a aprovação, ele poderá fazer login e ver os preços.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleCustomerApproval(customer.id, 'approved')}
+                                  className="bg-green-600 hover:bg-green-700"
+                                >
+                                  Aprovar
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={approvingCustomer === customer.id}
+                              >
+                                <XCircle className="h-4 w-4" />
+                                Rejeitar
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Rejeitar Cliente</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Tem certeza que deseja rejeitar o cadastro de {customer.name}?
+                                  Esta ação não poderá ser desfeita.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleCustomerApproval(customer.id, 'rejected')}
+                                  className="bg-red-600 hover:bg-red-700"
+                                >
+                                  Rejeitar
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              {pendingCustomers.length === 0 && (
+                <div className="text-center py-8">
+                  <UserCheck className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                  <h3 className="mt-4 text-lg font-semibold">
+                    Nenhum cadastro pendente
+                  </h3>
+                  <p className="mt-2 text-muted-foreground">
+                    Quando clientes se cadastrarem, eles aparecerão aqui para aprovação.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
