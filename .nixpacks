@@ -1,0 +1,2 @@
+# Nixpacks configuration
+providers = ["node"]
