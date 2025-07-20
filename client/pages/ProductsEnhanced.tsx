@@ -112,10 +112,11 @@ interface GradeTemplate {
   size?: string;
 }
 
-interface CreateGradeRequest {
+interface ExistingGrade {
+  id: number;
   name: string;
   description: string;
-  templates: GradeTemplate[];
+  active: boolean;
 }
 
 interface PaginationInfo {
