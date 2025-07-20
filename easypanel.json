@@ -1,0 +1,13 @@
+{
+  "name": "chinelos-admin",
+  "framework": "nodejs",
+  "buildCommand": "npm run build",
+  "startCommand": "npm start",
+  "nodeVersion": "22",
+  "environmentVariables": {
+    "NODE_ENV": "production"
+  },
+  "staticFiles": {
+    "dist/spa": "/"
+  }
+}
