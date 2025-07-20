@@ -312,6 +312,7 @@ export default function ProductsEnhanced() {
 
   const resetForm = () => {
     setEditingProduct(null);
+    setSelectedGrades([]);
     setFormData({
       name: "",
       description: "",
@@ -322,6 +323,7 @@ export default function ProductsEnhanced() {
       photo: "",
       stock: 0,
       variants: [],
+      grades: [],
     });
   };
 
