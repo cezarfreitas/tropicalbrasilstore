@@ -302,9 +302,10 @@ export default function Store() {
     allProducts,
   ]);
 
-          const fetchProducts = async (retryCount = 0, useBackup = false) => {
+            const fetchProducts = async (retryCount = 0, useBackup = false) => {
     setLoading(true);
     setFetchError(null);
+    setRetryAttempt(retryCount);
     try {
       const endpoint = useBackup ? "/api/products" : "/api/store-old/products";
       console.log(`Fetching products from ${endpoint}`, retryCount > 0 ? `(retry ${retryCount})` : "");
