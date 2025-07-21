@@ -173,7 +173,7 @@ router.put("/:id", async (req, res) => {
 // DELETE /api/size-groups/:id - Delete size group
 router.delete("/:id", async (req, res) => {
   try {
-    const [result] = await connection.execute(
+    const [result] = await db.execute(
       `
       DELETE FROM size_groups WHERE id = ?
     `,
