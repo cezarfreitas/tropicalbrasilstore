@@ -421,7 +421,9 @@ export default function ProductImport() {
         description: "Gerando arquivo de produtos...",
       });
 
-      const response = await fetch(`/api/import/export-products?filter=${filter}`);
+      const response = await fetch(
+        `/api/import/export-products?filter=${filter}`,
+      );
 
       if (response.ok) {
         // Create download link
@@ -429,14 +431,19 @@ export default function ProductImport() {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        const filterSuffix = filter === 'active' ? '_ativos' : filter === 'inactive' ? '_inativos' : '';
+        const filterSuffix =
+          filter === "active"
+            ? "_ativos"
+            : filter === "inactive"
+              ? "_inativos"
+              : "";
         a.download = `produtos_exportados${filterSuffix}_${new Date().toISOString().split("T")[0]}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
 
         toast({
           title: "Exportação Concluída",
-          description: `Arquivo de produtos ${filter === 'active' ? 'ativos' : 'todos'} baixado com sucesso`,
+          description: `Arquivo de produtos ${filter === "active" ? "ativos" : "todos"} baixado com sucesso`,
         });
       } else {
         throw new Error("Erro ao exportar produtos");
@@ -606,7 +613,8 @@ export default function ProductImport() {
                         <p className="text-sm text-muted-foreground">
                           {exportStats.active_products > 0
                             ? `${exportStats.active_products} produtos ativos`
-                            : "Somente produtos disponíveis"} na loja
+                            : "Somente produtos disponíveis"}{" "}
+                          na loja
                         </p>
                       </div>
                     </div>
@@ -634,7 +642,8 @@ export default function ProductImport() {
                         <p className="text-sm text-muted-foreground">
                           {exportStats.inactive_products > 0
                             ? `${exportStats.inactive_products} produtos inativos`
-                            : "Produtos desabilitados"} no sistema
+                            : "Produtos desabilitados"}{" "}
+                          no sistema
                         </p>
                       </div>
                     </div>
@@ -642,7 +651,9 @@ export default function ProductImport() {
                       onClick={() => exportProducts("inactive")}
                       variant="secondary"
                       className="w-full"
-                      disabled={isExporting || exportStats.inactive_products === 0}
+                      disabled={
+                        isExporting || exportStats.inactive_products === 0
+                      }
                     >
                       {isExporting ? (
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />

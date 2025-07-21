@@ -346,14 +346,14 @@ router.post("/reset", (req, res) => {
 // Export products to CSV
 router.get("/export-products", async (req, res) => {
   try {
-    const filter = req.query.filter as string || 'all';
+    const filter = (req.query.filter as string) || "all";
 
     // Build WHERE clause based on filter
-    let whereClause = '';
-    if (filter === 'active') {
-      whereClause = 'WHERE p.active = true';
-    } else if (filter === 'inactive') {
-      whereClause = 'WHERE p.active = false';
+    let whereClause = "";
+    if (filter === "active") {
+      whereClause = "WHERE p.active = true";
+    } else if (filter === "inactive") {
+      whereClause = "WHERE p.active = false";
     }
 
     // Get all products with related data
@@ -477,7 +477,12 @@ router.get("/export-products", async (req, res) => {
     const csvContent = csvRows.join("\n");
 
     // Set response headers for file download
-    const filterSuffix = filter === 'active' ? '_ativos' : filter === 'inactive' ? '_inativos' : '';
+    const filterSuffix =
+      filter === "active"
+        ? "_ativos"
+        : filter === "inactive"
+          ? "_inativos"
+          : "";
     const filename = `produtos_exportados${filterSuffix}_${new Date().toISOString().split("T")[0]}.csv`;
     res.setHeader("Content-Type", "text/csv; charset=utf-8");
     res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
