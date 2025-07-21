@@ -35,13 +35,20 @@ export function createServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-    // Initialize database on startup
-  initDatabase().catch(console.error);
-  createStoreSchema().catch(console.error);
-  fixOrdersTable().catch(console.error);
-  checkAndFixTables().catch(console.error);
-  createNotificationSettings().catch(console.error);
-  createCustomerAuthTable().catch(console.error);
+      // Initialize database on startup - run sequentially to avoid dependency issues
+  (async () => {
+    try {
+      await initDatabase(); // This creates base tables and seeds data
+      await createStoreSchema(); // This creates store-specific tables (customers, orders, order_items)
+      await createCustomerAuthTable(); // Authentication tables
+      await createNotificationSettings(); // Settings tables
+      await fixOrdersTable(); // Fix any missing columns
+      await checkAndFixTables(); // Final table structure checks
+      console.log("✅ All database initialization completed successfully");
+    } catch (error) {
+      console.error("❌ Database initialization failed:", error);
+    }
+  })();
 
   // Health check endpoint
   app.get("/health", (_req, res) => {
