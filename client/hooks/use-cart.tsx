@@ -29,10 +29,41 @@ type CartAction =
   | { type: "UPDATE_QUANTITY"; id: string; quantity: number }
   | { type: "CLEAR_CART" };
 
+const CART_STORAGE_KEY = "shopping-cart";
+
 const CartContext = createContext<{
   state: CartState;
   dispatch: React.Dispatch<CartAction>;
 } | null>(null);
+
+function loadCartFromStorage(): CartState {
+  try {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(CART_STORAGE_KEY);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    }
+  } catch (error) {
+    console.error("Erro ao carregar carrinho do localStorage:", error);
+  }
+
+  return {
+    items: [],
+    totalItems: 0,
+    totalPrice: 0,
+  };
+}
+
+function saveCartToStorage(state: CartState) {
+  try {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state));
+    }
+  } catch (error) {
+    console.error("Erro ao salvar carrinho no localStorage:", error);
+  }
+}
 
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
