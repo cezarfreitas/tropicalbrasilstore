@@ -110,8 +110,22 @@ export default function Orders() {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<OrderDetails | null>(null);
   const [orderDetailsLoading, setOrderDetailsLoading] = useState(false);
-  const [statusUpdating, setStatusUpdating] = useState<number | null>(null);
+    const [statusUpdating, setStatusUpdating] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
+
+  // Search, filter and pagination states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
+  const [sortBy, setSortBy] = useState("created_at");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  // Edit order states
+  const [editingOrder, setEditingOrder] = useState<OrderDetails | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
   const { toast } = useToast();
 
   useEffect(() => {
