@@ -80,12 +80,62 @@ export function ProductModal({
     }
   }, [productId, isOpen]);
 
-  const fetchProduct = async () => {
+  const fetchProduct = async (retryCount: number = 0) => {
     if (!productId) return;
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/store/products/${productId}`);
+      // Create a robust fetch function to handle interference
+      const safeFetch = async (url: string, options?: RequestInit) => {
+        // Try native fetch first
+        try {
+          if (typeof window.fetch === 'function') {
+            return await window.fetch(url, options);
+          }
+        } catch (err) {
+          console.warn('Native fetch failed, trying XMLHttpRequest fallback:', err);
+        }
+
+        // Fallback to XMLHttpRequest
+        return new Promise<Response>((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open(options?.method || 'GET', url, true);
+
+          // Set headers
+          if (options?.headers) {
+            const headers = options.headers as Record<string, string>;
+            Object.entries(headers).forEach(([key, value]) => {
+              xhr.setRequestHeader(key, value);
+            });
+          }
+
+          xhr.onload = () => {
+            const response = new Response(xhr.responseText, {
+              status: xhr.status,
+              statusText: xhr.statusText,
+              headers: new Headers(xhr.getAllResponseHeaders().split('\r\n').reduce((acc, line) => {
+                const [key, value] = line.split(': ');
+                if (key && value) acc[key] = value;
+                return acc;
+              }, {} as Record<string, string>))
+            });
+            resolve(response);
+          };
+
+          xhr.onerror = () => reject(new Error('Network error'));
+          xhr.ontimeout = () => reject(new Error('Request timeout'));
+          xhr.timeout = 10000;
+
+          xhr.send(options?.body);
+        });
+      };
+
+      const response = await safeFetch(`/api/store/products/${productId}`, {
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
       if (response.ok) {
         const data = await response.json();
         setProduct(data);
@@ -99,9 +149,34 @@ export function ProductModal({
         setSelectedGrade(null);
         setSelectedSize(null);
         setQuantity(1);
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching product:", error);
+
+      // Retry logic for network errors
+      const shouldRetry = retryCount < 2 && (
+        error.name === 'TypeError' ||
+        error.message?.includes('Failed to fetch') ||
+        error.message?.includes('Network error') ||
+        error.message?.includes('Request timeout') ||
+        !error.message
+      );
+
+      if (shouldRetry) {
+        console.log(`Retrying product fetch... (attempt ${retryCount + 1}/3)`);
+        const delay = Math.min(1000 * Math.pow(2, retryCount), 3000);
+        setTimeout(() => fetchProduct(retryCount + 1), delay);
+        return;
+      }
+
+      // Show user-friendly error
+      toast({
+        title: "Erro ao carregar produto",
+        description: "Verifique sua conexão e tente novamente",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
