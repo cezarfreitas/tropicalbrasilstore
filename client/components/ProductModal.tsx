@@ -200,8 +200,8 @@ export function ProductModal({
       });
 
       toast({
-        title: "Adicionado!",
-        description: `${grade.name} - ${selectedColorData?.name}`,
+        title: "✓ Adicionado ao carrinho",
+        description: `${grade.name}`,
       });
     } else if (!hasGrades() && selectedSize) {
       const variant = product.variants.find(v => 
