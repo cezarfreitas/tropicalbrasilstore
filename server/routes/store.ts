@@ -14,7 +14,7 @@ router.get("/products", async (req, res) => {
         p.description,
         p.base_price,
         
-        p.photo,
+        
         p.active,
         c.name as category_name,
         COUNT(DISTINCT pv.id) as variant_count,
