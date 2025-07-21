@@ -305,15 +305,11 @@ export default function Store() {
     fetchProducts();
   }, []);
 
-  useEffect(() => {
-    applyFilters();
+    useEffect(() => {
+    fetchProducts();
   }, [
     currentPage,
     selectedCategory,
-    selectedColors,
-    selectedGrades,
-    priceRange,
-    allProducts,
   ]);
 
                         const fetchProducts = async (retryCount = 0, useBackup = false) => {
