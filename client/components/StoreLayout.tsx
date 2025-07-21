@@ -402,9 +402,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     key={category.id}
                     to={category.id === 'all' ? '/loja' : `/loja?categoria=${category.name.toLowerCase()}`}
                     onClick={() => setCategoriesOpen(false)}
-                    className="block w-full p-3 text-left rounded-lg hover:bg-gray-100 transition-colors"
+                    className="block w-full p-3 text-left rounded-lg hover:bg-orange-50 hover:border-orange-200 border border-transparent transition-all duration-200"
                   >
-                    <span className="font-medium">{category.name}</span>
+                    <span className="font-medium text-gray-800">{category.name}</span>
                   </Link>
                 ))}
               </div>
