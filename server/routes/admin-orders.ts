@@ -38,7 +38,7 @@ router.get("/:id", async (req, res) => {
       `
       SELECT 
         o.*,
-                o.customer_phone as customer_whatsapp,
+                        '' as customer_whatsapp,
                 o.total_amount
       FROM orders o
       WHERE o.id = ?
