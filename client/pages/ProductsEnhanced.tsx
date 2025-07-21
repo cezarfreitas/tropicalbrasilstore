@@ -104,6 +104,7 @@ interface CreateProductRequest {
   base_price?: number;
   suggested_price?: number;
   sku?: string;
+  parent_sku?: string;
   photo?: string;
   stock?: number;
   variants: ProductVariant[];
