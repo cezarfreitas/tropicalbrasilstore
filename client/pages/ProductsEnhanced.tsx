@@ -788,7 +788,7 @@ export default function ProductsEnhanced() {
                 </TabsList>
 
                 <TabsContent value="basic" className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="name">Nome do Produto</Label>
                       <Input
@@ -812,6 +812,21 @@ export default function ProductsEnhanced() {
                         placeholder="Ex: CHM001"
                       />
                     </div>
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="parent_sku">SKU do Produto Pai (Para Agrupamento)</Label>
+                    <Input
+                      id="parent_sku"
+                      value={formData.parent_sku}
+                      onChange={(e) =>
+                        setFormData({ ...formData, parent_sku: e.target.value })
+                      }
+                      placeholder="Ex: CHM-BASE (para agrupar variantes)"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Use o mesmo SKU pai para produtos que são variantes (cor/tamanho) do mesmo produto base
+                    </p>
                   </div>
 
                   <div className="grid gap-2">
