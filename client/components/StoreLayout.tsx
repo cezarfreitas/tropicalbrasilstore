@@ -44,13 +44,60 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               </div>
             </Link>
 
-            <div className="flex items-center gap-2 sm:gap-4">
-              <Link
-                to="/admin"
-                className="hidden sm:block text-sm text-muted-foreground hover:text-foreground"
-              >
-                Área Administrativa
-              </Link>
+                        <div className="flex items-center gap-2 sm:gap-3">
+              {/* Authentication Status */}
+              {isAuthenticated ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-9 sm:h-10">
+                      <User className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">
+                        {customer?.name || "Cliente"}
+                      </span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuLabel>
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {customer?.name || "Cliente"}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {customer?.whatsapp}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="text-xs">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            isApproved ? "bg-green-500" : "bg-yellow-500"
+                          }`}
+                        />
+                        {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={logout}>
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sair
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 sm:h-10"
+                  onClick={() => setLoginModalOpen(true)}
+                >
+                  <LogIn className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Entrar</span>
+                </Button>
+              )}
+
+              {/* Cart */}
               <Link to="/loja/carrinho">
                 <Button variant="outline" size="sm" className="relative h-9 sm:h-10">
                   <ShoppingCart className="h-4 w-4 sm:mr-2" />
@@ -64,6 +111,14 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     </Badge>
                   )}
                 </Button>
+              </Link>
+
+              {/* Admin Link */}
+              <Link
+                to="/admin"
+                className="hidden sm:block text-sm text-muted-foreground hover:text-foreground"
+              >
+                Admin
               </Link>
             </div>
           </div>
