@@ -52,8 +52,9 @@ interface ProductByNamesRequest {
   suggested_price?: number;
   sku?: string;
   parent_sku?: string;
-  photo?: string;
-  photo_url?: string; // URL da foto para download automático
+  parent_id?: number; // ID do produto pai para hierarquia
+  photo?: string; // Caminho local da foto principal
+  photo_url?: string; // URL externa para download automático
   variants: {
     size_name: string;
     color_name: string;
