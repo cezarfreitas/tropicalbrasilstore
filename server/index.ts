@@ -33,6 +33,7 @@ import { addParentSkuColumn } from "./lib/add-parent-sku";
 import { addSizeGroupsTable } from "./lib/add-size-groups-table";
 import { createProductVariantsTable } from "./lib/create-product-variants";
 import { redesignGradeSystem } from "./lib/redesign-grades";
+import { createStoreSettingsTable } from "./lib/create-settings-table";
 
 export function createServer() {
   const app = express();
