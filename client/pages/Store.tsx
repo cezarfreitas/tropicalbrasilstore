@@ -317,12 +317,25 @@ export default function Store() {
     allProducts,
   ]);
 
-            const fetchProducts = async (retryCount = 0, useBackup = false) => {
+                        const fetchProducts = async (retryCount = 0, useBackup = false) => {
     setLoading(true);
     setFetchError(null);
     setRetryAttempt(retryCount);
     try {
-      const endpoint = useBackup ? "/api/products" : "/api/store-old/products";
+      // Build query parameters
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: productsPerPage.toString(),
+      });
+
+      if (selectedCategory !== "all") {
+        params.append("category", selectedCategory);
+      }
+
+      const endpoint = useBackup
+        ? `/api/store/products-paginated?${params}`
+        : `/api/store-old/products-paginated?${params}`;
+
       console.log(`Fetching products from ${endpoint}`, retryCount > 0 ? `(retry ${retryCount})` : "");
 
       const controller = new AbortController();
@@ -340,65 +353,25 @@ export default function Store() {
       console.log("Response status:", response.status);
 
       if (response.ok) {
-        const productsData = await response.json();
+        const responseData = await response.json();
         console.log(
           "Products fetched successfully:",
-          productsData.length,
+          responseData.products?.length || 0,
           "products",
         );
 
-        // Ensure productsData is an array
-        const safeProductsData = Array.isArray(productsData) ? productsData : [];
-        setAllProducts(safeProductsData);
+        // Handle paginated response
+        const productsData = responseData.products || [];
+        const pagination = responseData.pagination || {};
 
-        // Extract filter options
-        const uniqueCategories = new Set<string>();
-        const uniqueColors = new Set<string>();
-        let maxProductPrice = 0;
+        setFilteredProducts(productsData);
+        setTotalProducts(pagination.total || 0);
+        setTotalPages(pagination.totalPages || 0);
 
-        safeProductsData.forEach((product: StoreProduct) => {
-          if (product.category_name) {
-            uniqueCategories.add(product.category_name);
-          }
-          if (product.available_colors && Array.isArray(product.available_colors)) {
-            product.available_colors.forEach((color) => {
-              if (color && color.name) {
-                uniqueColors.add(color.name);
-              }
-            });
-          }
-          const price = parseFloat(product.suggested_price?.toString() || product.base_price?.toString() || "0");
-          maxProductPrice = Math.max(maxProductPrice, price);
-        });
-
-        setCategories([
-          {
-            id: "all",
-            name: "Todas as Categorias",
-            count: safeProductsData.length,
-          },
-          ...Array.from(uniqueCategories).map((cat) => ({
-            id: cat.toLowerCase(),
-            name: cat,
-            count: safeProductsData.filter(
-              (p: StoreProduct) => p.category_name === cat,
-            ).length,
-          })),
-        ]);
-
-        setColors([
-          ...Array.from(uniqueColors).map((color) => ({
-            id: color.toLowerCase(),
-            name: color,
-            count: safeProductsData.filter((p: StoreProduct) =>
-              p.available_colors?.some((c) => c && c.name === color),
-            ).length,
-          })),
-        ]);
-
-        const safeFinalMaxPrice = Math.max(100, Math.ceil(maxProductPrice)); // Minimum of 100
-        setMaxPrice(safeFinalMaxPrice);
-        setPriceRange([0, safeFinalMaxPrice]);
+        // On first load or category change, also fetch categories and colors
+        if (currentPage === 1) {
+          await fetchFilters();
+        }
       } else {
         console.error("API response not ok:", response.status, response.statusText);
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
