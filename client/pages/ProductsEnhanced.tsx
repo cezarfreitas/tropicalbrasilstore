@@ -323,8 +323,15 @@ export default function ProductsEnhanced() {
     });
   };
 
-      const handleToggleStatus = async (product: EnhancedProduct) => {
+            const handleToggleStatus = async (product: EnhancedProduct) => {
     try {
+      // Atualiza o estado local imediatamente para resposta instantânea
+      setProducts(prevProducts =>
+        prevProducts.map(p =>
+          p.id === product.id ? { ...p, active: !p.active } : p
+        )
+      );
+
       const response = await fetch(`/api/products-enhanced/${product.id}/toggle`, {
         method: "PATCH",
       });
@@ -335,11 +342,23 @@ export default function ProductsEnhanced() {
           title: "Sucesso",
           description: data.message,
         });
-        fetchProducts();
+        // Não precisa fazer fetchProducts() - já atualizou o estado local
       } else {
+        // Se falhou, reverte o estado local
+        setProducts(prevProducts =>
+          prevProducts.map(p =>
+            p.id === product.id ? { ...p, active: product.active } : p
+          )
+        );
         throw new Error("Erro ao alterar status do produto");
       }
     } catch (error: any) {
+      // Se houver erro, reverte o estado local
+      setProducts(prevProducts =>
+        prevProducts.map(p =>
+          p.id === product.id ? { ...p, active: product.active } : p
+        )
+      );
       toast({
         title: "Erro",
         description: error.message,
