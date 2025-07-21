@@ -112,6 +112,7 @@ export function createServer() {
     app.use("/api/mockup-data", mockupDataRouter);
   app.use("/api/reset-products", resetProductsRouter);
   app.use("/api/verify-products", verifyProductsRouter);
+  app.use("/api/seed-chinelos", seedChinelosRouter);
 
   return app;
 }
