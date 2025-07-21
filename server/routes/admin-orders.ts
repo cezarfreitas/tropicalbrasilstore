@@ -69,8 +69,10 @@ router.get("/:id", async (req, res) => {
         g.description as grade_description
       FROM order_items oi
       LEFT JOIN products p ON oi.product_id = p.id
-      LEFT JOIN colors co ON oi.color_id = co.id
+            LEFT JOIN colors co ON oi.color_id = co.id
+      LEFT JOIN sizes s ON oi.size_id = s.id
       LEFT JOIN grade_vendida g ON oi.grade_id = g.id
+      LEFT JOIN product_variants pv ON (p.id = pv.product_id AND oi.color_id = pv.color_id AND oi.size_id = pv.size_id)
       WHERE oi.order_id = ?
       ORDER BY oi.id
     `,
