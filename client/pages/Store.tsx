@@ -300,7 +300,7 @@ export default function Store() {
     allProducts,
   ]);
 
-  const fetchProducts = async () => {
+    const fetchProducts = async () => {
     setLoading(true);
     try {
       console.log("Fetching products from /api/store-old/products");
@@ -314,23 +314,28 @@ export default function Store() {
           productsData.length,
           "products",
         );
-        setAllProducts(productsData);
+
+        // Ensure productsData is an array
+        const safeProductsData = Array.isArray(productsData) ? productsData : [];
+        setAllProducts(safeProductsData);
 
         // Extract filter options
         const uniqueCategories = new Set<string>();
         const uniqueColors = new Set<string>();
         let maxProductPrice = 0;
 
-        productsData.forEach((product: StoreProduct) => {
+        safeProductsData.forEach((product: StoreProduct) => {
           if (product.category_name) {
             uniqueCategories.add(product.category_name);
           }
-          if (product.available_colors) {
-            product.available_colors.forEach((color) =>
-              uniqueColors.add(color.name),
-            );
+          if (product.available_colors && Array.isArray(product.available_colors)) {
+            product.available_colors.forEach((color) => {
+              if (color && color.name) {
+                uniqueColors.add(color.name);
+              }
+            });
           }
-          const price = product.suggested_price || product.base_price || 0;
+          const price = parseFloat(product.suggested_price?.toString() || product.base_price?.toString() || "0");
           maxProductPrice = Math.max(maxProductPrice, price);
         });
 
@@ -338,12 +343,12 @@ export default function Store() {
           {
             id: "all",
             name: "Todas as Categorias",
-            count: productsData.length,
+            count: safeProductsData.length,
           },
           ...Array.from(uniqueCategories).map((cat) => ({
             id: cat.toLowerCase(),
             name: cat,
-            count: productsData.filter(
+            count: safeProductsData.filter(
               (p: StoreProduct) => p.category_name === cat,
             ).length,
           })),
@@ -353,22 +358,36 @@ export default function Store() {
           ...Array.from(uniqueColors).map((color) => ({
             id: color.toLowerCase(),
             name: color,
-            count: productsData.filter((p: StoreProduct) =>
-              p.available_colors?.some((c) => c.name === color),
+            count: safeProductsData.filter((p: StoreProduct) =>
+              p.available_colors?.some((c) => c && c.name === color),
             ).length,
           })),
         ]);
 
-        setMaxPrice(Math.ceil(maxProductPrice));
-        setPriceRange([0, Math.ceil(maxProductPrice)]);
+        const safeFinalMaxPrice = Math.max(100, Math.ceil(maxProductPrice)); // Minimum of 100
+        setMaxPrice(safeFinalMaxPrice);
+        setPriceRange([0, safeFinalMaxPrice]);
+      } else {
+        console.error("API response not ok:", response.status, response.statusText);
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error("Error fetching products:", error);
-      console.error("Error details:", {
-        message: error.message,
-        stack: error.stack,
-        name: error.name,
-      });
+
+      // Safe error logging
+      const errorInfo: any = {};
+      try {
+        if (error instanceof Error) {
+          errorInfo.message = error.message;
+          errorInfo.name = error.name;
+          errorInfo.stack = error.stack;
+        } else {
+          errorInfo.error = String(error);
+        }
+        console.error("Error details:", errorInfo);
+      } catch (logError) {
+        console.error("Could not log error details:", logError);
+      }
 
       // Set empty state as fallback
       setAllProducts([]);
