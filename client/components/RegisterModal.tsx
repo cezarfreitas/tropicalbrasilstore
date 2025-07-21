@@ -43,16 +43,11 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
     setFormData({ ...formData, whatsapp: formatted });
   };
 
-  const resetForm = () => {
+    const resetForm = () => {
     setFormData({
       name: "",
       email: "",
       whatsapp: "",
-      business_type: "",
-      address: "",
-      city: "",
-      state: "",
-      notes: "",
     });
     setIsLoading(false);
   };
