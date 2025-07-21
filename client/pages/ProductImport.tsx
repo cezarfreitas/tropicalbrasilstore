@@ -529,9 +529,13 @@ export default function ProductImport() {
                       Gera um arquivo CSV com todos os produtos cadastrados no sistema
                     </p>
                   </div>
-                  <Button onClick={exportProducts} size="lg">
-                    <Download className="h-5 w-5 mr-2" />
-                    Exportar Produtos
+                  <Button onClick={exportProducts} size="lg" disabled={isExporting}>
+                    {isExporting ? (
+                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                    ) : (
+                      <Download className="h-5 w-5 mr-2" />
+                    )}
+                    {isExporting ? "Exportando..." : "Exportar Produtos"}
                   </Button>
                 </div>
               </div>
