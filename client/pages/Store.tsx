@@ -308,6 +308,14 @@ export default function Store() {
     setLoading(true);
     setFetchError(null);
     setRetryAttempt(retryCount);
+
+    // Safety timeout to prevent infinite loading
+    const safetyTimeout = setTimeout(() => {
+      console.error("fetchProducts took too long, forcing loading to false");
+      setLoading(false);
+      setFetchError("Tempo limite excedido. Tente novamente.");
+    }, 30000); // 30 seconds max
+
     try {
       // Build query parameters
       const params = new URLSearchParams({
