@@ -59,9 +59,12 @@ router.get("/products", async (req, res) => {
     const [countResult] = await db.execute(countQuery, queryParams);
     const totalProducts = (countResult as any)[0].total;
 
-    // Get paginated products
+    // Get paginated products (use interpolation for LIMIT/OFFSET as MySQL2 doesn't support them as parameters)
+    const limitNum = parseInt(limit.toString());
+    const offsetNum = parseInt(offset.toString());
+
     const productQuery = `
-      SELECT 
+      SELECT
         p.id,
         p.name,
         p.description,
@@ -74,14 +77,10 @@ router.get("/products", async (req, res) => {
         SUM(pv.stock) as total_stock
       ${baseQuery}
       ORDER BY p.name
-      LIMIT ? OFFSET ?
+      LIMIT ${limitNum} OFFSET ${offsetNum}
     `;
 
-    const [products] = await db.execute(productQuery, [
-      ...queryParams,
-      parseInt(limit.toString()),
-      parseInt(offset.toString()),
-    ]);
+    const [products] = await db.execute(productQuery, queryParams);
 
     // For each product, get available colors
     const productsWithColors = [];
