@@ -137,16 +137,18 @@ function Store() {
 
     } catch (err: any) {
       console.error('Error fetching products:', err);
-      
+
       // Retry logic for network errors
-      if (retryCount < 2 && (err.name === 'TypeError' || err.name === 'AbortError')) {
+      if (retryCount < 2 && (err.name === 'TypeError' || err.message?.includes('Failed to fetch'))) {
         console.log(`Retrying... (attempt ${retryCount + 1})`);
-        setTimeout(() => fetchProducts(page, retryCount + 1), 2000);
+        setTimeout(() => fetchProducts(page, retryCount + 1), 1000);
         return;
       }
 
       // Set error state
-      setError(err.message || 'Erro ao carregar produtos');
+      const errorMessage = err.message || 'Erro ao carregar produtos';
+      console.error('Final error:', errorMessage);
+      setError(errorMessage);
       setProducts([]);
       setPagination(null);
     } finally {
