@@ -529,9 +529,9 @@ export default function Store() {
         </div>
       </StoreLayout>
     );
-  }
+    }
 
-    return (
+  return (
     <StoreLayout>
       <div className="flex min-h-screen bg-gray-50">
         {/* Mobile sidebar overlay */}
