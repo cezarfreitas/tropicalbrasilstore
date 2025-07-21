@@ -962,26 +962,26 @@ export default function Store() {
                               </span>
                               Carrinho
                             </Button>
-                          ) : (
+                                                    ) : (
                             <Button
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
+                                if (!isAuthenticated) {
+                                  setLoginModalOpen(true);
+                                }
                               }}
                               variant="outline"
-                              className="w-full h-8 sm:h-9 text-[10px] sm:text-xs font-medium cursor-not-allowed"
+                              className="w-full h-8 sm:h-9 text-[10px] sm:text-xs font-medium"
                               size="sm"
-                              disabled
-                              asChild
+                              disabled={isAuthenticated}
                             >
-                              <Link to="/login">
-                                <User className="mr-2 h-3 w-3" />
-                                {isAuthenticated
-                                  ? customer?.status === "pending"
-                                    ? "Aguardando Aprovação"
-                                    : "Não Autorizado"
-                                  : "Faça Login"}
-                              </Link>
+                              <User className="mr-2 h-3 w-3" />
+                              {isAuthenticated
+                                ? customer?.status === "pending"
+                                  ? "Aguardando Aprovação"
+                                  : "Não Autorizado"
+                                : "Faça Login"}
                             </Button>
                           )}
                         </div>
