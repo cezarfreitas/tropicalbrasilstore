@@ -48,6 +48,8 @@ interface AvailableGrade {
   color_id: number;
   templates: GradeTemplate[];
   total_quantity: number;
+  has_full_stock?: boolean;
+  has_any_stock?: boolean;
 }
 
 interface ProductDetail {
