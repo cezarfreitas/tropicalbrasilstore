@@ -3,6 +3,26 @@ import db from "../lib/db";
 
 const router = Router();
 
+// Test endpoint to verify data
+router.get("/test", async (req, res) => {
+  try {
+    const [products] = await db.execute(`
+      SELECT p.id, p.name, p.photo, p.base_price
+      FROM products p
+      WHERE p.active = true
+      LIMIT 5
+    `);
+
+    res.json({
+      success: true,
+      count: (products as any[]).length,
+      products: products
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Get all available products for the store with simple pagination
 router.get("/products", async (req, res) => {
   try {
