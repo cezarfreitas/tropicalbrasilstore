@@ -41,7 +41,7 @@ interface PaginationInfo {
   hasPrevPage: boolean;
 }
 
-export function Store() {
+function Store() {
   // State
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
