@@ -329,8 +329,25 @@ export default function Store() {
 
       console.log(`Fetching products from ${endpoint}`, retryCount > 0 ? `(retry ${retryCount})` : "");
 
+      // Test server connectivity first for initial requests
+      if (retryCount === 0) {
+        try {
+          const healthCheck = await fetch('/api/ping', {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' },
+            signal: AbortSignal.timeout(3000)
+          });
+          if (!healthCheck.ok) {
+            throw new Error('Server not responding');
+          }
+        } catch (healthError) {
+          console.warn('Server health check failed:', healthError);
+          // Continue with the main request anyway
+        }
+      }
+
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // Increased timeout to 15 seconds
 
       const response = await fetch(endpoint, {
         signal: controller.signal,
