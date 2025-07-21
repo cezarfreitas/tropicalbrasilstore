@@ -67,17 +67,17 @@ interface ColumnMapping {
 }
 
 const REQUIRED_FIELDS = [
-  { key: 'name', label: 'Nome do Produto', required: true },
-  { key: 'category_id', label: 'Categoria', required: true },
-  { key: 'base_price', label: 'Preço Base', required: true },
-  { key: 'photo_url', label: 'URL da Foto', required: false },
-  { key: 'size_group_id', label: 'Grupo de Tamanhos', required: true },
-  { key: 'colors', label: 'Cores (separadas por vírgula)', required: true },
-  { key: 'sku', label: 'SKU', required: false },
-  { key: 'parent_sku', label: 'SKU Pai', required: false },
-  { key: 'description', label: 'Descrição', required: false },
-  { key: 'suggested_price', label: 'Preço Sugerido', required: false },
-  { key: 'stock_per_variant', label: 'Estoque por Variante', required: false },
+  { key: "name", label: "Nome do Produto", required: true },
+  { key: "category_id", label: "Categoria", required: true },
+  { key: "base_price", label: "Preço Base", required: true },
+  { key: "photo_url", label: "URL da Foto", required: false },
+  { key: "size_group_id", label: "Grupo de Tamanhos", required: true },
+  { key: "colors", label: "Cores (separadas por vírgula)", required: true },
+  { key: "sku", label: "SKU", required: false },
+  { key: "parent_sku", label: "SKU Pai", required: false },
+  { key: "description", label: "Descrição", required: false },
+  { key: "suggested_price", label: "Preço Sugerido", required: false },
+  { key: "stock_per_variant", label: "Estoque por Variante", required: false },
 ];
 
 export default function ProductImport() {
@@ -143,11 +143,16 @@ export default function ProductImport() {
     }
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const uploadedFile = event.target.files?.[0];
     if (!uploadedFile) return;
 
-    if (!uploadedFile.name.endsWith('.csv') && !uploadedFile.name.endsWith('.xlsx')) {
+    if (
+      !uploadedFile.name.endsWith(".csv") &&
+      !uploadedFile.name.endsWith(".xlsx")
+    ) {
       toast({
         title: "Formato Inválido",
         description: "Por favor, selecione um arquivo CSV ou Excel (.xlsx)",
@@ -157,13 +162,13 @@ export default function ProductImport() {
     }
 
     setFile(uploadedFile);
-    
+
     try {
       const formData = new FormData();
-      formData.append('file', uploadedFile);
+      formData.append("file", uploadedFile);
 
-      const response = await fetch('/api/import/parse-csv', {
-        method: 'POST',
+      const response = await fetch("/api/import/parse-csv", {
+        method: "POST",
         body: formData,
       });
 
@@ -171,15 +176,15 @@ export default function ProductImport() {
         const result = await response.json();
         setCsvData(result.data);
         setCsvHeaders(result.headers);
-        
+
         // Auto-map columns based on header names
-        const autoMappings: ColumnMapping[] = REQUIRED_FIELDS.map(field => ({
+        const autoMappings: ColumnMapping[] = REQUIRED_FIELDS.map((field) => ({
           csvColumn: autoMapColumn(result.headers, field.key),
           targetField: field.key,
           required: field.required,
         }));
         setColumnMappings(autoMappings);
-        
+
         toast({
           title: "Arquivo Processado",
           description: `${result.data.length} linhas encontradas`,
@@ -198,43 +203,45 @@ export default function ProductImport() {
 
   const autoMapColumn = (headers: string[], targetField: string): string => {
     const commonMappings: Record<string, string[]> = {
-      'name': ['nome', 'produto', 'name', 'product_name'],
-      'category_id': ['categoria', 'category', 'category_id', 'cat'],
-      'base_price': ['preco', 'price', 'base_price', 'valor'],
-      'photo_url': ['foto', 'photo', 'photo_url', 'imagem', 'image'],
-      'size_group_id': ['grupo_tamanho', 'size_group', 'tamanhos', 'sizes'],
-      'colors': ['cores', 'colors', 'cor', 'color'],
-      'sku': ['sku', 'codigo'],
-      'description': ['descricao', 'description', 'desc'],
-      'stock_per_variant': ['estoque', 'stock', 'quantity', 'qtd'],
+      name: ["nome", "produto", "name", "product_name"],
+      category_id: ["categoria", "category", "category_id", "cat"],
+      base_price: ["preco", "price", "base_price", "valor"],
+      photo_url: ["foto", "photo", "photo_url", "imagem", "image"],
+      size_group_id: ["grupo_tamanho", "size_group", "tamanhos", "sizes"],
+      colors: ["cores", "colors", "cor", "color"],
+      sku: ["sku", "codigo"],
+      description: ["descricao", "description", "desc"],
+      stock_per_variant: ["estoque", "stock", "quantity", "qtd"],
     };
 
     const possibleHeaders = commonMappings[targetField] || [];
-    const normalizedHeaders = headers.map(h => h.toLowerCase().trim());
-    
+    const normalizedHeaders = headers.map((h) => h.toLowerCase().trim());
+
     for (const possible of possibleHeaders) {
-      const index = normalizedHeaders.findIndex(h => h.includes(possible.toLowerCase()));
+      const index = normalizedHeaders.findIndex((h) =>
+        h.includes(possible.toLowerCase()),
+      );
       if (index !== -1) {
         return headers[index];
       }
     }
-    
-    return '';
+
+    return "";
   };
 
   const validateMappings = (): boolean => {
-    const requiredMappings = columnMappings.filter(m => m.required);
-    const missingMappings = requiredMappings.filter(m => !m.csvColumn);
-    
+    const requiredMappings = columnMappings.filter((m) => m.required);
+    const missingMappings = requiredMappings.filter((m) => !m.csvColumn);
+
     if (missingMappings.length > 0) {
       toast({
         title: "Mapeamento Incompleto",
-        description: `Campos obrigatórios sem mapeamento: ${missingMappings.map(m => m.targetField).join(', ')}`,
+        description: `Campos obrigatórios sem mapeamento: ${missingMappings.map((m) => m.targetField).join(", ")}`,
         variant: "destructive",
       });
       return false;
     }
-    
+
     return true;
   };
 
@@ -243,8 +250,8 @@ export default function ProductImport() {
 
     const preview: ImportRow[] = csvData.slice(0, 10).map((row, index) => {
       const mappedData: Record<string, any> = {};
-      
-      columnMappings.forEach(mapping => {
+
+      columnMappings.forEach((mapping) => {
         if (mapping.csvColumn && mapping.csvColumn in row) {
           mappedData[mapping.targetField] = row[mapping.csvColumn];
         }
@@ -274,8 +281,8 @@ export default function ProductImport() {
 
     const fullImportData: ImportRow[] = csvData.map((row, index) => {
       const mappedData: Record<string, any> = {};
-      
-      columnMappings.forEach(mapping => {
+
+      columnMappings.forEach((mapping) => {
         if (mapping.csvColumn && mapping.csvColumn in row) {
           mappedData[mapping.targetField] = row[mapping.csvColumn];
         }
@@ -291,13 +298,13 @@ export default function ProductImport() {
     setImportData(fullImportData);
 
     try {
-      const response = await fetch('/api/import/products', {
-        method: 'POST',
+      const response = await fetch("/api/import/products", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          data: fullImportData.map(item => item.data),
+          data: fullImportData.map((item) => item.data),
           columnMappings,
         }),
       });
@@ -320,11 +327,11 @@ export default function ProductImport() {
 
   const pollImportProgress = async () => {
     try {
-      const response = await fetch('/api/import/progress');
+      const response = await fetch("/api/import/progress");
       if (response.ok) {
         const progress = await response.json();
         setImportProgress(progress);
-        
+
         if (progress.processed < progress.total) {
           setTimeout(pollImportProgress, 1000);
         } else {
@@ -341,13 +348,13 @@ export default function ProductImport() {
   };
 
   const downloadTemplate = () => {
-    const headers = REQUIRED_FIELDS.map(f => f.label);
-    const csvContent = headers.join(',') + '\n';
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const headers = REQUIRED_FIELDS.map((f) => f.label);
+    const csvContent = headers.join(",") + "\n";
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'template_importacao_produtos.csv';
+    a.download = "template_importacao_produtos.csv";
     a.click();
     window.URL.revokeObjectURL(url);
   };
@@ -367,7 +374,7 @@ export default function ProductImport() {
       errors: 0,
     });
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
@@ -375,7 +382,9 @@ export default function ProductImport() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Importação de Produtos</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Importação de Produtos
+          </h1>
           <p className="text-muted-foreground">
             Importe produtos em massa com upload automático de fotos
           </p>
@@ -416,7 +425,8 @@ export default function ProductImport() {
                     Selecione um arquivo CSV ou Excel
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Arquivo deve conter colunas para nome, categoria, preço, fotos e variantes
+                    Arquivo deve conter colunas para nome, categoria, preço,
+                    fotos e variantes
                   </p>
                   <Input
                     ref={fileInputRef}
@@ -447,13 +457,29 @@ export default function ProductImport() {
                   Formato Esperado:
                 </h4>
                 <ul className="text-sm text-blue-800 space-y-1">
-                  <li>• <strong>Nome:</strong> Nome do produto</li>
-                  <li>• <strong>Categoria:</strong> ID ou nome da categoria</li>
-                  <li>• <strong>Preço Base:</strong> Valor numérico</li>
-                  <li>• <strong>URL da Foto:</strong> Link direto para imagem</li>
-                  <li>• <strong>Grupo de Tamanhos:</strong> ID do grupo (ex: 1=Feminino, 2=Masculino)</li>
-                  <li>• <strong>Cores:</strong> Nomes separados por vírgula</li>
-                  <li>• <strong>Estoque:</strong> Quantidade por variante (opcional)</li>
+                  <li>
+                    • <strong>Nome:</strong> Nome do produto
+                  </li>
+                  <li>
+                    • <strong>Categoria:</strong> ID ou nome da categoria
+                  </li>
+                  <li>
+                    • <strong>Preço Base:</strong> Valor numérico
+                  </li>
+                  <li>
+                    • <strong>URL da Foto:</strong> Link direto para imagem
+                  </li>
+                  <li>
+                    • <strong>Grupo de Tamanhos:</strong> ID do grupo (ex:
+                    1=Feminino, 2=Masculino)
+                  </li>
+                  <li>
+                    • <strong>Cores:</strong> Nomes separados por vírgula
+                  </li>
+                  <li>
+                    • <strong>Estoque:</strong> Quantidade por variante
+                    (opcional)
+                  </li>
                 </ul>
               </div>
             </CardContent>
@@ -475,11 +501,13 @@ export default function ProductImport() {
                     <div className="w-48">
                       <Label className="text-sm font-medium">
                         {field.label}
-                        {field.required && <span className="text-red-500 ml-1">*</span>}
+                        {field.required && (
+                          <span className="text-red-500 ml-1">*</span>
+                        )}
                       </Label>
                     </div>
                     <Select
-                      value={columnMappings[index]?.csvColumn || ''}
+                      value={columnMappings[index]?.csvColumn || ""}
                       onValueChange={(value) => {
                         const newMappings = [...columnMappings];
                         newMappings[index] = {
@@ -542,10 +570,14 @@ export default function ProductImport() {
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span>Progresso da Importação</span>
-                      <span>{importProgress.processed} / {importProgress.total}</span>
+                      <span>
+                        {importProgress.processed} / {importProgress.total}
+                      </span>
                     </div>
-                    <Progress 
-                      value={(importProgress.processed / importProgress.total) * 100} 
+                    <Progress
+                      value={
+                        (importProgress.processed / importProgress.total) * 100
+                      }
                     />
                   </div>
 
@@ -601,15 +633,17 @@ export default function ProductImport() {
                           <TableCell>
                             <Badge
                               variant={
-                                item.status === 'success' ? 'default' :
-                                item.status === 'error' ? 'destructive' :
-                                'secondary'
+                                item.status === "success"
+                                  ? "default"
+                                  : item.status === "error"
+                                    ? "destructive"
+                                    : "secondary"
                               }
                             >
-                              {item.status === 'success' && 'Sucesso'}
-                              {item.status === 'error' && 'Erro'}
-                              {item.status === 'pending' && 'Pendente'}
-                              {item.status === 'processing' && 'Processando'}
+                              {item.status === "success" && "Sucesso"}
+                              {item.status === "error" && "Erro"}
+                              {item.status === "pending" && "Pendente"}
+                              {item.status === "processing" && "Processando"}
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -638,7 +672,7 @@ export default function ProductImport() {
               Primeiras 10 linhas mapeadas do arquivo
             </DialogDescription>
           </DialogHeader>
-          
+
           {importData.length > 0 && (
             <Table>
               <TableHeader>
@@ -660,9 +694,9 @@ export default function ProductImport() {
                     <TableCell>{item.data.base_price}</TableCell>
                     <TableCell>
                       {item.data.photo_url && (
-                        <a 
-                          href={item.data.photo_url} 
-                          target="_blank" 
+                        <a
+                          href={item.data.photo_url}
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:underline text-xs"
                         >

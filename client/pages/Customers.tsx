@@ -143,7 +143,12 @@ export default function Customers() {
   const [updating, setUpdating] = useState(false);
   const [deletingCustomer, setDeletingCustomer] = useState<string | null>(null);
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
-  const [addForm, setAddForm] = useState({ email: "", name: "", whatsapp: "", minimum_order: 0 });
+  const [addForm, setAddForm] = useState({
+    email: "",
+    name: "",
+    whatsapp: "",
+    minimum_order: 0,
+  });
   const [adding, setAdding] = useState(false);
   const [approvingCustomer, setApprovingCustomer] = useState<number | null>(
     null,
@@ -559,7 +564,10 @@ export default function Customers() {
                   min="0"
                   value={addForm.minimum_order}
                   onChange={(e) =>
-                    setAddForm({ ...addForm, minimum_order: parseFloat(e.target.value) || 0 })
+                    setAddForm({
+                      ...addForm,
+                      minimum_order: parseFloat(e.target.value) || 0,
+                    })
                   }
                   placeholder="0.00"
                 />

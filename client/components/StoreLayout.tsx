@@ -2,7 +2,18 @@ import { ReactNode, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Package, User, LogOut, LogIn, Menu, X, Minus, Plus, Trash2 } from "lucide-react";
+import {
+  ShoppingCart,
+  Package,
+  User,
+  LogOut,
+  LogIn,
+  Menu,
+  X,
+  Minus,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { LoginModal } from "@/components/LoginModal";
@@ -26,7 +37,8 @@ interface StoreLayoutProps {
 }
 
 export function StoreLayout({ children }: StoreLayoutProps) {
-  const { items, totalItems, updateQuantity, removeItem, totalPrice } = useCart();
+  const { items, totalItems, updateQuantity, removeItem, totalPrice } =
+    useCart();
   const { isAuthenticated, isApproved, customer, logout } = useCustomerAuth();
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
@@ -40,26 +52,29 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       try {
         const response = await new Promise<Response>((resolve, reject) => {
           const xhr = new XMLHttpRequest();
-          xhr.open('GET', '/api/store/categories', true);
-          xhr.setRequestHeader('Accept', 'application/json');
+          xhr.open("GET", "/api/store/categories", true);
+          xhr.setRequestHeader("Accept", "application/json");
 
           xhr.onload = () => {
             const headers = new Headers();
-            xhr.getAllResponseHeaders().split('\r\n').forEach(line => {
-              const [key, value] = line.split(': ');
-              if (key && value) headers.set(key, value);
-            });
+            xhr
+              .getAllResponseHeaders()
+              .split("\r\n")
+              .forEach((line) => {
+                const [key, value] = line.split(": ");
+                if (key && value) headers.set(key, value);
+              });
 
             const response = new Response(xhr.responseText, {
               status: xhr.status,
               statusText: xhr.statusText,
-              headers: headers
+              headers: headers,
             });
             resolve(response);
           };
 
-          xhr.onerror = () => reject(new Error('Network error'));
-          xhr.ontimeout = () => reject(new Error('Request timeout'));
+          xhr.onerror = () => reject(new Error("Network error"));
+          xhr.ontimeout = () => reject(new Error("Request timeout"));
           xhr.timeout = 5000;
 
           xhr.send();
@@ -67,19 +82,16 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
         if (response.ok) {
           const data = await response.json();
-          setCategories([
-            { id: 'all', name: 'Todas as Categorias' },
-            ...data
-          ]);
+          setCategories([{ id: "all", name: "Todas as Categorias" }, ...data]);
         }
       } catch (error) {
-        console.warn('Failed to fetch categories:', error);
+        console.warn("Failed to fetch categories:", error);
         // Set default categories
         setCategories([
-          { id: 'all', name: 'Todas as Categorias' },
-          { id: '1', name: 'Chinelos' },
-          { id: '2', name: 'Sandálias' },
-          { id: '3', name: 'Tênis' },
+          { id: "all", name: "Todas as Categorias" },
+          { id: "1", name: "Chinelos" },
+          { id: "2", name: "Sandálias" },
+          { id: "3", name: "Tênis" },
         ]);
       }
     };
@@ -90,20 +102,20 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   // Lock body scroll when any drawer is open
   useEffect(() => {
     if (categoriesOpen || cartOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
 
     // Cleanup on unmount
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [categoriesOpen, cartOpen]);
 
   return (
     <div className="min-h-screen bg-background">
-            {/* Header */}
+      {/* Header */}
       <header className="border-b bg-card shadow-sm sticky top-0 z-40">
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           {/* Mobile Layout - Centered Logo */}
@@ -125,9 +137,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <Package className="h-6 w-6 text-primary-foreground" />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold text-primary">
-                  Chinelos
-                </span>
+                <span className="text-lg font-bold text-primary">Chinelos</span>
                 <span className="text-xs text-muted-foreground">
                   Loja Online
                 </span>
@@ -256,9 +266,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="h-10">
                       <User className="h-4 w-4 mr-2" />
-                      <span>
-                        {customer?.name || "Cliente"}
-                      </span>
+                      <span>{customer?.name || "Cliente"}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
@@ -330,20 +338,24 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         </div>
       </header>
 
-            {/* Main content */}
-      <main className="min-h-[calc(100vh-140px)] sm:min-h-[calc(100vh-160px)]">{children}</main>
+      {/* Main content */}
+      <main className="min-h-[calc(100vh-140px)] sm:min-h-[calc(100vh-160px)]">
+        {children}
+      </main>
 
-                  {/* Footer */}
+      {/* Footer */}
       <footer className="border-t bg-card mt-8 sm:mt-16">
         <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
           <div className="text-center text-xs sm:text-sm text-muted-foreground">
             <p>&copy; 2024 Chinelos Store. Todos os direitos reservados.</p>
-            <p className="mt-1 sm:mt-2">Sistema de vendas com grades obrigatórias</p>
+            <p className="mt-1 sm:mt-2">
+              Sistema de vendas com grades obrigatórias
+            </p>
           </div>
         </div>
       </footer>
 
-            {/* Login Modal */}
+      {/* Login Modal */}
       <LoginModal
         isOpen={loginModalOpen}
         onClose={() => setLoginModalOpen(false)}
@@ -380,7 +392,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           <div className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-left duration-300 sm:hidden">
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 border-b bg-orange-50">
-              <h2 className="text-lg font-semibold text-orange-900">Categorias</h2>
+              <h2 className="text-lg font-semibold text-orange-900">
+                Categorias
+              </h2>
               <Button
                 variant="ghost"
                 size="sm"
@@ -397,18 +411,26 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 {categories.map((category) => (
                   <Link
                     key={category.id}
-                    to={category.id === 'all' ? '/loja' : `/loja?categoria=${category.name.toLowerCase()}`}
+                    to={
+                      category.id === "all"
+                        ? "/loja"
+                        : `/loja?categoria=${category.name.toLowerCase()}`
+                    }
                     onClick={() => setCategoriesOpen(false)}
                     className="block w-full p-3 text-left rounded-lg hover:bg-orange-50 hover:border-orange-200 border border-transparent transition-all duration-200"
                   >
-                    <span className="font-medium text-gray-800">{category.name}</span>
+                    <span className="font-medium text-gray-800">
+                      {category.name}
+                    </span>
                   </Link>
                 ))}
               </div>
 
               {/* Quick Actions */}
               <div className="mt-6 pt-6 border-t border-gray-200">
-                <h3 className="text-sm font-medium text-gray-600 mb-3">Ações Rápidas</h3>
+                <h3 className="text-sm font-medium text-gray-600 mb-3">
+                  Ações Rápidas
+                </h3>
                 <div className="space-y-2">
                   <Link
                     to="/loja/carrinho"
@@ -418,7 +440,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     <ShoppingCart className="h-4 w-4 text-orange-600" />
                     <span className="font-medium text-gray-800">Carrinho</span>
                     {totalItems > 0 && (
-                      <Badge variant="secondary" className="ml-auto bg-orange-100 text-orange-800">
+                      <Badge
+                        variant="secondary"
+                        className="ml-auto bg-orange-100 text-orange-800"
+                      >
                         {totalItems}
                       </Badge>
                     )}
@@ -467,7 +492,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           <div className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-right duration-300 sm:hidden">
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 border-b bg-orange-50">
-              <h2 className="text-lg font-semibold text-orange-900">Carrinho</h2>
+              <h2 className="text-lg font-semibold text-orange-900">
+                Carrinho
+              </h2>
               <Button
                 variant="ghost"
                 size="sm"
@@ -535,12 +562,16 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                         {/* Quantity Controls */}
                         <div className="flex items-center justify-between mt-3">
-                          <span className="text-xs text-gray-600">Quantidade:</span>
+                          <span className="text-xs text-gray-600">
+                            Quantidade:
+                          </span>
                           <div className="flex items-center gap-2">
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              onClick={() =>
+                                updateQuantity(item.id, item.quantity - 1)
+                              }
                               className="h-6 w-6 p-0"
                             >
                               <Minus className="h-3 w-3" />
@@ -551,7 +582,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              onClick={() =>
+                                updateQuantity(item.id, item.quantity + 1)
+                              }
                               className="h-6 w-6 p-0"
                             >
                               <Plus className="h-3 w-3" />
@@ -577,12 +610,18 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                   {/* Action Buttons */}
                   <div className="space-y-2">
-                    <Link to="/loja/checkout" onClick={() => setCartOpen(false)}>
+                    <Link
+                      to="/loja/checkout"
+                      onClick={() => setCartOpen(false)}
+                    >
                       <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
                         Finalizar Compra
                       </Button>
                     </Link>
-                    <Link to="/loja/carrinho" onClick={() => setCartOpen(false)}>
+                    <Link
+                      to="/loja/carrinho"
+                      onClick={() => setCartOpen(false)}
+                    >
                       <Button variant="outline" className="w-full">
                         Ver Carrinho Completo
                       </Button>
