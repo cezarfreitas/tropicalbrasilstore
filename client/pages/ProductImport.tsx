@@ -414,7 +414,7 @@ export default function ProductImport() {
 
         toast({
           title: "Exportação Concluída",
-          description: "Arquivo de produtos baixado com sucesso",
+          description: `Arquivo de produtos ${filter === 'active' ? 'ativos' : 'todos'} baixado com sucesso`,
         });
       } else {
         throw new Error("Erro ao exportar produtos");
