@@ -448,7 +448,7 @@ export default function ProductImport() {
         </div>
       </div>
 
-      <Tabs defaultValue="upload" className="space-y-4">
+      <Tabs defaultValue="export" className="space-y-4">
         <TabsList>
           <TabsTrigger value="export">Exportação</TabsTrigger>
           <TabsTrigger value="upload">1. Upload do Arquivo</TabsTrigger>
