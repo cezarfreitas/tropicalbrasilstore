@@ -535,22 +535,54 @@ export default function ProductImport() {
                 </div>
               </div>
 
-              <div className="border-t pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-semibold">Exportar Todos os Produtos</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Gera um arquivo CSV com {productCount > 0 ? `${productCount} produtos` : 'todos os produtos'} cadastrados no sistema
-                    </p>
+              <div className="border-t pt-6 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 border rounded-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h4 className="font-semibold">Todos os Produtos</h4>
+                        <p className="text-sm text-muted-foreground">
+                          {productCount > 0 ? `${productCount} produtos` : 'Todos os produtos'} (ativos e inativos)
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => exportProducts('all')}
+                      className="w-full"
+                      disabled={isExporting}
+                    >
+                      {isExporting ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Download className="h-4 w-4 mr-2" />
+                      )}
+                      {isExporting ? "Exportando..." : "Exportar Todos"}
+                    </Button>
                   </div>
-                  <Button onClick={exportProducts} size="lg" disabled={isExporting}>
-                    {isExporting ? (
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                    ) : (
-                      <Download className="h-5 w-5 mr-2" />
-                    )}
-                    {isExporting ? "Exportando..." : "Exportar Produtos"}
-                  </Button>
+
+                  <div className="p-4 border rounded-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h4 className="font-semibold">Apenas Produtos Ativos</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Somente produtos disponíveis na loja
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => exportProducts('active')}
+                      variant="outline"
+                      className="w-full"
+                      disabled={isExporting}
+                    >
+                      {isExporting ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Download className="h-4 w-4 mr-2" />
+                      )}
+                      {isExporting ? "Exportando..." : "Exportar Ativos"}
+                    </Button>
+                  </div>
                 </div>
               </div>
 
