@@ -781,7 +781,7 @@ export default function ProductImport() {
                     produto
                   </li>
                   <li>
-                    • <strong>Preço de Venda:</strong> Preço final de venda ao
+                    • <strong>Preço de Venda:</strong> Pre��o final de venda ao
                     cliente
                   </li>
                   <li>
@@ -792,7 +792,7 @@ export default function ProductImport() {
                     1=Feminino, 2=Masculino)
                   </li>
                   <li>
-                    • <strong>Cores:</strong> Nomes separados por vírgula
+                    • <strong>Cor:</strong> Uma cor por linha (repita produto para cada cor)
                   </li>
                   <li>
                     • <strong>Estoque:</strong> Quantidade por variante
@@ -878,7 +878,7 @@ export default function ProductImport() {
                   </p>
                   <Button onClick={startImport} size="lg">
                     <Play className="h-5 w-5 mr-2" />
-                    Iniciar Importa��ão
+                    Iniciar Importação
                   </Button>
                 </div>
               )}
