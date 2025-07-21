@@ -314,7 +314,7 @@ function Store() {
                         <div className="flex items-center gap-1 sm:gap-2">
                           <span className="text-xs text-slate-600 hidden sm:inline">Cores:</span>
                           <div className="flex gap-1">
-                            {product.available_colors.slice(0, 3).map((color) => (
+                            {product.available_colors.slice(0, 5).map((color) => (
                               <div
                                 key={color.id}
                                 className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border border-slate-300"
@@ -322,8 +322,8 @@ function Store() {
                                 title={color.name}
                               />
                             ))}
-                            {product.available_colors.length > 3 && (
-                              <span className="text-xs text-slate-500">+{product.available_colors.length - 3}</span>
+                            {product.available_colors.length > 5 && (
+                              <span className="text-xs text-slate-500">+{product.available_colors.length - 5}</span>
                             )}
                           </div>
                         </div>
