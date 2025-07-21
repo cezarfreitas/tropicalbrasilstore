@@ -24,6 +24,7 @@ import { notificationsRouter } from "./routes/notifications";
 import { customerAuthRouter } from "./routes/customer-auth";
 import { mockupDataRouter } from "./routes/mockup-data";
 import { resetProductsRouter } from "./routes/reset-products";
+import { verifyProductsRouter } from "./routes/verify-products";
 import { createStoreSchema } from "./lib/store-schema";
 import { fixOrdersTable } from "./lib/fix-orders-table";
 import { checkAndFixTables } from "./lib/check-tables";
