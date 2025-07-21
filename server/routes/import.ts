@@ -258,14 +258,15 @@ async function processImport(data: any[]) {
       // Create product
       const [productResult] = await connection.execute(
         `INSERT INTO products (
-          name, description, category_id, base_price, suggested_price, 
+          name, description, category_id, base_price, sale_price, suggested_price,
           sku, parent_sku, photo, active
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           item.name,
           item.description || null,
           parseInt(item.category_id),
           parseFloat(item.base_price),
+          item.sale_price ? parseFloat(item.sale_price) : null,
           item.suggested_price ? parseFloat(item.suggested_price) : null,
           item.sku || null,
           item.parent_sku || null,
