@@ -495,7 +495,88 @@ export default function Orders() {
             </CardContent>
           </Card>
         </div>
-      )}
+            )}
+
+      {/* Compact Filters */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Search */}
+            <div className="flex-1 min-w-[300px]">
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar por ID, cliente ou email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+
+            {/* Status Filter */}
+            <Select
+              value={statusFilter || "all"}
+              onValueChange={(value) =>
+                setStatusFilter(value === "all" ? "" : value)
+              }
+            >
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                {Object.entries(statusConfig).map(([value, config]) => (
+                  <SelectItem key={value} value={value}>
+                    {config.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Date Filter */}
+            <Select
+              value={dateFilter}
+              onValueChange={(value) => setDateFilter(value)}
+            >
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="Período" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="today">Hoje</SelectItem>
+                <SelectItem value="week">Esta semana</SelectItem>
+                <SelectItem value="month">Este mês</SelectItem>
+                <SelectItem value="year">Este ano</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* Page Size */}
+            <Select
+              value={pageSize.toString()}
+              onValueChange={(value) => {
+                setPageSize(parseInt(value));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="w-[80px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="20">20</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* Clear Filters */}
+            <Button variant="outline" size="sm" onClick={clearFilters}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Orders Table */}
       <Card>
