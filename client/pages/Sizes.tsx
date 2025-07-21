@@ -44,42 +44,25 @@ export default function Sizes() {
     display_order: 0,
   });
   
-    // Hook para grupos de tamanhos integrado com banco de dados
-  const {
-    sizeGroups,
-    loading: sizeGroupsLoading,
+  // Hook para grupos de tamanhos integrado com banco de dados
+  const { 
+    sizeGroups, 
+    loading: sizeGroupsLoading, 
     error: sizeGroupsError,
-    addGroup,
-    updateGroup,
+    addGroup, 
+    updateGroup, 
     deleteGroup,
     refetch: refetchSizeGroups
   } = useSizeGroups();
-      description: "Tamanhos masculinos adultos",
-      icon: "👨",
-      sizes: ["38", "39", "40", "41", "42", "43", "44"]
-    },
-    {
-      id: "feminino", 
-      name: "Feminino",
-      description: "Tamanhos femininos adultos",
-      icon: "👩",
-      sizes: ["33", "34", "35", "36", "37", "38", "39"]
-    },
-    {
-      id: "infantil",
-      name: "Infantil",
-      description: "Tamanhos infantis",
-      icon: "👶",
-      sizes: ["32", "33", "34", "35", "36"]
-    }
-  ]);
+  
   const [groupDialogOpen, setGroupDialogOpen] = useState(false);
   const [editingGroup, setEditingGroup] = useState<SizeGroup | null>(null);
-  const [groupFormData, setGroupFormData] = useState<Omit<SizeGroup, 'id'>>({
+  const [groupFormData, setGroupFormData] = useState<Omit<SizeGroup, 'id' | 'created_at' | 'updated_at'>>({
     name: "",
     description: "",
     icon: "",
-    sizes: []
+    sizes: [],
+    active: true
   });
   
   const { toast } = useToast();
@@ -129,8 +112,7 @@ export default function Sizes() {
             : "Tamanho criado com sucesso",
         });
         setDialogOpen(false);
-        setEditingSize(null);
-        setFormData({ size: "", display_order: 0 });
+        resetForm();
         fetchSizes();
       } else {
         const error = await response.json();
@@ -143,6 +125,25 @@ export default function Sizes() {
         variant: "destructive",
       });
     }
+  };
+
+  const resetForm = () => {
+    setEditingSize(null);
+    setFormData({
+      size: "",
+      display_order: 0,
+    });
+  };
+
+  const resetGroupForm = () => {
+    setEditingGroup(null);
+    setGroupFormData({
+      name: "",
+      description: "",
+      icon: "",
+      sizes: [],
+      active: true
+    });
   };
 
   const handleEdit = (size: Size) => {
@@ -181,20 +182,12 @@ export default function Sizes() {
   };
 
   const handleNewSize = () => {
-    setEditingSize(null);
-    setFormData({ size: "", display_order: sizes.length });
+    resetForm();
     setDialogOpen(true);
   };
 
-  // Funções para grupos de tamanhos
   const handleNewGroup = () => {
-    setEditingGroup(null);
-    setGroupFormData({
-      name: "",
-      description: "",
-      icon: "",
-      sizes: []
-    });
+    resetGroupForm();
     setGroupDialogOpen(true);
   };
 
@@ -202,14 +195,15 @@ export default function Sizes() {
     setEditingGroup(group);
     setGroupFormData({
       name: group.name,
-      description: group.description,
-      icon: group.icon,
-      sizes: [...group.sizes]
+      description: group.description || "",
+      icon: group.icon || "",
+      sizes: group.sizes,
+      active: group.active
     });
     setGroupDialogOpen(true);
   };
 
-  const handleSaveGroup = () => {
+  const handleSaveGroup = async () => {
     if (!groupFormData.name.trim()) {
       toast({
         title: "Erro",
@@ -219,38 +213,48 @@ export default function Sizes() {
       return;
     }
 
-    const groupId = editingGroup?.id || groupFormData.name.toLowerCase().replace(/\s+/g, '_');
-    const newGroup: SizeGroup = {
-      id: groupId,
-      ...groupFormData
-    };
+    try {
+      if (editingGroup) {
+        await updateGroup(editingGroup.id, groupFormData);
+        toast({
+          title: "Sucesso",
+          description: "Grupo atualizado com sucesso",
+        });
+      } else {
+        await addGroup(groupFormData);
+        toast({
+          title: "Sucesso", 
+          description: "Grupo criado com sucesso",
+        });
+      }
 
-    if (editingGroup) {
-      setSizeGroups(prev => prev.map(g => g.id === editingGroup.id ? newGroup : g));
+      setGroupDialogOpen(false);
+      resetGroupForm();
+    } catch (error: any) {
       toast({
-        title: "Sucesso",
-        description: "Grupo atualizado com sucesso",
-      });
-    } else {
-      setSizeGroups(prev => [...prev, newGroup]);
-      toast({
-        title: "Sucesso", 
-        description: "Grupo criado com sucesso",
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
       });
     }
-
-    setGroupDialogOpen(false);
-    setEditingGroup(null);
   };
 
-  const handleDeleteGroup = (groupId: string) => {
+  const handleDeleteGroup = async (groupId: number) => {
     if (!confirm("Tem certeza que deseja excluir este grupo?")) return;
     
-    setSizeGroups(prev => prev.filter(g => g.id !== groupId));
-    toast({
-      title: "Sucesso",
-      description: "Grupo excluído com sucesso",
-    });
+    try {
+      await deleteGroup(groupId);
+      toast({
+        title: "Sucesso",
+        description: "Grupo excluído com sucesso",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const toggleSizeInGroup = (sizeValue: string) => {
@@ -349,8 +353,7 @@ export default function Sizes() {
                             display_order: parseInt(e.target.value) || 0,
                           })
                         }
-                        placeholder="0"
-                        min="0"
+                        placeholder="Ex: 1, 2, 3..."
                       />
                     </div>
                   </div>
@@ -372,54 +375,30 @@ export default function Sizes() {
           </div>
 
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Ruler className="h-5 w-5" />
-                Lista de Tamanhos
-              </CardTitle>
-              <CardDescription>
-                {sizes.length === 0
-                  ? "Nenhum tamanho cadastrado"
-                  : `${sizes.length} tamanho${sizes.length !== 1 ? "s" : ""} cadastrado${sizes.length !== 1 ? "s" : ""}`}
-              </CardDescription>
-            </CardHeader>
             <CardContent>
-              {sizes.length === 0 ? (
-                <div className="text-center py-8">
-                  <Ruler className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                  <h3 className="mt-2 text-sm font-semibold">
-                    Nenhum tamanho cadastrado
-                  </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Comece criando os tamanhos disponíveis para seus chinelos.
-                  </p>
-                  <div className="mt-6">
-                    <Button onClick={handleNewSize}>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Novo Tamanho
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Tamanho</TableHead>
+                    <TableHead>Ordem de Exibição</TableHead>
+                    <TableHead className="w-[100px]">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sizes.length === 0 ? (
                     <TableRow>
-                      <TableHead>Tamanho</TableHead>
-                      <TableHead>Ordem</TableHead>
-                      <TableHead>Criado em</TableHead>
-                      <TableHead className="w-[100px]">Ações</TableHead>
+                      <TableCell colSpan={3} className="text-center py-8">
+                        <Ruler className="mx-auto h-8 w-8 text-muted-foreground/50" />
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          Nenhum tamanho cadastrado
+                        </p>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {sizes.map((size) => (
+                  ) : (
+                    sizes.map((size) => (
                       <TableRow key={size.id}>
                         <TableCell className="font-medium">{size.size}</TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {size.display_order}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {new Date(size.created_at).toLocaleDateString("pt-BR")}
-                        </TableCell>
+                        <TableCell>{size.display_order}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <Button
@@ -439,10 +418,10 @@ export default function Sizes() {
                           </div>
                         </TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
+                    ))
+                  )}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         </TabsContent>
@@ -453,7 +432,7 @@ export default function Sizes() {
             <div>
               <h2 className="text-xl font-semibold">Grupos de Tamanhos</h2>
               <p className="text-muted-foreground">
-                Configure grupos para facilitar a seleção de variantes
+                Crie grupos para facilitar a seleção de tamanhos durante a criação de produtos
               </p>
             </div>
             <Dialog open={groupDialogOpen} onOpenChange={setGroupDialogOpen}>
@@ -469,49 +448,53 @@ export default function Sizes() {
                     {editingGroup ? "Editar Grupo" : "Novo Grupo de Tamanhos"}
                   </DialogTitle>
                   <DialogDescription>
-                    Configure um grupo para facilitar a seleção rápida de tamanhos
+                    {editingGroup
+                      ? "Atualize as informações do grupo"
+                      : "Crie um novo grupo de tamanhos para facilitar a criação de produtos"}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                      <Label htmlFor="group_name">Nome do Grupo</Label>
+                      <Label htmlFor="groupName">Nome do Grupo</Label>
                       <Input
-                        id="group_name"
+                        id="groupName"
                         value={groupFormData.name}
                         onChange={(e) =>
                           setGroupFormData({ ...groupFormData, name: e.target.value })
                         }
-                        placeholder="Ex: Masculino, Feminino..."
+                        placeholder="Ex: Masculino, Feminino, Infantil"
                         required
                       />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="group_icon">��cone (Emoji)</Label>
+                      <Label htmlFor="groupIcon">Ícone (Emoji)</Label>
                       <Input
-                        id="group_icon"
+                        id="groupIcon"
                         value={groupFormData.icon}
                         onChange={(e) =>
                           setGroupFormData({ ...groupFormData, icon: e.target.value })
                         }
-                        placeholder="Ex: 👨, 👩, 👶..."
+                        placeholder="Ex: 👨, 👩, 👶"
                       />
                     </div>
                   </div>
+                  
                   <div className="grid gap-2">
-                    <Label htmlFor="group_description">Descrição</Label>
+                    <Label htmlFor="groupDescription">Descrição</Label>
                     <Input
-                      id="group_description"
+                      id="groupDescription"
                       value={groupFormData.description}
                       onChange={(e) =>
                         setGroupFormData({ ...groupFormData, description: e.target.value })
                       }
-                      placeholder="Descreva o grupo de tamanhos"
+                      placeholder="Descrição do grupo"
                     />
                   </div>
+
                   <div className="grid gap-2">
                     <Label>Tamanhos do Grupo</Label>
-                    <div className="flex flex-wrap gap-2 p-4 border rounded">
+                    <div className="grid grid-cols-6 gap-2 p-4 border rounded-lg">
                       {sizes.map((size) => (
                         <div key={size.id} className="flex items-center space-x-2">
                           <Checkbox
@@ -525,9 +508,18 @@ export default function Sizes() {
                         </div>
                       ))}
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      Selecione os tamanhos que pertencem a este grupo
-                    </p>
+                    {groupFormData.sizes.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        <span className="text-sm text-muted-foreground">
+                          Selecionados:
+                        </span>
+                        {groupFormData.sizes.map((size) => (
+                          <Badge key={size} variant="secondary" className="text-xs">
+                            {size}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <DialogFooter>
@@ -546,51 +538,93 @@ export default function Sizes() {
             </Dialog>
           </div>
 
-          <div className="grid gap-4">
-            {sizeGroups.map((group) => (
-              <Card key={group.id}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{group.icon}</span>
-                      <div>
-                        <CardTitle>{group.name}</CardTitle>
-                        <CardDescription>{group.description}</CardDescription>
+          {sizeGroupsLoading ? (
+            <div className="flex items-center justify-center h-32">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Carregando grupos...
+                </p>
+              </div>
+            </div>
+          ) : sizeGroupsError ? (
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-center text-red-500">
+                  <p>Erro ao carregar grupos: {sizeGroupsError}</p>
+                  <Button onClick={refetchSizeGroups} variant="outline" className="mt-2">
+                    Tentar novamente
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid gap-4">
+              {sizeGroups.length === 0 ? (
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="text-center py-8">
+                      <Users className="mx-auto h-8 w-8 text-muted-foreground/50" />
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        Nenhum grupo de tamanhos cadastrado
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : (
+                sizeGroups.map((group) => (
+                  <Card key={group.id}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="text-2xl">{group.icon}</div>
+                          <div>
+                            <CardTitle className="text-lg">{group.name}</CardTitle>
+                            {group.description && (
+                              <CardDescription>{group.description}</CardDescription>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={group.active ? "default" : "secondary"}>
+                            {group.active ? "Ativo" : "Inativo"}
+                          </Badge>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleEditGroup(group)}
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleDeleteGroup(group.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleEditGroup(group)}
-                      >
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleDeleteGroup(group.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {group.sizes.map((size) => (
-                      <Badge key={size} variant="secondary">
-                        {size}
-                      </Badge>
-                    ))}
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {group.sizes.length} tamanho{group.sizes.length !== 1 ? "s" : ""} neste grupo
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div>
+                        <Label className="text-sm font-medium">
+                          Tamanhos ({group.sizes.length}):
+                        </Label>
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {group.sizes.map((size) => (
+                            <Badge key={size} variant="outline" className="text-xs">
+                              {size}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>
