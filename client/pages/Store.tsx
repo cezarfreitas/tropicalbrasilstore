@@ -300,11 +300,23 @@ export default function Store() {
     allProducts,
   ]);
 
-    const fetchProducts = async () => {
+      const fetchProducts = async (retryCount = 0) => {
     setLoading(true);
     try {
-      console.log("Fetching products from /api/store-old/products");
-      const response = await fetch("/api/store-old/products");
+      console.log("Fetching products from /api/store-old/products", retryCount > 0 ? `(retry ${retryCount})` : "");
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      const response = await fetch("/api/store-old/products", {
+        signal: controller.signal,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      clearTimeout(timeoutId);
       console.log("Response status:", response.status);
 
       if (response.ok) {
@@ -691,7 +703,7 @@ export default function Store() {
                       </div>
                       <div className="flex-1 text-center sm:text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Fa��a login para ver preços especiais
+                          Faça login para ver preços especiais
                         </h3>
                         <p className="text-sm text-gray-600 mt-1">
                           Entre com sua conta para acessar preços exclusivos e fazer pedidos de grades
