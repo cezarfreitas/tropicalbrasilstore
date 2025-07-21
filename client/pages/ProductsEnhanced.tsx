@@ -959,11 +959,100 @@ export default function ProductsEnhanced() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="variants" className="space-y-4">
+                                <TabsContent value="variants" className="space-y-6">
+                  {/* Interface Simplificada para Criar Variantes */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Criar Variantes Facilmente</CardTitle>
+                      <CardDescription>
+                        Selecione uma cor e os tamanhos desejados para criar variantes automaticamente
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label>1. Selecione a Cor</Label>
+                          <Select
+                            value={selectedColorForVariants?.toString() || ""}
+                            onValueChange={(value) => setSelectedColorForVariants(parseInt(value))}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Escolher cor" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {colors.map((color) => (
+                                <SelectItem key={color.id} value={color.id.toString()}>
+                                  <div className="flex items-center gap-2">
+                                    <div
+                                      className="w-4 h-4 rounded border"
+                                      style={{ backgroundColor: color.hex_code || "#999999" }}
+                                    />
+                                    {color.name}
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <Label>2. Estoque por Variante</Label>
+                          <Input
+                            type="number"
+                            min="0"
+                            value={variantStock}
+                            onChange={(e) => setVariantStock(parseInt(e.target.value) || 0)}
+                            placeholder="Quantidade"
+                          />
+                        </div>
+
+                        <div>
+                          <Label>3. Ação</Label>
+                          <Button
+                            type="button"
+                            onClick={addVariantsForColorAndSizes}
+                            className="w-full"
+                            disabled={!selectedColorForVariants || selectedSizesForVariants.length === 0}
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Criar Variantes
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label>2. Selecione os Tamanhos</Label>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {sizes.map((size) => (
+                            <Button
+                              key={size.id}
+                              type="button"
+                              variant={selectedSizesForVariants.includes(size.id) ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => {
+                                setSelectedSizesForVariants(prev =>
+                                  prev.includes(size.id)
+                                    ? prev.filter(id => id !== size.id)
+                                    : [...prev, size.id]
+                                );
+                              }}
+                            >
+                              {size.size}
+                            </Button>
+                          ))}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Clique nos tamanhos para selecionar/deselecionar
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Lista de Variantes Existentes */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <Label className="text-base">
-                        Variantes ({formData.variants.length})
+                        Variantes Criadas ({formData.variants.length})
                       </Label>
                       <div className="flex items-center gap-2">
                         <Button
@@ -1000,7 +1089,7 @@ export default function ProductsEnhanced() {
                       </Button>
                       <Button type="button" onClick={addVariant} size="sm">
                         <Plus className="mr-1 h-3 w-3" />
-                        Adicionar
+                        Manual
                       </Button>
                     </div>
                   </div>
