@@ -140,13 +140,27 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         </div>
       </footer>
 
-      {/* Login Modal */}
+            {/* Login Modal */}
       <LoginModal
         isOpen={loginModalOpen}
         onClose={() => setLoginModalOpen(false)}
+        onSwitchToRegister={() => {
+          setLoginModalOpen(false);
+          setRegisterModalOpen(true);
+        }}
         onSuccess={() => {
           // Optionally refresh the page or update state
           window.location.reload();
+        }}
+      />
+
+      {/* Register Modal */}
+      <RegisterModal
+        isOpen={registerModalOpen}
+        onClose={() => setRegisterModalOpen(false)}
+        onSwitchToLogin={() => {
+          setRegisterModalOpen(false);
+          setLoginModalOpen(true);
         }}
       />
     </div>
