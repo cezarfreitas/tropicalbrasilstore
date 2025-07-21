@@ -294,4 +294,37 @@ router.patch("/:id/toggle", async (req, res) => {
   }
 });
 
+// Toggle sell without stock (quick endpoint)
+router.patch("/:id/toggle-sell-without-stock", async (req, res) => {
+  try {
+    // Get current status
+    const [currentRows] = await db.execute(
+      "SELECT sell_without_stock FROM products WHERE id = ?",
+      [req.params.id],
+    );
+
+    if (currentRows.length === 0) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    const currentProduct = (currentRows as any)[0];
+    const newStatus = !currentProduct.sell_without_stock;
+
+    // Update status
+    await db.execute(
+      "UPDATE products SET sell_without_stock = ? WHERE id = ?",
+      [newStatus, req.params.id],
+    );
+
+    res.json({
+      success: true,
+      sell_without_stock: newStatus,
+      message: `Venda sem estoque ${newStatus ? "ativada" : "desativada"} com sucesso`,
+    });
+  } catch (error) {
+    console.error("Error toggling sell without stock:", error);
+    res.status(500).json({ error: "Failed to toggle sell without stock" });
+  }
+});
+
 export { router as productsEnhancedRouter };
