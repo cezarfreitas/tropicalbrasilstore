@@ -85,7 +85,10 @@ Esta API permite criar produtos usando **nomes** ao invés de IDs para categoria
     "category_created": true,
     "colors_created": ["Azul", "Vermelho"],
     "sizes_created": ["37", "38"],
-    "size_group_created": true
+    "size_group_created": true,
+    "photo_downloaded": true,
+    "photo_url_original": "https://example.com/foto.jpg",
+    "photo_path_saved": "/uploads/products/nome_do_produto.jpg"
   }
 }
 ```
