@@ -73,7 +73,7 @@ const REQUIRED_FIELDS = [
   { key: "sale_price", label: "Preço de Venda", required: false },
   { key: "photo_url", label: "URL da Foto", required: false },
   { key: "size_group_id", label: "Grupo de Tamanhos", required: true },
-  { key: "colors", label: "Cores (separadas por vírgula)", required: true },
+  { key: "color", label: "Cor (uma por linha)", required: true },
   { key: "sku", label: "SKU", required: false },
   { key: "parent_sku", label: "SKU Pai", required: false },
   { key: "description", label: "Descrição", required: false },
