@@ -254,22 +254,23 @@ router.get("/products/:id", async (req, res) => {
         [grade.id],
       );
 
-      // Check if all required variants are available with sufficient stock
-      let available = true;
+            // Calculate total required and check availability
       let totalRequired = 0;
+      let hasAnyStock = false;
+
       for (const template of templateRows as any[]) {
+        totalRequired += template.required_quantity;
         const variant = (variantRows as any[]).find(
           (v) =>
             v.size_id === template.size_id && v.color_id === grade.color_id,
         );
-        if (!variant || variant.stock < template.required_quantity) {
-          available = false;
-          break;
+        if (variant && variant.stock > 0) {
+          hasAnyStock = true;
         }
-        totalRequired += template.required_quantity;
       }
 
-      if (available) {
+      // Show grade if there's any stock available (not requiring full stock)
+      if (hasAnyStock || totalRequired > 0) {
         gradesWithTemplates.push({
           ...grade,
           templates: templateRows,
