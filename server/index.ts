@@ -40,6 +40,7 @@ import { addSuggestedPriceColumn } from "./lib/add-suggested-price-column";
 import { addPhotoColumn } from "./lib/add-photo-column";
 import { redesignGradeSystem } from "./lib/redesign-grades";
 import { createStoreSettingsTable } from "./lib/create-settings-table";
+import { addMinimumOrderColumn } from "./lib/add-minimum-order-column";
 
 export function createServer() {
   const app = express();
