@@ -323,24 +323,17 @@ export default function ProductsEnhanced() {
     });
   };
 
-    const handleToggleStatus = async (product: EnhancedProduct) => {
+      const handleToggleStatus = async (product: EnhancedProduct) => {
     try {
-      const newStatus = !product.active;
-      const response = await fetch(`/api/products-enhanced/${product.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...product,
-          active: newStatus,
-        }),
+      const response = await fetch(`/api/products-enhanced/${product.id}/toggle`, {
+        method: "PATCH",
       });
 
       if (response.ok) {
+        const data = await response.json();
         toast({
           title: "Sucesso",
-          description: `Produto ${newStatus ? "ativado" : "desativado"} com sucesso`,
+          description: data.message,
         });
         fetchProducts();
       } else {
