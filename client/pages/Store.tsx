@@ -339,9 +339,9 @@ function Store() {
                         </div>
                       )}
 
-                      {/* Add to Cart Button */}
+                      {/* Add to Cart Button - Desktop only */}
                       <Button
-                        className="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm h-6 sm:h-8"
+                        className="hidden sm:flex w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white text-sm h-8"
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
