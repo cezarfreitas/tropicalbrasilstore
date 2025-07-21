@@ -320,13 +320,14 @@ export default function ProductsEnhanced() {
   const resetForm = () => {
     setEditingProduct(null);
     setSelectedGrades([]);
-    setFormData({
+        setFormData({
       name: "",
       description: "",
       category_id: undefined,
       base_price: undefined,
       suggested_price: undefined,
       sku: "",
+      parent_sku: "",
       photo: "",
       stock: 0,
       variants: [],
