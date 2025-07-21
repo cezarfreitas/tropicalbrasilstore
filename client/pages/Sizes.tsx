@@ -50,6 +50,40 @@ export default function Sizes() {
     size: "",
     display_order: 0,
   });
+
+  // Estados para grupos de tamanhos
+  const [sizeGroups, setSizeGroups] = useState<SizeGroup[]>([
+    {
+      id: "masculino",
+      name: "Masculino",
+      description: "Tamanhos masculinos adultos",
+      icon: "👨",
+      sizes: ["38", "39", "40", "41", "42", "43", "44"]
+    },
+    {
+      id: "feminino",
+      name: "Feminino",
+      description: "Tamanhos femininos adultos",
+      icon: "👩",
+      sizes: ["33", "34", "35", "36", "37", "38", "39"]
+    },
+    {
+      id: "infantil",
+      name: "Infantil",
+      description: "Tamanhos infantis",
+      icon: "👶",
+      sizes: ["32", "33", "34", "35", "36"]
+    }
+  ]);
+  const [groupDialogOpen, setGroupDialogOpen] = useState(false);
+  const [editingGroup, setEditingGroup] = useState<SizeGroup | null>(null);
+  const [groupFormData, setGroupFormData] = useState<Omit<SizeGroup, 'id'>>({
+    name: "",
+    description: "",
+    icon: "",
+    sizes: []
+  });
+
   const { toast } = useToast();
 
   useEffect(() => {
