@@ -554,7 +554,21 @@ export default function ProductsEnhanced() {
     setFormData({ ...formData, variants: newVariants });
   };
 
-    const addVariantsForColorAndSizes = () => {
+      const selectSizeGroup = (groupKey: keyof typeof SIZE_GROUPS) => {
+    const group = SIZE_GROUPS[groupKey];
+    const groupSizeIds = sizes
+      .filter(size => group.sizes.includes(size.size))
+      .map(size => size.id);
+
+    setSelectedSizesForVariants(groupSizeIds);
+
+    toast({
+      title: "Grupo Selecionado",
+      description: `${group.name}: ${groupSizeIds.length} tamanhos selecionados`,
+    });
+  };
+
+  const addVariantsForColorAndSizes = () => {
     if (!selectedColorForVariants || selectedSizesForVariants.length === 0) {
       toast({
         title: "Erro",
