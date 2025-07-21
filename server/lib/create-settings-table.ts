@@ -1,11 +1,24 @@
 import db from "./db";
 
-async function createStoreSettingsTable() {
+export async function createStoreSettingsTable() {
   try {
-    console.log("Creating store_settings table...");
+    // Check if store_settings table exists
+    const [tables] = await db.execute(`
+      SELECT TABLE_NAME
+      FROM information_schema.TABLES
+      WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'store_settings'
+    `);
+
+    if ((tables as any[]).length > 0) {
+      console.log("✅ store_settings table already exists");
+      return;
+    }
+
+    console.log("📦 Creating store_settings table...");
 
     await db.execute(`
-      CREATE TABLE IF NOT EXISTS store_settings (
+      CREATE TABLE store_settings (
         id INT AUTO_INCREMENT PRIMARY KEY,
         store_name VARCHAR(255) NOT NULL DEFAULT 'Chinelos Store',
         store_description TEXT,
@@ -31,19 +44,9 @@ async function createStoreSettingsTable() {
       )
     `);
 
-    console.log("Store settings table created successfully!");
+    console.log("✅ store_settings table created successfully!");
   } catch (error) {
-    console.error("Error creating store_settings table:", error);
+    console.error("❌ Error creating store_settings table:", error);
     throw error;
   }
 }
-
-createStoreSettingsTable()
-  .then(() => {
-    console.log("Migration completed successfully");
-    process.exit(0);
-  })
-  .catch((error) => {
-    console.error("Migration failed:", error);
-    process.exit(1);
-  });
