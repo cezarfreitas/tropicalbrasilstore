@@ -244,7 +244,6 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               </Link>
             </div>
           </div>
-          </div>
         </div>
       </header>
 
