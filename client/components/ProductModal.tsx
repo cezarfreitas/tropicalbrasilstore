@@ -441,19 +441,35 @@ export function ProductModal({
                         );
                       })
                     ) : (
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="grid grid-cols-2 gap-2">
                         {getAvailableSizes().map((size) => (
                           <button
                             key={size.id}
                             onClick={() => setSelectedSize(size.id)}
-                            className={`p-2 border rounded-lg text-center text-xs ${
+                            className={`p-3 border rounded-lg text-left ${
                               selectedSize === size.id
                                 ? 'border-orange-500 bg-orange-50'
                                 : 'border-gray-200'
                             }`}
                           >
-                            <div className="font-medium">{size.name}</div>
-                            <div className="text-muted-foreground">{size.stock}</div>
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <div className="font-medium text-sm">{size.name}</div>
+                                <div className="text-xs text-orange-600 font-medium">
+                                  1 peça
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-xs font-bold text-muted-foreground">
+                                  {size.stock} disp.
+                                </div>
+                                {product.base_price && (
+                                  <div className="text-orange-500 font-bold text-xs">
+                                    R$ {parseFloat(product.base_price.toString()).toFixed(2)}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
                           </button>
                         ))}
                       </div>
