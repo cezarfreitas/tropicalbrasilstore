@@ -978,10 +978,19 @@ export default function Store() {
         </div>
       </div>
 
-      <ProductModal
+            <ProductModal
         productId={selectedProductId}
         isOpen={isModalOpen}
         onClose={closeModal}
+      />
+
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onSuccess={() => {
+          // Refresh the page after successful login
+          window.location.reload();
+        }}
       />
     </StoreLayout>
   );
