@@ -233,8 +233,8 @@ export function ProductModal({
       });
 
       toast({
-        title: "Adicionado!",
-        description: `${product.name} - ${selectedColorData?.name}`,
+        title: "✓ Adicionado ao carrinho",
+        description: `${selectedColorData?.name}`,
       });
     } else {
       toast({
