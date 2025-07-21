@@ -199,17 +199,65 @@ export function ProductModal({
               </div>
             </div>
 
-            {/* Grades */}
+                        {/* Grades */}
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold">Grades Disponíveis</h4>
+              <h4 className="text-lg font-semibold">
+                {product.available_grades && product.available_grades.length > 0
+                  ? "Grades Disponíveis"
+                  : "Compra por Unidade"}
+              </h4>
 
-              {product.available_grades.length === 0 ? (
+              {!product.available_grades || product.available_grades.length === 0 ? (
                 <Card>
-                  <CardContent className="text-center py-8">
-                    <Grid3x3 className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                    <p className="mt-2 text-muted-foreground">
-                      Nenhuma grade disponível para este produto
-                    </p>
+                  <CardContent className="py-6">
+                    <div className="text-center space-y-4">
+                      <Package className="mx-auto h-12 w-12 text-primary" />
+                      <div>
+                        <p className="text-lg font-medium">Compra por Unidade</p>
+                        <p className="text-sm text-muted-foreground">
+                          Este produto não possui grades pré-definidas. Você pode comprá-lo por unidade.
+                        </p>
+                      </div>
+
+                      {product.base_price && (
+                        <div className="flex items-center justify-center gap-4 pt-4">
+                          <div className="flex items-center gap-2">
+                            <Label className="text-sm">Quantidade:</Label>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => updateGradeQuantity(0, getGradeQuantity(0) - 1)}
+                            >
+                              <Minus className="h-3 w-3" />
+                            </Button>
+                            <Input
+                              type="number"
+                              min="1"
+                              value={getGradeQuantity(0)}
+                              onChange={(e) => updateGradeQuantity(0, parseInt(e.target.value) || 1)}
+                              className="w-16 h-8 text-center text-sm"
+                            />
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => updateGradeQuantity(0, getGradeQuantity(0) + 1)}
+                            >
+                              <Plus className="h-3 w-3" />
+                            </Button>
+                          </div>
+
+                          <Button
+                            onClick={() => addUnitToCart()}
+                            size="lg"
+                          >
+                            <ShoppingCart className="mr-2 h-4 w-4" />
+                            Adicionar R$ {(product.base_price * getGradeQuantity(0)).toFixed(2)}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               ) : (
