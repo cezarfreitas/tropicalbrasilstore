@@ -77,7 +77,8 @@ export function createServer() {
 
   // API routes
   app.use("/api/categories", categoriesRouter);
-  app.use("/api/sizes", sizesRouter);
+    app.use("/api/sizes", sizesRouter);
+  app.use("/api/size-groups", sizeGroupsRouter);
   app.use("/api/colors", colorsRouter);
   app.use("/api/products", productsRouter);
   app.use("/api/products-enhanced", productsEnhancedRouter);
