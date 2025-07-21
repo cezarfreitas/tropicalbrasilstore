@@ -49,6 +49,8 @@ import {
   Clock,
   UserCheck,
   Key,
+  Trash2,
+  Shield,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
