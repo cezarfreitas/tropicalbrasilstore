@@ -3,6 +3,28 @@ import db from "../lib/db";
 
 const router = Router();
 
+interface ProductVariant {
+  id?: number;
+  size_id: number;
+  color_id: number;
+  stock: number;
+  price_override?: number;
+}
+
+interface CreateProductRequest {
+  name: string;
+  description?: string;
+  category_id?: number;
+  base_price?: number;
+  suggested_price?: number;
+  sku?: string;
+  parent_sku?: string;
+  photo?: string;
+  stock?: number;
+  variants: ProductVariant[];
+  grades: number[];
+}
+
 // Get all products with complete information (simplified to work with current schema)
 router.get("/", async (req, res) => {
   try {
