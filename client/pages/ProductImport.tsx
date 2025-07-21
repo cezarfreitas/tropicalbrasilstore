@@ -402,6 +402,10 @@ export default function ProductImport() {
             <Download className="h-4 w-4 mr-2" />
             Baixar Template
           </Button>
+          <Button variant="outline" onClick={exportProducts}>
+            <Download className="h-4 w-4 mr-2" />
+            Exportar Produtos
+          </Button>
           <Button variant="outline" onClick={resetImport}>
             <RotateCcw className="h-4 w-4 mr-2" />
             Reiniciar
