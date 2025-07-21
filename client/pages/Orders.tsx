@@ -159,7 +159,7 @@ export default function Orders() {
     }
   };
 
-  const updateOrderStatus = async (orderId: number, newStatus: string) => {
+    const updateOrderStatus = async (orderId: number, newStatus: string) => {
     setStatusUpdating(orderId);
     try {
       const response = await fetch(`/api/admin/orders/${orderId}/status`, {
@@ -194,6 +194,53 @@ export default function Orders() {
       });
     } finally {
       setStatusUpdating(null);
+    }
+  };
+
+  const exportToExcel = async () => {
+    setExporting(true);
+    try {
+      const response = await fetch("/api/admin/orders/export/excel");
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+
+        // Get filename from response headers or use default
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = `pedidos_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+        if (contentDisposition) {
+          const filenameMatch = contentDisposition.match(/filename="([^"]+)"/);
+          if (filenameMatch) {
+            filename = filenameMatch[1];
+          }
+        }
+
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        toast({
+          title: "Sucesso",
+          description: "Relatório de pedidos exportado com sucesso!",
+        });
+      } else {
+        throw new Error("Falha ao exportar dados");
+      }
+    } catch (error) {
+      console.error("Error exporting to Excel:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível exportar os dados para Excel",
+        variant: "destructive",
+      });
+    } finally {
+      setExporting(false);
     }
   };
 
