@@ -529,8 +529,10 @@ export default function ProductsEnhanced() {
     setFormData({ ...formData, variants: newVariants });
   };
 
-        const selectSizeGroup = (groupKey: keyof typeof SIZE_GROUPS) => {
-    const group = SIZE_GROUPS[groupKey];
+                const selectSizeGroup = (groupId: number) => {
+    const group = sizeGroups.find(g => g.id === groupId);
+    if (!group) return;
+
     const groupSizeIds = sizes
       .filter(size => group.sizes.includes(size.size))
       .map(size => size.id);
