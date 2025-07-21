@@ -1,0 +1,4 @@
+Nome do Produto,Categoria,Preço Base,URL da Foto,Grupo de Tamanhos,Cores,SKU,SKU Pai,Descrição,Preço Sugerido,Estoque por Variante
+Chinelo Havaianas Top,1,25.90,https://example.com/havaianas-top.jpg,1,"azul,branco,preto",HAV001,HAV,Chinelo clássico Havaianas Top,35.90,100
+Sandália Adidas Slide,1,120.00,https://example.com/adidas-slide.jpg,2,"preto,branco",ADI001,ADI,Sandália esportiva Adidas,150.00,50
+Tênis Nike Air Max,2,299.99,https://example.com/nike-air.jpg,2,"preto,branco,vermelho",NIK001,NIK,Tênis esportivo Nike Air Max,399.99,25
