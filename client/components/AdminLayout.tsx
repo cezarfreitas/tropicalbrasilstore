@@ -42,6 +42,11 @@ const navigation = [
     icon: Package,
   },
   {
+    name: "Importar Produtos",
+    href: "/admin/products/import",
+    icon: Upload,
+  },
+  {
     name: "Categorias",
     href: "/admin/categories",
     icon: ShoppingBag,
