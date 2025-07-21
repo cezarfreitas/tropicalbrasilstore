@@ -29,6 +29,7 @@ import Store from "./pages/Store";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import ProductImport from "./pages/ProductImport";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
