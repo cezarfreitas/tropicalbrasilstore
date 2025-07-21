@@ -501,7 +501,7 @@ router.get("/export-products", async (req, res) => {
           );
 
           const avgStock =
-            stockInfo.length > 0
+            (stockInfo as any[]).length > 0
               ? Math.round((stockInfo as any[])[0].avg_stock || 0)
               : 0;
 
