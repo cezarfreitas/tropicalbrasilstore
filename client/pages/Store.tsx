@@ -440,9 +440,8 @@ export default function Store() {
       setMaxPrice(100);
       setPriceRange([0, 100]);
     } finally {
-      if (retryCount === 0) { // Only set loading false on the initial call, not retries
-        setLoading(false);
-      }
+      // Always set loading to false to prevent infinite loading state
+      setLoading(false);
     }
   };
 
