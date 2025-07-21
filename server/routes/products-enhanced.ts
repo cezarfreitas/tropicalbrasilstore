@@ -215,7 +215,7 @@ router.post("/", async (req, res) => {
 
     // Create the product
     const [result] = await connection.execute(
-      `INSERT INTO products (name, description, category_id, base_price, sku, parent_sku, stock, active) 
+      `INSERT INTO products (name, description, category_id, base_price, sku, parent_sku, active) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         name,
