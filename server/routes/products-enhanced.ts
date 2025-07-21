@@ -190,12 +190,13 @@ router.post("/", async (req, res) => {
 // Update product (simplified)
 router.put("/:id", async (req, res) => {
   try {
-        const {
+            const {
       name,
       description,
       category_id,
       base_price,
       sku,
+      parent_sku,
       active,
       sell_without_stock,
     } = req.body;
