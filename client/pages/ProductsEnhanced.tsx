@@ -1169,53 +1169,25 @@ export default function ProductsEnhanced() {
                           </div>
                         </div>
                       </div>
-                    </CardContent>
+                                        </CardContent>
                   </Card>
+                  )}
 
-                  {/* Lista de Variantes Existentes */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <Label className="text-base">
-                        Variantes Criadas ({formData.variants.length})
-                      </Label>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          type="button"
-                          variant={
-                            variantViewMode === "grid" ? "default" : "outline"
-                          }
-                          size="sm"
-                          onClick={() => setVariantViewMode("grid")}
-                        >
-                          Grid
-                        </Button>
-                        <Button
-                          type="button"
-                          variant={
-                            variantViewMode === "table" ? "default" : "outline"
-                          }
-                          size="sm"
-                          onClick={() => setVariantViewMode("table")}
-                        >
-                          Tabela
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        type="button"
-                        onClick={bulkCreateVariants}
-                        size="sm"
-                        variant="outline"
-                      >
-                        <Wand2 className="mr-1 h-3 w-3" />
-                        Criar Todas
-                      </Button>
-                      <Button type="button" onClick={addVariant} size="sm">
-                        <Plus className="mr-1 h-3 w-3" />
-                        Manual
-                      </Button>
-                    </div>
+                  {/* Ações rápidas para variantes */}
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      type="button"
+                      onClick={bulkCreateVariants}
+                      size="sm"
+                      variant="outline"
+                    >
+                      <Wand2 className="mr-1 h-3 w-3" />
+                      Criar Todas
+                    </Button>
+                    <Button type="button" onClick={addVariant} size="sm">
+                      <Plus className="mr-1 h-3 w-3" />
+                      Manual
+                    </Button>
                   </div>
 
                   {formData.variants.length === 0 ? (
