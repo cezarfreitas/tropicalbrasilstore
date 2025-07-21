@@ -172,8 +172,8 @@ router.get("/export/excel", async (req, res) => {
       'Grade': row.grade_nome || '',
       'Descrição Grade': row.grade_descricao || '',
       'Quantidade': row.quantidade || 0,
-            'Preço Unitário': `R$ ${(row.preco_unitario || 0).toFixed(2)}`,
-      'Preço Total Item': `R$ ${(row.preco_total || 0).toFixed(2)}`,
+                  'Preço Unitário': `R$ ${parseFloat(row.preco_unitario || 0).toFixed(2)}`,
+      'Preço Total Item': `R$ ${parseFloat(row.preco_total || 0).toFixed(2)}`,
       'Tipo Item': row.tipo_item || ''
     }));
 
