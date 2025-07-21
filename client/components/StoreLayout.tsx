@@ -26,7 +26,7 @@ interface StoreLayoutProps {
 }
 
 export function StoreLayout({ children }: StoreLayoutProps) {
-  const { items, totalItems } = useCart();
+  const { items, totalItems, updateQuantity, removeItem, totalPrice } = useCart();
   const { isAuthenticated, isApproved, customer, logout } = useCustomerAuth();
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
