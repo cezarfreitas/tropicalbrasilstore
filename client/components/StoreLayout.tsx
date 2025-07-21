@@ -467,7 +467,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           />
 
           {/* Cart Drawer - from right side */}
-          <div className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-right duration-300 sm:hidden">
+          <div className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-right duration-300">
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 border-b bg-orange-50">
               <h2 className="text-lg font-semibold text-orange-900">Carrinho</h2>
