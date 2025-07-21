@@ -648,7 +648,8 @@ export default function ProductImport() {
                   <TableHead>Linha</TableHead>
                   <TableHead>Nome</TableHead>
                   <TableHead>Categoria</TableHead>
-                  <TableHead>Preço</TableHead>
+                  <TableHead>Preço Base</TableHead>
+                  <TableHead>Preço Venda</TableHead>
                   <TableHead>Foto</TableHead>
                   <TableHead>Cores</TableHead>
                 </TableRow>
