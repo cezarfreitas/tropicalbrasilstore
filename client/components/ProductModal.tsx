@@ -96,7 +96,7 @@ export function ProductModal({
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/store-old/products/${productId}`);
+            const response = await fetch(`/api/store/products/${productId}`);
       if (response.ok) {
         const data = await response.json();
         setProduct(data);
