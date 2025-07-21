@@ -460,6 +460,161 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           </div>
         </>
       )}
+
+      {/* Mobile Cart Drawer */}
+      {cartOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50 z-50 sm:hidden animate-in fade-in duration-300"
+            onClick={() => setCartOpen(false)}
+          />
+
+          {/* Cart Drawer - from right side */}
+          <div className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-right duration-300 sm:hidden">
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between p-4 border-b bg-orange-50">
+              <h2 className="text-lg font-semibold text-orange-900">Carrinho</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCartOpen(false)}
+                className="h-8 w-8 p-0 hover:bg-orange-100"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            {/* Cart Content */}
+            <div className="flex flex-col h-full">
+              <div className="flex-1 overflow-y-auto p-4">
+                {items.length === 0 ? (
+                  <div className="text-center py-8">
+                    <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      Carrinho vazio
+                    </h3>
+                    <p className="text-gray-500 text-sm">
+                      Adicione produtos para começar
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {items.map((item) => (
+                      <div key={item.id} className="bg-gray-50 rounded-lg p-3">
+                        <div className="flex items-start gap-3">
+                          {/* Product Image */}
+                          <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                            {item.photo ? (
+                              <img
+                                src={item.photo}
+                                alt={item.productName}
+                                className="w-full h-full object-cover rounded-lg"
+                              />
+                            ) : (
+                              <Package className="h-6 w-6 text-gray-400" />
+                            )}
+                          </div>
+
+                          {/* Product Info */}
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-sm text-gray-900 truncate">
+                              {item.productName}
+                            </h4>
+                            <p className="text-xs text-gray-600 mt-1">
+                              {item.gradeName} - {item.colorName}
+                            </p>
+                            <p className="text-sm font-bold text-orange-600 mt-1">
+                              R$ {item.totalPrice.toFixed(2)}
+                            </p>
+                          </div>
+
+                          {/* Remove Button */}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              const { removeItem } = useCart.getState();
+                              removeItem(item.id);
+                            }}
+                            className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+
+                        {/* Quantity Controls */}
+                        <div className="flex items-center justify-between mt-3">
+                          <span className="text-xs text-gray-600">Quantidade:</span>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                const { updateQuantity } = useCart.getState();
+                                updateQuantity(item.id, item.quantity - 1);
+                              }}
+                              className="h-6 w-6 p-0"
+                            >
+                              <Minus className="h-3 w-3" />
+                            </Button>
+                            <span className="text-sm font-medium w-8 text-center">
+                              {item.quantity}
+                            </span>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                const { updateQuantity } = useCart.getState();
+                                updateQuantity(item.id, item.quantity + 1);
+                              }}
+                              className="h-6 w-6 p-0"
+                            >
+                              <Plus className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Cart Footer */}
+              {items.length > 0 && (
+                <div className="border-t bg-white p-4 space-y-4">
+                  {/* Total */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-semibold">Total:</span>
+                    <span className="text-xl font-bold text-orange-600">
+                      R$ {items.reduce((total, item) => total + item.totalPrice * item.quantity, 0).toFixed(2)}
+                    </span>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="space-y-2">
+                    <Link to="/loja/checkout" onClick={() => setCartOpen(false)}>
+                      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+                        Finalizar Compra
+                      </Button>
+                    </Link>
+                    <Link to="/loja/carrinho" onClick={() => setCartOpen(false)}>
+                      <Button variant="outline" className="w-full">
+                        Ver Carrinho Completo
+                      </Button>
+                    </Link>
+                  </div>
+
+                  <div className="text-xs text-gray-500 text-center">
+                    <p>• Compras por grades (kits)</p>
+                    <p>• Confirmação via WhatsApp</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
