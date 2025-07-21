@@ -237,9 +237,19 @@ function Store() {
                   <p className="text-red-900 font-medium">Erro ao carregar produtos</p>
                   <p className="text-red-700 text-sm">{error}</p>
                 </div>
-                <Button onClick={handleRefresh} variant="outline" size="sm" className="ml-auto">
-                  Tentar Novamente
-                </Button>
+                <div className="flex gap-2 ml-auto">
+                  <Button onClick={() => fetchProducts(1, 0)} variant="outline" size="sm">
+                    Tentar Novamente
+                  </Button>
+                  <Button
+                    onClick={() => window.location.reload()}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    Recarregar Página
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
