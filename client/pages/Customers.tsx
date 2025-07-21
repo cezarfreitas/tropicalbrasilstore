@@ -121,9 +121,16 @@ export default function Customers() {
   const [selectedCustomer, setSelectedCustomer] =
     useState<CustomerDetails | null>(null);
   const [customerDetailsLoading, setCustomerDetailsLoading] = useState(false);
-  const [editingCustomer, setEditingCustomer] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ name: "", whatsapp: "" });
+    const [editingCustomer, setEditingCustomer] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({
+    name: "",
+    email: "",
+    whatsapp: "",
+    status: "approved" as "pending" | "approved" | "rejected",
+    newPassword: ""
+  });
   const [updating, setUpdating] = useState(false);
+  const [deletingCustomer, setDeletingCustomer] = useState<string | null>(null);
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
   const [addForm, setAddForm] = useState({ email: "", name: "", whatsapp: "" });
   const [adding, setAdding] = useState(false);
@@ -256,17 +263,26 @@ export default function Customers() {
     return digits.slice(-4);
   };
 
-  const startEdit = (customer: Customer) => {
+    const startEdit = (customer: Customer) => {
     setEditingCustomer(customer.email);
     setEditForm({
       name: customer.name,
+      email: customer.email,
       whatsapp: customer.whatsapp,
+      status: customer.status || "approved",
+      newPassword: ""
     });
   };
 
-  const cancelEdit = () => {
+    const cancelEdit = () => {
     setEditingCustomer(null);
-    setEditForm({ name: "", whatsapp: "" });
+    setEditForm({
+      name: "",
+      email: "",
+      whatsapp: "",
+      status: "approved",
+      newPassword: ""
+    });
   };
 
   const saveCustomer = async (email: string) => {
@@ -307,6 +323,42 @@ export default function Customers() {
       });
     } finally {
       setUpdating(false);
+    }
+  };
+
+    const deleteCustomer = async (email: string) => {
+    setDeletingCustomer(email);
+    try {
+      const response = await fetch(
+        `/api/admin/customers/${encodeURIComponent(email)}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      if (response.ok) {
+        setCustomers(customers.filter((customer) => customer.email !== email));
+        toast({
+          title: "Sucesso",
+          description: "Cliente deletado com sucesso",
+        });
+        fetchStats();
+      } else {
+        toast({
+          title: "Erro",
+          description: "Não foi possível deletar o cliente",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting customer:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível deletar o cliente",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingCustomer(null);
     }
   };
 
