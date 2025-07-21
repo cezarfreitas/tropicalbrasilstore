@@ -26,9 +26,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Edit2, Trash2, Ruler } from "lucide-react";
+import { Plus, Edit2, Trash2, Ruler, Users, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Size, CreateSizeRequest } from "@shared/types";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+
+interface SizeGroup {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  sizes: string[];
+}
 
 export default function Sizes() {
   const [sizes, setSizes] = useState<Size[]>([]);
