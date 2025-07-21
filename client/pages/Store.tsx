@@ -334,22 +334,8 @@ function Store() {
               Nenhum produto encontrado
             </h3>
             <p className="text-slate-600 mb-4">
-              {searchTerm 
-                ? `Nenhum produto encontrado para "${searchTerm}"`
-                : 'Não há produtos disponíveis no momento'
-              }
+              Não há produtos disponíveis no momento
             </p>
-            {(searchTerm || selectedCategory !== 'all') && (
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedCategory('all');
-                }}
-              >
-                Limpar filtros
-              </Button>
-            )}
           </div>
         )}
       </div>
