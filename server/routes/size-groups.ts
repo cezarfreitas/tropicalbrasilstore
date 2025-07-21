@@ -39,9 +39,9 @@ router.get("/:id", async (req, res) => {
       return res.status(404).json({ error: "Size group not found" });
     }
     
-    const sizeGroup = {
+        const sizeGroup = {
       ...sizeGroups[0],
-      sizes: JSON.parse(sizeGroups[0].sizes || '[]')
+      sizes: sizeGroups[0].sizes || []
     };
     
     res.json(sizeGroup);
