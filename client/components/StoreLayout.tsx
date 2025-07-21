@@ -375,12 +375,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 z-50 sm:hidden"
+            className="fixed inset-0 bg-black/50 z-50 sm:hidden animate-in fade-in duration-300"
             onClick={() => setCategoriesOpen(false)}
           />
 
           {/* Drawer */}
-          <div className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-50 transform transition-transform duration-300 sm:hidden">
+          <div className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-left duration-300 sm:hidden">
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-lg font-semibold">Categorias</h2>
