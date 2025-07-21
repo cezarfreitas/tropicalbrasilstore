@@ -319,13 +319,13 @@ function Store() {
                     </div>
 
                     {/* Product Info */}
-                    <div className="p-4 space-y-3">
+                    <div className="p-2 sm:p-4 space-y-2 sm:space-y-3">
                       <div>
-                        <h3 className="font-semibold text-slate-900 line-clamp-2 group-hover:text-primary transition-colors">
+                        <h3 className="font-semibold text-sm sm:text-base text-slate-900 line-clamp-2 group-hover:text-primary transition-colors">
                           {product.name}
                         </h3>
                         {product.description && (
-                          <p className="text-sm text-slate-600 line-clamp-2 mt-1">
+                          <p className="text-xs sm:text-sm text-slate-600 line-clamp-1 sm:line-clamp-2 mt-1">
                             {product.description}
                           </p>
                         )}
@@ -334,7 +334,7 @@ function Store() {
                       {/* Pricing */}
                       {product.base_price && (
                         <div className="space-y-1">
-                          <div className="text-lg font-bold text-primary">
+                          <div className="text-sm sm:text-lg font-bold text-primary">
                             R$ {parseFloat(product.base_price.toString()).toFixed(2)}
                           </div>
                           {product.suggested_price && (
@@ -347,19 +347,19 @@ function Store() {
 
                       {/* Colors */}
                       {product.available_colors && product.available_colors.length > 0 && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-slate-600">Cores:</span>
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <span className="text-xs text-slate-600 hidden sm:inline">Cores:</span>
                           <div className="flex gap-1">
-                            {product.available_colors.slice(0, 4).map((color) => (
+                            {product.available_colors.slice(0, 3).map((color) => (
                               <div
                                 key={color.id}
-                                className="w-4 h-4 rounded-full border border-slate-300"
+                                className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border border-slate-300"
                                 style={{ backgroundColor: color.hex_code || '#999' }}
                                 title={color.name}
                               />
                             ))}
-                            {product.available_colors.length > 4 && (
-                              <span className="text-xs text-slate-500">+{product.available_colors.length - 4}</span>
+                            {product.available_colors.length > 3 && (
+                              <span className="text-xs text-slate-500">+{product.available_colors.length - 3}</span>
                             )}
                           </div>
                         </div>
@@ -367,7 +367,7 @@ function Store() {
 
                       {/* Stock Info */}
                       {product.total_stock !== undefined && (
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs text-slate-500 hidden sm:block">
                           {product.total_stock > 0 ? `${product.total_stock} em estoque` : 'Sem estoque'}
                         </div>
                       )}
