@@ -16,7 +16,7 @@ Esta API permite criar produtos usando **nomes** ao invés de IDs para categoria
   "suggested_price": 35.90,
   "sku": "PROD001",
   "parent_sku": "PROD",
-  "photo": "https://example.com/foto.jpg",
+  "photo_url": "https://example.com/foto.jpg",
   "size_group_name": "Feminino",
   "variants": [
     {
