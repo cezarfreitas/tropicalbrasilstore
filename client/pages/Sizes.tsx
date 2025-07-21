@@ -32,14 +32,7 @@ import { Size, CreateSizeRequest } from "@shared/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-
-interface SizeGroup {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  sizes: string[];
-}
+import { useSizeGroups, SizeGroup } from "@/hooks/use-size-groups";
 
 export default function Sizes() {
   const [sizes, setSizes] = useState<Size[]>([]);
