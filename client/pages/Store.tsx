@@ -272,12 +272,12 @@ function Store() {
           <>
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
               {filteredProducts.map((product) => (
-                <Card 
-                  key={product.id} 
-                  className="group cursor-pointer hover:shadow-lg transition-shadow duration-200"
+                <Card
+                  key={product.id}
+                  className="group cursor-pointer hover:shadow-lg transition-shadow duration-200 relative"
                   onClick={() => handleProductClick(product.id)}
                 >
-                  <CardContent className="p-0">
+                  <CardContent className="p-0 relative">
                     {/* Product Image */}
                     <div className="aspect-square relative overflow-hidden rounded-t-lg">
                       <ProductImage
