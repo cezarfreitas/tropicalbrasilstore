@@ -444,8 +444,10 @@ export default function Store() {
       setMaxPrice(100);
       setPriceRange([0, 100]);
     } finally {
-      // Always set loading to false to prevent infinite loading state
+      // Clear safety timeout and loading state
+      clearTimeout(safetyTimeout);
       setLoading(false);
+      console.log(`fetchProducts completed (retry: ${retryCount})`);
     }
   };
 
