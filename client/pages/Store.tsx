@@ -680,14 +680,7 @@ export default function Store() {
                             {product.name}
                           </h3>
                           <div className="flex items-center justify-between">
-                            {product.category_name && (
-                                                            <Badge
-                                variant="secondary"
-                                className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1"
-                              >
-                                {product.category_name}
-                              </Badge>
-                            )}
+                            
                             <div className="flex items-center justify-center gap-1">
                               {product.available_colors &&
                               product.available_colors.length > 0 ? (
