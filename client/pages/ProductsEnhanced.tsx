@@ -1190,7 +1190,7 @@ export default function ProductsEnhanced() {
                     </Button>
                   </div>
 
-                  {formData.variants.length === 0 ? (
+                                    {formData.variants.length === 0 ? (
                     <div className="text-center py-8 border-2 border-dashed rounded-lg">
                       <Package className="mx-auto h-8 w-8 text-muted-foreground/50" />
                       <p className="mt-2 text-sm text-muted-foreground">
@@ -1198,15 +1198,15 @@ export default function ProductsEnhanced() {
                       </p>
                       <Button
                         type="button"
-                        onClick={bulkCreateVariants}
+                        onClick={() => setVariantGeneratorVisible(true)}
                         className="mt-4"
                         variant="outline"
                       >
                         <Wand2 className="mr-2 h-4 w-4" />
-                        Criar Todas as Combinações
+                        Abrir Gerador de Variantes
                       </Button>
                     </div>
-                  ) : variantViewMode === "grid" ? (
+                  ) : (
                     <div className="space-y-6">
                       {colors.map((color) => {
                         const colorVariants = formData.variants.filter(
