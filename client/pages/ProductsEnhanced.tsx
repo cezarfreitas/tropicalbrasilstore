@@ -545,8 +545,10 @@ export default function ProductsEnhanced() {
     });
   };
 
-  const getSizeGroupStatus = (groupKey: keyof typeof SIZE_GROUPS) => {
-    const group = SIZE_GROUPS[groupKey];
+    const getSizeGroupStatus = (groupId: number) => {
+    const group = sizeGroups.find(g => g.id === groupId);
+    if (!group) return { total: 0, selected: 0, isComplete: false, isPartial: false };
+
     const groupSizeIds = sizes
       .filter(size => group.sizes.includes(size.size))
       .map(size => size.id);
