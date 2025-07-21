@@ -138,6 +138,7 @@ export default function Customers() {
     whatsapp: "",
     status: "approved" as "pending" | "approved" | "rejected",
     newPassword: "",
+    minimum_order: 0,
   });
   const [updating, setUpdating] = useState(false);
   const [deletingCustomer, setDeletingCustomer] = useState<string | null>(null);
