@@ -1,4 +1,4 @@
-import { Database } from './db';
+import connection from './db';
 
 export async function addSizeGroupsTable() {
   const db = await Database.getInstance();
