@@ -201,7 +201,8 @@ export default function ProductImport() {
     const commonMappings: Record<string, string[]> = {
       'name': ['nome', 'produto', 'name', 'product_name'],
       'category_id': ['categoria', 'category', 'category_id', 'cat'],
-      'base_price': ['preco', 'price', 'base_price', 'valor'],
+      'base_price': ['preco_base', 'base_price', 'preco_custo', 'cost_price'],
+      'sale_price': ['preco_venda', 'sale_price', 'preco', 'price', 'valor'],
       'photo_url': ['foto', 'photo', 'photo_url', 'imagem', 'image'],
       'size_group_id': ['grupo_tamanho', 'size_group', 'tamanhos', 'sizes'],
       'colors': ['cores', 'colors', 'cor', 'color'],
