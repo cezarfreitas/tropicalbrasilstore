@@ -421,10 +421,10 @@ export function ProductModal({
                           <button
                             key={size.id}
                             onClick={() => setSelectedSize(size.id)}
-                            className={`p-2.5 border rounded-lg text-left ${
+                            className={`p-2.5 border rounded-xl text-left transition-all duration-200 ${
                               selectedSize === size.id
-                                ? 'border-orange-500 bg-orange-50'
-                                : 'border-gray-200'
+                                ? 'border-orange-500 bg-orange-50 shadow-sm'
+                                : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                             }`}
                           >
                             <div className="space-y-1">
