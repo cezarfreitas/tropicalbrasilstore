@@ -1617,9 +1617,10 @@ export default function ProductsEnhanced() {
                       </TableCell>
                                             <TableCell>
                         <div className="flex items-center gap-2">
-                                                    <Switch
+                                                                              <Switch
                             checked={product.active}
                             onCheckedChange={() => handleToggleStatus(product)}
+                            disabled={toggleLoading === product.id}
                             title={product.active ? "Desativar produto" : "Ativar produto"}
                           />
                           <Button
