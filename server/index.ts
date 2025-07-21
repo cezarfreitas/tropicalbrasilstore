@@ -37,6 +37,7 @@ import { addSizeGroupsTable } from "./lib/add-size-groups-table";
 import { createProductVariantsTable } from "./lib/create-product-variants";
 import { addPriceOverrideColumn } from "./lib/add-price-override-column";
 import { addSuggestedPriceColumn } from "./lib/add-suggested-price-column";
+import { addPhotoColumn } from "./lib/add-photo-column";
 import { redesignGradeSystem } from "./lib/redesign-grades";
 import { createStoreSettingsTable } from "./lib/create-settings-table";
 
