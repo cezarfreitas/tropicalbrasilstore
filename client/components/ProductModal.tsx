@@ -133,26 +133,17 @@ export function ProductModal({
     } catch (error: any) {
       console.error("Error fetching product:", error);
 
-      // Retry logic for network errors
-      const shouldRetry = retryCount < 2 && (
-        error.name === 'TypeError' ||
-        error.message?.includes('Failed to fetch') ||
-        error.message?.includes('Network error') ||
-        error.message?.includes('Request timeout') ||
-        !error.message
-      );
-
-      if (shouldRetry) {
+      // Simple retry for any error
+      if (retryCount < 2) {
         console.log(`Retrying product fetch... (attempt ${retryCount + 1}/3)`);
-        const delay = Math.min(1000 * Math.pow(2, retryCount), 3000);
-        setTimeout(() => fetchProduct(retryCount + 1), delay);
+        setTimeout(() => fetchProduct(retryCount + 1), 1000);
         return;
       }
 
-      // Show user-friendly error
+      // Show user-friendly error only after all retries
       toast({
-        title: "Erro ao carregar produto",
-        description: "Verifique sua conexão e tente novamente",
+        title: "Erro ao carregar",
+        description: "Tente novamente em alguns segundos",
         variant: "destructive",
       });
     } finally {
