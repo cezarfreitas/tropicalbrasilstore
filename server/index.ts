@@ -118,6 +118,7 @@ export function createServer() {
   app.use("/api/reset-products", resetProductsRouter);
   app.use("/api/verify-products", verifyProductsRouter);
   app.use("/api/seed-chinelos", seedChinelosRouter);
+  app.use("/api/import", importRouter);
 
   return app;
 }
