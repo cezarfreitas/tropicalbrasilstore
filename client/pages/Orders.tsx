@@ -54,7 +54,6 @@ interface Order {
 interface OrderItem {
   id: number;
   product_name: string;
-  product_photo: string;
   product_sku: string;
   sku_variant: string;
   size: string;
