@@ -272,37 +272,37 @@ function Store() {
                         </h3>
                       </div>
 
-                      {/* Pricing */}
+                      {/* Pricing and Colors */}
                       {product.base_price && (
                         <div className="space-y-1">
-                          <div className="text-sm sm:text-lg font-bold text-primary">
-                            R$ {parseFloat(product.base_price.toString()).toFixed(2)}
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm sm:text-lg font-bold text-primary">
+                              R$ {parseFloat(product.base_price.toString()).toFixed(2)}
+                            </div>
+                            {/* Colors on the right side */}
+                            {product.available_colors && product.available_colors.length > 0 && (
+                              <div className="flex items-center gap-1">
+                                <div className="flex gap-1">
+                                  {product.available_colors.slice(0, 5).map((color) => (
+                                    <div
+                                      key={color.id}
+                                      className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border border-slate-300"
+                                      style={{ backgroundColor: color.hex_code || '#999' }}
+                                      title={color.name}
+                                    />
+                                  ))}
+                                  {product.available_colors.length > 5 && (
+                                    <span className="text-xs text-slate-500">+{product.available_colors.length - 5}</span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
                           </div>
                           {product.suggested_price && (
                             <div className="text-xs text-muted-foreground">
                               Sugerido: R$ {parseFloat(product.suggested_price.toString()).toFixed(2)}
                             </div>
                           )}
-                        </div>
-                      )}
-
-                      {/* Colors */}
-                      {product.available_colors && product.available_colors.length > 0 && (
-                        <div className="flex items-center gap-1 sm:gap-2">
-                          <span className="text-xs text-slate-600 hidden sm:inline">Cores:</span>
-                          <div className="flex gap-1">
-                            {product.available_colors.slice(0, 5).map((color) => (
-                              <div
-                                key={color.id}
-                                className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border border-slate-300"
-                                style={{ backgroundColor: color.hex_code || '#999' }}
-                                title={color.name}
-                              />
-                            ))}
-                            {product.available_colors.length > 5 && (
-                              <span className="text-xs text-slate-500">+{product.available_colors.length - 5}</span>
-                            )}
-                          </div>
                         </div>
                       )}
 
