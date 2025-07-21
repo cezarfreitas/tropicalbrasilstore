@@ -311,20 +311,23 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               )}
 
               {/* Cart */}
-              <Link to="/loja/carrinho">
-                <Button variant="outline" size="sm" className="relative h-10">
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  <span>Carrinho</span>
-                  {totalItems > 0 && (
-                    <Badge
-                      variant="destructive"
-                      className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
-                    >
-                      {totalItems}
-                    </Badge>
-                  )}
-                </Button>
-              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                className="relative h-10"
+                onClick={() => setCartOpen(true)}
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                <span>Carrinho</span>
+                {totalItems > 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                  >
+                    {totalItems}
+                  </Badge>
+                )}
+              </Button>
 
               {/* Admin Link */}
               <Link
@@ -484,12 +487,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 z-50 sm:hidden animate-in fade-in duration-300"
+            className="fixed inset-0 bg-black/50 z-50 animate-in fade-in duration-300"
             onClick={() => setCartOpen(false)}
           />
 
           {/* Cart Drawer - from right side */}
-          <div className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-right duration-300 sm:hidden">
+          <div className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-right duration-300">
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 border-b bg-orange-50">
               <h2 className="text-lg font-semibold text-orange-900">

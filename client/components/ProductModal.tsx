@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useCart } from "@/hooks/use-cart";
 import { useToast } from "@/hooks/use-toast";
@@ -88,27 +84,30 @@ export function ProductModal({
       // Use XMLHttpRequest directly to bypass fetch interference
       const response = await new Promise<Response>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', `/api/store/products/${productId}`, true);
-        xhr.setRequestHeader('Accept', 'application/json');
-        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.open("GET", `/api/store/products/${productId}`, true);
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.setRequestHeader("Content-Type", "application/json");
 
         xhr.onload = () => {
           const headers = new Headers();
-          xhr.getAllResponseHeaders().split('\r\n').forEach(line => {
-            const [key, value] = line.split(': ');
-            if (key && value) headers.set(key, value);
-          });
+          xhr
+            .getAllResponseHeaders()
+            .split("\r\n")
+            .forEach((line) => {
+              const [key, value] = line.split(": ");
+              if (key && value) headers.set(key, value);
+            });
 
           const response = new Response(xhr.responseText, {
             status: xhr.status,
             statusText: xhr.statusText,
-            headers: headers
+            headers: headers,
           });
           resolve(response);
         };
 
-        xhr.onerror = () => reject(new Error('Network error'));
-        xhr.ontimeout = () => reject(new Error('Request timeout'));
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.ontimeout = () => reject(new Error("Request timeout"));
         xhr.timeout = 8000; // 8 second timeout
 
         xhr.send();
@@ -169,10 +168,15 @@ export function ProductModal({
     const colors = Array.from(colorMap.values());
 
     // If product has grades, filter colors to only show those with available grades
-    if (productData?.available_grades && productData.available_grades.length > 0) {
-      return colors.filter(color => {
-        const gradesForColor = productData.available_grades.filter(grade => grade.color_id === color.id);
-        return gradesForColor.some(grade => {
+    if (
+      productData?.available_grades &&
+      productData.available_grades.length > 0
+    ) {
+      return colors.filter((color) => {
+        const gradesForColor = productData.available_grades.filter(
+          (grade) => grade.color_id === color.id,
+        );
+        return gradesForColor.some((grade) => {
           // Check if grade is available (either sell without stock is enabled or has full stock)
           return productData.sell_without_stock || grade.has_full_stock;
         });
@@ -184,10 +188,10 @@ export function ProductModal({
 
   const getAvailableSizes = () => {
     if (!product?.variants || !selectedColor) return [];
-    
+
     const sizeMap = new Map();
     product.variants
-      .filter(v => v.color_id === selectedColor && v.stock > 0)
+      .filter((v) => v.color_id === selectedColor && v.stock > 0)
       .forEach((variant) => {
         if (!sizeMap.has(variant.size_id)) {
           sizeMap.set(variant.size_id, {
@@ -197,14 +201,16 @@ export function ProductModal({
           });
         }
       });
-    
+
     return Array.from(sizeMap.values());
   };
 
   const getAvailableGradesForColor = () => {
     if (!product?.available_grades || !selectedColor) return [];
-    
-    return product.available_grades.filter(grade => grade.color_id === selectedColor);
+
+    return product.available_grades.filter(
+      (grade) => grade.color_id === selectedColor,
+    );
   };
 
   const hasGrades = () => {
@@ -226,10 +232,14 @@ export function ProductModal({
       return;
     }
 
-    const selectedColorData = getAvailableColors().find(c => c.id === selectedColor);
+    const selectedColorData = getAvailableColors().find(
+      (c) => c.id === selectedColor,
+    );
 
     if (hasGrades() && selectedGrade) {
-      const grade = getAvailableGradesForColor().find(g => g.id === selectedGrade);
+      const grade = getAvailableGradesForColor().find(
+        (g) => g.id === selectedGrade,
+      );
       if (!grade) return;
 
       if (!canAddGradeToCart(grade)) {
@@ -241,14 +251,16 @@ export function ProductModal({
         return;
       }
 
-      const gradePrice = product.base_price ? product.base_price * grade.total_quantity : 0;
+      const gradePrice = product.base_price
+        ? product.base_price * grade.total_quantity
+        : 0;
 
       addItem({
         type: "grade",
         productId: product.id,
         productName: product.name,
         colorId: selectedColor,
-        colorName: selectedColorData?.name || '',
+        colorName: selectedColorData?.name || "",
         gradeId: grade.id,
         gradeName: grade.name,
         quantity,
@@ -261,10 +273,10 @@ export function ProductModal({
         description: `${grade.name}`,
       });
     } else if (!hasGrades() && selectedSize) {
-      const variant = product.variants.find(v => 
-        v.color_id === selectedColor && v.size_id === selectedSize
+      const variant = product.variants.find(
+        (v) => v.color_id === selectedColor && v.size_id === selectedSize,
       );
-      
+
       if (!variant || variant.stock < quantity) {
         toast({
           title: "Erro",
@@ -281,9 +293,9 @@ export function ProductModal({
         productId: product.id,
         productName: product.name,
         colorId: selectedColor,
-        colorName: selectedColorData?.name || '',
+        colorName: selectedColorData?.name || "",
         sizeId: selectedSize,
-        sizeName: variant.size || '',
+        sizeName: variant.size || "",
         quantity,
         unitPrice,
         photo: product.photo,
@@ -296,7 +308,9 @@ export function ProductModal({
     } else {
       toast({
         title: "Erro",
-        description: hasGrades() ? "Selecione uma grade" : "Selecione um tamanho",
+        description: hasGrades()
+          ? "Selecione uma grade"
+          : "Selecione um tamanho",
         variant: "destructive",
       });
       return;
@@ -345,7 +359,9 @@ export function ProductModal({
       <DialogContent className="max-w-sm mx-auto p-0 gap-0 overflow-hidden rounded-2xl [&>button]:hidden">
         <VisuallyHidden>
           <DialogTitle>
-            {product ? `Adicionar ${product.name} ao carrinho` : 'Adicionar produto ao carrinho'}
+            {product
+              ? `Adicionar ${product.name} ao carrinho`
+              : "Adicionar produto ao carrinho"}
           </DialogTitle>
         </VisuallyHidden>
 
@@ -370,7 +386,9 @@ export function ProductModal({
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm truncate">{product.name}</h3>
+                  <h3 className="font-medium text-sm truncate">
+                    {product.name}
+                  </h3>
                   {product.base_price && (
                     <p className="text-orange-500 font-bold text-sm">
                       R$ {parseFloat(product.base_price.toString()).toFixed(2)}
@@ -392,7 +410,9 @@ export function ProductModal({
             <div className="p-4 space-y-3">
               {/* Colors */}
               <div>
-                <div className="text-xs font-medium text-gray-700 mb-2">Cor</div>
+                <div className="text-xs font-medium text-gray-700 mb-2">
+                  Cor
+                </div>
                 {getAvailableColors().length === 0 ? (
                   <div className="text-center py-8">
                     <p className="text-sm text-muted-foreground">
@@ -407,13 +427,13 @@ export function ProductModal({
                         onClick={() => setSelectedColor(color.id)}
                         className={`flex items-center gap-2 p-2 border rounded-lg text-xs ${
                           selectedColor === color.id
-                            ? 'border-orange-500 bg-orange-50'
-                            : 'border-gray-200'
+                            ? "border-orange-500 bg-orange-50"
+                            : "border-gray-200"
                         }`}
                       >
                         <div
                           className="w-4 h-4 rounded-full border border-gray-300"
-                          style={{ backgroundColor: color.hex_code || '#999' }}
+                          style={{ backgroundColor: color.hex_code || "#999" }}
                         />
                         <span className="font-medium">{color.name}</span>
                       </button>
@@ -426,26 +446,30 @@ export function ProductModal({
               {selectedColor && (
                 <div>
                   <div className="text-xs font-medium text-gray-700 mb-2">
-                    {hasGrades() ? 'Grade' : 'Tamanho'}
+                    {hasGrades() ? "Grade" : "Tamanho"}
                   </div>
                   <div className="space-y-2">
                     {hasGrades() ? (
                       getAvailableGradesForColor().map((grade) => {
                         const canAdd = canAddGradeToCart(grade);
                         // Sort templates by display order
-                        const sortedTemplates = [...grade.templates].sort((a, b) => a.display_order - b.display_order);
+                        const sortedTemplates = [...grade.templates].sort(
+                          (a, b) => a.display_order - b.display_order,
+                        );
 
                         return (
                           <button
                             key={grade.id}
-                            onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
+                            onClick={() =>
+                              canAdd ? setSelectedGrade(grade.id) : null
+                            }
                             disabled={!canAdd}
                             className={`p-3 border rounded-xl text-left transition-all duration-200 ${
                               !canAdd
-                                ? 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed'
+                                ? "border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
                                 : selectedGrade === grade.id
-                                  ? 'border-orange-500 bg-orange-50 shadow-sm'
-                                  : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                                  ? "border-orange-500 bg-orange-50 shadow-sm"
+                                  : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
                             }`}
                           >
                             <div className="space-y-1.5">
@@ -456,7 +480,10 @@ export function ProductModal({
                                 </div>
                                 {product.base_price && (
                                   <div className="text-orange-500 font-bold text-sm">
-                                    R$ {(product.base_price * grade.total_quantity).toFixed(2)}
+                                    R${" "}
+                                    {(
+                                      product.base_price * grade.total_quantity
+                                    ).toFixed(2)}
                                   </div>
                                 )}
                               </div>
@@ -469,7 +496,11 @@ export function ProductModal({
                                 <span className="ml-1">
                                   {sortedTemplates.map((template, index) => (
                                     <span key={`${template.size_id}-${index}`}>
-                                      {template.size}({template.required_quantity}){index < sortedTemplates.length - 1 ? ' • ' : ''}
+                                      {template.size}(
+                                      {template.required_quantity})
+                                      {index < sortedTemplates.length - 1
+                                        ? " • "
+                                        : ""}
                                     </span>
                                   ))}
                                 </span>
@@ -486,22 +517,31 @@ export function ProductModal({
                             onClick={() => setSelectedSize(size.id)}
                             className={`p-2.5 border rounded-xl text-left transition-all duration-200 ${
                               selectedSize === size.id
-                                ? 'border-orange-500 bg-orange-50 shadow-sm'
-                                : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                                ? "border-orange-500 bg-orange-50 shadow-sm"
+                                : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
                             }`}
                           >
                             <div className="space-y-1">
                               <div className="flex justify-between items-center">
-                                <div className="font-medium text-sm">{size.name}</div>
+                                <div className="font-medium text-sm">
+                                  {size.name}
+                                </div>
                                 {product.base_price && (
                                   <div className="text-orange-500 font-bold text-xs">
-                                    R$ {parseFloat(product.base_price.toString()).toFixed(2)}
+                                    R${" "}
+                                    {parseFloat(
+                                      product.base_price.toString(),
+                                    ).toFixed(2)}
                                   </div>
                                 )}
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                <span className="font-medium text-orange-600">1 peça</span>
-                                <span className="ml-2">{size.stock} disponível</span>
+                                <span className="font-medium text-orange-600">
+                                  1 peça
+                                </span>
+                                <span className="ml-2">
+                                  {size.stock} disponível
+                                </span>
                               </div>
                             </div>
                           </button>
@@ -524,7 +564,9 @@ export function ProductModal({
                     >
                       <Minus className="h-3 w-3" />
                     </Button>
-                    <span className="w-8 text-center text-sm font-medium">{quantity}</span>
+                    <span className="w-8 text-center text-sm font-medium">
+                      {quantity}
+                    </span>
                     <Button
                       variant="outline"
                       size="sm"
@@ -535,7 +577,7 @@ export function ProductModal({
                     </Button>
                   </div>
 
-                  <Button 
+                  <Button
                     onClick={addToCart}
                     className="bg-orange-500 hover:bg-orange-600 text-white"
                     size="sm"
@@ -549,7 +591,9 @@ export function ProductModal({
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-muted-foreground text-sm">Produto não encontrado</p>
+            <p className="text-muted-foreground text-sm">
+              Produto não encontrado
+            </p>
           </div>
         )}
       </DialogContent>

@@ -5,7 +5,9 @@ async function verifyGrades() {
     console.log("🔍 Verificando grades do sistema...");
 
     // Count grades
-    const [gradesResult] = await db.execute('SELECT COUNT(*) as count FROM grade_vendida');
+    const [gradesResult] = await db.execute(
+      "SELECT COUNT(*) as count FROM grade_vendida",
+    );
     const gradesCount = (gradesResult as any)[0].count;
     console.log(`📊 Total de grades: ${gradesCount}`);
 

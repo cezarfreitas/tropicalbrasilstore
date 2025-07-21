@@ -63,33 +63,38 @@ export default function Checkout() {
       // Use XMLHttpRequest to avoid fetch interference
       const response = await new Promise<Response>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/api/store-old/orders', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('Accept', 'application/json');
-        
+        xhr.open("POST", "/api/store-old/orders", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Accept", "application/json");
+
         xhr.onload = () => {
           const headers = new Headers();
-          xhr.getAllResponseHeaders().split('\r\n').forEach(line => {
-            const [key, value] = line.split(': ');
-            if (key && value) headers.set(key, value);
-          });
-          
+          xhr
+            .getAllResponseHeaders()
+            .split("\r\n")
+            .forEach((line) => {
+              const [key, value] = line.split(": ");
+              if (key && value) headers.set(key, value);
+            });
+
           const response = new Response(xhr.responseText, {
             status: xhr.status,
             statusText: xhr.statusText,
-            headers: headers
+            headers: headers,
           });
           resolve(response);
         };
 
-        xhr.onerror = () => reject(new Error('Network error'));
-        xhr.ontimeout = () => reject(new Error('Request timeout'));
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.ontimeout = () => reject(new Error("Request timeout"));
         xhr.timeout = 10000;
-        
-        xhr.send(JSON.stringify({
-          customer,
-          items,
-        }));
+
+        xhr.send(
+          JSON.stringify({
+            customer,
+            items,
+          }),
+        );
       });
 
       if (response.ok) {
@@ -144,7 +149,9 @@ export default function Checkout() {
             {/* WhatsApp Card */}
             <Card className="bg-green-50 border-green-200">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base sm:text-lg">Próximo Passo: Enviar via WhatsApp</CardTitle>
+                <CardTitle className="text-base sm:text-lg">
+                  Próximo Passo: Enviar via WhatsApp
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-xs sm:text-sm text-muted-foreground">
@@ -153,9 +160,9 @@ export default function Checkout() {
                   processar seu pedido.
                 </p>
 
-                <Button 
-                  onClick={sendWhatsApp} 
-                  className="w-full bg-green-600 hover:bg-green-700" 
+                <Button
+                  onClick={sendWhatsApp}
+                  className="w-full bg-green-600 hover:bg-green-700"
                   size="lg"
                 >
                   <Phone className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
@@ -189,7 +196,9 @@ export default function Checkout() {
   return (
     <StoreLayout>
       <div className="container mx-auto px-4 py-4 sm:py-8">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">Finalizar Compra</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">
+          Finalizar Compra
+        </h1>
 
         {/* Mobile Layout */}
         <div className="block lg:hidden space-y-4">
@@ -238,7 +247,9 @@ export default function Checkout() {
               <div className="border-t pt-3">
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total</span>
-                  <span className="text-orange-500">R$ {totalPrice.toFixed(2)}</span>
+                  <span className="text-orange-500">
+                    R$ {totalPrice.toFixed(2)}
+                  </span>
                 </div>
               </div>
 
@@ -261,7 +272,9 @@ export default function Checkout() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="name" className="text-sm">Nome Completo</Label>
+                  <Label htmlFor="name" className="text-sm">
+                    Nome Completo
+                  </Label>
                   <Input
                     id="name"
                     type="text"
@@ -282,7 +295,9 @@ export default function Checkout() {
                 </div>
 
                 <div>
-                  <Label htmlFor="email" className="text-sm">Email</Label>
+                  <Label htmlFor="email" className="text-sm">
+                    Email
+                  </Label>
                   <Input
                     id="email"
                     type="email"
@@ -298,7 +313,9 @@ export default function Checkout() {
                 </div>
 
                 <div>
-                  <Label htmlFor="whatsapp" className="text-sm">WhatsApp</Label>
+                  <Label htmlFor="whatsapp" className="text-sm">
+                    WhatsApp
+                  </Label>
                   <Input
                     id="whatsapp"
                     type="tel"

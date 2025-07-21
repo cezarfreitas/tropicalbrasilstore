@@ -15,14 +15,16 @@ async function debugQuery() {
 
     // Test simple query first
     console.log("\n1. Query simples:");
-    const [simple] = await db.execute("SELECT COUNT(*) as total FROM products WHERE active = true");
+    const [simple] = await db.execute(
+      "SELECT COUNT(*) as total FROM products WHERE active = true",
+    );
     console.log("Resultado:", simple);
 
     // Test query with parameters
     console.log("\n2. Query com parâmetros (sem LIMIT/OFFSET):");
     const [withParams] = await db.execute(
       "SELECT p.id, p.name FROM products p WHERE p.active = true ORDER BY p.name",
-      []
+      [],
     );
     console.log(`Encontrados: ${(withParams as any[]).length} produtos`);
 
@@ -31,18 +33,22 @@ async function debugQuery() {
     try {
       const [withLimit] = await db.execute(
         "SELECT p.id, p.name FROM products p WHERE p.active = true ORDER BY p.name LIMIT ? OFFSET ?",
-        [limit, offset]
+        [limit, offset],
       );
-      console.log(`Sucesso! Encontrados: ${(withLimit as any[]).length} produtos`);
+      console.log(
+        `Sucesso! Encontrados: ${(withLimit as any[]).length} produtos`,
+      );
     } catch (err) {
       console.error("Erro com LIMIT/OFFSET original:", err.message);
-      
+
       // Try with explicit numbers
       console.log("\n4. Tentando com números explícitos:");
       const [withExplicit] = await db.execute(
-        "SELECT p.id, p.name FROM products p WHERE p.active = true ORDER BY p.name LIMIT 5 OFFSET 0"
+        "SELECT p.id, p.name FROM products p WHERE p.active = true ORDER BY p.name LIMIT 5 OFFSET 0",
       );
-      console.log(`Sucesso com números explícitos! Encontrados: ${(withExplicit as any[]).length} produtos`);
+      console.log(
+        `Sucesso com números explícitos! Encontrados: ${(withExplicit as any[]).length} produtos`,
+      );
     }
 
     process.exit(0);

@@ -21,7 +21,7 @@ router.get("/products-paginated", async (req, res) => {
     const totalProducts = (countResult as any)[0].total;
     const totalPages = Math.ceil(totalProducts / limit);
 
-            // Get paginated products with enhanced data (using inline values as workaround)
+    // Get paginated products with enhanced data (using inline values as workaround)
     const [products] = await db.execute(`
       SELECT
         p.id,
@@ -86,8 +86,8 @@ router.get("/products-paginated", async (req, res) => {
         available_sizes: sizeRows,
         price_range: {
           min: product.min_price,
-          max: product.max_price
-        }
+          max: product.max_price,
+        },
       });
     }
 
@@ -99,10 +99,10 @@ router.get("/products-paginated", async (req, res) => {
         total: totalProducts,
         totalPages,
         hasNext: page < totalPages,
-        hasPrev: page > 1
-      }
+        hasPrev: page > 1,
+      },
     });
-    } catch (error) {
+  } catch (error) {
     console.error("Error fetching paginated store products:", error);
     res.status(500).json({ error: "Failed to fetch products" });
   }
@@ -124,8 +124,12 @@ router.get("/categories", async (req, res) => {
 
     // Add "all" category
     const allCategories = [
-      { id: "all", name: "Todas as Categorias", description: "Ver todos os produtos" },
-      ...categories
+      {
+        id: "all",
+        name: "Todas as Categorias",
+        description: "Ver todos os produtos",
+      },
+      ...categories,
     ];
 
     res.json(allCategories);
@@ -207,7 +211,9 @@ router.get("/products/:id", async (req, res) => {
     const product = (productRows as any)[0];
 
     // Get variants based on sell_without_stock setting
-    const variantStockCondition = product.sell_without_stock ? '' : 'AND pv.stock > 0';
+    const variantStockCondition = product.sell_without_stock
+      ? ""
+      : "AND pv.stock > 0";
     const [variantRows] = await db.execute(
       `SELECT 
         pv.id,
@@ -262,13 +268,13 @@ router.get("/products/:id", async (req, res) => {
 
       for (const template of templateRows as any[]) {
         totalRequired += template.required_quantity;
-        
+
         // Check if variant exists and has sufficient stock
         const variant = (variantRows as any[]).find(
           (v) =>
             v.size_id === template.size_id && v.color_id === grade.color_id,
         );
-        
+
         if (variant) {
           if (variant.stock > 0) {
             hasAnyStock = true;
@@ -283,7 +289,7 @@ router.get("/products/:id", async (req, res) => {
 
       // Determine if grade should be shown based on sell_without_stock setting
       let shouldShowGrade = false;
-      
+
       if (product.sell_without_stock) {
         // If sell without stock is enabled, show grade regardless of stock
         shouldShowGrade = totalRequired > 0;
@@ -400,9 +406,9 @@ router.post("/orders", async (req, res) => {
         `SELECT sell_without_stock FROM products WHERE id = ?`,
         [item.productId],
       );
-      
+
       const productInfo = (productRows as any)[0];
-      
+
       // If sell without stock is disabled, check stock availability
       if (!productInfo.sell_without_stock) {
         const [templateRows] = await connection.execute(
@@ -438,9 +444,9 @@ router.post("/orders", async (req, res) => {
         `SELECT sell_without_stock FROM products WHERE id = ?`,
         [item.productId],
       );
-      
+
       const productInfo = (productRows as any)[0];
-      
+
       // Grade item - update multiple variant stocks based on template
       const [templateRows] = await connection.execute(
         `SELECT gt.*, s.size FROM grade_templates gt

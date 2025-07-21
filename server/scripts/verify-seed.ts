@@ -5,17 +5,23 @@ async function verifySeed() {
     console.log("🔍 Verificando resultados do seed...");
 
     // Count products
-    const [productsResult] = await db.execute('SELECT COUNT(*) as count FROM products');
+    const [productsResult] = await db.execute(
+      "SELECT COUNT(*) as count FROM products",
+    );
     const productCount = (productsResult as any)[0].count;
     console.log(`📦 Produtos: ${productCount}`);
 
     // Count variants
-    const [variantsResult] = await db.execute('SELECT COUNT(*) as count FROM product_variants');
+    const [variantsResult] = await db.execute(
+      "SELECT COUNT(*) as count FROM product_variants",
+    );
     const variantCount = (variantsResult as any)[0].count;
     console.log(`🔗 Variantes: ${variantCount}`);
 
     // Count product-color-grades associations
-    const [gradesResult] = await db.execute('SELECT COUNT(*) as count FROM product_color_grades');
+    const [gradesResult] = await db.execute(
+      "SELECT COUNT(*) as count FROM product_color_grades",
+    );
     const gradesCount = (gradesResult as any)[0].count;
     console.log(`📊 Associações produto-cor-grade: ${gradesCount}`);
 

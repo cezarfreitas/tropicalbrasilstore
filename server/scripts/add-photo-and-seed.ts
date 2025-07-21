@@ -5,10 +5,10 @@ async function runMigrationAndSeed() {
   try {
     console.log("🔧 Adicionando coluna photo...");
     await addPhotoColumn();
-    
+
     console.log("🚀 Executando seed de chinelos...");
     await seedChinelos();
-    
+
     console.log("✅ Processo concluído com sucesso!");
     process.exit(0);
   } catch (error) {

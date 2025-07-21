@@ -1,15 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Teste de Imagem</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Teste de Carregamento de Imagem</h1>
-    <img src="https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=400&h=400&fit=crop" alt="Teste" style="width: 200px; height: 200px;">
+    <img
+      src="https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=400&h=400&fit=crop"
+      alt="Teste"
+      style="width: 200px; height: 200px"
+    />
     <script>
-        const img = document.querySelector('img');
-        img.onload = () => console.log('Imagem carregou com sucesso');
-        img.onerror = () => console.log('Erro ao carregar imagem');
+      const img = document.querySelector("img");
+      img.onload = () => console.log("Imagem carregou com sucesso");
+      img.onerror = () => console.log("Erro ao carregar imagem");
     </script>
-</body>
+  </body>
 </html>
