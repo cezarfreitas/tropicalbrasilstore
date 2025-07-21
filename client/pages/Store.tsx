@@ -54,9 +54,6 @@ function Store() {
   // Fetch products function
   const fetchProducts = async (page: number = 1, retryCount: number = 0) => {
     console.log(`Fetching products - page: ${page}, retry: ${retryCount}`);
-    console.log(`Current location: ${window.location.origin}`);
-    console.log(`Fetch available: ${typeof window.fetch === 'function'}`);
-    console.log(`User agent: ${navigator.userAgent}`);
 
     setLoading(true);
     setError(null);
