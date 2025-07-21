@@ -339,7 +339,7 @@ router.put("/:id", async (req, res) => {
     // Update the product
     await connection.execute(
       `UPDATE products SET 
-         name = ?, description = ?, category_id = ?, base_price = ?, 
+                  name = ?, description = ?, category_id = ?, base_price = ?, suggested_price = ?, 
                   sku = ?, parent_sku = ?, active = ?, sell_without_stock = ?
        WHERE id = ?`,
       [
