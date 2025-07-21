@@ -128,10 +128,18 @@ export default function Orders() {
 
   const { toast } = useToast();
 
-  useEffect(() => {
+    useEffect(() => {
     fetchOrders();
     fetchStats();
   }, []);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchFilteredOrders();
+    }, 300); // Debounce search
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, statusFilter, dateFilter, sortBy, sortOrder, currentPage, pageSize]);
 
   const fetchOrders = async () => {
     try {
