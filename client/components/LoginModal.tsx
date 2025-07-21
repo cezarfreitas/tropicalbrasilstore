@@ -12,6 +12,7 @@ interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  onSwitchToRegister?: () => void;
 }
 
 export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
