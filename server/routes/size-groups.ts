@@ -136,9 +136,9 @@ router.put("/:id", async (req, res) => {
       WHERE id = ?
     `, [req.params.id]);
     
-    const updatedGroup = {
+        const updatedGroup = {
       ...(rows as any[])[0],
-      sizes: JSON.parse((rows as any[])[0].sizes || '[]')
+      sizes: (rows as any[])[0].sizes || []
     };
     
     res.json(updatedGroup);
