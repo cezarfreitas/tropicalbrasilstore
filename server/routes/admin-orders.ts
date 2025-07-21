@@ -528,16 +528,17 @@ router.get("/:id/export/excel", async (req, res) => {
       { wch: 25 }, // Produto
       { wch: 15 }, // SKU Produto
       { wch: 15 }, // SKU Pai
-      { wch: 20 }, // SKU Variante
+      { wch: 25 }, // SKU Variante
       { wch: 15 }, // Cor
       { wch: 10 }, // Cor Hex
       { wch: 10 }, // Tamanho
       { wch: 15 }, // Grade
       { wch: 25 }, // Descrição Grade
-      { wch: 10 }, // Quantidade
-      { wch: 12 }, // Preço Unitário
-      { wch: 12 }, // Preço Total Item
-      { wch: 12 }, // Tipo Item
+      { wch: 10 }, // Qtd Kits
+      { wch: 12 }, // Qtd Unidades
+      { wch: 15 }, // Preço por Unidade
+      { wch: 15 }, // Preço Total Variante
+      { wch: 15 }, // Tipo Item
     ];
     ws['!cols'] = colWidths;
 
