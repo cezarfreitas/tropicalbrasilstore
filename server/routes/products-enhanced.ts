@@ -205,7 +205,7 @@ router.put("/:id", async (req, res) => {
     await db.execute(
       `UPDATE products SET 
          name = ?, description = ?, category_id = ?, base_price = ?, 
-         sku = ?, active = ?
+                  sku = ?, active = ?, sell_without_stock = ?
        WHERE id = ?`,
       [
         name,
@@ -213,7 +213,8 @@ router.put("/:id", async (req, res) => {
         category_id || null,
         base_price || null,
         sku || null,
-        active !== undefined ? active : true,
+                active !== undefined ? active : true,
+        sell_without_stock !== undefined ? sell_without_stock : false,
         req.params.id,
       ],
     );
