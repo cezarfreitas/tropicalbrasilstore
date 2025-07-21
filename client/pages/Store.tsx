@@ -411,15 +411,17 @@ export default function Store() {
         console.error("Could not log error details:", logError);
       }
 
-            // Retry logic for network errors
+            // Retry logic for network errors - simplified
       if (retryCount < 2 && (
         error instanceof TypeError ||
         (error instanceof Error && error.name === 'AbortError')
       )) {
-        console.log(`Retrying fetch... (attempt ${retryCount + 1})`);
-        // Don't return here - let the finally block run to clean up loading state
-        setLoading(false); // Temporarily set to false before retry
-        setTimeout(() => fetchProducts(retryCount + 1, retryCount === 1), 1000 * (retryCount + 1)); // Use backup on second retry
+        console.log(`Will retry fetch... (attempt ${retryCount + 1})`);
+        // Let finally block handle cleanup, then retry
+        setTimeout(() => {
+          console.log(`Executing retry ${retryCount + 1}`);
+          fetchProducts(retryCount + 1, retryCount >= 1);
+        }, 2000); // Fixed 2 second delay
         return;
       }
 
