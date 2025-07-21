@@ -66,10 +66,6 @@ function Store() {
         limit: productsPerPage.toString(),
       });
 
-      if (selectedCategory !== 'all') {
-        params.append('category', selectedCategory);
-      }
-
       // Try primary endpoint first, then fallback
       const endpoints = [
         `/api/store/products-paginated?${params}`,
