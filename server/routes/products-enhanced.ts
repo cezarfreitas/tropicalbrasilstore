@@ -423,12 +423,11 @@ router.put("/:id", async (req, res) => {
       [req.params.id],
     );
 
-        // Get grades
+            // Get grades
     const [gradeRows] = await db.execute(
       `SELECT DISTINCT gv.id, gv.name, gv.description, gv.active
        FROM grade_vendida gv
-       JOIN grade_templates gt ON gv.id = gt.grade_id
-       JOIN product_color_grades pcg ON gt.id = pcg.grade_template_id
+       JOIN product_color_grades pcg ON gv.id = pcg.grade_id
        WHERE pcg.product_id = ?`,
       [req.params.id],
     );
