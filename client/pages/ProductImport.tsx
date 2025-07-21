@@ -98,6 +98,7 @@ export default function ProductImport() {
   const [categories, setCategories] = useState<any[]>([]);
   const [sizeGroups, setSizeGroups] = useState<any[]>([]);
   const [colors, setColors] = useState<any[]>([]);
+  const [isExporting, setIsExporting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
