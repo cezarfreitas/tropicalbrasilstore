@@ -581,6 +581,92 @@ export default function Settings() {
           </Card>
         </TabsContent>
 
+                <TabsContent value="backup" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Backup e Restauração</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-lg font-medium">Fazer Backup</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Crie um backup completo de todos os dados da loja (produtos, pedidos, configurações)
+                  </p>
+                  <Button
+                    onClick={downloadBackup}
+                    disabled={backupLoading}
+                    variant="outline"
+                  >
+                    {backupLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    ) : (
+                      <Download className="h-4 w-4 mr-2" />
+                    )}
+                    Baixar Backup
+                  </Button>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h4 className="text-lg font-medium">Restaurar Backup</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Restaure dados de um arquivo de backup (pedidos e clientes serão preservados)
+                  </p>
+                  <div className="space-y-2">
+                    <input
+                      type="file"
+                      accept=".json"
+                      onChange={handleFileUpload}
+                      style={{ display: 'none' }}
+                      id="backup-upload"
+                      disabled={restoreLoading}
+                    />
+                    <Button
+                      onClick={() => document.getElementById('backup-upload')?.click()}
+                      disabled={restoreLoading}
+                      variant="outline"
+                    >
+                      {restoreLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : (
+                        <Upload className="h-4 w-4 mr-2" />
+                      )}
+                      Carregar Backup
+                    </Button>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h4 className="text-lg font-medium">Criar Banco Template</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Crie um banco de dados com produtos, categorias e configurações de exemplo.
+                    Ideal para começar uma nova loja do zero.
+                  </p>
+                  <Button
+                    onClick={createTemplate}
+                    disabled={templateLoading}
+                    variant="destructive"
+                  >
+                    {templateLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    ) : (
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                    )}
+                    Criar Template
+                  </Button>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    ⚠️ Esta ação substituirá produtos e categorias existentes
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="advanced" className="space-y-6">
           <Card>
             <CardHeader>
