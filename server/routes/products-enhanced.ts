@@ -3,7 +3,7 @@ import db from "../lib/db";
 
 const router = Router();
 
-// Get all products with complete information including variants
+// Get all products with complete information (simplified to work with current schema)
 router.get("/", async (req, res) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
@@ -49,36 +49,37 @@ router.get("/", async (req, res) => {
       const orderDirection =
         sortOrder.toLowerCase() === "desc" ? "DESC" : "ASC";
       orderByClause = `ORDER BY p.${sortBy} ${orderDirection}`;
-    } else if (sortBy === "total_stock") {
-      const orderDirection =
-        sortOrder.toLowerCase() === "desc" ? "DESC" : "ASC";
-      orderByClause = `ORDER BY total_stock ${orderDirection}`;
     }
 
-    // Get total count first
+    // Get total count first (simplified to work with current schema)
     const [countRows] = await db.execute(
-      `SELECT COUNT(DISTINCT p.id) as total
+      `SELECT COUNT(p.id) as total
        FROM products p 
        LEFT JOIN categories c ON p.category_id = c.id 
-       LEFT JOIN product_variants pv ON p.id = pv.product_id
        ${whereClause}`,
       params,
     );
 
     const total = (countRows as any)[0].total;
 
-    // Get paginated results using template literals for LIMIT/OFFSET
+    // Get paginated results (simplified to work with current schema)
     const paginatedQuery = `
       SELECT 
-        p.*,
+        p.id,
+        p.name,
+        p.description,
+        p.category_id,
+        p.base_price,
+        p.sku,
+        p.active,
+        p.created_at,
+        p.updated_at,
         c.name as category_name,
-        COUNT(DISTINCT pv.id) as variant_count,
-        COALESCE(SUM(pv.stock), 0) as total_stock
+        0 as variant_count,
+        0 as total_stock
       FROM products p 
       LEFT JOIN categories c ON p.category_id = c.id 
-      LEFT JOIN product_variants pv ON p.id = pv.product_id
       ${whereClause}
-      GROUP BY p.id
       ${orderByClause}
       LIMIT ${limit} OFFSET ${offset}
     `;
@@ -102,7 +103,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get product by ID with all variants, sizes, colors, and grades
+// Get product by ID with all information
 router.get("/:id", async (req, res) => {
   try {
     // Get basic product info
@@ -120,33 +121,11 @@ router.get("/:id", async (req, res) => {
 
     const product = (productRows as any)[0];
 
-    // Get product variants with size and color info
-    const [variantRows] = await db.execute(
-      `SELECT 
-        pv.*,
-        s.size,
-        s.display_order,
-        c.name as color_name,
-        c.hex_code
-       FROM product_variants pv
-       LEFT JOIN sizes s ON pv.size_id = s.id
-       LEFT JOIN colors c ON pv.color_id = c.id
-       WHERE pv.product_id = ?
-       ORDER BY s.display_order, c.name`,
-      [req.params.id],
-    );
-
-    // Get associated grades
-    const [gradeRows] = await db.execute(
-      `SELECT g.id, g.name, g.description
-       FROM grade_vendida g
-       INNER JOIN product_grades pg ON g.id = pg.grade_id
-       WHERE pg.product_id = ?`,
-      [req.params.id],
-    );
-
-    product.variants = variantRows;
-    product.grades = gradeRows;
+    // Set default values for fields that don't exist in current schema
+    product.variants = [];
+    product.grades = [];
+    product.variant_count = 0;
+    product.total_stock = 0;
 
     res.json(product);
   } catch (error) {
@@ -155,23 +134,15 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Create new product with variants
+// Create new product (simplified)
 router.post("/", async (req, res) => {
-  const connection = await db.getConnection();
   try {
-    await connection.beginTransaction();
-
     const {
       name,
       description,
       category_id,
       base_price,
-      suggested_price,
       sku,
-      photo,
-      stock,
-      variants = [],
-      grades = [],
     } = req.body;
 
     if (!name) {
@@ -179,50 +150,19 @@ router.post("/", async (req, res) => {
     }
 
     // Create the product
-    const [result] = await connection.execute(
-      `INSERT INTO products (name, description, category_id, base_price, suggested_price, sku, photo, stock) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    const [result] = await db.execute(
+      `INSERT INTO products (name, description, category_id, base_price, sku) 
+       VALUES (?, ?, ?, ?, ?)`,
       [
         name,
         description || null,
         category_id || null,
         base_price || null,
-        suggested_price || null,
         sku || null,
-        photo || null,
-        stock || 0,
       ],
     );
 
     const productId = (result as any).insertId;
-
-    // Create variants if provided
-    for (const variant of variants) {
-      if (variant.size_id && variant.color_id) {
-        await connection.execute(
-          `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override, sku_variant) 
-           VALUES (?, ?, ?, ?, ?, ?)`,
-          [
-            productId,
-            variant.size_id,
-            variant.color_id,
-            variant.stock || 0,
-            variant.price_override || null,
-            variant.sku_variant || null,
-          ],
-        );
-      }
-    }
-
-    // Associate with grades if provided
-    for (const gradeId of grades) {
-      await connection.execute(
-        `INSERT IGNORE INTO product_grades (product_id, grade_id) VALUES (?, ?)`,
-        [productId, gradeId],
-      );
-    }
-
-    await connection.commit();
 
     // Fetch the created product with all information
     const [productRows] = await db.execute(
@@ -235,35 +175,24 @@ router.post("/", async (req, res) => {
 
     res.status(201).json((productRows as any)[0]);
   } catch (error: any) {
-    await connection.rollback();
     console.error("Error creating product:", error);
     if (error.code === "ER_DUP_ENTRY") {
       return res.status(400).json({ error: "SKU already exists" });
     }
     res.status(500).json({ error: "Failed to create product" });
-  } finally {
-    connection.release();
   }
 });
 
-// Update product with variants
+// Update product (simplified)
 router.put("/:id", async (req, res) => {
-  const connection = await db.getConnection();
   try {
-    await connection.beginTransaction();
-
     const {
       name,
       description,
       category_id,
       base_price,
-      suggested_price,
       sku,
-      photo,
-      stock,
       active,
-      variants = [],
-      grades = [],
     } = req.body;
 
     if (!name) {
@@ -271,62 +200,21 @@ router.put("/:id", async (req, res) => {
     }
 
     // Update the product
-    await connection.execute(
+    await db.execute(
       `UPDATE products SET 
          name = ?, description = ?, category_id = ?, base_price = ?, 
-         suggested_price = ?, sku = ?, photo = ?, stock = ?, active = ?
+         sku = ?, active = ?
        WHERE id = ?`,
       [
         name,
         description || null,
         category_id || null,
         base_price || null,
-        suggested_price || null,
         sku || null,
-        photo || null,
-        stock || 0,
         active !== undefined ? active : true,
         req.params.id,
       ],
     );
-
-    // Update variants - delete existing and create new ones
-    await connection.execute(
-      `DELETE FROM product_variants WHERE product_id = ?`,
-      [req.params.id],
-    );
-
-    for (const variant of variants) {
-      if (variant.size_id && variant.color_id) {
-        await connection.execute(
-          `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override, sku_variant) 
-           VALUES (?, ?, ?, ?, ?, ?)`,
-          [
-            req.params.id,
-            variant.size_id,
-            variant.color_id,
-            variant.stock || 0,
-            variant.price_override || null,
-            variant.sku_variant || null,
-          ],
-        );
-      }
-    }
-
-    // Update grade associations
-    await connection.execute(
-      `DELETE FROM product_grades WHERE product_id = ?`,
-      [req.params.id],
-    );
-
-    for (const gradeId of grades) {
-      await connection.execute(
-        `INSERT IGNORE INTO product_grades (product_id, grade_id) VALUES (?, ?)`,
-        [req.params.id, gradeId],
-      );
-    }
-
-    await connection.commit();
 
     // Fetch the updated product
     const [productRows] = await db.execute(
@@ -343,18 +231,15 @@ router.put("/:id", async (req, res) => {
 
     res.json((productRows as any)[0]);
   } catch (error: any) {
-    await connection.rollback();
     console.error("Error updating product:", error);
     if (error.code === "ER_DUP_ENTRY") {
       return res.status(400).json({ error: "SKU already exists" });
     }
     res.status(500).json({ error: "Failed to update product" });
-  } finally {
-    connection.release();
   }
 });
 
-// Delete product and all variants
+// Delete product
 router.delete("/:id", async (req, res) => {
   try {
     const [result] = await db.execute("DELETE FROM products WHERE id = ?", [
@@ -370,30 +255,6 @@ router.delete("/:id", async (req, res) => {
   } catch (error) {
     console.error("Error deleting product:", error);
     res.status(500).json({ error: "Failed to delete product" });
-  }
-});
-
-// Get product variants for a specific product
-router.get("/:id/variants", async (req, res) => {
-  try {
-    const [rows] = await db.execute(
-      `SELECT 
-        pv.*,
-        s.size,
-        s.display_order,
-        c.name as color_name,
-        c.hex_code
-       FROM product_variants pv
-       LEFT JOIN sizes s ON pv.size_id = s.id
-       LEFT JOIN colors c ON pv.color_id = c.id
-       WHERE pv.product_id = ?
-       ORDER BY s.display_order, c.name`,
-      [req.params.id],
-    );
-    res.json(rows);
-  } catch (error) {
-    console.error("Error fetching product variants:", error);
-    res.status(500).json({ error: "Failed to fetch product variants" });
   }
 });
 
