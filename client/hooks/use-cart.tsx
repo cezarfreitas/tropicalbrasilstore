@@ -1,4 +1,10 @@
-import { createContext, useContext, useReducer, ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  ReactNode,
+  useEffect,
+} from "react";
 
 interface CartItem {
   id: string;
@@ -191,7 +197,7 @@ export function useCart() {
 
   const { state, dispatch } = context;
 
-    const addItem = (item: Omit<CartItem, "id" | "totalPrice">) => {
+  const addItem = (item: Omit<CartItem, "id" | "totalPrice">) => {
     let id: string;
 
     switch (item.type) {
@@ -202,7 +208,7 @@ export function useCart() {
         id = `variant-${item.productId}-${item.colorId}-${item.sizeId}`;
         break;
       case "unit":
-        id = `unit-${item.productId}-${item.colorId || 'default'}`;
+        id = `unit-${item.productId}-${item.colorId || "default"}`;
         break;
       default:
         id = `item-${item.productId}-${Date.now()}`;
