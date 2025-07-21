@@ -294,6 +294,7 @@ export default function Customers() {
       whatsapp: "",
       status: "approved",
       newPassword: "",
+      minimum_order: 0,
     });
   };
 
