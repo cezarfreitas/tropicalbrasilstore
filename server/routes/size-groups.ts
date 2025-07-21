@@ -28,7 +28,7 @@ router.get("/", async (req, res) => {
 // GET /api/size-groups/:id - Get single size group
 router.get("/:id", async (req, res) => {
   try {
-    const [rows] = await connection.execute(
+    const [rows] = await db.execute(
       `
       SELECT id, name, description, icon, sizes, active, created_at, updated_at 
       FROM size_groups 
