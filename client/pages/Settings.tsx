@@ -19,6 +19,10 @@ import {
   Shield,
   Save,
   Loader2,
+  Database,
+  Download,
+  Upload,
+  RefreshCw,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
