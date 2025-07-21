@@ -182,7 +182,7 @@ router.get("/export/excel", async (req, res) => {
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(excelData);
 
-        // Auto-size columns
+            // Auto-size columns
     const colWidths = [
       { wch: 10 }, // ID Pedido
       { wch: 12 }, // Data Pedido
@@ -201,7 +201,6 @@ router.get("/export/excel", async (req, res) => {
       { wch: 10 }, // Quantidade
       { wch: 12 }, // Preço Unitário
       { wch: 12 }, // Preço Total Item
-      { wch: 12 }, // Estoque Variante
       { wch: 12 }, // Tipo Item
     ];
     ws['!cols'] = colWidths;
