@@ -683,14 +683,15 @@ export default function Customers() {
             <CardContent>
               <Table>
                 <TableHeader>
-                  <TableRow>
+                                    <TableRow>
                     <TableHead>Cliente</TableHead>
                     <TableHead>Contato</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead>Pedidos</TableHead>
                     <TableHead>Total Gasto</TableHead>
                     <TableHead>Último Pedido</TableHead>
                     <TableHead>Cadastro</TableHead>
-                    <TableHead className="w-[150px]">Ações</TableHead>
+                    <TableHead className="w-[200px]">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
