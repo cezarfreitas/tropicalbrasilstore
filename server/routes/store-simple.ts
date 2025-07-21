@@ -154,9 +154,12 @@ router.get("/products-paginated", async (req, res) => {
     const [countResult] = await db.execute(countQuery, queryParams);
     const totalProducts = (countResult as any)[0].total;
 
-    // Get products with basic info
+    // Get products with basic info (use interpolation for LIMIT/OFFSET)
+    const limitNum = parseInt(limit.toString());
+    const offsetNum = parseInt(offset.toString());
+
     const productsQuery = `
-      SELECT 
+      SELECT
         p.id,
         p.name,
         p.description,
@@ -169,14 +172,10 @@ router.get("/products-paginated", async (req, res) => {
       LEFT JOIN categories c ON p.category_id = c.id
       ${whereClause}
       ORDER BY p.name
-      LIMIT ? OFFSET ?
+      LIMIT ${limitNum} OFFSET ${offsetNum}
     `;
 
-    const [products] = await db.execute(productsQuery, [
-      ...queryParams,
-      parseInt(limit.toString()),
-      parseInt(offset.toString()),
-    ]);
+    const [products] = await db.execute(productsQuery, queryParams);
 
     console.log(`Found ${(products as any[]).length} products`);
 
