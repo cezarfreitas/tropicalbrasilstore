@@ -4,6 +4,7 @@ import { handleDemo } from "./routes/demo";
 import { initDatabase } from "./lib/db";
 import { categoriesRouter } from "./routes/categories";
 import { sizesRouter } from "./routes/sizes";
+import { sizeGroupsRouter } from "./routes/size-groups";
 import { colorsRouter } from "./routes/colors";
 import { productsRouter } from "./routes/products";
 import { gradesRouter } from "./routes/grades";
