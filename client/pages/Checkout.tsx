@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { StoreLayout } from "@/components/StoreLayout";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/hooks/use-cart";
+import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { useToast } from "@/hooks/use-toast";
 import {
   ShoppingCart,
@@ -25,6 +26,7 @@ interface CustomerInfo {
 
 export default function Checkout() {
   const { items, totalPrice, clearCart } = useCart();
+  const { customer: authCustomer, isAuthenticated } = useCustomerAuth();
   const [customer, setCustomer] = useState<CustomerInfo>({
     name: "",
     email: "",
@@ -35,6 +37,17 @@ export default function Checkout() {
   const [whatsappMessage, setWhatsappMessage] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Pre-fill form with authenticated customer data
+  useEffect(() => {
+    if (isAuthenticated && authCustomer) {
+      setCustomer({
+        name: authCustomer.name,
+        email: authCustomer.email,
+        whatsapp: authCustomer.whatsapp,
+      });
+    }
+  }, [isAuthenticated, authCustomer]);
 
   // Redirect if cart is empty
   if (items.length === 0 && !orderComplete) {
@@ -258,8 +271,14 @@ export default function Checkout() {
                     }
                     placeholder="Seu nome completo"
                     className="mt-1"
+                    disabled={isAuthenticated}
                     required
                   />
+                  {isAuthenticated && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      ✓ Dados preenchidos automaticamente da sua conta
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -273,6 +292,7 @@ export default function Checkout() {
                     }
                     placeholder="seu@email.com"
                     className="mt-1"
+                    disabled={isAuthenticated}
                     required
                   />
                 </div>
@@ -288,6 +308,7 @@ export default function Checkout() {
                     }
                     placeholder="(11) 99999-9999"
                     className="mt-1"
+                    disabled={isAuthenticated}
                     required
                   />
                   <p className="text-xs text-muted-foreground mt-1">
@@ -331,8 +352,14 @@ export default function Checkout() {
                         setCustomer({ ...customer, name: e.target.value })
                       }
                       placeholder="Seu nome completo"
+                      disabled={isAuthenticated}
                       required
                     />
+                    {isAuthenticated && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        ✓ Dados preenchidos automaticamente da sua conta
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -345,6 +372,7 @@ export default function Checkout() {
                         setCustomer({ ...customer, email: e.target.value })
                       }
                       placeholder="seu@email.com"
+                      disabled={isAuthenticated}
                       required
                     />
                   </div>
@@ -359,6 +387,7 @@ export default function Checkout() {
                         setCustomer({ ...customer, whatsapp: e.target.value })
                       }
                       placeholder="(11) 99999-9999"
+                      disabled={isAuthenticated}
                       required
                     />
                     <p className="text-xs text-muted-foreground mt-1">
