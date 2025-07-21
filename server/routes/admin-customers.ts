@@ -103,10 +103,10 @@ router.post("/", async (req, res) => {
     // Insert new customer
     await db.execute(
       `
-      INSERT INTO customers (email, name, whatsapp, created_at, updated_at)
-      VALUES (?, ?, ?, NOW(), NOW())
+      INSERT INTO customers (email, name, whatsapp, minimum_order, created_at, updated_at)
+      VALUES (?, ?, ?, ?, NOW(), NOW())
     `,
-      [email, name, whatsapp || null],
+      [email, name, whatsapp || null, minimum_order || 0],
     );
 
     res.status(201).json({ message: "Cliente criado com sucesso" });
