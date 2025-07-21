@@ -99,9 +99,11 @@ Esta API permite criar produtos usando **nomes** ao invés de IDs para categoria
 ```javascript
 const produto = {
   "name": "Chinelo Havaianas",
+  "description": "Chinelo confortável e durável",
   "category_name": "Calçados",
   "base_price": 15.00,
   "sale_price": 25.00,
+  "photo_url": "https://exemplo.com/chinelo-havaianas.jpg",
   "variants": [
     {
       "size_name": "37",
