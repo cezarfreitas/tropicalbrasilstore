@@ -131,6 +131,7 @@ const produtoCompleto = {
   "suggested_price": 399.99,
   "sku": "NIKE-AIR-MAX",
   "parent_sku": "NIKE",
+  "photo_url": "https://nike.com/images/air-max.jpg",
   "size_group_name": "Unissex",
   "variants": [
     {
