@@ -82,7 +82,7 @@ router.get("/:email", async (req, res) => {
 // Create new customer
 router.post("/", async (req, res) => {
   try {
-    const { email, name, whatsapp } = req.body;
+    const { email, name, whatsapp, minimum_order } = req.body;
 
     if (!email || !name) {
       return res.status(400).json({ error: "Email e nome são obrigatórios" });
