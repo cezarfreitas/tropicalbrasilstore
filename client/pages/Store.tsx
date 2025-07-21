@@ -601,14 +601,14 @@ export default function Store() {
     return pages;
   };
 
-  if (loading) {
+    if (loading) {
     return (
       <StoreLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
             <p className="mt-2 text-sm text-muted-foreground">
-              Carregando produtos...
+              {retryAttempt > 0 ? `Tentativa ${retryAttempt + 1} de carregamento...` : "Carregando produtos..."}
             </p>
           </div>
         </div>
