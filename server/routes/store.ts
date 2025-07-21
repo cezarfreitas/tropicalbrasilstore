@@ -13,7 +13,7 @@ router.get("/products", async (req, res) => {
         p.name,
         p.description,
         p.base_price,
-        p.suggested_price,
+        
         p.photo,
         p.active,
         c.name as category_name,
