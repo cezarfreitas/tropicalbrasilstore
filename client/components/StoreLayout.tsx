@@ -31,6 +31,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
 
   // Fetch categories for mobile menu
