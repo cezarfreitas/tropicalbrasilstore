@@ -61,6 +61,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowUpDown,
+  ToggleLeft,
+  ToggleRight,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -319,6 +321,38 @@ export default function ProductsEnhanced() {
       variants: [],
       grades: [],
     });
+  };
+
+    const handleToggleStatus = async (product: EnhancedProduct) => {
+    try {
+      const newStatus = !product.active;
+      const response = await fetch(`/api/products-enhanced/${product.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...product,
+          active: newStatus,
+        }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Sucesso",
+          description: `Produto ${newStatus ? "ativado" : "desativado"} com sucesso`,
+        });
+        fetchProducts();
+      } else {
+        throw new Error("Erro ao alterar status do produto");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const handleEdit = async (product: EnhancedProduct) => {
@@ -1327,23 +1361,16 @@ export default function ProductsEnhanced() {
         </DialogContent>
       </Dialog>
 
-      {/* Filters and Search */}
+            {/* Filters and Search - Compactado */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            Filtros e Busca
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <Label htmlFor="search">Buscar</Label>
+        <CardContent className="pt-6">
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Busca */}
+            <div className="flex-1 min-w-[300px]">
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="search"
-                  placeholder="Nome, SKU ou descrição..."
+                  placeholder="Buscar por nome, SKU ou descrição..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -1351,82 +1378,76 @@ export default function ProductsEnhanced() {
               </div>
             </div>
 
-            <div>
-              <Label htmlFor="filter-category">Categoria</Label>
-              <Select
-                value={selectedCategory || "all"}
-                onValueChange={(value) =>
-                  setSelectedCategory(value === "all" ? "" : value)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Todas as categorias" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas as categorias</SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem
-                      key={category.id}
-                      value={category.id.toString()}
-                    >
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {/* Categoria */}
+            <Select
+              value={selectedCategory || "all"}
+              onValueChange={(value) =>
+                setSelectedCategory(value === "all" ? "" : value)
+              }
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem
+                    key={category.id}
+                    value={category.id.toString()}
+                  >
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-            <div>
-              <Label htmlFor="filter-status">Status</Label>
-              <Select
-                value={selectedStatus || "all"}
-                onValueChange={(value) =>
-                  setSelectedStatus(value === "all" ? "" : value)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos os status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="active">Ativo</SelectItem>
-                  <SelectItem value="inactive">Inativo</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {/* Status */}
+            <Select
+              value={selectedStatus || "all"}
+              onValueChange={(value) =>
+                setSelectedStatus(value === "all" ? "" : value)
+              }
+            >
+              <SelectTrigger className="w-[120px]">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="active">Ativo</SelectItem>
+                <SelectItem value="inactive">Inativo</SelectItem>
+              </SelectContent>
+            </Select>
 
-            <div>
-              <Label htmlFor="page-size">Itens por página</Label>
-              <Select
-                value={pageSize.toString()}
-                onValueChange={(value) => {
-                  setPageSize(parseInt(value));
-                  setCurrentPage(1);
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                  <SelectItem value="100">100</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+            {/* Itens por página */}
+            <Select
+              value={pageSize.toString()}
+              onValueChange={(value) => {
+                setPageSize(parseInt(value));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="w-[80px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="20">20</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+              </SelectContent>
+            </Select>
 
-          <div className="flex items-center gap-2 mt-4">
+            {/* Limpar filtros */}
             <Button variant="outline" size="sm" onClick={clearFilters}>
-              <X className="h-4 w-4 mr-2" />
-              Limpar Filtros
+              <X className="h-4 w-4" />
             </Button>
+
+            {/* Informações da paginação */}
             {pagination && (
-              <div className="text-sm text-muted-foreground">
-                Mostrando {(currentPage - 1) * pageSize + 1} a{" "}
+              <div className="text-sm text-muted-foreground ml-auto">
+                {(currentPage - 1) * pageSize + 1}-
                 {Math.min(currentPage * pageSize, pagination.total)} de{" "}
-                {pagination.total} produtos
+                {pagination.total}
               </div>
             )}
           </div>
@@ -1577,8 +1598,20 @@ export default function ProductsEnhanced() {
                           {product.active ? "Ativo" : "Inativo"}
                         </Badge>
                       </TableCell>
-                      <TableCell>
+                                            <TableCell>
                         <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleToggleStatus(product)}
+                            title={product.active ? "Desativar produto" : "Ativar produto"}
+                          >
+                            {product.active ? (
+                              <ToggleRight className="h-4 w-4 text-green-600" />
+                            ) : (
+                              <ToggleLeft className="h-4 w-4 text-gray-400" />
+                            )}
+                          </Button>
                           <Button
                             variant="outline"
                             size="icon"
