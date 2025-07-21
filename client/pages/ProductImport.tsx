@@ -100,6 +100,15 @@ export default function ProductImport() {
   const [colors, setColors] = useState<any[]>([]);
   const [isExporting, setIsExporting] = useState(false);
   const [productCount, setProductCount] = useState<number>(0);
+  const [exportStats, setExportStats] = useState<{
+    total_products: number;
+    active_products: number;
+    inactive_products: number;
+  }>({
+    total_products: 0,
+    active_products: 0,
+    inactive_products: 0,
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
