@@ -99,7 +99,7 @@ function Store() {
       for (const endpoint of endpoints) {
         try {
           console.log(`Trying endpoint: ${endpoint}`);
-          response = await fetch(endpoint, {
+          response = await fetchFunction(endpoint, {
             headers: {
               'Accept': 'application/json',
             },
