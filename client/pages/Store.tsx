@@ -164,15 +164,8 @@ function Store() {
     }
   };
 
-  const handleRefresh = () => {
-    fetchProducts(currentPage);
-  };
-
-  // Filter products by search term
-  const filteredProducts = products.filter(product =>
-    searchTerm === '' || 
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Use all products since we removed filtering
+  const filteredProducts = products;
 
   return (
     <StoreLayout>
