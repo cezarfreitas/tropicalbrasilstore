@@ -399,7 +399,9 @@ export default function ProductImport() {
         description: "Gerando arquivo de produtos...",
       });
 
-      const response = await fetch(`/api/import/export-products?filter=${filter}`);
+      const response = await fetch(
+        `/api/import/export-products?filter=${filter}`,
+      );
 
       if (response.ok) {
         // Create download link

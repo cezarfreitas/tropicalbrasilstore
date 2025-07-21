@@ -346,12 +346,12 @@ router.post("/reset", (req, res) => {
 // Export products to CSV
 router.get("/export-products", async (req, res) => {
   try {
-    const filter = req.query.filter as string || 'all';
+    const filter = (req.query.filter as string) || "all";
 
     // Build WHERE clause based on filter
-    let whereClause = '';
-    if (filter === 'active') {
-      whereClause = 'WHERE p.active = true';
+    let whereClause = "";
+    if (filter === "active") {
+      whereClause = "WHERE p.active = true";
     }
 
     // Get all products with related data
