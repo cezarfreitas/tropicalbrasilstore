@@ -1063,12 +1063,25 @@ export default function Store() {
         onClose={closeModal}
       />
 
-      <LoginModal
+            <LoginModal
         isOpen={loginModalOpen}
         onClose={() => setLoginModalOpen(false)}
+        onSwitchToRegister={() => {
+          setLoginModalOpen(false);
+          setRegisterModalOpen(true);
+        }}
         onSuccess={() => {
           // Refresh the page after successful login
           window.location.reload();
+        }}
+      />
+
+      <RegisterModal
+        isOpen={registerModalOpen}
+        onClose={() => setRegisterModalOpen(false)}
+        onSwitchToLogin={() => {
+          setRegisterModalOpen(false);
+          setLoginModalOpen(true);
         }}
       />
     </StoreLayout>
