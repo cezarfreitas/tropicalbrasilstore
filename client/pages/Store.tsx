@@ -681,8 +681,7 @@ export default function Store() {
                           </h3>
                           <div className="flex items-center justify-between">
                             
-                            <div className="flex items-center justify-center gap-1">
-                              {product.available_colors &&
+                                                        {product.available_colors &&
                               product.available_colors.length > 0 ? (
                                 <div className="flex items-center gap-1.5">
                                   {product.available_colors
