@@ -106,6 +106,11 @@ function Store() {
           }
         } catch (err) {
           console.warn(`Failed endpoint ${endpoint}:`, err);
+          console.warn(`Error details:`, {
+            name: (err as Error).name,
+            message: (err as Error).message,
+            stack: (err as Error).stack
+          });
           lastError = err as Error;
           response = null;
         }
