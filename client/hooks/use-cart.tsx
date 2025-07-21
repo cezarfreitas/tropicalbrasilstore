@@ -2,13 +2,15 @@ import { createContext, useContext, useReducer, ReactNode } from "react";
 
 interface CartItem {
   id: string;
-  type: "grade";
+  type: "grade" | "variant" | "unit";
   productId: number;
   productName: string;
-  colorId: number;
-  colorName: string;
-  gradeId: number;
-  gradeName: string;
+  colorId?: number;
+  colorName?: string;
+  gradeId?: number;
+  gradeName?: string;
+  sizeId?: number;
+  sizeName?: string;
   quantity: number;
   unitPrice: number;
   totalPrice: number;
