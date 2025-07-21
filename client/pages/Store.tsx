@@ -355,8 +355,24 @@ export default function Store() {
         setMaxPrice(Math.ceil(maxProductPrice));
         setPriceRange([0, Math.ceil(maxProductPrice)]);
       }
-    } catch (error) {
+        } catch (error) {
       console.error("Error fetching products:", error);
+      console.error("Error details:", {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
+
+      // Set empty state as fallback
+      setAllProducts([]);
+      setCategories([{
+        id: "all",
+        name: "Todas as Categorias",
+        count: 0
+      }]);
+      setColors([]);
+      setMaxPrice(100);
+      setPriceRange([0, 100]);
     } finally {
       setLoading(false);
     }
