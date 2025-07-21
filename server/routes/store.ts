@@ -9,31 +9,19 @@ router.get("/products-paginated", async (req, res) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
-    const category = req.query.category as string;
     const offset = (page - 1) * limit;
-
-    // Build WHERE clause for category filter
-    let whereClause = "WHERE p.active = true";
-    const queryParams: any[] = [];
-
-    if (category && category !== "all") {
-      whereClause += " AND LOWER(c.name) = ?";
-      queryParams.push(category.toLowerCase());
-    }
 
     // Get total count for pagination
     const [countResult] = await db.execute(`
       SELECT COUNT(DISTINCT p.id) as total
       FROM products p
-      LEFT JOIN categories c ON p.category_id = c.id
-      ${whereClause}
-    `, queryParams);
+      WHERE p.active = true
+    `);
 
     const totalProducts = (countResult as any)[0].total;
     const totalPages = Math.ceil(totalProducts / limit);
 
-        // Get paginated products with enhanced data
-    const finalParams = [...queryParams, limit, offset];
+    // Get paginated products with enhanced data
     const [products] = await db.execute(`
       SELECT
         p.id,
@@ -43,17 +31,15 @@ router.get("/products-paginated", async (req, res) => {
         p.active,
         c.name as category_name,
         COUNT(DISTINCT pv.id) as variant_count,
-        COALESCE(SUM(pv.stock), 0) as total_stock,
-        MIN(CASE WHEN pv.stock > 0 THEN p.base_price END) as min_price,
-        MAX(CASE WHEN pv.stock > 0 THEN p.base_price END) as max_price
+        COALESCE(SUM(pv.stock), 0) as total_stock
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
       LEFT JOIN product_variants pv ON p.id = pv.product_id
-      ${whereClause}
+      WHERE p.active = true
       GROUP BY p.id
       ORDER BY p.name
       LIMIT ? OFFSET ?
-    `, finalParams);
+    `, [limit, offset]);
 
     // For each product, get available colors and variants
     const productsWithDetails = [];
