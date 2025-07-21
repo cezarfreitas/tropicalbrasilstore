@@ -1,5 +1,11 @@
 import db from "./db";
 
+export async function enhanceDatabase() {
+  // Placeholder function for compatibility
+  console.log("Database enhancement function called");
+  return true;
+}
+
 export async function addEnhancedMockupData() {
   try {
     console.log("Adding enhanced mockup data...");
