@@ -888,13 +888,12 @@ export default function Store() {
 
                         {/* Pricing Section */}
                         <div className="text-center space-y-1">
-                          {isApproved ? (
-                            <div className="flex items-center justify-center gap-3">
+                                                    {isApproved ? (
+                            <div className="text-center space-y-1">
                               {product.base_price && (
                                 <div>
                                   <div className="text-lg sm:text-2xl font-bold text-primary">
-                                    R${" "}
-                                    {parseFloat(product.base_price).toFixed(2)}
+                                    R$ {parseFloat(product.base_price).toFixed(2)}
                                   </div>
                                   <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">
                                     UNITÁRIO
@@ -903,17 +902,10 @@ export default function Store() {
                               )}
 
                               {product.suggested_price &&
-                                product.suggested_price !==
-                                  product.base_price && (
-                                  <div className="text-right">
-                                    <div className="text-xs sm:text-sm text-muted-foreground">
-                                      R${" "}
-                                      {parseFloat(
-                                        product.suggested_price,
-                                      ).toFixed(2)}
-                                    </div>
-                                    <div className="text-[10px] sm:text-xs text-muted-foreground">
-                                      sugerido
+                                product.suggested_price !== product.base_price && (
+                                  <div className="pt-1">
+                                    <div className="text-[10px] sm:text-xs text-muted-foreground/70 line-through">
+                                      Sugerido: R$ {parseFloat(product.suggested_price.toString()).toFixed(2)}
                                     </div>
                                   </div>
                                 )}
