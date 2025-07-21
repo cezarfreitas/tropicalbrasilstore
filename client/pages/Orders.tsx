@@ -297,6 +297,65 @@ export default function Orders() {
     } finally {
       setExporting(false);
     }
+    };
+
+  const exportSingleOrder = async (orderId: number) => {
+    try {
+      const response = await fetch(`/api/admin/orders/${orderId}/export/excel`);
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `pedido_${orderId}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        toast({
+          title: "Sucesso",
+          description: `Pedido #${orderId} exportado com sucesso!`,
+        });
+      } else {
+        throw new Error("Falha ao exportar pedido");
+      }
+    } catch (error) {
+      console.error("Error exporting order:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível exportar o pedido",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSort = (column: string) => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("");
+    setDateFilter("");
+    setSortBy("created_at");
+    setSortOrder("desc");
+    setCurrentPage(1);
+  };
+
+  const handleEditOrder = (order: Order) => {
+    fetchOrderDetails(order.id).then(() => {
+      if (selectedOrder) {
+        setEditingOrder(selectedOrder);
+        setEditDialogOpen(true);
+      }
+    });
   };
 
   const formatCurrency = (value: number) => {
