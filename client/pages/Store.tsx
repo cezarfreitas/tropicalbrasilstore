@@ -349,6 +349,9 @@ export default function Store() {
         const productsData = responseData.products || [];
         const pagination = responseData.pagination || {};
 
+        // Debug log to check if photos are being returned
+        console.log("First product with photo data:", productsData[0]);
+
         setFilteredProducts(productsData);
         setTotalProducts(pagination.total || 0);
         setTotalPages(pagination.totalPages || 0);
