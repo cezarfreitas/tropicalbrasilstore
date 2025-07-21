@@ -123,7 +123,7 @@ function Store() {
       for (const endpoint of endpoints) {
         try {
           console.log(`Trying endpoint: ${endpoint}`);
-          response = await fetchFunction(endpoint, {
+          response = await safeFetch(endpoint, {
             headers: {
               'Accept': 'application/json',
             },
