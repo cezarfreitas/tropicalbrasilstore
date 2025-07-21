@@ -150,8 +150,9 @@ export default function ProductsEnhanced() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
-  const [sortBy, setSortBy] = useState("name");
+    const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [toggleLoading, setToggleLoading] = useState<number | null>(null);
 
   const [editingProduct, setEditingProduct] = useState<EnhancedProduct | null>(
     null,
