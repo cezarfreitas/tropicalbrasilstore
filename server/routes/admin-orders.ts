@@ -61,7 +61,7 @@ router.get("/:id", async (req, res) => {
                 p.name as product_name,
         p.photo as product_photo,
         p.sku as product_sku,
-        COALESCE(pv.sku_variant, CONCAT(p.sku, '-', co.name, '-', s.size)) as sku_variant,
+                CONCAT(p.sku, '-', COALESCE(co.name, ''), '-', COALESCE(s.size, '')) as sku_variant,
         s.size,
         co.name as color_name,
         co.hex_code as color_hex,
