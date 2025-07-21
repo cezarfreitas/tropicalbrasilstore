@@ -1552,8 +1552,9 @@ export default function ProductsEnhanced() {
           ) : (
             <>
               <Table>
-                <TableHeader>
+                                <TableHeader>
                   <TableRow>
+                    <TableHead className="w-[80px]">Foto</TableHead>
                     <TableHead>
                       <Button
                         variant="ghost"
@@ -1587,7 +1588,8 @@ export default function ProductsEnhanced() {
                     </TableHead>
                     <TableHead>Variantes</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="w-[100px]">Ações</TableHead>
+                    <TableHead>Venda s/ estoque</TableHead>
+                    <TableHead className="w-[140px]">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
