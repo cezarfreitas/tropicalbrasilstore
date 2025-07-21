@@ -290,14 +290,9 @@ function Store() {
                     {/* Product Info */}
                     <div className="p-2 sm:p-4 space-y-2 sm:space-y-3">
                       <div>
-                        <h3 className="font-semibold text-sm sm:text-base text-slate-900 line-clamp-2 group-hover:text-primary transition-colors">
+                        <h3 className="font-medium text-xs sm:text-sm text-slate-900 line-clamp-1 group-hover:text-primary transition-colors">
                           {product.name}
                         </h3>
-                        {product.description && (
-                          <p className="text-xs sm:text-sm text-slate-600 line-clamp-1 sm:line-clamp-2 mt-1">
-                            {product.description}
-                          </p>
-                        )}
                       </div>
 
                       {/* Pricing */}
