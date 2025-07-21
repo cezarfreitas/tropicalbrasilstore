@@ -282,6 +282,7 @@ export default function Customers() {
       whatsapp: customer.whatsapp,
       status: customer.status || "approved",
       newPassword: "",
+      minimum_order: customer.minimum_order || 0,
     });
   };
 
