@@ -655,8 +655,8 @@ export default function Orders() {
                   </TableCell>
                   <TableCell>{order.item_count} item(s)</TableCell>
                   <TableCell>{formatCurrency(order.total_amount)}</TableCell>
-                  <TableCell>{getStatusBadge(order.status)}</TableCell>
-                                    <TableCell>{formatDate(order.created_at)}</TableCell>
+                                    <TableCell>{getStatusBadge(order.status)}</TableCell>
+                  <TableCell>{formatDate(order.created_at)}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Dialog>
