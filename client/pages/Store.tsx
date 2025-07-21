@@ -31,7 +31,9 @@ import {
   ChevronRight,
   Lock,
   User,
+  LogIn,
 } from "lucide-react";
+import { LoginModal } from "@/components/LoginModal";
 
 interface StoreProduct {
   id: number;
@@ -815,7 +817,7 @@ export default function Store() {
                                     {parseFloat(product.base_price).toFixed(2)}
                                   </div>
                                   <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">
-                                    UNIT��RIO
+                                    UNITÁRIO
                                   </div>
                                 </div>
                               )}
