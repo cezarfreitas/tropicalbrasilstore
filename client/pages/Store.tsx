@@ -257,7 +257,8 @@ export default function Store() {
   );
     const [isModalOpen, setIsModalOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [loginModalOpen, setLoginModalOpen] = useState(false);
+      const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [registerModalOpen, setRegisterModalOpen] = useState(false);
     const [fetchError, setFetchError] = useState<string | null>(null);
   const [retryAttempt, setRetryAttempt] = useState(0);
 
