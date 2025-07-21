@@ -33,6 +33,59 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
 
+  // Fetch categories for mobile menu
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await new Promise<Response>((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', '/api/store/categories', true);
+          xhr.setRequestHeader('Accept', 'application/json');
+
+          xhr.onload = () => {
+            const headers = new Headers();
+            xhr.getAllResponseHeaders().split('\r\n').forEach(line => {
+              const [key, value] = line.split(': ');
+              if (key && value) headers.set(key, value);
+            });
+
+            const response = new Response(xhr.responseText, {
+              status: xhr.status,
+              statusText: xhr.statusText,
+              headers: headers
+            });
+            resolve(response);
+          };
+
+          xhr.onerror = () => reject(new Error('Network error'));
+          xhr.ontimeout = () => reject(new Error('Request timeout'));
+          xhr.timeout = 5000;
+
+          xhr.send();
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setCategories([
+            { id: 'all', name: 'Todas as Categorias' },
+            ...data
+          ]);
+        }
+      } catch (error) {
+        console.warn('Failed to fetch categories:', error);
+        // Set default categories
+        setCategories([
+          { id: 'all', name: 'Todas as Categorias' },
+          { id: '1', name: 'Chinelos' },
+          { id: '2', name: 'Sandálias' },
+          { id: '3', name: 'Tênis' },
+        ]);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
             {/* Header */}
