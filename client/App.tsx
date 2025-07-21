@@ -104,6 +104,16 @@ const App = () => (
                   }
                 />
                 <Route
+                  path="/admin/products/import"
+                  element={
+                    <ProtectedRoute>
+                      <AdminLayout>
+                        <ProductImport />
+                      </AdminLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/admin/categories"
                   element={
                     <ProtectedRoute>
