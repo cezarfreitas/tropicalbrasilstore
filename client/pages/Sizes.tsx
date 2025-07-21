@@ -182,10 +182,86 @@ export default function Sizes() {
     }
   };
 
-  const handleNewSize = () => {
+    const handleNewSize = () => {
     setEditingSize(null);
     setFormData({ size: "", display_order: sizes.length });
     setDialogOpen(true);
+  };
+
+  // Funções para grupos de tamanhos
+  const handleNewGroup = () => {
+    setEditingGroup(null);
+    setGroupFormData({
+      name: "",
+      description: "",
+      icon: "",
+      sizes: []
+    });
+    setGroupDialogOpen(true);
+  };
+
+  const handleEditGroup = (group: SizeGroup) => {
+    setEditingGroup(group);
+    setGroupFormData({
+      name: group.name,
+      description: group.description,
+      icon: group.icon,
+      sizes: [...group.sizes]
+    });
+    setGroupDialogOpen(true);
+  };
+
+  const handleSaveGroup = () => {
+    if (!groupFormData.name.trim()) {
+      toast({
+        title: "Erro",
+        description: "Nome do grupo é obrigatório",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const groupId = editingGroup?.id || groupFormData.name.toLowerCase().replace(/\s+/g, '_');
+    const newGroup: SizeGroup = {
+      id: groupId,
+      ...groupFormData
+    };
+
+    if (editingGroup) {
+      setSizeGroups(prev => prev.map(g => g.id === editingGroup.id ? newGroup : g));
+      toast({
+        title: "Sucesso",
+        description: "Grupo atualizado com sucesso",
+      });
+    } else {
+      setSizeGroups(prev => [...prev, newGroup]);
+      toast({
+        title: "Sucesso",
+        description: "Grupo criado com sucesso",
+      });
+    }
+
+    setGroupDialogOpen(false);
+    setEditingGroup(null);
+  };
+
+  const handleDeleteGroup = (groupId: string) => {
+    if (!confirm("Tem certeza que deseja excluir este grupo?")) return;
+
+    setSizeGroups(prev => prev.filter(g => g.id !== groupId));
+    toast({
+      title: "Sucesso",
+      description: "Grupo excluído com sucesso",
+    });
+  };
+
+  const toggleSizeInGroup = (sizeValue: string) => {
+    setGroupFormData(prev => ({
+      ...prev,
+      sizes: prev.sizes.includes(sizeValue)
+        ? prev.sizes.filter(s => s !== sizeValue)
+        : [...prev.sizes, sizeValue]
+    }));
   };
 
   if (loading) {
