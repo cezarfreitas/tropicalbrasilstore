@@ -254,8 +254,9 @@ export default function Store() {
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null,
   );
-  const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   // Customer authentication
   const { isAuthenticated, isApproved, isFirstLogin, customer } =
