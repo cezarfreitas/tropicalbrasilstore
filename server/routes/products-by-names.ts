@@ -142,6 +142,18 @@ async function getOrCreateSize(connection: any, sizeName: string): Promise<numbe
   return (result as any).insertId;
 }
 
+// Helper function to validate parent product exists
+async function validateParentProduct(connection: any, parentId: number): Promise<boolean> {
+  if (!parentId) return true; // Optional field
+
+  const [existing] = await connection.execute(
+    "SELECT id FROM products WHERE id = ?",
+    [parentId]
+  );
+
+  return (existing as any[]).length > 0;
+}
+
 // Helper function to get or create size group
 async function getOrCreateSizeGroup(connection: any, sizeGroupName: string, sizeNames: string[]): Promise<number> {
   if (!sizeGroupName) {
