@@ -325,4 +325,126 @@ router.post("/reset", (req, res) => {
   res.json({ message: "Progress reset" });
 });
 
+// Export products to CSV
+router.get("/export-products", async (req, res) => {
+  try {
+    // Get all products with related data
+    const [products] = await db.execute(`
+      SELECT
+        p.id,
+        p.name,
+        p.description,
+        p.category_id,
+        c.name as category_name,
+        p.base_price,
+        p.sale_price,
+        p.suggested_price,
+        p.sku,
+        p.parent_sku,
+        p.photo,
+        p.active,
+        p.created_at
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      ORDER BY p.created_at DESC
+    `);
+
+    // For each product, get colors, size group, and stock info
+    const exportData = [];
+
+    for (const product of products as any[]) {
+      // Get product colors
+      const [colors] = await db.execute(`
+        SELECT DISTINCT co.name
+        FROM product_variants pv
+        LEFT JOIN colors co ON pv.color_id = co.id
+        WHERE pv.product_id = ? AND co.name IS NOT NULL
+        ORDER BY co.name
+      `, [product.id]);
+
+      const colorNames = (colors as any[]).map(c => c.name).join(',');
+
+      // Get size group (find the most common size group for this product)
+      const [sizeGroupInfo] = await db.execute(`
+        SELECT sg.id, sg.name
+        FROM product_variants pv
+        LEFT JOIN sizes s ON pv.size_id = s.id
+        LEFT JOIN size_groups sg ON JSON_CONTAINS(sg.sizes, JSON_QUOTE(s.size))
+        WHERE pv.product_id = ? AND sg.id IS NOT NULL
+        GROUP BY sg.id, sg.name
+        ORDER BY COUNT(*) DESC
+        LIMIT 1
+      `, [product.id]);
+
+      const sizeGroupId = sizeGroupInfo.length > 0 ? (sizeGroupInfo as any[])[0].id : '';
+
+      // Get average stock per variant
+      const [stockInfo] = await db.execute(`
+        SELECT AVG(stock) as avg_stock
+        FROM product_variants
+        WHERE product_id = ?
+      `, [product.id]);
+
+      const avgStock = stockInfo.length > 0 ? Math.round((stockInfo as any[])[0].avg_stock || 0) : 0;
+
+      // Build photo URL (convert relative path to full URL if needed)
+      let photoUrl = '';
+      if (product.photo) {
+        photoUrl = product.photo.startsWith('http')
+          ? product.photo
+          : `${req.protocol}://${req.get('host')}${product.photo}`;
+      }
+
+      exportData.push({
+        'Nome do Produto': product.name || '',
+        'Categoria': product.category_id || '',
+        'Preço Base': product.base_price || '',
+        'Preço de Venda': product.sale_price || '',
+        'URL da Foto': photoUrl,
+        'Grupo de Tamanhos': sizeGroupId,
+        'Cores': colorNames,
+        'SKU': product.sku || '',
+        'SKU Pai': product.parent_sku || '',
+        'Descrição': product.description || '',
+        'Preço Sugerido': product.suggested_price || '',
+        'Estoque por Variante': avgStock,
+      });
+    }
+
+    // Convert to CSV format
+    if (exportData.length === 0) {
+      return res.status(404).json({ error: "No products found to export" });
+    }
+
+    const headers = Object.keys(exportData[0]);
+    const csvRows = [
+      headers.join(','),
+      ...exportData.map(row =>
+        headers.map(header => {
+          const value = row[header]?.toString() || '';
+          // Escape commas and quotes in CSV
+          return value.includes(',') || value.includes('"')
+            ? `"${value.replace(/"/g, '""')}"`
+            : value;
+        }).join(',')
+      )
+    ];
+
+    const csvContent = csvRows.join('\n');
+
+    // Set response headers for file download
+    const filename = `produtos_exportados_${new Date().toISOString().split('T')[0]}.csv`;
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', Buffer.byteLength(csvContent, 'utf8'));
+
+    // Add BOM for proper UTF-8 encoding in Excel
+    res.send('\ufeff' + csvContent);
+
+  } catch (error) {
+    console.error("Error exporting products:", error);
+    res.status(500).json({ error: "Failed to export products" });
+  }
+});
+
 export { router as importRouter };
