@@ -303,11 +303,7 @@ export default function Store() {
   ]);
 
                         const fetchProducts = async (retryCount = 0, useBackup = false) => {
-    // Prevent concurrent fetches
-    if (loading && retryCount === 0) {
-      console.log("Fetch already in progress, skipping...");
-      return;
-    }
+    console.log(`Starting fetchProducts (retry: ${retryCount}, backup: ${useBackup})`);
 
     setLoading(true);
     setFetchError(null);
