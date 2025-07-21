@@ -110,9 +110,10 @@ export function ProductModal({
 
   const getAvailableColors = (productData = product) => {
     if (!productData?.variants) return [];
-    
+
     const colorMap = new Map();
     productData.variants.forEach((variant) => {
+      // Only show colors that have stock
       if (variant.stock > 0 && !colorMap.has(variant.color_id)) {
         colorMap.set(variant.color_id, {
           id: variant.color_id,
@@ -121,7 +122,7 @@ export function ProductModal({
         });
       }
     });
-    
+
     return Array.from(colorMap.values());
   };
 
