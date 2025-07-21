@@ -138,39 +138,33 @@ async function downloadImage(
   }
 }
 
-// Process colors string and ensure they exist in database
-async function processColors(colorsString: string): Promise<number[]> {
-  if (!colorsString) return [];
-
-  const colorNames = colorsString
-    .split(",")
-    .map((c) => c.trim())
-    .filter((c) => c);
-  const colorIds: number[] = [];
-
-  for (const colorName of colorNames) {
-    // Check if color exists
-    const [existing] = await db.execute(
-      "SELECT id FROM colors WHERE LOWER(name) = LOWER(?)",
-      [colorName],
-    );
-
-    let colorId: number;
-    if ((existing as any[]).length > 0) {
-      colorId = (existing as any[])[0].id;
-    } else {
-      // Create new color with default hex
-      const [result] = await db.execute(
-        "INSERT INTO colors (name, hex_code) VALUES (?, ?)",
-        [colorName, generateRandomHex()],
-      );
-      colorId = (result as any).insertId;
-    }
-
-    colorIds.push(colorId);
+// Process single color and ensure it exists in database
+async function processColor(colorName: string): Promise<number> {
+  if (!colorName || !colorName.trim()) {
+    throw new Error("Color name is required");
   }
 
-  return colorIds;
+  const trimmedColor = colorName.trim();
+
+  // Check if color exists
+  const [existing] = await db.execute(
+    "SELECT id FROM colors WHERE LOWER(name) = LOWER(?)",
+    [trimmedColor],
+  );
+
+  let colorId: number;
+  if ((existing as any[]).length > 0) {
+    colorId = (existing as any[])[0].id;
+  } else {
+    // Create new color with default hex
+    const [result] = await db.execute(
+      "INSERT INTO colors (name, hex_code) VALUES (?, ?)",
+      [trimmedColor, generateRandomHex()],
+    );
+    colorId = (result as any).insertId;
+  }
+
+  return colorId;
 }
 
 function generateRandomHex(): string {
