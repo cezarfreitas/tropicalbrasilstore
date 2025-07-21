@@ -1664,16 +1664,26 @@ export default function ProductsEnhanced() {
                           {product.variant_count} variantes
                         </Badge>
                       </TableCell>
-                      <TableCell>
+                                            <TableCell>
                         <Badge
                           variant={product.active ? "default" : "secondary"}
                         >
                           {product.active ? "Ativo" : "Inativo"}
                         </Badge>
                       </TableCell>
-                                            <TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-center">
+                          <Switch
+                            checked={product.sell_without_stock}
+                            onCheckedChange={() => handleToggleSellWithoutStock(product)}
+                            disabled={toggleSellLoading === product.id}
+                            title={product.sell_without_stock ? "Desativar venda sem estoque" : "Ativar venda sem estoque"}
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell>
                         <div className="flex items-center gap-2">
-                                                                              <Switch
+                          <Switch
                             checked={product.active}
                             onCheckedChange={() => handleToggleStatus(product)}
                             disabled={toggleLoading === product.id}
