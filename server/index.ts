@@ -28,6 +28,7 @@ import { checkAndFixTables } from "./lib/check-tables";
 import { createNotificationSettings } from "./lib/notification-settings";
 import { createCustomerAuthTable } from "./lib/create-customer-auth-table";
 import { addSellWithoutStockColumn } from "./lib/add-sell-without-stock";
+import { addParentSkuColumn } from "./lib/add-parent-sku";
 
 export function createServer() {
   const app = express();
