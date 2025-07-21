@@ -344,7 +344,22 @@ export default function ProductImport() {
 
   const downloadTemplate = () => {
     const headers = REQUIRED_FIELDS.map(f => f.label);
-    const csvContent = headers.join(',') + '\n';
+    const sampleRow = [
+      'Chinelo Havaianas Top',
+      '1',
+      '18.50',
+      '25.90',
+      'https://example.com/havaianas-top.jpg',
+      '1',
+      'azul,branco,preto',
+      'HAV001',
+      'HAV',
+      'Chinelo clássico Havaianas Top',
+      '35.90',
+      '100'
+    ];
+
+    const csvContent = headers.join(',') + '\n' + sampleRow.join(',') + '\n';
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
