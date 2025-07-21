@@ -524,6 +524,57 @@ export default function ProductsEnhanced() {
     setFormData({ ...formData, variants: newVariants });
   };
 
+    const addVariantsForColorAndSizes = () => {
+    if (!selectedColorForVariants || selectedSizesForVariants.length === 0) {
+      toast({
+        title: "Erro",
+        description: "Selecione uma cor e pelo menos um tamanho",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newVariants: ProductVariant[] = [];
+
+    selectedSizesForVariants.forEach((sizeId) => {
+      // Verifica se a combinação já existe
+      const exists = formData.variants.some(
+        (v) => v.size_id === sizeId && v.color_id === selectedColorForVariants
+      );
+
+      if (!exists) {
+        newVariants.push({
+          size_id: sizeId,
+          color_id: selectedColorForVariants,
+          stock: variantStock,
+        });
+      }
+    });
+
+    if (newVariants.length > 0) {
+      setFormData({
+        ...formData,
+        variants: [...formData.variants, ...newVariants],
+      });
+
+      toast({
+        title: "Sucesso",
+        description: `${newVariants.length} variante(s) adicionada(s)`,
+      });
+
+      // Reset selection
+      setSelectedColorForVariants(null);
+      setSelectedSizesForVariants([]);
+      setVariantStock(0);
+    } else {
+      toast({
+        title: "Aviso",
+        description: "Todas as combinações selecionadas já existem",
+        variant: "destructive",
+      });
+    }
+  };
+
   const bulkCreateVariants = () => {
     const newVariants: ProductVariant[] = [];
 
