@@ -1,8 +1,8 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Package, User, LogOut, LogIn } from "lucide-react";
+import { ShoppingCart, Package, User, LogOut, LogIn, Menu, X } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { LoginModal } from "@/components/LoginModal";
