@@ -182,26 +182,24 @@ router.get("/products-paginated", async (req, res) => {
     // Add simple color data for each product and check grade availability
     const productsWithData = [];
     for (const product of products as any[]) {
-      // Check if product has grades
+      // Check if product has grades using the correct table structure
       const [gradeRows] = await db.execute(
         `SELECT COUNT(*) as grade_count
-        FROM grades g
-        WHERE g.product_id = ?`,
+        FROM product_color_grades pcg
+        WHERE pcg.product_id = ?`,
         [product.id]
       );
 
       const hasGrades = (gradeRows as any)[0].grade_count > 0;
 
-      // If product has grades, check if any grades are available
+      // If product has grades, check if any color-grade combinations exist
       if (hasGrades) {
         const [availableGrades] = await db.execute(
           `SELECT COUNT(*) as available_count
-          FROM grades g
-          WHERE g.product_id = ?
-          AND (
-            (SELECT sell_without_stock FROM products WHERE id = g.product_id) = 1
-            OR g.has_full_stock = 1
-          )`,
+          FROM product_color_grades pcg
+          INNER JOIN grade_vendida gv ON pcg.grade_id = gv.id
+          WHERE pcg.product_id = ?
+          AND gv.active = 1`,
           [product.id]
         );
 
