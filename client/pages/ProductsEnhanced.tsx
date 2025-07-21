@@ -1062,30 +1062,60 @@ export default function ProductsEnhanced() {
                         </div>
                       </div>
 
-                      <div>
+                                            <div>
                         <Label>2. Selecione os Tamanhos</Label>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {sizes.map((size) => (
-                            <Button
-                              key={size.id}
-                              type="button"
-                              variant={selectedSizesForVariants.includes(size.id) ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSelectedSizesForVariants(prev =>
-                                  prev.includes(size.id)
-                                    ? prev.filter(id => id !== size.id)
-                                    : [...prev, size.id]
-                                );
-                              }}
-                            >
-                              {size.size}
-                            </Button>
-                          ))}
+
+                        {/* Grupos de Tamanhos */}
+                        <div className="space-y-3 mt-3">
+                          <div>
+                            <Label className="text-sm font-medium">Grupos Rápidos:</Label>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {Object.entries(SIZE_GROUPS).map(([key, group]) => (
+                                <Button
+                                  key={key}
+                                  type="button"
+                                  variant="secondary"
+                                  size="sm"
+                                  onClick={() => selectSizeGroup(key as keyof typeof SIZE_GROUPS)}
+                                  className="flex items-center gap-2"
+                                >
+                                  <span>{group.icon}</span>
+                                  {group.name}
+                                </Button>
+                              ))}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Clique em um grupo para selecionar automaticamente os tamanhos correspondentes
+                            </p>
+                          </div>
+
+                          {/* Seleção Individual */}
+                          <div>
+                            <Label className="text-sm font-medium">Seleção Individual:</Label>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {sizes.map((size) => (
+                                <Button
+                                  key={size.id}
+                                  type="button"
+                                  variant={selectedSizesForVariants.includes(size.id) ? "default" : "outline"}
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedSizesForVariants(prev =>
+                                      prev.includes(size.id)
+                                        ? prev.filter(id => id !== size.id)
+                                        : [...prev, size.id]
+                                    );
+                                  }}
+                                >
+                                  {size.size}
+                                </Button>
+                              ))}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Ou clique nos tamanhos individuais para ajustar a seleção
+                            </p>
+                          </div>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Clique nos tamanhos para selecionar/deselecionar
-                        </p>
                       </div>
                     </CardContent>
                   </Card>
