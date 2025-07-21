@@ -44,11 +44,16 @@ export default function Sizes() {
     display_order: 0,
   });
   
-  // Estados para grupos de tamanhos
-  const [sizeGroups, setSizeGroups] = useState<SizeGroup[]>([
-    {
-      id: "masculino",
-      name: "Masculino",
+    // Hook para grupos de tamanhos integrado com banco de dados
+  const {
+    sizeGroups,
+    loading: sizeGroupsLoading,
+    error: sizeGroupsError,
+    addGroup,
+    updateGroup,
+    deleteGroup,
+    refetch: refetchSizeGroups
+  } = useSizeGroups();
       description: "Tamanhos masculinos adultos",
       icon: "👨",
       sizes: ["38", "39", "40", "41", "42", "43", "44"]
@@ -482,7 +487,7 @@ export default function Sizes() {
                       />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="group_icon">Ícone (Emoji)</Label>
+                      <Label htmlFor="group_icon">��cone (Emoji)</Label>
                       <Input
                         id="group_icon"
                         value={groupFormData.icon}
