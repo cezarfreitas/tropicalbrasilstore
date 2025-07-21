@@ -86,7 +86,7 @@ router.get("/", async (req, res) => {
 
     // Get paginated results with variant and stock information
     const paginatedQuery = `
-      SELECT 
+      SELECT
         p.id,
         p.name,
         p.description,
@@ -94,6 +94,7 @@ router.get("/", async (req, res) => {
         p.base_price,
         p.sku,
         p.parent_sku,
+        p.photo,
         p.active,
         p.sell_without_stock,
         p.created_at,
@@ -101,11 +102,11 @@ router.get("/", async (req, res) => {
         c.name as category_name,
         COUNT(DISTINCT pv.id) as variant_count,
         COALESCE(SUM(pv.stock), 0) as total_stock
-      FROM products p 
-      LEFT JOIN categories c ON p.category_id = c.id 
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
       LEFT JOIN product_variants pv ON p.id = pv.product_id
       ${whereClause}
-      GROUP BY p.id, p.name, p.description, p.category_id, p.base_price, p.sku, p.parent_sku, p.active, p.sell_without_stock, p.created_at, p.updated_at, c.name
+      GROUP BY p.id, p.name, p.description, p.category_id, p.base_price, p.sku, p.parent_sku, p.photo, p.active, p.sell_without_stock, p.created_at, p.updated_at, c.name
       ${orderByClause}
       LIMIT ${limit} OFFSET ${offset}
     `;
