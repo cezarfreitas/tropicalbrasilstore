@@ -166,6 +166,97 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Add item to order
+router.post("/:id/items", async (req, res) => {
+  try {
+    const { product_id, size_id, color_id, grade_id, quantity, unit_price, type } = req.body;
+    const orderId = req.params.id;
+
+    const total_price = quantity * unit_price;
+
+    const [result] = await db.execute(`
+      INSERT INTO order_items (order_id, product_id, size_id, color_id, grade_id, quantity, unit_price, total_price, type)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [orderId, product_id, size_id || null, color_id || null, grade_id || null, quantity, unit_price, total_price, type || 'product']);
+
+    // Update order total
+    await updateOrderTotal(orderId);
+
+    res.json({ message: "Item added to order successfully", id: (result as any).insertId });
+  } catch (error) {
+    console.error("Error adding item to order:", error);
+    res.status(500).json({ error: "Failed to add item to order" });
+  }
+});
+
+// Remove item from order
+router.delete("/:orderId/items/:itemId", async (req, res) => {
+  try {
+    const { orderId, itemId } = req.params;
+
+    const [result] = await db.execute(`
+      DELETE FROM order_items WHERE id = ? AND order_id = ?
+    `, [itemId, orderId]);
+
+    if ((result as any).affectedRows === 0) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+
+    // Update order total
+    await updateOrderTotal(orderId);
+
+    res.json({ message: "Item removed from order successfully" });
+  } catch (error) {
+    console.error("Error removing item from order:", error);
+    res.status(500).json({ error: "Failed to remove item from order" });
+  }
+});
+
+// Update order item
+router.patch("/:orderId/items/:itemId", async (req, res) => {
+  try {
+    const { orderId, itemId } = req.params;
+    const { quantity, unit_price } = req.body;
+
+    const total_price = quantity * unit_price;
+
+    const [result] = await db.execute(`
+      UPDATE order_items
+      SET quantity = ?, unit_price = ?, total_price = ?
+      WHERE id = ? AND order_id = ?
+    `, [quantity, unit_price, total_price, itemId, orderId]);
+
+    if ((result as any).affectedRows === 0) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+
+    // Update order total
+    await updateOrderTotal(orderId);
+
+    res.json({ message: "Item updated successfully" });
+  } catch (error) {
+    console.error("Error updating order item:", error);
+    res.status(500).json({ error: "Failed to update order item" });
+  }
+});
+
+// Helper function to update order total
+async function updateOrderTotal(orderId: string) {
+  const [items] = await db.execute(`
+    SELECT SUM(total_price) as total_amount
+    FROM order_items
+    WHERE order_id = ?
+  `, [orderId]);
+
+  const totalAmount = (items as any[])[0]?.total_amount || 0;
+
+  await db.execute(`
+    UPDATE orders
+    SET total_amount = ?, updated_at = NOW()
+    WHERE id = ?
+  `, [totalAmount, orderId]);
+}
+
 // Update order status
 router.patch("/:id/status", async (req, res) => {
   try {
