@@ -65,7 +65,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const [result] = await connection.execute(
+    const [result] = await db.execute(
       `
       INSERT INTO size_groups (name, description, icon, sizes, active)
       VALUES (?, ?, ?, ?, ?)
