@@ -50,7 +50,20 @@ interface StoreProduct {
     id: number;
     name: string;
     hex_code?: string;
+    variant_count?: number;
+    total_stock?: number;
   }>;
+  available_sizes?: Array<{
+    id: number;
+    size: string;
+    display_order: number;
+    variant_count?: number;
+    total_stock?: number;
+  }>;
+  price_range?: {
+    min?: number;
+    max?: number;
+  };
 }
 
 interface FilterOption {
