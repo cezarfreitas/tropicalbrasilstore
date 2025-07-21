@@ -26,7 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Edit2, Trash2, Ruler, Users, Palette } from "lucide-react";
+import { Plus, Edit2, Trash2, Ruler, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Size, CreateSizeRequest } from "@shared/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -50,7 +50,7 @@ export default function Sizes() {
     size: "",
     display_order: 0,
   });
-
+  
   // Estados para grupos de tamanhos
   const [sizeGroups, setSizeGroups] = useState<SizeGroup[]>([
     {
@@ -61,7 +61,7 @@ export default function Sizes() {
       sizes: ["38", "39", "40", "41", "42", "43", "44"]
     },
     {
-      id: "feminino",
+      id: "feminino", 
       name: "Feminino",
       description: "Tamanhos femininos adultos",
       icon: "👩",
@@ -83,7 +83,7 @@ export default function Sizes() {
     icon: "",
     sizes: []
   });
-
+  
   const { toast } = useToast();
 
   useEffect(() => {
@@ -182,7 +182,7 @@ export default function Sizes() {
     }
   };
 
-    const handleNewSize = () => {
+  const handleNewSize = () => {
     setEditingSize(null);
     setFormData({ size: "", display_order: sizes.length });
     setDialogOpen(true);
@@ -236,7 +236,7 @@ export default function Sizes() {
     } else {
       setSizeGroups(prev => [...prev, newGroup]);
       toast({
-        title: "Sucesso",
+        title: "Sucesso", 
         description: "Grupo criado com sucesso",
       });
     }
@@ -247,7 +247,7 @@ export default function Sizes() {
 
   const handleDeleteGroup = (groupId: string) => {
     if (!confirm("Tem certeza que deseja excluir este grupo?")) return;
-
+    
     setSizeGroups(prev => prev.filter(g => g.id !== groupId));
     toast({
       title: "Sucesso",
@@ -277,7 +277,7 @@ export default function Sizes() {
     );
   }
 
-    return (
+  return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Tamanhos</h1>
@@ -298,6 +298,7 @@ export default function Sizes() {
           </TabsTrigger>
         </TabsList>
 
+        {/* Aba de Tamanhos */}
         <TabsContent value="sizes" className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
@@ -306,146 +307,294 @@ export default function Sizes() {
                 Gerencie os tamanhos individuais disponíveis
               </p>
             </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={handleNewSize}>
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Tamanho
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <form onSubmit={handleSubmit}>
-              <DialogHeader>
-                <DialogTitle>
-                  {editingSize ? "Editar Tamanho" : "Novo Tamanho"}
-                </DialogTitle>
-                <DialogDescription>
-                  {editingSize
-                    ? "Atualize as informações do tamanho"
-                    : "Adicione um novo tamanho para seus produtos"}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="size">Tamanho</Label>
-                  <Input
-                    id="size"
-                    value={formData.size}
-                    onChange={(e) =>
-                      setFormData({ ...formData, size: e.target.value })
-                    }
-                    placeholder="Ex: 32, 34, 36, 38, 40"
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="display_order">Ordem de Exibição</Label>
-                  <Input
-                    id="display_order"
-                    type="number"
-                    value={formData.display_order}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        display_order: parseInt(e.target.value) || 0,
-                      })
-                    }
-                    placeholder="0"
-                    min="0"
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setDialogOpen(false)}
-                >
-                  Cancelar
-                </Button>
-                <Button type="submit">
-                  {editingSize ? "Atualizar" : "Criar"}
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Ruler className="h-5 w-5" />
-            Lista de Tamanhos
-          </CardTitle>
-          <CardDescription>
-            {sizes.length === 0
-              ? "Nenhum tamanho cadastrado"
-              : `${sizes.length} tamanho${sizes.length !== 1 ? "s" : ""} cadastrado${sizes.length !== 1 ? "s" : ""}`}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {sizes.length === 0 ? (
-            <div className="text-center py-8">
-              <Ruler className="mx-auto h-12 w-12 text-muted-foreground/50" />
-              <h3 className="mt-2 text-sm font-semibold">
-                Nenhum tamanho cadastrado
-              </h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Comece criando os tamanhos disponíveis para seus chinelos.
-              </p>
-              <div className="mt-6">
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
                 <Button onClick={handleNewSize}>
                   <Plus className="mr-2 h-4 w-4" />
                   Novo Tamanho
                 </Button>
-              </div>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <form onSubmit={handleSubmit}>
+                  <DialogHeader>
+                    <DialogTitle>
+                      {editingSize ? "Editar Tamanho" : "Novo Tamanho"}
+                    </DialogTitle>
+                    <DialogDescription>
+                      {editingSize
+                        ? "Atualize as informações do tamanho"
+                        : "Adicione um novo tamanho para seus produtos"}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="size">Tamanho</Label>
+                      <Input
+                        id="size"
+                        value={formData.size}
+                        onChange={(e) =>
+                          setFormData({ ...formData, size: e.target.value })
+                        }
+                        placeholder="Ex: 32, 34, 36, 38, 40"
+                        required
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="display_order">Ordem de Exibição</Label>
+                      <Input
+                        id="display_order"
+                        type="number"
+                        value={formData.display_order}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            display_order: parseInt(e.target.value) || 0,
+                          })
+                        }
+                        placeholder="0"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setDialogOpen(false)}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button type="submit">
+                      {editingSize ? "Atualizar" : "Criar"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Ruler className="h-5 w-5" />
+                Lista de Tamanhos
+              </CardTitle>
+              <CardDescription>
+                {sizes.length === 0
+                  ? "Nenhum tamanho cadastrado"
+                  : `${sizes.length} tamanho${sizes.length !== 1 ? "s" : ""} cadastrado${sizes.length !== 1 ? "s" : ""}`}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {sizes.length === 0 ? (
+                <div className="text-center py-8">
+                  <Ruler className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                  <h3 className="mt-2 text-sm font-semibold">
+                    Nenhum tamanho cadastrado
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Comece criando os tamanhos disponíveis para seus chinelos.
+                  </p>
+                  <div className="mt-6">
+                    <Button onClick={handleNewSize}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Novo Tamanho
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Tamanho</TableHead>
+                      <TableHead>Ordem</TableHead>
+                      <TableHead>Criado em</TableHead>
+                      <TableHead className="w-[100px]">Ações</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {sizes.map((size) => (
+                      <TableRow key={size.id}>
+                        <TableCell className="font-medium">{size.size}</TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {size.display_order}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {new Date(size.created_at).toLocaleDateString("pt-BR")}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleEdit(size)}
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleDelete(size.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Aba de Grupos de Tamanhos */}
+        <TabsContent value="groups" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">Grupos de Tamanhos</h2>
+              <p className="text-muted-foreground">
+                Configure grupos para facilitar a seleção de variantes
+              </p>
             </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Tamanho</TableHead>
-                  <TableHead>Ordem</TableHead>
-                  <TableHead>Criado em</TableHead>
-                  <TableHead className="w-[100px]">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sizes.map((size) => (
-                  <TableRow key={size.id}>
-                    <TableCell className="font-medium">{size.size}</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {size.display_order}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {new Date(size.created_at).toLocaleDateString("pt-BR")}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleEdit(size)}
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleDelete(size.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+            <Dialog open={groupDialogOpen} onOpenChange={setGroupDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={handleNewGroup}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Novo Grupo
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[600px]">
+                <DialogHeader>
+                  <DialogTitle>
+                    {editingGroup ? "Editar Grupo" : "Novo Grupo de Tamanhos"}
+                  </DialogTitle>
+                  <DialogDescription>
+                    Configure um grupo para facilitar a seleção rápida de tamanhos
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="group_name">Nome do Grupo</Label>
+                      <Input
+                        id="group_name"
+                        value={groupFormData.name}
+                        onChange={(e) =>
+                          setGroupFormData({ ...groupFormData, name: e.target.value })
+                        }
+                        placeholder="Ex: Masculino, Feminino..."
+                        required
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="group_icon">Ícone (Emoji)</Label>
+                      <Input
+                        id="group_icon"
+                        value={groupFormData.icon}
+                        onChange={(e) =>
+                          setGroupFormData({ ...groupFormData, icon: e.target.value })
+                        }
+                        placeholder="Ex: 👨, 👩, 👶..."
+                      />
+                    </div>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="group_description">Descrição</Label>
+                    <Input
+                      id="group_description"
+                      value={groupFormData.description}
+                      onChange={(e) =>
+                        setGroupFormData({ ...groupFormData, description: e.target.value })
+                      }
+                      placeholder="Descreva o grupo de tamanhos"
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Tamanhos do Grupo</Label>
+                    <div className="flex flex-wrap gap-2 p-4 border rounded">
+                      {sizes.map((size) => (
+                        <div key={size.id} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`size-${size.id}`}
+                            checked={groupFormData.sizes.includes(size.size)}
+                            onCheckedChange={() => toggleSizeInGroup(size.size)}
+                          />
+                          <Label htmlFor={`size-${size.id}`} className="text-sm">
+                            {size.size}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Selecione os tamanhos que pertencem a este grupo
+                    </p>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setGroupDialogOpen(false)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button onClick={handleSaveGroup}>
+                    {editingGroup ? "Atualizar" : "Criar"}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          <div className="grid gap-4">
+            {sizeGroups.map((group) => (
+              <Card key={group.id}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{group.icon}</span>
+                      <div>
+                        <CardTitle>{group.name}</CardTitle>
+                        <CardDescription>{group.description}</CardDescription>
                       </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleEditGroup(group)}
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleDeleteGroup(group.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {group.sizes.map((size) => (
+                      <Badge key={size} variant="secondary">
+                        {size}
+                      </Badge>
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {group.sizes.length} tamanho{group.sizes.length !== 1 ? "s" : ""} neste grupo
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
