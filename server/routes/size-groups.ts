@@ -6,7 +6,7 @@ const router = express.Router();
 // GET /api/size-groups - List all size groups
 router.get("/", async (req, res) => {
   try {
-    const [rows] = await connection.execute(`
+    const [rows] = await db.execute(`
       SELECT id, name, description, icon, sizes, active, created_at, updated_at 
       FROM size_groups 
       ORDER BY name ASC
