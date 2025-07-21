@@ -155,8 +155,8 @@ router.get("/products-paginated", async (req, res) => {
 
     const [products] = await db.execute(productsQuery, [
       ...queryParams,
-      limit,
-      offset,
+      parseInt(limit.toString()),
+      parseInt(offset.toString()),
     ]);
 
     console.log(`Found ${(products as any[]).length} products`);
