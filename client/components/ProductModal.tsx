@@ -414,46 +414,69 @@ export function ProductModal({
                             Nenhuma grade disponível para esta cor
                           </p>
                         ) : (
-                          getAvailableGradesForColor().map((grade) => (
-                            <button
-                              key={grade.id}
-                              onClick={() => setSelectedGrade(grade.id)}
-                              className={`w-full p-4 border rounded-lg text-left transition-colors ${
-                                selectedGrade === grade.id
-                                  ? 'border-primary bg-primary/10'
-                                  : 'border-border hover:border-primary/50'
-                              }`}
-                            >
-                              <div className="flex justify-between items-start">
-                                <div>
-                                  <h4 className="font-medium">{grade.name}</h4>
-                                  {grade.description && (
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                      {grade.description}
-                                    </p>
-                                  )}
-                                  <div className="flex items-center gap-4 mt-2">
-                                    <Badge variant="outline">
-                                      {grade.total_quantity} peças
-                                    </Badge>
-                                    <div className="text-sm text-muted-foreground">
-                                      Tamanhos: {grade.templates.map(t => t.size).join(', ')}
+                                                    getAvailableGradesForColor().map((grade) => {
+                            const canAdd = canAddGradeToCart(grade);
+                            const hasStock = grade.has_full_stock;
+                            const stockInfo = product?.sell_without_stock
+                              ? "Disponível (venda sem estoque ativa)"
+                              : hasStock
+                                ? "Estoque completo disponível"
+                                : grade.has_any_stock
+                                  ? "Estoque parcial - não disponível"
+                                  : "Sem estoque";
+
+                            return (
+                              <button
+                                key={grade.id}
+                                onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
+                                disabled={!canAdd}
+                                className={`w-full p-4 border rounded-lg text-left transition-colors ${
+                                  !canAdd
+                                    ? 'border-muted bg-muted/30 opacity-60 cursor-not-allowed'
+                                    : selectedGrade === grade.id
+                                      ? 'border-primary bg-primary/10'
+                                      : 'border-border hover:border-primary/50'
+                                }`}
+                              >
+                                <div className="flex justify-between items-start">
+                                  <div>
+                                    <h4 className="font-medium">{grade.name}</h4>
+                                    {grade.description && (
+                                      <p className="text-sm text-muted-foreground mt-1">
+                                        {grade.description}
+                                      </p>
+                                    )}
+                                    <div className="flex items-center gap-4 mt-2">
+                                      <Badge variant="outline">
+                                        {grade.total_quantity} peças
+                                      </Badge>
+                                      <div className="text-sm text-muted-foreground">
+                                        Tamanhos: {grade.templates.map(t => t.size).join(', ')}
+                                      </div>
+                                    </div>
+                                    <div className="mt-2">
+                                      <Badge
+                                        variant={canAdd ? (hasStock ? "default" : "secondary") : "destructive"}
+                                        className="text-xs"
+                                      >
+                                        {stockInfo}
+                                      </Badge>
                                     </div>
                                   </div>
+                                  {product.base_price && (
+                                    <div className="text-right">
+                                      <p className={`font-bold ${canAdd ? 'text-primary' : 'text-muted-foreground'}`}>
+                                        R$ {(product.base_price * grade.total_quantity).toFixed(2)}
+                                      </p>
+                                      <p className="text-xs text-muted-foreground">
+                                        total da grade
+                                      </p>
+                                    </div>
+                                  )}
                                 </div>
-                                {product.base_price && (
-                                  <div className="text-right">
-                                    <p className="font-bold text-primary">
-                                      R$ {(product.base_price * grade.total_quantity).toFixed(2)}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground">
-                                      total da grade
-                                    </p>
-                                  </div>
-                                )}
-                              </div>
-                            </button>
-                          ))
+                              </button>
+                            );
+                          })
                         )}
                       </div>
                     ) : (
