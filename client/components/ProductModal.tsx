@@ -94,7 +94,7 @@ export function ProductModal({
     }));
   };
 
-  const addGradeToCart = (grade: AvailableGrade) => {
+    const addGradeToCart = (grade: AvailableGrade) => {
     if (!product) return;
 
     const quantity = getGradeQuantity(grade.id);
@@ -122,6 +122,29 @@ export function ProductModal({
     });
 
     updateGradeQuantity(grade.id, 1);
+    onClose();
+  };
+
+  const addUnitToCart = () => {
+    if (!product || !product.base_price) return;
+
+    const quantity = getGradeQuantity(0);
+
+    addItem({
+      type: "unit",
+      productId: product.id,
+      productName: product.name,
+      quantity,
+      unitPrice: product.base_price,
+      photo: product.photo,
+    });
+
+    toast({
+      title: "Produto adicionado ao carrinho",
+      description: `${quantity}x ${product.name}`,
+    });
+
+    updateGradeQuantity(0, 1);
     onClose();
   };
 
