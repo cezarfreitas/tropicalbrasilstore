@@ -147,6 +147,18 @@ export default function ProductImport() {
     }
   };
 
+  const fetchProductCount = async () => {
+    try {
+      const response = await fetch("/api/products-enhanced?page=1&limit=1");
+      if (response.ok) {
+        const data = await response.json();
+        setProductCount(data.pagination?.totalProducts || 0);
+      }
+    } catch (error) {
+      console.error("Error fetching product count:", error);
+    }
+  };
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (!uploadedFile) return;
