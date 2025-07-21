@@ -94,9 +94,7 @@ function Store() {
           response = await fetch(endpoint, {
             headers: {
               'Accept': 'application/json',
-              'Content-Type': 'application/json',
             },
-            signal: AbortSignal.timeout(10000), // 10 second timeout
           });
 
           if (response.ok) {
