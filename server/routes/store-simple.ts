@@ -63,26 +63,101 @@ router.get("/products", async (req, res) => {
       offset,
     ]);
 
-    // For each product, get available colors
+        // For each product, get available colors based on viable grades
     const productsWithColors = [];
     for (const product of products as any[]) {
-      const [colorRows] = await db.execute(
-        `
-        SELECT DISTINCT
-          co.id,
-          co.name,
-          co.hex_code
-        FROM product_variants pv
-        LEFT JOIN colors co ON pv.color_id = co.id
-        WHERE pv.product_id = ? AND pv.stock > 0 AND co.id IS NOT NULL
-        ORDER BY co.name
-      `,
+      // Get product info including sell_without_stock setting
+      const [productInfo] = await db.execute(
+        `SELECT sell_without_stock FROM products WHERE id = ?`,
+        [product.id],
+      );
+      const productSettings = (productInfo as any)[0];
+
+      // Get all available grades for this product
+      const [gradeRows] = await db.execute(
+        `SELECT DISTINCT
+          g.id,
+          g.name,
+          c.name as color_name,
+          c.hex_code,
+          pcg.color_id,
+          co.id as color_table_id,
+          co.name as color_table_name,
+          co.hex_code as color_table_hex
+         FROM grade_vendida g
+         INNER JOIN product_color_grades pcg ON g.id = pcg.grade_id
+         INNER JOIN colors c ON pcg.color_id = c.id
+         LEFT JOIN colors co ON c.id = co.id
+         WHERE pcg.product_id = ? AND g.active = true`,
         [product.id],
       );
 
+      const viableColors = new Set();
+
+      // For each grade, check if it's viable
+      for (const grade of gradeRows as any[]) {
+        const [templateRows] = await db.execute(
+          `SELECT gt.*, s.size, s.display_order
+           FROM grade_templates gt
+           LEFT JOIN sizes s ON gt.size_id = s.id
+           WHERE gt.grade_id = ?
+           ORDER BY s.display_order`,
+          [grade.id],
+        );
+
+        let hasFullStock = true;
+
+        // Check if all required variants have sufficient stock
+        for (const template of templateRows as any[]) {
+          const [variantRows] = await db.execute(
+            `SELECT stock FROM product_variants
+             WHERE product_id = ? AND size_id = ? AND color_id = ?`,
+            [product.id, template.size_id, grade.color_id],
+          );
+
+          const variant = (variantRows as any)[0];
+          if (!variant || variant.stock < template.required_quantity) {
+            hasFullStock = false;
+            break;
+          }
+        }
+
+        // If sell without stock is enabled OR has full stock, color is viable
+        if (productSettings.sell_without_stock || hasFullStock) {
+          viableColors.add(JSON.stringify({
+            id: grade.color_table_id,
+            name: grade.color_table_name,
+            hex_code: grade.color_table_hex,
+          }));
+        }
+      }
+
+      // If no grades exist, fall back to individual variant stock check
+      if (gradeRows.length === 0) {
+        const variantStockCondition = productSettings.sell_without_stock ? '' : 'AND pv.stock > 0';
+        const [colorRows] = await db.execute(
+          `SELECT DISTINCT
+            co.id,
+            co.name,
+            co.hex_code
+          FROM product_variants pv
+          LEFT JOIN colors co ON pv.color_id = co.id
+          WHERE pv.product_id = ? ${variantStockCondition} AND co.id IS NOT NULL
+          ORDER BY co.name`,
+          [product.id],
+        );
+
+        for (const color of colorRows as any[]) {
+          viableColors.add(JSON.stringify(color));
+        }
+      }
+
+      // Convert set back to array
+      const availableColors = Array.from(viableColors).map(colorStr => JSON.parse(colorStr));
+
       productsWithColors.push({
         ...product,
-        available_colors: colorRows,
+        available_colors: availableColors,
       });
     }
 
