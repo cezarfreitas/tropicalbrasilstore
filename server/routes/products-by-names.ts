@@ -259,8 +259,8 @@ router.post("/", async (req, res) => {
 
     // Create the product with parent_id
     const [result] = await connection.execute(
-      `INSERT INTO products (name, description, category_id, base_price, sale_price, suggested_price, sku, parent_sku, photo, active)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO products (name, description, category_id, base_price, sale_price, suggested_price, sku, parent_sku, parent_id, photo, active)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         name,
         description || null,
@@ -270,6 +270,7 @@ router.post("/", async (req, res) => {
         suggested_price || null,
         sku || null,
         parent_sku || null,
+        parent_id || null, // ID do produto pai para hierarquia
         photoPath, // Foto principal do produto (não das variantes)
         true,
       ]
