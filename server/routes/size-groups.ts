@@ -1,5 +1,5 @@
 import express from "express";
-import connection from "../lib/db";
+import db from "../lib/db";
 
 const router = express.Router();
 
