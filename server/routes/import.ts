@@ -489,4 +489,22 @@ router.get("/export-products", async (req, res) => {
   }
 });
 
+// Get export statistics
+router.get("/export-stats", async (req, res) => {
+  try {
+    const [stats] = await db.execute(`
+      SELECT
+        COUNT(*) as total_products,
+        COUNT(CASE WHEN active = true THEN 1 END) as active_products,
+        COUNT(CASE WHEN active = false THEN 1 END) as inactive_products
+      FROM products
+    `);
+
+    res.json((stats as any[])[0]);
+  } catch (error) {
+    console.error("Error fetching export stats:", error);
+    res.status(500).json({ error: "Failed to fetch export stats" });
+  }
+});
+
 export { router as importRouter };
