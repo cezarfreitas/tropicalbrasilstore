@@ -52,7 +52,8 @@ export function createServer() {
       await addSellWithoutStockColumn(); // Add sell without stock functionality
       await addParentSkuColumn(); // Add parent SKU for variant grouping
             await addSizeGroupsTable(); // Add size groups table and default data
-      await createProductVariantsTable(); // Create product variants table
+            await createProductVariantsTable(); // Create product variants table
+      await redesignGradeSystem(); // Create grade templates and product color grades tables
       await fixOrdersTable(); // Fix any missing columns
       await checkAndFixTables(); // Final table structure checks
       console.log("✅ All database initialization completed successfully");
