@@ -540,7 +540,7 @@ export default function ProductImport() {
                   <div>
                     <h4 className="font-semibold">Exportar Todos os Produtos</h4>
                     <p className="text-sm text-muted-foreground">
-                      Gera um arquivo CSV com todos os produtos cadastrados no sistema
+                      Gera um arquivo CSV com {productCount > 0 ? `${productCount} produtos` : 'todos os produtos'} cadastrados no sistema
                     </p>
                   </div>
                   <Button onClick={exportProducts} size="lg" disabled={isExporting}>
