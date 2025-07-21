@@ -332,17 +332,47 @@ router.post("/", async (req, res) => {
       0
     );
 
+    // Get parent product info if exists
+    let parentProduct = null;
+    if (parent_id) {
+      const [parentRows] = await db.execute(
+        "SELECT id, name, sku FROM products WHERE id = ?",
+        [parent_id]
+      );
+      parentProduct = (parentRows as any[])[0] || null;
+    }
+
     res.status(201).json({
       message: "Product created successfully",
-      product,
+      product: {
+        ...product,
+        parent_product: parentProduct
+      },
       created_resources: {
         category_created: category_name ? true : false,
-        colors_created: variants.map(v => v.color_name),
-        sizes_created: variants.map(v => v.size_name),
+        colors_created: [...new Set(variants.map(v => v.color_name))], // Remove duplicates
+        sizes_created: [...new Set(variants.map(v => v.size_name))], // Remove duplicates
         size_group_created: size_group_name ? true : false,
-        photo_downloaded: photoDownloaded,
-        photo_url_original: photo_url || null,
-        photo_path_saved: photoPath || null,
+        photo_status: {
+          downloaded: photoDownloaded,
+          url_original: photo_url || null,
+          path_saved: photoPath || null,
+          error: photoError || null
+        },
+        parent_reference: parent_id ? {
+          parent_id: parent_id,
+          parent_found: parentProduct !== null,
+          parent_name: parentProduct?.name || null
+        } : null
+      },
+      summary: {
+        product_name: name,
+        variants_created: variants.length,
+        unique_colors: [...new Set(variants.map(v => v.color_name))].length,
+        unique_sizes: [...new Set(variants.map(v => v.size_name))].length,
+        total_stock: variants.reduce((sum, v) => sum + (v.stock || 0), 0),
+        has_parent: !!parent_id,
+        has_photo: !!photoPath
       }
     });
 
