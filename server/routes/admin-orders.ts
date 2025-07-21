@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
       SELECT 
         o.id,
         o.customer_email,
-                o.total_price as total_amount,
+                        o.total_amount,
         o.status,
         o.created_at,
         o.updated_at,
