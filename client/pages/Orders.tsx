@@ -501,17 +501,9 @@ export default function Orders() {
                                     key={item.id}
                                     className="flex items-center justify-between p-3 border rounded-lg"
                                   >
-                                    <div className="flex items-center gap-3">
+                                                                        <div className="flex items-center gap-3">
                                       <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
-                                        {item.product_photo ? (
-                                          <img
-                                            src={item.product_photo}
-                                            alt={item.product_name}
-                                            className="w-full h-full object-cover rounded-lg"
-                                          />
-                                        ) : (
-                                          <Package className="h-6 w-6 text-muted-foreground" />
-                                        )}
+                                        <Package className="h-6 w-6 text-muted-foreground" />
                                       </div>
                                                                             <div>
                                         <div className="font-medium">
