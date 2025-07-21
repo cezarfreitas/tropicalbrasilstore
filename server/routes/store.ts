@@ -191,7 +191,7 @@ router.get("/products", async (req, res) => {
 // Get product details with variants and available grades
 router.get("/products/:id", async (req, res) => {
   try {
-    // Get product basic info
+    // Get product basic info including sell_without_stock setting
     const [productRows] = await db.execute(
       `SELECT p.*, c.name as category_name 
        FROM products p 
@@ -206,13 +206,14 @@ router.get("/products/:id", async (req, res) => {
 
     const product = (productRows as any)[0];
 
-    // Get available variants (with stock > 0)
+    // Get variants based on sell_without_stock setting
+    const variantStockCondition = product.sell_without_stock ? '' : 'AND pv.stock > 0';
     const [variantRows] = await db.execute(
       `SELECT 
         pv.id,
         pv.size_id,
         pv.color_id,
-                pv.stock,
+        pv.stock,
         COALESCE(pv.price_override, 0) as price_override,
         s.size,
         s.display_order,
@@ -221,7 +222,7 @@ router.get("/products/:id", async (req, res) => {
        FROM product_variants pv
        LEFT JOIN sizes s ON pv.size_id = s.id
        LEFT JOIN colors c ON pv.color_id = c.id
-       WHERE pv.product_id = ? AND pv.stock > 0
+       WHERE pv.product_id = ? ${variantStockCondition}
        ORDER BY s.display_order, c.name`,
       [req.params.id],
     );
@@ -242,7 +243,7 @@ router.get("/products/:id", async (req, res) => {
       [req.params.id],
     );
 
-    // For each grade, get the template requirements
+    // For each grade, get the template requirements and check stock availability
     const gradesWithTemplates = [];
     for (const grade of gradeRows as any[]) {
       const [templateRows] = await db.execute(
@@ -254,27 +255,50 @@ router.get("/products/:id", async (req, res) => {
         [grade.id],
       );
 
-            // Calculate total required and check availability
+      // Calculate total required and check stock availability
       let totalRequired = 0;
+      let hasFullStock = true;
       let hasAnyStock = false;
 
       for (const template of templateRows as any[]) {
         totalRequired += template.required_quantity;
+        
+        // Check if variant exists and has sufficient stock
         const variant = (variantRows as any[]).find(
           (v) =>
             v.size_id === template.size_id && v.color_id === grade.color_id,
         );
-        if (variant && variant.stock > 0) {
-          hasAnyStock = true;
+        
+        if (variant) {
+          if (variant.stock > 0) {
+            hasAnyStock = true;
+          }
+          if (variant.stock < template.required_quantity) {
+            hasFullStock = false;
+          }
+        } else {
+          hasFullStock = false;
         }
       }
 
-      // Show grade if there's any stock available (not requiring full stock)
-      if (hasAnyStock || totalRequired > 0) {
+      // Determine if grade should be shown based on sell_without_stock setting
+      let shouldShowGrade = false;
+      
+      if (product.sell_without_stock) {
+        // If sell without stock is enabled, show grade regardless of stock
+        shouldShowGrade = totalRequired > 0;
+      } else {
+        // If sell without stock is disabled, only show grade if there's sufficient stock
+        shouldShowGrade = hasFullStock && totalRequired > 0;
+      }
+
+      if (shouldShowGrade) {
         gradesWithTemplates.push({
           ...grade,
           templates: templateRows,
           total_quantity: totalRequired,
+          has_full_stock: hasFullStock,
+          has_any_stock: hasAnyStock,
         });
       }
     }
@@ -371,8 +395,54 @@ router.post("/orders", async (req, res) => {
 
     const orderId = (orderResult as any).insertId;
 
+    // Validate stock before processing order
+    for (const item of items) {
+      // Get product info to check sell_without_stock setting
+      const [productRows] = await connection.execute(
+        `SELECT sell_without_stock FROM products WHERE id = ?`,
+        [item.productId],
+      );
+      
+      const productInfo = (productRows as any)[0];
+      
+      // If sell without stock is disabled, check stock availability
+      if (!productInfo.sell_without_stock) {
+        const [templateRows] = await connection.execute(
+          `SELECT gt.*, s.size FROM grade_templates gt
+           LEFT JOIN sizes s ON gt.size_id = s.id
+           WHERE gt.grade_id = ?`,
+          [item.gradeId],
+        );
+
+        for (const template of templateRows as any[]) {
+          const requiredQuantity = template.required_quantity * item.quantity;
+
+          // Check stock
+          const [variantRows] = await connection.execute(
+            `SELECT stock FROM product_variants WHERE product_id = ? AND size_id = ? AND color_id = ?`,
+            [item.productId, template.size_id, item.colorId],
+          );
+
+          const variant = (variantRows as any)[0];
+          if (!variant || variant.stock < requiredQuantity) {
+            throw new Error(
+              `Insufficient stock for ${item.productName} size ${template.size}. Required: ${requiredQuantity}, Available: ${variant?.stock || 0}`,
+            );
+          }
+        }
+      }
+    }
+
     // Create order items and update stock - only grade purchases
     for (const item of items) {
+      // Get product info to check sell_without_stock setting
+      const [productRows] = await connection.execute(
+        `SELECT sell_without_stock FROM products WHERE id = ?`,
+        [item.productId],
+      );
+      
+      const productInfo = (productRows as any)[0];
+      
       // Grade item - update multiple variant stocks based on template
       const [templateRows] = await connection.execute(
         `SELECT gt.*, s.size FROM grade_templates gt
@@ -384,24 +454,14 @@ router.post("/orders", async (req, res) => {
       for (const template of templateRows as any[]) {
         const requiredQuantity = template.required_quantity * item.quantity;
 
-        // Check stock
-        const [variantRows] = await connection.execute(
-          `SELECT stock FROM product_variants WHERE product_id = ? AND size_id = ? AND color_id = ?`,
-          [item.productId, template.size_id, item.colorId],
-        );
-
-        const variant = (variantRows as any)[0];
-        if (!variant || variant.stock < requiredQuantity) {
-          throw new Error(
-            `Insufficient stock for ${item.productName} size ${template.size}`,
+        // Only update stock if sell_without_stock is disabled
+        if (!productInfo.sell_without_stock) {
+          // Update stock
+          await connection.execute(
+            `UPDATE product_variants SET stock = stock - ? WHERE product_id = ? AND size_id = ? AND color_id = ?`,
+            [requiredQuantity, item.productId, template.size_id, item.colorId],
           );
         }
-
-        // Update stock
-        await connection.execute(
-          `UPDATE product_variants SET stock = stock - ? WHERE product_id = ? AND size_id = ? AND color_id = ?`,
-          [requiredQuantity, item.productId, template.size_id, item.colorId],
-        );
       }
 
       // Create order item for the grade
