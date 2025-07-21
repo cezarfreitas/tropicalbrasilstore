@@ -220,58 +220,14 @@ function Store() {
     <StoreLayout>
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-slate-900">
-              Loja de Chinelos
-            </h1>
-            <p className="text-slate-600 mt-1">
-              {pagination ? `${pagination.totalProducts} produtos disponíveis` : 'Carregando produtos...'}
-            </p>
-          </div>
-
-          <Button onClick={handleRefresh} variant="outline" disabled={loading}>
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            Atualizar
-          </Button>
+        <div className="text-center">
+          <h1 className="text-2xl lg:text-3xl font-bold text-slate-900">
+            Loja de Chinelos
+          </h1>
+          <p className="text-slate-600 mt-1">
+            {pagination ? `${pagination.totalProducts} produtos disponíveis` : 'Carregando produtos...'}
+          </p>
         </div>
-
-        {/* Filters */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* Search */}
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-                  <Input
-                    placeholder="Buscar produtos..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-
-              {/* Category Filter */}
-              <div className="w-full md:w-48">
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger>
-                    <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Categoria" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Error State */}
         {error && (
