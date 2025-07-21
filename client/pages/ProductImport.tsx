@@ -388,22 +388,53 @@ export default function ProductImport() {
 
   const downloadTemplate = () => {
     const headers = REQUIRED_FIELDS.map((f) => f.label);
-    const sampleRow = [
-      "Chinelo Havaianas Top",
-      "1",
-      "18.50",
-      "25.90",
-      "https://example.com/havaianas-top.jpg",
-      "1",
-      "azul,branco,preto",
-      "HAV001",
-      "HAV",
-      "Chinelo clássico Havaianas Top",
-      "35.90",
-      "100",
+    const sampleRows = [
+      [
+        "Chinelo Havaianas Top",
+        "1",
+        "18.50",
+        "25.90",
+        "https://example.com/havaianas-top.jpg",
+        "1",
+        "azul",
+        "HAV001-AZUL",
+        "HAV001",
+        "Chinelo clássico Havaianas Top",
+        "35.90",
+        "100",
+      ],
+      [
+        "Chinelo Havaianas Top",
+        "1",
+        "18.50",
+        "25.90",
+        "https://example.com/havaianas-top.jpg",
+        "1",
+        "branco",
+        "HAV001-BRANCO",
+        "HAV001",
+        "Chinelo clássico Havaianas Top",
+        "35.90",
+        "100",
+      ],
+      [
+        "Chinelo Havaianas Top",
+        "1",
+        "18.50",
+        "25.90",
+        "https://example.com/havaianas-top.jpg",
+        "1",
+        "preto",
+        "HAV001-PRETO",
+        "HAV001",
+        "Chinelo clássico Havaianas Top",
+        "35.90",
+        "100",
+      ],
     ];
 
-    const csvContent = headers.join(",") + "\n" + sampleRow.join(",") + "\n";
+    const csvContent = headers.join(",") + "\n" +
+      sampleRows.map(row => row.join(",")).join("\n") + "\n";
     const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
