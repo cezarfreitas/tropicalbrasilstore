@@ -53,6 +53,7 @@ interface ProductByNamesRequest {
   sku?: string;
   parent_sku?: string;
   photo?: string;
+  photo_url?: string; // URL da foto para download automático
   variants: {
     size_name: string;
     color_name: string;
