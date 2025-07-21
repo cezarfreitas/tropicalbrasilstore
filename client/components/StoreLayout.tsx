@@ -6,6 +6,7 @@ import { ShoppingCart, Package, User, LogOut, LogIn } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { LoginModal } from "@/components/LoginModal";
+import { RegisterModal } from "@/components/RegisterModal";
 import {
   DropdownMenu,
   DropdownMenuContent,
