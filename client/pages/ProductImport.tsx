@@ -429,7 +429,7 @@ export default function ProductImport() {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        const filterSuffix = filter === 'active' ? '_ativos' : '';
+        const filterSuffix = filter === 'active' ? '_ativos' : filter === 'inactive' ? '_inativos' : '';
         a.download = `produtos_exportados${filterSuffix}_${new Date().toISOString().split("T")[0]}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
