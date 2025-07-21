@@ -60,6 +60,9 @@ export default function Settings() {
   const [settings, setSettings] = useState<StoreSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [backupLoading, setBackupLoading] = useState(false);
+  const [restoreLoading, setRestoreLoading] = useState(false);
+  const [templateLoading, setTemplateLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
