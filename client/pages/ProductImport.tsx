@@ -369,6 +369,41 @@ export default function ProductImport() {
     window.URL.revokeObjectURL(url);
   };
 
+  const exportProducts = async () => {
+    try {
+      toast({
+        title: "Preparando Exportação",
+        description: "Gerando arquivo de produtos...",
+      });
+
+      const response = await fetch('/api/import/export-products');
+
+      if (response.ok) {
+        // Create download link
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `produtos_exportados_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+        toast({
+          title: "Exportação Concluída",
+          description: "Arquivo de produtos baixado com sucesso",
+        });
+      } else {
+        throw new Error("Erro ao exportar produtos");
+      }
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível exportar os produtos",
+        variant: "destructive",
+      });
+    }
+  };
+
   const resetImport = () => {
     setFile(null);
     setCsvData([]);
