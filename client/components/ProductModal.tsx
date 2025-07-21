@@ -375,12 +375,12 @@ export function ProductModal({
                             key={grade.id}
                             onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
                             disabled={!canAdd}
-                            className={`p-3 border rounded-lg text-left ${
+                            className={`p-3 border rounded-xl text-left transition-all duration-200 ${
                               !canAdd
-                                ? 'border-gray-200 bg-gray-50 opacity-60'
+                                ? 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed'
                                 : selectedGrade === grade.id
-                                  ? 'border-orange-500 bg-orange-50'
-                                  : 'border-gray-200'
+                                  ? 'border-orange-500 bg-orange-50 shadow-sm'
+                                  : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                             }`}
                           >
                             <div className="space-y-1.5">
