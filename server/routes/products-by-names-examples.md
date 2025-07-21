@@ -132,6 +132,26 @@ const produto = {
   ]
 };
 
+### 2. Produto com Hierarquia (Produto Filho)
+```javascript
+const produtoFilho = {
+  "name": "Chinelo Havaianas Top Edição Limitada",
+  "description": "Versão especial do clássico Havaianas Top",
+  "category_name": "Calçados",
+  "parent_id": 123, // ID do produto pai
+  "parent_sku": "HAV-TOP",
+  "base_price": 22.00,
+  "sale_price": 35.00,
+  "photo_url": "https://exemplo.com/havaianas-edicao-limitada.jpg",
+  "variants": [
+    {
+      "size_name": "37",
+      "color_name": "Dourado",
+      "stock": 25
+    }
+  ]
+};
+
 fetch('/api/products-by-names', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
