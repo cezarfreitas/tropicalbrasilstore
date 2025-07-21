@@ -12,7 +12,7 @@ async function testPhotosAPI() {
       WHERE p.active = true AND p.photo IS NOT NULL
       LIMIT 5
     `);
-    
+
     console.table(products);
 
     // Test 2: Simulate API endpoint
@@ -21,7 +21,7 @@ async function testPhotosAPI() {
     const limit = 5;
     const offset = (page - 1) * limit;
 
-    const whereClause = 'WHERE p.active = true';
+    const whereClause = "WHERE p.active = true";
     const queryParams: any[] = [];
 
     const productsQuery = `

@@ -168,7 +168,7 @@ router.get("/:id", async (req, res) => {
       [req.params.id],
     );
 
-            // Get product grades (if they exist)
+    // Get product grades (if they exist)
     const [gradeRows] = await db.execute(
       `SELECT DISTINCT gv.id, gv.name, gv.description, gv.active
        FROM grade_vendida gv
@@ -180,7 +180,10 @@ router.get("/:id", async (req, res) => {
     product.variants = variantRows;
     product.grades = gradeRows;
     product.variant_count = (variantRows as any[]).length;
-    product.total_stock = (variantRows as any[]).reduce((sum, variant) => sum + (variant.stock || 0), 0);
+    product.total_stock = (variantRows as any[]).reduce(
+      (sum, variant) => sum + (variant.stock || 0),
+      0,
+    );
 
     res.json(product);
   } catch (error) {
@@ -192,7 +195,7 @@ router.get("/:id", async (req, res) => {
 // Create new product with variants and grades
 router.post("/", async (req, res) => {
   const connection = await db.getConnection();
-  
+
   try {
     await connection.beginTransaction();
 
@@ -221,10 +224,10 @@ router.post("/", async (req, res) => {
       [
         name,
         description || null,
-                category_id || null,
+        category_id || null,
         base_price || null,
         suggested_price || null,
-                sku || null,
+        sku || null,
         parent_sku || null,
         true,
       ],
@@ -251,7 +254,7 @@ router.post("/", async (req, res) => {
       }
     }
 
-        // Assign grades if provided
+    // Assign grades if provided
     if (grades && grades.length > 0) {
       // Get available colors for this product to assign grades
       const [colors] = await connection.execute(
@@ -296,7 +299,10 @@ router.post("/", async (req, res) => {
 
     product.variants = variantRows;
     product.variant_count = (variantRows as any[]).length;
-    product.total_stock = (variantRows as any[]).reduce((sum, variant) => sum + (variant.stock || 0), 0);
+    product.total_stock = (variantRows as any[]).reduce(
+      (sum, variant) => sum + (variant.stock || 0),
+      0,
+    );
 
     res.status(201).json(product);
   } catch (error: any) {
@@ -314,7 +320,7 @@ router.post("/", async (req, res) => {
 // Update product with variants and grades
 router.put("/:id", async (req, res) => {
   const connection = await db.getConnection();
-  
+
   try {
     await connection.beginTransaction();
 
@@ -332,7 +338,10 @@ router.put("/:id", async (req, res) => {
       sell_without_stock,
       variants,
       grades,
-    }: CreateProductRequest & { active?: boolean; sell_without_stock?: boolean } = req.body;
+    }: CreateProductRequest & {
+      active?: boolean;
+      sell_without_stock?: boolean;
+    } = req.body;
 
     if (!name) {
       return res.status(400).json({ error: "Name is required" });
@@ -348,9 +357,9 @@ router.put("/:id", async (req, res) => {
         name,
         description || null,
         category_id || null,
-                base_price || null,
+        base_price || null,
         suggested_price || null,
-                sku || null,
+        sku || null,
         parent_sku || null,
         active !== undefined ? active : true,
         sell_without_stock !== undefined ? sell_without_stock : false,
@@ -386,7 +395,7 @@ router.put("/:id", async (req, res) => {
       }
     }
 
-        // Update grades if provided
+    // Update grades if provided
     if (grades !== undefined) {
       // Delete existing grade assignments
       await connection.execute(
@@ -442,7 +451,7 @@ router.put("/:id", async (req, res) => {
       [req.params.id],
     );
 
-            // Get grades
+    // Get grades
     const [gradeRows] = await db.execute(
       `SELECT DISTINCT gv.id, gv.name, gv.description, gv.active
        FROM grade_vendida gv
@@ -454,7 +463,10 @@ router.put("/:id", async (req, res) => {
     product.variants = variantRows;
     product.grades = gradeRows;
     product.variant_count = (variantRows as any[]).length;
-    product.total_stock = (variantRows as any[]).reduce((sum, variant) => sum + (variant.stock || 0), 0);
+    product.total_stock = (variantRows as any[]).reduce(
+      (sum, variant) => sum + (variant.stock || 0),
+      0,
+    );
 
     res.json(product);
   } catch (error: any) {

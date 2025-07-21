@@ -39,7 +39,9 @@ export default function Cart() {
   return (
     <StoreLayout>
       <div className="container mx-auto px-4 py-4 sm:py-8">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">Seu Carrinho</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">
+          Seu Carrinho
+        </h1>
 
         {/* Mobile Layout */}
         <div className="block lg:hidden space-y-4">
@@ -64,7 +66,9 @@ export default function Cart() {
 
                     {/* Product Info */}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-sm truncate">{item.productName}</h3>
+                      <h3 className="font-medium text-sm truncate">
+                        {item.productName}
+                      </h3>
                       <div className="flex items-center gap-1 mt-1">
                         <Grid3x3 className="h-3 w-3 text-muted-foreground" />
                         <span className="text-xs text-muted-foreground">
@@ -89,7 +93,7 @@ export default function Cart() {
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
-                      
+
                       {/* Quantity Controls */}
                       <div className="flex items-center gap-1">
                         <Button
@@ -128,20 +132,29 @@ export default function Cart() {
             <CardContent className="p-4">
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Itens ({totalItems})</span>
-                  <span className="font-medium">R$ {totalPrice.toFixed(2)}</span>
+                  <span className="text-sm text-muted-foreground">
+                    Itens ({totalItems})
+                  </span>
+                  <span className="font-medium">
+                    R$ {totalPrice.toFixed(2)}
+                  </span>
                 </div>
-                
+
                 <div className="border-t pt-3">
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-lg">Total</span>
-                    <span className="font-bold text-lg text-orange-500">R$ {totalPrice.toFixed(2)}</span>
+                    <span className="font-bold text-lg text-orange-500">
+                      R$ {totalPrice.toFixed(2)}
+                    </span>
                   </div>
                 </div>
 
                 <div className="space-y-2 pt-2">
                   <Link to="/loja/checkout">
-                    <Button className="w-full bg-orange-500 hover:bg-orange-600" size="lg">
+                    <Button
+                      className="w-full bg-orange-500 hover:bg-orange-600"
+                      size="lg"
+                    >
                       Finalizar Compra
                     </Button>
                   </Link>

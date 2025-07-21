@@ -14,7 +14,7 @@ router.get("/filtered", async (req, res) => {
       status = "",
       date = "",
       sortBy = "created_at",
-      sortOrder = "desc"
+      sortOrder = "desc",
     } = req.query;
 
     let whereClause = "WHERE 1=1";
@@ -54,11 +54,19 @@ router.get("/filtered", async (req, res) => {
     const offset = (Number(page) - 1) * Number(limit);
 
     // Valid sort columns
-    const validSortColumns = ["id", "customer_email", "total_amount", "status", "created_at"];
-    const sortColumn = validSortColumns.includes(String(sortBy)) ? sortBy : "created_at";
+    const validSortColumns = [
+      "id",
+      "customer_email",
+      "total_amount",
+      "status",
+      "created_at",
+    ];
+    const sortColumn = validSortColumns.includes(String(sortBy))
+      ? sortBy
+      : "created_at";
     const sortDirection = sortOrder === "asc" ? "ASC" : "DESC";
 
-            // Simple query for now
+    // Simple query for now
     const [orders] = await db.execute(`
       SELECT
         o.id,
@@ -169,20 +177,44 @@ router.get("/:id", async (req, res) => {
 // Add item to order
 router.post("/:id/items", async (req, res) => {
   try {
-    const { product_id, size_id, color_id, grade_id, quantity, unit_price, type } = req.body;
+    const {
+      product_id,
+      size_id,
+      color_id,
+      grade_id,
+      quantity,
+      unit_price,
+      type,
+    } = req.body;
     const orderId = req.params.id;
 
     const total_price = quantity * unit_price;
 
-    const [result] = await db.execute(`
+    const [result] = await db.execute(
+      `
       INSERT INTO order_items (order_id, product_id, size_id, color_id, grade_id, quantity, unit_price, total_price, type)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [orderId, product_id, size_id || null, color_id || null, grade_id || null, quantity, unit_price, total_price, type || 'product']);
+    `,
+      [
+        orderId,
+        product_id,
+        size_id || null,
+        color_id || null,
+        grade_id || null,
+        quantity,
+        unit_price,
+        total_price,
+        type || "product",
+      ],
+    );
 
     // Update order total
     await updateOrderTotal(orderId);
 
-    res.json({ message: "Item added to order successfully", id: (result as any).insertId });
+    res.json({
+      message: "Item added to order successfully",
+      id: (result as any).insertId,
+    });
   } catch (error) {
     console.error("Error adding item to order:", error);
     res.status(500).json({ error: "Failed to add item to order" });
@@ -194,9 +226,12 @@ router.delete("/:orderId/items/:itemId", async (req, res) => {
   try {
     const { orderId, itemId } = req.params;
 
-    const [result] = await db.execute(`
+    const [result] = await db.execute(
+      `
       DELETE FROM order_items WHERE id = ? AND order_id = ?
-    `, [itemId, orderId]);
+    `,
+      [itemId, orderId],
+    );
 
     if ((result as any).affectedRows === 0) {
       return res.status(404).json({ error: "Item not found" });
@@ -220,11 +255,14 @@ router.patch("/:orderId/items/:itemId", async (req, res) => {
 
     const total_price = quantity * unit_price;
 
-    const [result] = await db.execute(`
+    const [result] = await db.execute(
+      `
       UPDATE order_items
       SET quantity = ?, unit_price = ?, total_price = ?
       WHERE id = ? AND order_id = ?
-    `, [quantity, unit_price, total_price, itemId, orderId]);
+    `,
+      [quantity, unit_price, total_price, itemId, orderId],
+    );
 
     if ((result as any).affectedRows === 0) {
       return res.status(404).json({ error: "Item not found" });
@@ -242,19 +280,25 @@ router.patch("/:orderId/items/:itemId", async (req, res) => {
 
 // Helper function to update order total
 async function updateOrderTotal(orderId: string) {
-  const [items] = await db.execute(`
+  const [items] = await db.execute(
+    `
     SELECT SUM(total_price) as total_amount
     FROM order_items
     WHERE order_id = ?
-  `, [orderId]);
+  `,
+    [orderId],
+  );
 
   const totalAmount = (items as any[])[0]?.total_amount || 0;
 
-  await db.execute(`
+  await db.execute(
+    `
     UPDATE orders
     SET total_amount = ?, updated_at = NOW()
     WHERE id = ?
-  `, [totalAmount, orderId]);
+  `,
+    [totalAmount, orderId],
+  );
 }
 
 // Update order status
@@ -328,7 +372,8 @@ router.get("/export/excel", async (req, res) => {
     for (const row of orderData as any[]) {
       if (row.grade_id && row.color_id) {
         // Get grade template to break down the kit
-        const [gradeTemplates] = await db.execute(`
+        const [gradeTemplates] = await db.execute(
+          `
           SELECT
             gt.size_id,
             gt.required_quantity,
@@ -340,22 +385,29 @@ router.get("/export/excel", async (req, res) => {
           LEFT JOIN colors c ON c.id = ?
           WHERE gt.grade_id = ?
           ORDER BY s.display_order
-        `, [row.color_id, row.grade_id]);
+        `,
+          [row.color_id, row.grade_id],
+        );
 
         // Calculate total items in kit and unit price per piece
         const totalPiecesInKit = (gradeTemplates as any[]).reduce(
-          (sum, template) => sum + template.required_quantity, 0
+          (sum, template) => sum + template.required_quantity,
+          0,
         );
         const pricePerPiece = row.preco_unitario_kit / totalPiecesInKit;
 
         // Create a row for each variant in the kit
         for (const template of gradeTemplates as any[]) {
-          const variantQuantity = template.required_quantity * row.quantidade_kits;
-          const variantTotalPrice = template.required_quantity * row.quantidade_kits * pricePerPiece;
+          const variantQuantity =
+            template.required_quantity * row.quantidade_kits;
+          const variantTotalPrice =
+            template.required_quantity * row.quantidade_kits * pricePerPiece;
 
           excelData.push({
             "ID Pedido": row.pedido_id,
-            "Data Pedido": new Date(row.data_pedido).toLocaleDateString("pt-BR"),
+            "Data Pedido": new Date(row.data_pedido).toLocaleDateString(
+              "pt-BR",
+            ),
             "Cliente Email": row.cliente_email,
             Status: row.status_pedido,
             "Valor Total Pedido": `R$ ${parseFloat(row.valor_total || 0).toFixed(2)}`,
@@ -457,7 +509,8 @@ router.get("/:id/export/excel", async (req, res) => {
     const orderId = req.params.id;
 
     // Get single order with detailed item information
-    const [orderData] = await db.execute(`
+    const [orderData] = await db.execute(
+      `
       SELECT
         o.id as pedido_id,
         o.customer_email as cliente_email,
@@ -482,7 +535,9 @@ router.get("/:id/export/excel", async (req, res) => {
       LEFT JOIN grade_vendida g ON oi.grade_id = g.id
       WHERE o.id = ? AND oi.type = 'grade'
       ORDER BY oi.id
-    `, [orderId]);
+    `,
+      [orderId],
+    );
 
     if ((orderData as any[]).length === 0) {
       return res.status(404).json({ error: "Order not found" });
@@ -494,7 +549,8 @@ router.get("/:id/export/excel", async (req, res) => {
     for (const row of orderData as any[]) {
       if (row.grade_id && row.color_id) {
         // Get grade template to break down the kit
-        const [gradeTemplates] = await db.execute(`
+        const [gradeTemplates] = await db.execute(
+          `
           SELECT
             gt.size_id,
             gt.required_quantity,
@@ -506,39 +562,46 @@ router.get("/:id/export/excel", async (req, res) => {
           LEFT JOIN colors c ON c.id = ?
           WHERE gt.grade_id = ?
           ORDER BY s.display_order
-        `, [row.color_id, row.grade_id]);
+        `,
+          [row.color_id, row.grade_id],
+        );
 
         // Calculate total items in kit and unit price per piece
         const totalPiecesInKit = (gradeTemplates as any[]).reduce(
-          (sum, template) => sum + template.required_quantity, 0
+          (sum, template) => sum + template.required_quantity,
+          0,
         );
         const pricePerPiece = row.preco_unitario_kit / totalPiecesInKit;
 
         // Create a row for each variant in the kit
         for (const template of gradeTemplates as any[]) {
-          const variantQuantity = template.required_quantity * row.quantidade_kits;
-          const variantTotalPrice = template.required_quantity * row.quantidade_kits * pricePerPiece;
+          const variantQuantity =
+            template.required_quantity * row.quantidade_kits;
+          const variantTotalPrice =
+            template.required_quantity * row.quantidade_kits * pricePerPiece;
 
           excelData.push({
-            'ID Pedido': row.pedido_id,
-            'Data Pedido': new Date(row.data_pedido).toLocaleDateString('pt-BR'),
-            'Cliente Email': row.cliente_email,
-            'Status': row.status_pedido,
-            'Valor Total Pedido': `R$ ${parseFloat(row.valor_total || 0).toFixed(2)}`,
-            'Produto': row.produto_nome || '',
-            'SKU Produto': row.produto_sku || '',
-            'SKU Pai': row.produto_parent_sku || '',
-            'SKU Variante': `${row.produto_sku}-${template.cor_nome}-${template.tamanho}`,
-            'Cor': template.cor_nome || '',
-            'Cor Hex': template.cor_hex || '',
-            'Tamanho': template.tamanho || '',
-            'Grade': row.grade_nome || '',
-            'Descrição Grade': row.grade_descricao || '',
-            'Qtd Kits': row.quantidade_kits || 0,
-            'Qtd Unidades': variantQuantity,
-            'Preço por Unidade': `R$ ${pricePerPiece.toFixed(2)}`,
-            'Preço Total Variante': `R$ ${variantTotalPrice.toFixed(2)}`,
-            'Tipo Item': 'variante_de_kit'
+            "ID Pedido": row.pedido_id,
+            "Data Pedido": new Date(row.data_pedido).toLocaleDateString(
+              "pt-BR",
+            ),
+            "Cliente Email": row.cliente_email,
+            Status: row.status_pedido,
+            "Valor Total Pedido": `R$ ${parseFloat(row.valor_total || 0).toFixed(2)}`,
+            Produto: row.produto_nome || "",
+            "SKU Produto": row.produto_sku || "",
+            "SKU Pai": row.produto_parent_sku || "",
+            "SKU Variante": `${row.produto_sku}-${template.cor_nome}-${template.tamanho}`,
+            Cor: template.cor_nome || "",
+            "Cor Hex": template.cor_hex || "",
+            Tamanho: template.tamanho || "",
+            Grade: row.grade_nome || "",
+            "Descrição Grade": row.grade_descricao || "",
+            "Qtd Kits": row.quantidade_kits || 0,
+            "Qtd Unidades": variantQuantity,
+            "Preço por Unidade": `R$ ${pricePerPiece.toFixed(2)}`,
+            "Preço Total Variante": `R$ ${variantTotalPrice.toFixed(2)}`,
+            "Tipo Item": "variante_de_kit",
           });
         }
       }
@@ -570,19 +633,22 @@ router.get("/:id/export/excel", async (req, res) => {
       { wch: 15 }, // Preço Total Variante
       { wch: 15 }, // Tipo Item
     ];
-    ws['!cols'] = colWidths;
+    ws["!cols"] = colWidths;
 
     // Add worksheet to workbook
     XLSX.utils.book_append_sheet(wb, ws, `Pedido ${orderId}`);
 
     // Generate Excel buffer
-    const excelBuffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+    const excelBuffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
 
     // Set response headers for file download
-    const filename = `pedido_${orderId}_${new Date().toISOString().split('T')[0]}.xlsx`;
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    res.setHeader('Content-Length', excelBuffer.length);
+    const filename = `pedido_${orderId}_${new Date().toISOString().split("T")[0]}.xlsx`;
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.setHeader("Content-Length", excelBuffer.length);
 
     // Send the Excel file
     res.send(excelBuffer);

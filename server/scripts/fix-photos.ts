@@ -50,7 +50,7 @@ const photoTemplates = [
   "https://picsum.photos/400/400?random=47",
   "https://picsum.photos/400/400?random=48",
   "https://picsum.photos/400/400?random=49",
-  "https://picsum.photos/400/400?random=50"
+  "https://picsum.photos/400/400?random=50",
 ];
 
 async function fixPhotos() {
@@ -58,29 +58,35 @@ async function fixPhotos() {
     console.log("🔧 Corrigindo URLs das fotos dos produtos...");
 
     // Get all products with photos
-    const [products] = await db.execute('SELECT id, name FROM products WHERE photo IS NOT NULL ORDER BY id');
-    
-    console.log(`📦 Encontrados ${(products as any[]).length} produtos com fotos`);
+    const [products] = await db.execute(
+      "SELECT id, name FROM products WHERE photo IS NOT NULL ORDER BY id",
+    );
+
+    console.log(
+      `📦 Encontrados ${(products as any[]).length} produtos com fotos`,
+    );
 
     for (let i = 0; i < (products as any[]).length; i++) {
       const product = (products as any[])[i];
       const newPhotoUrl = photoTemplates[i % photoTemplates.length];
-      
-      await db.execute(
-        'UPDATE products SET photo = ? WHERE id = ?',
-        [newPhotoUrl, product.id]
-      );
-      
+
+      await db.execute("UPDATE products SET photo = ? WHERE id = ?", [
+        newPhotoUrl,
+        product.id,
+      ]);
+
       console.log(`✅ ${i + 1}/${(products as any[]).length}: ${product.name}`);
     }
 
     console.log("✅ URLs das fotos corrigidas com sucesso!");
-    
+
     // Verify the update
     console.log("\n🔍 Verificando algumas fotos atualizadas:");
-    const [updated] = await db.execute('SELECT id, name, photo FROM products WHERE photo IS NOT NULL LIMIT 5');
+    const [updated] = await db.execute(
+      "SELECT id, name, photo FROM products WHERE photo IS NOT NULL LIMIT 5",
+    );
     console.table(updated);
-    
+
     process.exit(0);
   } catch (error) {
     console.error("❌ Erro ao corrigir fotos:", error);

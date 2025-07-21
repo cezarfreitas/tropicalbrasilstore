@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { StoreLayout } from '@/components/StoreLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ProductModal } from '@/components/ProductModal';
-import { ProductImage } from '@/components/ProductImage';
-import { Package, AlertCircle, ShoppingCart } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { StoreLayout } from "@/components/StoreLayout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ProductModal } from "@/components/ProductModal";
+import { ProductImage } from "@/components/ProductImage";
+import { Package, AlertCircle, ShoppingCart } from "lucide-react";
 
 interface StoreProduct {
   id: number;
@@ -25,8 +25,6 @@ interface StoreProduct {
   total_stock?: number;
 }
 
-
-
 interface PaginationInfo {
   currentPage: number;
   totalPages: number;
@@ -41,14 +39,16 @@ function Store() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
   const productsPerPage = 20;
-  
+
   // Modal
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(
+    null,
+  );
   const [showProductModal, setShowProductModal] = useState(false);
 
   // Fetch products function
@@ -81,27 +81,30 @@ function Store() {
           // Use XMLHttpRequest directly to bypass fetch interference
           response = await new Promise<Response>((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-            xhr.open('GET', endpoint, true);
-            xhr.setRequestHeader('Accept', 'application/json');
-            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.open("GET", endpoint, true);
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
 
             xhr.onload = () => {
               const headers = new Headers();
-              xhr.getAllResponseHeaders().split('\r\n').forEach(line => {
-                const [key, value] = line.split(': ');
-                if (key && value) headers.set(key, value);
-              });
+              xhr
+                .getAllResponseHeaders()
+                .split("\r\n")
+                .forEach((line) => {
+                  const [key, value] = line.split(": ");
+                  if (key && value) headers.set(key, value);
+                });
 
               const response = new Response(xhr.responseText, {
                 status: xhr.status,
                 statusText: xhr.statusText,
-                headers: headers
+                headers: headers,
               });
               resolve(response);
             };
 
-            xhr.onerror = () => reject(new Error('Network error'));
-            xhr.ontimeout = () => reject(new Error('Request timeout'));
+            xhr.onerror = () => reject(new Error("Network error"));
+            xhr.ontimeout = () => reject(new Error("Request timeout"));
             xhr.timeout = 8000;
 
             xhr.send();
@@ -118,7 +121,7 @@ function Store() {
           console.warn(`Error details:`, {
             name: (err as Error).name,
             message: (err as Error).message,
-            stack: (err as Error).stack
+            stack: (err as Error).stack,
           });
           lastError = err as Error;
           response = null;
@@ -126,7 +129,7 @@ function Store() {
       }
 
       if (!response || !response.ok) {
-        throw lastError || new Error('All endpoints failed');
+        throw lastError || new Error("All endpoints failed");
       }
 
       const data = await response.json();
@@ -136,9 +139,8 @@ function Store() {
       setPagination(data.pagination || null);
       setCurrentPage(page);
       setError(null);
-
     } catch (err: any) {
-      console.error('Error fetching products:', err);
+      console.error("Error fetching products:", err);
 
       // Simple retry for any error
       if (retryCount < 2) {
@@ -148,8 +150,8 @@ function Store() {
       }
 
       // Set error state after all retries
-      const errorMessage = err.message || 'Erro de conexão. Tente novamente.';
-      console.error('Final error after retries:', errorMessage);
+      const errorMessage = err.message || "Erro de conexão. Tente novamente.";
+      console.error("Final error after retries:", errorMessage);
       setError(errorMessage);
       setProducts([]);
       setPagination(null);
@@ -192,7 +194,9 @@ function Store() {
             Loja de Chinelos
           </h1>
           <p className="text-slate-600 mt-1">
-            {pagination ? `${pagination.totalProducts} produtos disponíveis` : 'Carregando produtos...'}
+            {pagination
+              ? `${pagination.totalProducts} produtos disponíveis`
+              : "Carregando produtos..."}
           </p>
         </div>
 
@@ -203,11 +207,17 @@ function Store() {
               <div className="flex items-center gap-3">
                 <AlertCircle className="h-5 w-5 text-red-600" />
                 <div>
-                  <p className="text-red-900 font-medium">Erro ao carregar produtos</p>
+                  <p className="text-red-900 font-medium">
+                    Erro ao carregar produtos
+                  </p>
                   <p className="text-red-700 text-sm">{error}</p>
                 </div>
                 <div className="flex gap-2 ml-auto">
-                  <Button onClick={() => fetchProducts(1, 0)} variant="outline" size="sm">
+                  <Button
+                    onClick={() => fetchProducts(1, 0)}
+                    variant="outline"
+                    size="sm"
+                  >
                     Tentar Novamente
                   </Button>
                   <Button
@@ -252,7 +262,7 @@ function Store() {
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                       />
-                      
+
                       {/* Category Badge */}
                       {product.category_name && (
                         <Badge
@@ -277,30 +287,44 @@ function Store() {
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
                             <div className="text-sm sm:text-lg font-bold text-primary">
-                              R$ {parseFloat(product.base_price.toString()).toFixed(2)}
+                              R${" "}
+                              {parseFloat(
+                                product.base_price.toString(),
+                              ).toFixed(2)}
                             </div>
                             {/* Colors on the right side */}
-                            {product.available_colors && product.available_colors.length > 0 && (
-                              <div className="flex items-center gap-1">
-                                <div className="flex gap-1">
-                                  {product.available_colors.slice(0, 5).map((color) => (
-                                    <div
-                                      key={color.id}
-                                      className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border border-slate-300"
-                                      style={{ backgroundColor: color.hex_code || '#999' }}
-                                      title={color.name}
-                                    />
-                                  ))}
-                                  {product.available_colors.length > 5 && (
-                                    <span className="text-xs text-slate-500">+{product.available_colors.length - 5}</span>
-                                  )}
+                            {product.available_colors &&
+                              product.available_colors.length > 0 && (
+                                <div className="flex items-center gap-1">
+                                  <div className="flex gap-1">
+                                    {product.available_colors
+                                      .slice(0, 5)
+                                      .map((color) => (
+                                        <div
+                                          key={color.id}
+                                          className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border border-slate-300"
+                                          style={{
+                                            backgroundColor:
+                                              color.hex_code || "#999",
+                                          }}
+                                          title={color.name}
+                                        />
+                                      ))}
+                                    {product.available_colors.length > 5 && (
+                                      <span className="text-xs text-slate-500">
+                                        +{product.available_colors.length - 5}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
-                            )}
+                              )}
                           </div>
                           {product.suggested_price && (
                             <div className="text-xs text-muted-foreground">
-                              Sugerido: R$ {parseFloat(product.suggested_price.toString()).toFixed(2)}
+                              Sugerido: R${" "}
+                              {parseFloat(
+                                product.suggested_price.toString(),
+                              ).toFixed(2)}
                             </div>
                           )}
                         </div>
@@ -344,21 +368,23 @@ function Store() {
                 >
                   Anterior
                 </Button>
-                
+
                 <div className="flex items-center gap-1">
-                  {[...Array(Math.min(5, pagination.totalPages))].map((_, i) => {
-                    const page = i + 1;
-                    return (
-                      <Button
-                        key={page}
-                        variant={page === currentPage ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handlePageChange(page)}
-                      >
-                        {page}
-                      </Button>
-                    );
-                  })}
+                  {[...Array(Math.min(5, pagination.totalPages))].map(
+                    (_, i) => {
+                      const page = i + 1;
+                      return (
+                        <Button
+                          key={page}
+                          variant={page === currentPage ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => handlePageChange(page)}
+                        >
+                          {page}
+                        </Button>
+                      );
+                    },
+                  )}
                 </div>
 
                 <Button
