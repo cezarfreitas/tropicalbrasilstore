@@ -85,55 +85,33 @@ export function ProductModal({
 
     setLoading(true);
     try {
-      // Create a robust fetch function to handle interference
-      const safeFetch = async (url: string, options?: RequestInit) => {
-        // Try native fetch first
-        try {
-          if (typeof window.fetch === 'function') {
-            return await window.fetch(url, options);
-          }
-        } catch (err) {
-          console.warn('Native fetch failed, trying XMLHttpRequest fallback:', err);
-        }
+      // Use XMLHttpRequest directly to bypass fetch interference
+      const response = await new Promise<Response>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `/api/store/products/${productId}`, true);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.setRequestHeader('Content-Type', 'application/json');
 
-        // Fallback to XMLHttpRequest
-        return new Promise<Response>((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open(options?.method || 'GET', url, true);
+        xhr.onload = () => {
+          const headers = new Headers();
+          xhr.getAllResponseHeaders().split('\r\n').forEach(line => {
+            const [key, value] = line.split(': ');
+            if (key && value) headers.set(key, value);
+          });
 
-          // Set headers
-          if (options?.headers) {
-            const headers = options.headers as Record<string, string>;
-            Object.entries(headers).forEach(([key, value]) => {
-              xhr.setRequestHeader(key, value);
-            });
-          }
+          const response = new Response(xhr.responseText, {
+            status: xhr.status,
+            statusText: xhr.statusText,
+            headers: headers
+          });
+          resolve(response);
+        };
 
-          xhr.onload = () => {
-            const response = new Response(xhr.responseText, {
-              status: xhr.status,
-              statusText: xhr.statusText,
-              headers: new Headers(xhr.getAllResponseHeaders().split('\r\n').reduce((acc, line) => {
-                const [key, value] = line.split(': ');
-                if (key && value) acc[key] = value;
-                return acc;
-              }, {} as Record<string, string>))
-            });
-            resolve(response);
-          };
+        xhr.onerror = () => reject(new Error('Network error'));
+        xhr.ontimeout = () => reject(new Error('Request timeout'));
+        xhr.timeout = 8000; // 8 second timeout
 
-          xhr.onerror = () => reject(new Error('Network error'));
-          xhr.ontimeout = () => reject(new Error('Request timeout'));
-          xhr.timeout = 10000;
-
-          xhr.send(options?.body);
-        });
-      };
-
-      const response = await safeFetch(`/api/store/products/${productId}`, {
-        headers: {
-          'Accept': 'application/json',
-        },
+        xhr.send();
       });
 
       if (response.ok) {
