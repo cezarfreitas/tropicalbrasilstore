@@ -209,17 +209,31 @@ export function LoginModal({ isOpen, onClose, onSuccess, onSwitchToRegister }: L
             </div>
           </div>
 
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => {
-              handleClose();
-              navigate("/cadastro");
-            }}
-          >
-            <UserPlus className="h-4 w-4 mr-2" />
-            Criar conta
-          </Button>
+                    {onSwitchToRegister ? (
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => {
+                handleClose();
+                onSwitchToRegister();
+              }}
+            >
+              <UserPlus className="h-4 w-4 mr-2" />
+              Criar conta
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => {
+                handleClose();
+                navigate("/cadastro");
+              }}
+            >
+              <UserPlus className="h-4 w-4 mr-2" />
+              Criar conta
+            </Button>
+          )}
 
           <div className="text-center">
             <p className="text-xs text-muted-foreground">
