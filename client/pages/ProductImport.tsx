@@ -1001,7 +1001,7 @@ export default function ProductImport() {
                   <TableHead>Preço Base</TableHead>
                   <TableHead>Preço Venda</TableHead>
                   <TableHead>Foto</TableHead>
-                  <TableHead>Cores</TableHead>
+                  <TableHead>Cor</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
