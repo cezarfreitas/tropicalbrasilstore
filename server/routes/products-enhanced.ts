@@ -139,12 +139,13 @@ router.get("/:id", async (req, res) => {
 // Create new product (simplified)
 router.post("/", async (req, res) => {
   try {
-    const {
+        const {
       name,
       description,
       category_id,
       base_price,
       sku,
+      parent_sku,
     } = req.body;
 
     if (!name) {
