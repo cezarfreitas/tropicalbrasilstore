@@ -161,10 +161,11 @@ const produtoCompleto = {
 
 ## Vantagens
 
-✅ **Criação Automática**: Categorias, cores e tamanhos são criados automaticamente  
-✅ **Flexibilidade**: Use nomes intuitivos ao invés de IDs  
-✅ **Relatório**: Retorna quais recursos foram criados  
-✅ **Validação**: Verifica dados obrigatórios  
+✅ **Criação Automática**: Categorias, cores e tamanhos são criados automaticamente
+✅ **Flexibilidade**: Use nomes intuitivos ao invés de IDs
+✅ **Download Automático**: Fotos são baixadas e salvas automaticamente
+✅ **Relatório**: Retorna quais recursos foram criados
+✅ **Validação**: Verifica dados obrigatórios
 ✅ **Transação**: Operação atômica (tudo ou nada)
 
 ## Erros Comuns
