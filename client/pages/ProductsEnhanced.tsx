@@ -1083,16 +1083,16 @@ export default function ProductsEnhanced() {
                         <div className="space-y-3 mt-3">
                           <div>
                             <Label className="text-sm font-medium">Grupos Rápidos:</Label>
-                                                                                    <div className="flex flex-wrap gap-2 mt-2">
-                              {Object.entries(SIZE_GROUPS).map(([key, group]) => {
-                                const status = getSizeGroupStatus(key as keyof typeof SIZE_GROUPS);
+                                                                                                                                                                        <div className="flex flex-wrap gap-2 mt-2">
+                              {sizeGroups.filter(group => group.active).map((group) => {
+                                const status = getSizeGroupStatus(group.id);
                                 return (
                                   <Button
-                                    key={key}
+                                    key={group.id}
                                     type="button"
                                     variant={status.isComplete ? "default" : status.isPartial ? "secondary" : "outline"}
                                     size="sm"
-                                    onClick={() => selectSizeGroup(key as keyof typeof SIZE_GROUPS)}
+                                    onClick={() => selectSizeGroup(group.id)}
                                     className="flex items-center gap-2"
                                   >
                                     <span>{group.icon}</span>
