@@ -371,6 +371,7 @@ export default function ProductImport() {
   };
 
   const exportProducts = async () => {
+    setIsExporting(true);
     try {
       toast({
         title: "Preparando Exportação",
@@ -402,6 +403,8 @@ export default function ProductImport() {
         description: "Não foi possível exportar os produtos",
         variant: "destructive",
       });
+    } finally {
+      setIsExporting(false);
     }
   };
 
