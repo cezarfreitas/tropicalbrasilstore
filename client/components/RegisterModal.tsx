@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Package, Phone, User, Building, MapPin, LogIn } from "lucide-react";
+import { Package, Phone, User, LogIn } from "lucide-react";
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -15,7 +14,7 @@ interface RegisterModalProps {
 }
 
 export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
-    const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     whatsapp: "",
@@ -43,7 +42,7 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
     setFormData({ ...formData, whatsapp: formatted });
   };
 
-    const resetForm = () => {
+  const resetForm = () => {
     setFormData({
       name: "",
       email: "",
@@ -120,7 +119,7 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <div className="inline-flex items-center justify-center w-8 h-8 bg-primary rounded-lg">
@@ -138,133 +137,53 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Personal Information */}
-            <div className="space-y-4">
-              <h4 className="text-sm font-medium text-gray-900">Informações Pessoais</h4>
-              
-              <div className="space-y-2">
-                <Label htmlFor="modal-name">Nome Completo</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="modal-name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Seu nome completo"
-                    className="pl-10"
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="modal-email">Email</Label>
+            <div className="space-y-2">
+              <Label htmlFor="modal-name">Nome Completo</Label>
+              <div className="relative">
+                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="modal-email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="seu@email.com"
+                  id="modal-name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="Seu nome completo"
+                  className="pl-10"
                   required
                   disabled={isLoading}
                 />
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="modal-register-whatsapp">WhatsApp</Label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="modal-register-whatsapp"
-                    type="tel"
-                    value={formData.whatsapp}
-                    onChange={(e) => handleWhatsAppChange(e.target.value)}
-                    placeholder="(11) 99999-9999"
-                    className="pl-10"
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Será usado para login e comunicação
-                </p>
-              </div>
             </div>
 
-            {/* Business Information */}
-            <div className="space-y-4">
-              <h4 className="text-sm font-medium text-gray-900">Informações do Negócio</h4>
-              
-              <div className="space-y-2">
-                <Label htmlFor="modal-business">Tipo de Negócio</Label>
-                <div className="relative">
-                  <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="modal-business"
-                    value={formData.business_type}
-                    onChange={(e) => setFormData({ ...formData, business_type: e.target.value })}
-                    placeholder="Ex: Loja de calçados, Revendedor, etc."
-                    className="pl-10"
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="modal-email">Email</Label>
+              <Input
+                id="modal-email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="seu@email.com"
+                required
+                disabled={isLoading}
+              />
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="modal-address">Endereço</Label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="modal-address"
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    placeholder="Rua, Avenida, etc."
-                    className="pl-10"
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="modal-city">Cidade</Label>
-                  <Input
-                    id="modal-city"
-                    value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    placeholder="São Paulo"
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="modal-state">Estado</Label>
-                  <Input
-                    id="modal-state"
-                    value={formData.state}
-                    onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                    placeholder="SP"
-                    maxLength={2}
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="modal-notes">Observações (Opcional)</Label>
-                <Textarea
-                  id="modal-notes"
-                  value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  placeholder="Informações adicionais sobre seu negócio..."
-                  rows={3}
+            <div className="space-y-2">
+              <Label htmlFor="modal-register-whatsapp">WhatsApp</Label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="modal-register-whatsapp"
+                  type="tel"
+                  value={formData.whatsapp}
+                  onChange={(e) => handleWhatsAppChange(e.target.value)}
+                  placeholder="(11) 99999-9999"
+                  className="pl-10"
+                  required
                   disabled={isLoading}
                 />
               </div>
+              <p className="text-xs text-muted-foreground">
+                Será usado para login e comunicação
+              </p>
             </div>
 
             <Button
