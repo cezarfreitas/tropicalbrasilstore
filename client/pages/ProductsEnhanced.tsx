@@ -154,9 +154,14 @@ export default function ProductsEnhanced() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
     const [sortBy, setSortBy] = useState("name");
-    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+      const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [toggleLoading, setToggleLoading] = useState<number | null>(null);
   const [toggleSellLoading, setToggleSellLoading] = useState<number | null>(null);
+
+  // Estados para criação simplificada de variantes
+  const [selectedColorForVariants, setSelectedColorForVariants] = useState<number | null>(null);
+  const [selectedSizesForVariants, setSelectedSizesForVariants] = useState<number[]>([]);
+  const [variantStock, setVariantStock] = useState<number>(0);
 
   const [editingProduct, setEditingProduct] = useState<EnhancedProduct | null>(
     null,
