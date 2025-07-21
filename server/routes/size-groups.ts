@@ -82,7 +82,7 @@ router.post("/", async (req, res) => {
     const insertId = (result as any).insertId;
 
     // Return the created size group
-    const [rows] = await connection.execute(
+    const [rows] = await db.execute(
       `
       SELECT id, name, description, icon, sizes, active, created_at, updated_at 
       FROM size_groups 
