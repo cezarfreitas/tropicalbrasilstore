@@ -166,14 +166,14 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               </nav>
             </div>
 
-                        <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-3">
               {/* Authentication Status */}
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-9 sm:h-10">
-                      <User className="h-4 w-4 sm:mr-2" />
-                      <span className="hidden sm:inline">
+                    <Button variant="ghost" size="sm" className="h-10">
+                      <User className="h-4 w-4 mr-2" />
+                      <span>
                         {customer?.name || "Cliente"}
                       </span>
                     </Button>
@@ -211,23 +211,23 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-9 sm:h-10"
+                  className="h-10"
                   onClick={() => setLoginModalOpen(true)}
                 >
-                  <LogIn className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Entrar</span>
+                  <LogIn className="h-4 w-4 mr-2" />
+                  <span>Entrar</span>
                 </Button>
               )}
 
               {/* Cart */}
               <Link to="/loja/carrinho">
-                <Button variant="outline" size="sm" className="relative h-9 sm:h-10">
-                  <ShoppingCart className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Carrinho</span>
+                <Button variant="outline" size="sm" className="relative h-10">
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  <span>Carrinho</span>
                   {totalItems > 0 && (
                     <Badge
                       variant="destructive"
-                      className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 h-4 w-4 sm:h-5 sm:w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                      className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
                     >
                       {totalItems}
                     </Badge>
@@ -238,11 +238,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               {/* Admin Link */}
               <Link
                 to="/admin"
-                className="hidden sm:block text-sm text-muted-foreground hover:text-foreground"
+                className="text-sm text-muted-foreground hover:text-foreground"
               >
                 Admin
               </Link>
             </div>
+          </div>
           </div>
         </div>
       </header>
