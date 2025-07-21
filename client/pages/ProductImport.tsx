@@ -399,9 +399,7 @@ export default function ProductImport() {
         description: "Gerando arquivo de produtos...",
       });
 
-      const response = await fetch(
-        `/api/import/export-products?filter=${filter}`,
-      );
+      const response = await fetch(`/api/import/export-products?filter=${filter}`);
 
       if (response.ok) {
         // Create download link
@@ -409,7 +407,8 @@ export default function ProductImport() {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `produtos_exportados_${new Date().toISOString().split("T")[0]}.csv`;
+        const filterSuffix = filter === 'active' ? '_ativos' : '';
+        a.download = `produtos_exportados${filterSuffix}_${new Date().toISOString().split("T")[0]}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
 
