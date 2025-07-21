@@ -285,7 +285,7 @@ export function ProductModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-sm mx-auto p-0 gap-0 overflow-hidden rounded-2xl">
+      <DialogContent className="max-w-sm mx-auto p-0 gap-0 overflow-hidden rounded-2xl [&>button]:hidden">
         <VisuallyHidden>
           <DialogTitle>
             {product ? `Adicionar ${product.name} ao carrinho` : 'Adicionar produto ao carrinho'}
