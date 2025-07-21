@@ -143,8 +143,11 @@ export default function ProductsEnhanced() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [gradeDialogOpen, setGradeDialogOpen] = useState(false);
-    // Removed variant view mode - only showing collapsed by color
+      // Removed variant view mode - only showing collapsed by color
   const [variantGeneratorVisible, setVariantGeneratorVisible] = useState(false);
+
+  // Hook para grupos de tamanhos do banco de dados
+  const { sizeGroups } = useSizeGroups();
 
   // Pagination and filtering states
   const [currentPage, setCurrentPage] = useState(1);
@@ -404,7 +407,7 @@ export default function ProductsEnhanced() {
           title: "Sucesso",
           description: data.message,
         });
-        // Não precisa fazer fetchProducts() - j�� atualizou o estado local
+        // Não precisa fazer fetchProducts() - já atualizou o estado local
       } else {
         // Se falhou, reverte o estado local
         setProducts(prevProducts =>
