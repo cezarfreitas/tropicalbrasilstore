@@ -138,6 +138,11 @@ router.patch("/:email", async (req, res) => {
       updateValues.push(whatsapp);
     }
 
+    if (minimum_order !== undefined) {
+      updateFields.push("minimum_order = ?");
+      updateValues.push(minimum_order);
+    }
+
     updateFields.push("updated_at = NOW()");
     updateValues.push(decodeURIComponent(req.params.email));
 
