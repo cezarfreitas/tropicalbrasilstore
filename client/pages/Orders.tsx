@@ -791,7 +791,26 @@ export default function Orders() {
                           </div>
                         ) : null}
                       </DialogContent>
-                    </Dialog>
+                                        </Dialog>
+
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => exportSingleOrder(order.id)}
+                        title="Exportar pedido"
+                      >
+                        <FileSpreadsheet className="h-4 w-4" />
+                      </Button>
+
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleEditOrder(order)}
+                        title="Editar pedido"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
