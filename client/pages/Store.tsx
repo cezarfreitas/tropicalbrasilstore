@@ -674,7 +674,7 @@ export default function Store() {
                         )}
                       </div>
                                             <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
-                        {/* Header - Nome e Categoria */}
+                                                {/* Header - Nome */}
                         <div className="space-y-2">
                                                     <h3 className="font-semibold text-xs sm:text-sm line-clamp-2 leading-tight min-h-[28px] sm:min-h-[32px]">
                             {product.name}
