@@ -58,7 +58,8 @@ router.get("/filtered", async (req, res) => {
     const sortColumn = validSortColumns.includes(String(sortBy)) ? sortBy : "created_at";
     const sortDirection = sortOrder === "asc" ? "ASC" : "DESC";
 
-    const [orders] = await db.execute(`
+        // Build the complete query
+    const query = `
       SELECT
         o.id,
         o.customer_email,
@@ -73,9 +74,11 @@ router.get("/filtered", async (req, res) => {
       LEFT JOIN order_items oi ON o.id = oi.order_id
       ${whereClause}
       GROUP BY o.id
-      ORDER BY o.${sortColumn} ${sortDirection}
+      ORDER BY ${sortColumn} ${sortDirection}
       LIMIT ? OFFSET ?
-    `, [...params, Number(limit), offset]);
+    `;
+
+    const [orders] = await db.execute(query, [...params, Number(limit), offset]);
 
     res.json(orders);
   } catch (error) {
