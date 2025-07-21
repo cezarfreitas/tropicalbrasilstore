@@ -115,9 +115,36 @@ router.get("/products-paginated", async (req, res) => {
         hasPrev: page > 1
       }
     });
-  } catch (error) {
+    } catch (error) {
     console.error("Error fetching paginated store products:", error);
     res.status(500).json({ error: "Failed to fetch products" });
+  }
+});
+
+// Get categories for store filtering
+router.get("/categories", async (req, res) => {
+  try {
+    const [categories] = await db.execute(`
+      SELECT DISTINCT
+        c.id,
+        c.name,
+        c.description
+      FROM categories c
+      INNER JOIN products p ON c.id = p.category_id
+      WHERE p.active = true
+      ORDER BY c.name
+    `);
+
+    // Add "all" category
+    const allCategories = [
+      { id: "all", name: "Todas as Categorias", description: "Ver todos os produtos" },
+      ...categories
+    ];
+
+    res.json(allCategories);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ error: "Failed to fetch categories" });
   }
 });
 
