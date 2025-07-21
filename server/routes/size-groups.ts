@@ -82,9 +82,9 @@ router.post("/", async (req, res) => {
       WHERE id = ?
     `, [insertId]);
     
-    const createdGroup = {
+        const createdGroup = {
       ...(rows as any[])[0],
-      sizes: JSON.parse((rows as any[])[0].sizes || '[]')
+      sizes: (rows as any[])[0].sizes || []
     };
     
     res.status(201).json(createdGroup);
