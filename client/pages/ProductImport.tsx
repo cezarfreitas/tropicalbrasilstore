@@ -391,7 +391,7 @@ export default function ProductImport() {
     window.URL.revokeObjectURL(url);
   };
 
-  const exportProducts = async () => {
+  const exportProducts = async (filter: string = "all") => {
     setIsExporting(true);
     try {
       toast({
@@ -399,7 +399,7 @@ export default function ProductImport() {
         description: "Gerando arquivo de produtos...",
       });
 
-      const response = await fetch("/api/import/export-products");
+      const response = await fetch(`/api/import/export-products?filter=${filter}`);
 
       if (response.ok) {
         // Create download link
