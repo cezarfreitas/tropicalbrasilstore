@@ -55,8 +55,9 @@ export function createServer() {
       await createNotificationSettings(); // Settings tables
       await addSellWithoutStockColumn(); // Add sell without stock functionality
       await addParentSkuColumn(); // Add parent SKU for variant grouping
-            await addSizeGroupsTable(); // Add size groups table and default data
+                        await addSizeGroupsTable(); // Add size groups table and default data
             await createProductVariantsTable(); // Create product variants table
+            await addPriceOverrideColumn(); // Add price_override column to product_variants
             await redesignGradeSystem(); // Create grade templates and product color grades tables
       await createStoreSettingsTable(); // Create store settings table
       await fixOrdersTable(); // Fix any missing columns
