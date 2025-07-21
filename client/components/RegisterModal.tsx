@@ -15,15 +15,10 @@ interface RegisterModalProps {
 }
 
 export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
-  const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
     name: "",
     email: "",
     whatsapp: "",
-    business_type: "",
-    address: "",
-    city: "",
-    state: "",
-    notes: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
