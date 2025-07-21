@@ -847,13 +847,46 @@ export default function Customers() {
                             </>
                           ) : (
                             <>
-                              <Button
+                                                            <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => startEdit(customer)}
                               >
                                 <Edit2 className="h-4 w-4" />
                               </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={deletingCustomer === customer.email}
+                                  >
+                                    {deletingCustomer === customer.email ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <Trash2 className="h-4 w-4 text-red-600" />
+                                    )}
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Deletar Cliente</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Tem certeza que deseja deletar o cliente {customer.name}?
+                                      Esta ação não pode ser desfeita e todos os dados do cliente serão perdidos.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => deleteCustomer(customer.email)}
+                                      className="bg-red-600 hover:bg-red-700"
+                                    >
+                                      Deletar
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
                               <Dialog>
                                 <DialogTrigger asChild>
                                   <Button
