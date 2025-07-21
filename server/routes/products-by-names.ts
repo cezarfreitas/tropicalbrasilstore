@@ -185,6 +185,7 @@ router.post("/", async (req, res) => {
       sku,
       parent_sku,
       photo,
+      photo_url,
       variants,
       size_group_name,
     }: ProductByNamesRequest = req.body;
@@ -210,9 +211,26 @@ router.post("/", async (req, res) => {
       sizeGroupId = await getOrCreateSizeGroup(connection, size_group_name, sizeNames);
     }
 
+    // Handle photo download if photo_url is provided
+    let photoPath = photo || null;
+    let photoDownloaded = false;
+
+    if (photo_url && !photo) {
+      try {
+        const downloadedPath = await downloadImage(photo_url, name);
+        if (downloadedPath) {
+          photoPath = downloadedPath;
+          photoDownloaded = true;
+        }
+      } catch (error) {
+        console.error("Error downloading image:", error);
+        // Continue without photo if download fails
+      }
+    }
+
     // Create the product
     const [result] = await connection.execute(
-      `INSERT INTO products (name, description, category_id, base_price, sale_price, suggested_price, sku, parent_sku, photo, active) 
+      `INSERT INTO products (name, description, category_id, base_price, sale_price, suggested_price, sku, parent_sku, photo, active)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         name,
@@ -223,7 +241,7 @@ router.post("/", async (req, res) => {
         suggested_price || null,
         sku || null,
         parent_sku || null,
-        photo || null,
+        photoPath,
         true,
       ]
     );
