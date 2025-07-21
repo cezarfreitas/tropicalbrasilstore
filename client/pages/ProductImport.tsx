@@ -460,6 +460,96 @@ export default function ProductImport() {
           </TabsTrigger>
         </TabsList>
 
+        <TabsContent value="export">
+          <Card>
+            <CardHeader>
+              <CardTitle>Exportar Produtos Existentes</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Exporte todos os produtos cadastrados para um arquivo CSV
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold mb-3">Informações Incluídas na Exportação:</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      Nome do produto e descrição
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      Categoria e grupo de tamanhos
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      Preços (base, venda, sugerido)
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      SKU e código pai
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      URLs das fotos dos produtos
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      Cores disponíveis
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      Estoque médio por variante
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold mb-3">Casos de Uso:</h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li>• Backup completo dos produtos</li>
+                    <li>• Edição em massa no Excel</li>
+                    <li>• Migração para outro sistema</li>
+                    <li>• Análise de dados de produtos</li>
+                    <li>• Compartilhamento de catálogo</li>
+                    <li>• Importação em outro ambiente</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="border-t pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold">Exportar Todos os Produtos</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Gera um arquivo CSV com todos os produtos cadastrados no sistema
+                    </p>
+                  </div>
+                  <Button onClick={exportProducts} size="lg">
+                    <Download className="h-5 w-5 mr-2" />
+                    Exportar Produtos
+                  </Button>
+                </div>
+              </div>
+
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5" />
+                  <div>
+                    <h5 className="font-medium text-amber-900">Dicas para Exportação</h5>
+                    <ul className="text-sm text-amber-800 mt-2 space-y-1">
+                      <li>• O arquivo exportado pode ser editado e re-importado</li>
+                      <li>• URLs das fotos são geradas automaticamente</li>
+                      <li>• Formato compatível com Excel e Google Sheets</li>
+                      <li>• Codificação UTF-8 para caracteres especiais</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="upload">
           <Card>
             <CardHeader>
