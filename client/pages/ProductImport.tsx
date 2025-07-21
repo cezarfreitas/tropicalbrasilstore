@@ -576,8 +576,8 @@ export default function ProductImport() {
                       <div>
                         <h4 className="font-semibold">Todos os Produtos</h4>
                         <p className="text-sm text-muted-foreground">
-                          {productCount > 0
-                            ? `${productCount} produtos`
+                          {exportStats.total_products > 0
+                            ? `${exportStats.total_products} produtos`
                             : "Todos os produtos"}{" "}
                           (ativos e inativos)
                         </p>
