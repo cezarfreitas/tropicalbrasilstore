@@ -121,9 +121,9 @@ router.put("/:id", async (req, res) => {
       });
     }
 
-    const [result] = await connection.execute(
+    const [result] = await db.execute(
       `
-      UPDATE size_groups 
+      UPDATE size_groups
       SET name = ?, description = ?, icon = ?, sizes = ?, active = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `,
