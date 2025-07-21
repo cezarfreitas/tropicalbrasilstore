@@ -578,7 +578,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold">Total:</span>
                     <span className="text-xl font-bold text-orange-600">
-                      R$ {items.reduce((total, item) => total + item.totalPrice * item.quantity, 0).toFixed(2)}
+                      R$ {totalPrice.toFixed(2)}
                     </span>
                   </div>
 
