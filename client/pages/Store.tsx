@@ -297,10 +297,9 @@ export default function Store() {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
   const [maxPrice, setMaxPrice] = useState<number>(200);
 
-  // Filter options
+    // Filter options
   const [categories, setCategories] = useState<FilterOption[]>([]);
   const [colors, setColors] = useState<FilterOption[]>([]);
-  const [allProducts, setAllProducts] = useState<StoreProduct[]>([]);
 
   useEffect(() => {
     fetchProducts();
