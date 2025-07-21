@@ -419,14 +419,22 @@ export default function Store() {
 
                   // Set empty state as fallback after all retries failed
       setFetchError("Não foi possível carregar os produtos. Verifique sua conexão e tente novamente.");
+
+      // Provide a minimal fallback structure
       setFilteredProducts([]);
       setCategories([
         {
           id: "all",
           name: "Todas as Categorias",
         },
+        {
+          id: "1",
+          name: "Chinelos",
+        },
       ]);
-      setColors([]);
+      setColors([
+        { id: "all", name: "Todas as Cores" },
+      ]);
       setMaxPrice(100);
       setPriceRange([0, 100]);
     } finally {
