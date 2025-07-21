@@ -830,6 +830,28 @@ export default function Customers() {
                         )}
                       </TableCell>
                       <TableCell>
+                        {editingCustomer === customer.email ? (
+                          <Input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={editForm.minimum_order}
+                            onChange={(e) =>
+                              setEditForm({
+                                ...editForm,
+                                minimum_order: parseFloat(e.target.value) || 0,
+                              })
+                            }
+                            className="h-8 w-24"
+                            placeholder="0.00"
+                          />
+                        ) : (
+                          <div className="text-sm">
+                            {formatCurrency(customer.minimum_order || 0)}
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
                         <div>
                           <div className="font-medium">
                             {customer.total_orders}
