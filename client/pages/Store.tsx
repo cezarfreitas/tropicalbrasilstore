@@ -413,6 +413,8 @@ export default function Store() {
         (error instanceof Error && error.name === 'AbortError')
       )) {
         console.log(`Retrying fetch... (attempt ${retryCount + 1})`);
+        // Don't return here - let the finally block run to clean up loading state
+        setLoading(false); // Temporarily set to false before retry
         setTimeout(() => fetchProducts(retryCount + 1, retryCount === 1), 1000 * (retryCount + 1)); // Use backup on second retry
         return;
       }
