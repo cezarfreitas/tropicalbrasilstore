@@ -11,52 +11,34 @@ router.get("/summary", async (req, res) => {
     const [colorCount] = await db.execute("SELECT COUNT(*) as count FROM colors");
     const [sizeCount] = await db.execute("SELECT COUNT(*) as count FROM sizes");
 
-    // Get sample products with variants
+    // Get sample products with basic info
     const [sampleProducts] = await db.execute(`
       SELECT 
         p.id,
         p.name,
         p.sku,
         p.base_price,
-        COUNT(pv.id) as variant_count,
-        GROUP_CONCAT(DISTINCT c.name ORDER BY c.name SEPARATOR ', ') as available_colors,
-        GROUP_CONCAT(DISTINCT s.size ORDER BY s.display_order SEPARATOR ', ') as available_sizes
+        COUNT(pv.id) as variant_count
       FROM products p
       LEFT JOIN product_variants pv ON p.id = pv.product_id
-      LEFT JOIN colors c ON pv.color_id = c.id
-      LEFT JOIN sizes s ON pv.size_id = s.id
       WHERE p.active = true
       GROUP BY p.id, p.name, p.sku, p.base_price
       ORDER BY p.name
       LIMIT 5
     `);
 
-    // Get stock distribution
-    const [stockStats] = await db.execute(`
-      SELECT 
-        CASE 
-          WHEN stock = 0 THEN 'Sem estoque'
-          WHEN stock BETWEEN 1 AND 10 THEN 'Estoque baixo (1-10)'
-          WHEN stock BETWEEN 11 AND 30 THEN 'Estoque médio (11-30)'
-          WHEN stock > 30 THEN 'Estoque alto (30+)'
-        END as stock_level,
-        COUNT(*) as variant_count
-      FROM product_variants
-      GROUP BY 
-        CASE 
-          WHEN stock = 0 THEN 'Sem estoque'
-          WHEN stock BETWEEN 1 AND 10 THEN 'Estoque baixo (1-10)'
-          WHEN stock BETWEEN 11 AND 30 THEN 'Estoque médio (11-30)'
-          WHEN stock > 30 THEN 'Estoque alto (30+)'
-        END
-      ORDER BY 
-        CASE 
-          WHEN stock = 0 THEN 1
-          WHEN stock BETWEEN 1 AND 10 THEN 2
-          WHEN stock BETWEEN 11 AND 30 THEN 3
-          WHEN stock > 30 THEN 4
-        END
-    `);
+    // Get simple stock statistics
+    const [zeroStock] = await db.execute("SELECT COUNT(*) as count FROM product_variants WHERE stock = 0");
+    const [lowStock] = await db.execute("SELECT COUNT(*) as count FROM product_variants WHERE stock BETWEEN 1 AND 10");
+    const [mediumStock] = await db.execute("SELECT COUNT(*) as count FROM product_variants WHERE stock BETWEEN 11 AND 30");
+    const [highStock] = await db.execute("SELECT COUNT(*) as count FROM product_variants WHERE stock > 30");
+
+    const stockDistribution = [
+      { stock_level: "Sem estoque", variant_count: (zeroStock as any)[0].count },
+      { stock_level: "Estoque baixo (1-10)", variant_count: (lowStock as any)[0].count },
+      { stock_level: "Estoque médio (11-30)", variant_count: (mediumStock as any)[0].count },
+      { stock_level: "Estoque alto (30+)", variant_count: (highStock as any)[0].count }
+    ];
 
     res.json({
       summary: {
@@ -67,7 +49,7 @@ router.get("/summary", async (req, res) => {
         avg_variants_per_product: Math.round((variantCount as any)[0].count / (productCount as any)[0].count)
       },
       sample_products: sampleProducts,
-      stock_distribution: stockStats
+      stock_distribution: stockDistribution
     });
   } catch (error) {
     console.error("❌ Error getting product verification data:", error);
