@@ -143,13 +143,42 @@ router.get("/:id", async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    const product = (productRows as any)[0];
+        const product = (productRows as any)[0];
 
-    // Set default values for fields that don't exist in current schema
-    product.variants = [];
-    product.grades = [];
-    product.variant_count = 0;
-    product.total_stock = 0;
+    // Get product variants
+    const [variantRows] = await db.execute(
+      `SELECT
+        pv.id,
+        pv.size_id,
+        pv.color_id,
+        pv.stock,
+        pv.price_override,
+        s.size,
+        s.display_order,
+        c.name as color_name,
+        c.hex_code
+       FROM product_variants pv
+       LEFT JOIN sizes s ON pv.size_id = s.id
+       LEFT JOIN colors c ON pv.color_id = c.id
+       WHERE pv.product_id = ?
+       ORDER BY s.display_order, c.name`,
+      [req.params.id],
+    );
+
+    // Get product grades (if they exist)
+    const [gradeRows] = await db.execute(
+      `SELECT g.id, g.name, g.description, g.active
+       FROM grade_templates g
+       JOIN product_color_grades pcg ON g.id = pcg.grade_template_id
+       WHERE pcg.product_id = ?
+       GROUP BY g.id`,
+      [req.params.id],
+    );
+
+    product.variants = variantRows;
+    product.grades = gradeRows;
+    product.variant_count = (variantRows as any[]).length;
+    product.total_stock = (variantRows as any[]).reduce((sum, variant) => sum + (variant.stock || 0), 0);
 
     res.json(product);
   } catch (error) {
