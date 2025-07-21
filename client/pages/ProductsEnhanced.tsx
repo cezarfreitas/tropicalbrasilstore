@@ -90,6 +90,7 @@ interface EnhancedProduct {
   photo?: string;
   stock: number;
   active: boolean;
+  sell_without_stock: boolean;
   variant_count: number;
   total_stock: number;
   variants?: ProductVariant[];
