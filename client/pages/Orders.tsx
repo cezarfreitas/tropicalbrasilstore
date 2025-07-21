@@ -827,8 +827,278 @@ export default function Orders() {
               </p>
             </div>
           )}
-        </CardContent>
+                </CardContent>
       </Card>
+
+      {/* Edit Order Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              Editar Pedido #{editingOrder?.id}
+            </DialogTitle>
+          </DialogHeader>
+          {editingOrder && (
+            <EditOrderForm
+              order={editingOrder}
+              onUpdate={() => {
+                fetchFilteredOrders();
+                fetchStats();
+                setEditDialogOpen(false);
+              }}
+              onCancel={() => setEditDialogOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+// Edit Order Form Component
+function EditOrderForm({
+  order,
+  onUpdate,
+  onCancel
+}: {
+  order: OrderDetails;
+  onUpdate: () => void;
+  onCancel: () => void;
+}) {
+  const [items, setItems] = useState(order.items);
+  const [products, setProducts] = useState<any[]>([]);
+  const [colors, setColors] = useState<any[]>([]);
+  const [sizes, setSizes] = useState<any[]>([]);
+  const [grades, setGrades] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchProducts();
+    fetchColors();
+    fetchSizes();
+    fetchGrades();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("/api/products");
+      if (response.ok) {
+        setProducts(await response.json());
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const fetchColors = async () => {
+    try {
+      const response = await fetch("/api/colors");
+      if (response.ok) {
+        setColors(await response.json());
+      }
+    } catch (error) {
+      console.error("Error fetching colors:", error);
+    }
+  };
+
+  const fetchSizes = async () => {
+    try {
+      const response = await fetch("/api/sizes");
+      if (response.ok) {
+        setSizes(await response.json());
+      }
+    } catch (error) {
+      console.error("Error fetching sizes:", error);
+    }
+  };
+
+  const fetchGrades = async () => {
+    try {
+      const response = await fetch("/api/grades-redesigned");
+      if (response.ok) {
+        setGrades(await response.json());
+      }
+    } catch (error) {
+      console.error("Error fetching grades:", error);
+    }
+  };
+
+  const updateItem = async (itemId: number, quantity: number, unit_price: number) => {
+    try {
+      const response = await fetch(`/api/admin/orders/${order.id}/items/${itemId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ quantity, unit_price }),
+      });
+
+      if (response.ok) {
+        setItems(items.map(item =>
+          item.id === itemId
+            ? { ...item, quantity, unit_price, total_price: quantity * unit_price }
+            : item
+        ));
+        toast({
+          title: "Sucesso",
+          description: "Item atualizado com sucesso",
+        });
+      } else {
+        throw new Error("Erro ao atualizar item");
+      }
+    } catch (error) {
+      console.error("Error updating item:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível atualizar o item",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const removeItem = async (itemId: number) => {
+    if (!confirm("Tem certeza que deseja remover este item?")) return;
+
+    try {
+      const response = await fetch(`/api/admin/orders/${order.id}/items/${itemId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setItems(items.filter(item => item.id !== itemId));
+        toast({
+          title: "Sucesso",
+          description: "Item removido com sucesso",
+        });
+      } else {
+        throw new Error("Erro ao remover item");
+      }
+    } catch (error) {
+      console.error("Error removing item:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível remover o item",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(value || 0);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <h4 className="font-semibold mb-2">Informações do Cliente</h4>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              {order.customer_name}
+            </div>
+            <div className="flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              {order.customer_email}
+            </div>
+            <div className="flex items-center gap-2">
+              <Phone className="h-4 w-4" />
+              {order.customer_whatsapp}
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4 className="font-semibold mb-2">Informações do Pedido</h4>
+          <div className="space-y-2 text-sm">
+            <div>Status: <Badge>{order.status}</Badge></div>
+            <div>Total: <strong>{formatCurrency(order.total_amount)}</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h4 className="font-semibold mb-4">Itens do Pedido</h4>
+        <div className="space-y-3">
+          {items.map((item) => (
+            <div key={item.id} className="flex items-center gap-4 p-4 border rounded-lg">
+              <div className="flex-1">
+                <div className="font-medium">{item.product_name}</div>
+                <div className="text-sm text-muted-foreground">
+                  {item.product_sku && `SKU: ${item.product_sku}`}
+                  {item.sku_variant && ` • Variante: ${item.sku_variant}`}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Grade: {item.grade_name} • Cor: {item.color_name}
+                  {item.size && ` • Tamanho: ${item.size}`}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <div>
+                  <label className="text-xs">Qtd</label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={item.quantity}
+                    onChange={(e) => {
+                      const newQuantity = parseInt(e.target.value) || 1;
+                      updateItem(item.id, newQuantity, item.unit_price);
+                    }}
+                    className="w-16 h-8"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs">Preço</label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={item.unit_price}
+                    onChange={(e) => {
+                      const newPrice = parseFloat(e.target.value) || 0;
+                      updateItem(item.id, item.quantity, newPrice);
+                    }}
+                    className="w-20 h-8"
+                  />
+                </div>
+
+                <div className="text-right">
+                  <div className="text-xs text-muted-foreground">Total</div>
+                  <div className="font-medium">{formatCurrency(item.total_price)}</div>
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => removeItem(item.id)}
+                  className="h-8 w-8"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex justify-between items-center pt-4 border-t">
+        <div className="text-lg font-semibold">
+          Total do Pedido: {formatCurrency(items.reduce((sum, item) => sum + item.total_price, 0))}
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={onCancel}>
+            Cancelar
+          </Button>
+          <Button onClick={onUpdate}>
+            Salvar Alterações
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
