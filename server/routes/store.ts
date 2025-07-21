@@ -4,6 +4,123 @@ import { sendOrderNotifications } from "../lib/notification-service";
 
 const router = Router();
 
+// Get paginated products for the store with enhanced data
+router.get("/products-paginated", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const category = req.query.category as string;
+    const offset = (page - 1) * limit;
+
+    // Build WHERE clause for category filter
+    let whereClause = "WHERE p.active = true";
+    const queryParams: any[] = [];
+
+    if (category && category !== "all") {
+      whereClause += " AND LOWER(c.name) = ?";
+      queryParams.push(category.toLowerCase());
+    }
+
+    // Get total count for pagination
+    const [countResult] = await db.execute(`
+      SELECT COUNT(DISTINCT p.id) as total
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      ${whereClause}
+    `, queryParams);
+
+    const totalProducts = (countResult as any)[0].total;
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    // Get paginated products with enhanced data
+    const [products] = await db.execute(`
+      SELECT
+        p.id,
+        p.name,
+        p.description,
+        p.base_price,
+        p.active,
+        c.name as category_name,
+        COUNT(DISTINCT pv.id) as variant_count,
+        COALESCE(SUM(pv.stock), 0) as total_stock,
+        MIN(CASE WHEN pv.stock > 0 THEN p.base_price END) as min_price,
+        MAX(CASE WHEN pv.stock > 0 THEN p.base_price END) as max_price
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN product_variants pv ON p.id = pv.product_id
+      ${whereClause}
+      GROUP BY p.id
+      ORDER BY p.name
+      LIMIT ? OFFSET ?
+    `, [...queryParams, limit, offset]);
+
+    // For each product, get available colors and variants
+    const productsWithDetails = [];
+    for (const product of products as any[]) {
+      // Get available colors with stock info
+      const [colorRows] = await db.execute(
+        `
+        SELECT DISTINCT
+          co.id,
+          co.name,
+          co.hex_code,
+          COUNT(pv.id) as variant_count,
+          SUM(pv.stock) as total_stock
+        FROM product_variants pv
+        LEFT JOIN colors co ON pv.color_id = co.id
+        WHERE pv.product_id = ? AND co.id IS NOT NULL
+        GROUP BY co.id, co.name, co.hex_code
+        ORDER BY co.name
+      `,
+        [product.id],
+      );
+
+      // Get available sizes with stock info
+      const [sizeRows] = await db.execute(
+        `
+        SELECT DISTINCT
+          s.id,
+          s.size,
+          s.display_order,
+          COUNT(pv.id) as variant_count,
+          SUM(pv.stock) as total_stock
+        FROM product_variants pv
+        LEFT JOIN sizes s ON pv.size_id = s.id
+        WHERE pv.product_id = ? AND s.id IS NOT NULL
+        GROUP BY s.id, s.size, s.display_order
+        ORDER BY s.display_order
+      `,
+        [product.id],
+      );
+
+      productsWithDetails.push({
+        ...product,
+        available_colors: colorRows,
+        available_sizes: sizeRows,
+        price_range: {
+          min: product.min_price,
+          max: product.max_price
+        }
+      });
+    }
+
+    res.json({
+      products: productsWithDetails,
+      pagination: {
+        page,
+        limit,
+        total: totalProducts,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching paginated store products:", error);
+    res.status(500).json({ error: "Failed to fetch products" });
+  }
+});
+
 // Get all available products for the store
 router.get("/products", async (req, res) => {
   try {
