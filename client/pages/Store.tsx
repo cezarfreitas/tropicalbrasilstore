@@ -300,15 +300,16 @@ export default function Store() {
     allProducts,
   ]);
 
-      const fetchProducts = async (retryCount = 0) => {
+        const fetchProducts = async (retryCount = 0, useBackup = false) => {
     setLoading(true);
     try {
-      console.log("Fetching products from /api/store-old/products", retryCount > 0 ? `(retry ${retryCount})` : "");
+      const endpoint = useBackup ? "/api/products" : "/api/store-old/products";
+      console.log(`Fetching products from ${endpoint}`, retryCount > 0 ? `(retry ${retryCount})` : "");
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-      const response = await fetch("/api/store-old/products", {
+      const response = await fetch(endpoint, {
         signal: controller.signal,
         headers: {
           'Accept': 'application/json',
