@@ -159,7 +159,18 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(cartReducer, loadCartFromStorage());
+  const [state, dispatch] = useReducer(cartReducer, {
+    items: [],
+    totalItems: 0,
+    totalPrice: 0,
+  });
+
+  useEffect(() => {
+    const storedCart = loadCartFromStorage();
+    if (storedCart.items.length > 0 || storedCart.totalItems > 0) {
+      dispatch({ type: "LOAD_CART", state: storedCart });
+    }
+  }, []);
 
   useEffect(() => {
     saveCartToStorage(state);
