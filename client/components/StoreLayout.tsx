@@ -93,6 +93,18 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           {/* Mobile Layout - Centered Logo */}
           <div className="flex sm:hidden items-center justify-center relative">
+            {/* Mobile Hamburger Menu */}
+            <div className="absolute left-0">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCategoriesOpen(true)}
+                className="h-9 w-9 p-0"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            </div>
+
             <Link to="/loja" className="flex items-center gap-2">
               <div className="rounded-lg bg-primary p-2">
                 <Package className="h-6 w-6 text-primary-foreground" />
