@@ -355,6 +355,93 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           setLoginModalOpen(true);
         }}
       />
+
+      {/* Mobile Categories Drawer */}
+      {categoriesOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50 z-50 sm:hidden"
+            onClick={() => setCategoriesOpen(false)}
+          />
+
+          {/* Drawer */}
+          <div className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-50 transform transition-transform duration-300 sm:hidden">
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="text-lg font-semibold">Categorias</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCategoriesOpen(false)}
+                className="h-8 w-8 p-0"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            {/* Categories List */}
+            <div className="p-4">
+              <div className="space-y-2">
+                {categories.map((category) => (
+                  <Link
+                    key={category.id}
+                    to={category.id === 'all' ? '/loja' : `/loja?categoria=${category.name.toLowerCase()}`}
+                    onClick={() => setCategoriesOpen(false)}
+                    className="block w-full p-3 text-left rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <span className="font-medium">{category.name}</span>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Quick Actions */}
+              <div className="mt-6 pt-6 border-t">
+                <h3 className="text-sm font-medium text-gray-600 mb-3">Ações Rápidas</h3>
+                <div className="space-y-2">
+                  <Link
+                    to="/loja/carrinho"
+                    onClick={() => setCategoriesOpen(false)}
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <ShoppingCart className="h-4 w-4 text-gray-600" />
+                    <span className="font-medium">Carrinho</span>
+                    {totalItems > 0 && (
+                      <Badge variant="secondary" className="ml-auto">
+                        {totalItems}
+                      </Badge>
+                    )}
+                  </Link>
+
+                  {isAuthenticated ? (
+                    <button
+                      onClick={() => {
+                        setCategoriesOpen(false);
+                        logout();
+                      }}
+                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors w-full text-left"
+                    >
+                      <LogOut className="h-4 w-4 text-gray-600" />
+                      <span className="font-medium">Sair</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setCategoriesOpen(false);
+                        setLoginModalOpen(true);
+                      }}
+                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors w-full text-left"
+                    >
+                      <LogIn className="h-4 w-4 text-gray-600" />
+                      <span className="font-medium">Entrar</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
