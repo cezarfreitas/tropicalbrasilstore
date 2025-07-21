@@ -167,12 +167,7 @@ function FiltersSidebar({
                 onChange={() => onColorToggle(color.id)}
                 className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
               />
-              <span className="text-sm text-gray-700">{color.name}</span>
-              {color.count && (
-                <span className="text-xs text-muted-foreground ml-auto">
-                  {color.count}
-                </span>
-              )}
+                            <span className="text-sm text-gray-700">{color.name}</span>
             </label>
           ))}
         </div>
