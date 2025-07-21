@@ -410,18 +410,18 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               </div>
 
               {/* Quick Actions */}
-              <div className="mt-6 pt-6 border-t">
+              <div className="mt-6 pt-6 border-t border-gray-200">
                 <h3 className="text-sm font-medium text-gray-600 mb-3">Ações Rápidas</h3>
                 <div className="space-y-2">
                   <Link
                     to="/loja/carrinho"
                     onClick={() => setCategoriesOpen(false)}
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-orange-50 hover:border-orange-200 border border-transparent transition-all duration-200"
                   >
-                    <ShoppingCart className="h-4 w-4 text-gray-600" />
-                    <span className="font-medium">Carrinho</span>
+                    <ShoppingCart className="h-4 w-4 text-orange-600" />
+                    <span className="font-medium text-gray-800">Carrinho</span>
                     {totalItems > 0 && (
-                      <Badge variant="secondary" className="ml-auto">
+                      <Badge variant="secondary" className="ml-auto bg-orange-100 text-orange-800">
                         {totalItems}
                       </Badge>
                     )}
