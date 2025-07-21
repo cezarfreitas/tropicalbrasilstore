@@ -87,9 +87,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     fetchCategories();
   }, []);
 
-  // Lock body scroll when drawer is open
+  // Lock body scroll when any drawer is open
   useEffect(() => {
-    if (categoriesOpen) {
+    if (categoriesOpen || cartOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -99,7 +99,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [categoriesOpen]);
+  }, [categoriesOpen, cartOpen]);
 
   return (
     <div className="min-h-screen bg-background">
