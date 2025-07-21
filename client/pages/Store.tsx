@@ -77,58 +77,37 @@ function Store() {
       let response: Response | null = null;
       let lastError: Error | null = null;
 
-      // Create a more robust fetch function to handle interference
-      const safeFetch = async (url: string, options?: RequestInit) => {
-        // Try native fetch first
-        try {
-          if (typeof window.fetch === 'function') {
-            return await window.fetch(url, options);
-          }
-        } catch (err) {
-          console.warn('Native fetch failed, trying XMLHttpRequest fallback:', err);
-        }
-
-        // Fallback to XMLHttpRequest
-        return new Promise<Response>((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open(options?.method || 'GET', url, true);
-
-          // Set headers
-          if (options?.headers) {
-            const headers = options.headers as Record<string, string>;
-            Object.entries(headers).forEach(([key, value]) => {
-              xhr.setRequestHeader(key, value);
-            });
-          }
-
-          xhr.onload = () => {
-            const response = new Response(xhr.responseText, {
-              status: xhr.status,
-              statusText: xhr.statusText,
-              headers: new Headers(xhr.getAllResponseHeaders().split('\r\n').reduce((acc, line) => {
-                const [key, value] = line.split(': ');
-                if (key && value) acc[key] = value;
-                return acc;
-              }, {} as Record<string, string>))
-            });
-            resolve(response);
-          };
-
-          xhr.onerror = () => reject(new Error('Network error'));
-          xhr.ontimeout = () => reject(new Error('Request timeout'));
-          xhr.timeout = 10000;
-
-          xhr.send(options?.body);
-        });
-      };
-
       for (const endpoint of endpoints) {
         try {
           console.log(`Trying endpoint: ${endpoint}`);
-          response = await safeFetch(endpoint, {
-            headers: {
-              'Accept': 'application/json',
-            },
+
+          // Use XMLHttpRequest directly to bypass fetch interference
+          response = await new Promise<Response>((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', endpoint, true);
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onload = () => {
+              const headers = new Headers();
+              xhr.getAllResponseHeaders().split('\r\n').forEach(line => {
+                const [key, value] = line.split(': ');
+                if (key && value) headers.set(key, value);
+              });
+
+              const response = new Response(xhr.responseText, {
+                status: xhr.status,
+                statusText: xhr.statusText,
+                headers: headers
+              });
+              resolve(response);
+            };
+
+            xhr.onerror = () => reject(new Error('Network error'));
+            xhr.ontimeout = () => reject(new Error('Request timeout'));
+            xhr.timeout = 8000;
+
+            xhr.send();
           });
 
           if (response.ok) {
