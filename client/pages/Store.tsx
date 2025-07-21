@@ -827,6 +827,15 @@ export default function Store() {
                             src={product.photo}
                             alt={product.name}
                             className="w-full h-full object-cover"
+                            loading="lazy"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent) {
+                                parent.innerHTML = '<div class="flex items-center justify-center w-full h-full"><svg class="h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg></div>';
+                              }
+                            }}
                           />
                         ) : (
                           <Package className="h-12 w-12 text-muted-foreground/50" />
@@ -896,7 +905,7 @@ export default function Store() {
                                     R$ {parseFloat(product.base_price).toFixed(2)}
                                   </div>
                                   <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">
-                                    UNITÁRIO
+                                    UNIT��RIO
                                   </div>
                                 </div>
                               )}
