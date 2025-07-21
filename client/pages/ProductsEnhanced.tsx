@@ -324,8 +324,10 @@ export default function ProductsEnhanced() {
     });
   };
 
-            const handleToggleStatus = async (product: EnhancedProduct) => {
+                  const handleToggleStatus = async (product: EnhancedProduct) => {
     try {
+      setToggleLoading(product.id);
+
       // Atualiza o estado local imediatamente para resposta instantânea
       setProducts(prevProducts =>
         prevProducts.map(p =>
@@ -365,6 +367,8 @@ export default function ProductsEnhanced() {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setToggleLoading(null);
     }
   };
 
