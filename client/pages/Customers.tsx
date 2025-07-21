@@ -392,7 +392,7 @@ export default function Customers() {
           description: "Cliente criado com sucesso",
         });
         setIsAddingCustomer(false);
-        setAddForm({ email: "", name: "", whatsapp: "" });
+        setAddForm({ email: "", name: "", whatsapp: "", minimum_order: 0 });
         fetchCustomers();
         fetchStats();
       } else {
