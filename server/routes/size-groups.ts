@@ -12,22 +12,11 @@ router.get("/", async (req, res) => {
       ORDER BY name ASC
     `);
     
-        // Parse JSON sizes for each row
-    const sizeGroups = (rows as any[]).map(row => {
-      console.log('Raw row sizes:', row.sizes, 'type:', typeof row.sizes);
-      try {
-        return {
-          ...row,
-          sizes: typeof row.sizes === 'string' ? JSON.parse(row.sizes) : row.sizes || []
-        };
-      } catch (error) {
-        console.error('Error parsing sizes JSON for row', row.id, ':', error);
-        return {
-          ...row,
-          sizes: []
-        };
-      }
-    });
+            // MySQL automatically parses JSON columns, so sizes is already an array
+    const sizeGroups = (rows as any[]).map(row => ({
+      ...row,
+      sizes: row.sizes || []
+    }));
     
     res.json(sizeGroups);
   } catch (error) {
