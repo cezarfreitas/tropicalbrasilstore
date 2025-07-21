@@ -16,6 +16,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 interface StoreLayoutProps {
   children: ReactNode;
 }
@@ -23,8 +28,10 @@ interface StoreLayoutProps {
 export function StoreLayout({ children }: StoreLayoutProps) {
   const { items, totalItems } = useCart();
   const { isAuthenticated, isApproved, customer, logout } = useCustomerAuth();
-    const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   return (
     <div className="min-h-screen bg-background">
