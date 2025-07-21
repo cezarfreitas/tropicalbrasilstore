@@ -1,12 +1,10 @@
 import connection from './db';
 
 export async function addSizeGroupsTable() {
-  const db = await Database.getInstance();
-  
   try {
     console.log('Creating size_groups table...');
     
-    await db.execute(`
+    await connection.execute(`
       CREATE TABLE IF NOT EXISTS size_groups (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
@@ -53,7 +51,7 @@ export async function addSizeGroupsTable() {
     ];
 
     for (const group of defaultGroups) {
-      await db.execute(`
+      await connection.execute(`
         INSERT IGNORE INTO size_groups (name, description, icon, sizes, active)
         VALUES (?, ?, ?, ?, ?)
       `, [group.name, group.description, group.icon, group.sizes, group.active]);
