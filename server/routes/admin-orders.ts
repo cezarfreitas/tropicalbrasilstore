@@ -14,8 +14,8 @@ router.get("/", async (req, res) => {
         o.status,
         o.created_at,
         o.updated_at,
-                o.customer_name,
-        o.customer_phone as customer_whatsapp,
+                        '' as customer_name,
+        '' as customer_whatsapp,
         COUNT(oi.id) as item_count
             FROM orders o
       LEFT JOIN order_items oi ON o.id = oi.order_id
