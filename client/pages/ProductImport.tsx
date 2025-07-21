@@ -878,7 +878,7 @@ export default function ProductImport() {
                   </p>
                   <Button onClick={startImport} size="lg">
                     <Play className="h-5 w-5 mr-2" />
-                    Iniciar Importação
+                    Iniciar Importa��ão
                   </Button>
                 </div>
               )}
@@ -1025,7 +1025,7 @@ export default function ProductImport() {
                       )}
                     </TableCell>
                     <TableCell className="text-xs">
-                      {item.data.colors}
+                      {item.data.color}
                     </TableCell>
                   </TableRow>
                 ))}
