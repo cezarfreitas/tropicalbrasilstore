@@ -1087,20 +1087,28 @@ export default function ProductsEnhanced() {
                         <div className="space-y-3 mt-3">
                           <div>
                             <Label className="text-sm font-medium">Grupos Rápidos:</Label>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                              {Object.entries(SIZE_GROUPS).map(([key, group]) => (
-                                <Button
-                                  key={key}
-                                  type="button"
-                                  variant="secondary"
-                                  size="sm"
-                                  onClick={() => selectSizeGroup(key as keyof typeof SIZE_GROUPS)}
-                                  className="flex items-center gap-2"
-                                >
-                                  <span>{group.icon}</span>
-                                  {group.name}
-                                </Button>
-                              ))}
+                                                        <div className="flex flex-wrap gap-2 mt-2">
+                              {Object.entries(SIZE_GROUPS).map(([key, group]) => {
+                                const status = getSizeGroupStatus(key as keyof typeof SIZE_GROUPS);
+                                return (
+                                  <Button
+                                    key={key}
+                                    type="button"
+                                    variant={status.isComplete ? "default" : status.isPartial ? "secondary" : "outline"}
+                                    size="sm"
+                                    onClick={() => selectSizeGroup(key as keyof typeof SIZE_GROUPS)}
+                                    className="flex items-center gap-2"
+                                  >
+                                    <span>{group.icon}</span>
+                                    {group.name}
+                                    {status.selected > 0 && (
+                                      <Badge variant="secondary" className="ml-1 text-xs">
+                                        {status.selected}/{status.total}
+                                      </Badge>
+                                    )}
+                                  </Button>
+                                );
+                              })}
                             </div>
                             <p className="text-xs text-muted-foreground mt-1">
                               Clique em um grupo para selecionar automaticamente os tamanhos correspondentes
