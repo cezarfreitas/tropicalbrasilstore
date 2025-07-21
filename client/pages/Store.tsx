@@ -416,7 +416,8 @@ export default function Store() {
         return;
       }
 
-      // Set empty state as fallback after all retries failed
+            // Set empty state as fallback after all retries failed
+      setFetchError("Não foi possível carregar os produtos. Verifique sua conexão e tente novamente.");
       setAllProducts([]);
       setCategories([
         {
