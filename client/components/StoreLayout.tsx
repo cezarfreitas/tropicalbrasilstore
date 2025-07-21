@@ -533,10 +533,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => {
-                              const { removeItem } = useCart.getState();
-                              removeItem(item.id);
-                            }}
+                            onClick={() => removeItem(item.id)}
                             className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
                           >
                             <Trash2 className="h-3 w-3" />
