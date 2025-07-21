@@ -4,6 +4,86 @@ import * as XLSX from "xlsx";
 
 const router = Router();
 
+// Get filtered orders with pagination and search
+router.get("/filtered", async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 20,
+      search = "",
+      status = "",
+      date = "",
+      sortBy = "created_at",
+      sortOrder = "desc"
+    } = req.query;
+
+    let whereClause = "WHERE 1=1";
+    const params: any[] = [];
+
+    // Search filter
+    if (search) {
+      whereClause += ` AND (o.id LIKE ? OR o.customer_email LIKE ?)`;
+      params.push(`%${search}%`, `%${search}%`);
+    }
+
+    // Status filter
+    if (status) {
+      whereClause += ` AND o.status = ?`;
+      params.push(status);
+    }
+
+    // Date filter
+    if (date) {
+      switch (date) {
+        case "today":
+          whereClause += ` AND DATE(o.created_at) = CURDATE()`;
+          break;
+        case "week":
+          whereClause += ` AND o.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)`;
+          break;
+        case "month":
+          whereClause += ` AND o.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)`;
+          break;
+        case "year":
+          whereClause += ` AND o.created_at >= DATE_SUB(NOW(), INTERVAL 1 YEAR)`;
+          break;
+      }
+    }
+
+    // Calculate offset
+    const offset = (Number(page) - 1) * Number(limit);
+
+    // Valid sort columns
+    const validSortColumns = ["id", "customer_email", "total_amount", "status", "created_at"];
+    const sortColumn = validSortColumns.includes(String(sortBy)) ? sortBy : "created_at";
+    const sortDirection = sortOrder === "asc" ? "ASC" : "DESC";
+
+    const [orders] = await db.execute(`
+      SELECT
+        o.id,
+        o.customer_email,
+        o.total_amount,
+        o.status,
+        o.created_at,
+        o.updated_at,
+        '' as customer_name,
+        '' as customer_whatsapp,
+        COUNT(oi.id) as item_count
+      FROM orders o
+      LEFT JOIN order_items oi ON o.id = oi.order_id
+      ${whereClause}
+      GROUP BY o.id
+      ORDER BY o.${sortColumn} ${sortDirection}
+      LIMIT ? OFFSET ?
+    `, [...params, Number(limit), offset]);
+
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching filtered orders:", error);
+    res.status(500).json({ error: "Failed to fetch filtered orders" });
+  }
+});
+
 // Get all orders with customer and item details
 router.get("/", async (req, res) => {
   try {
@@ -198,7 +278,7 @@ router.get("/export/excel", async (req, res) => {
       { wch: 25 }, // Descrição Grade
       { wch: 10 }, // Quantidade
       { wch: 12 }, // Preço Unitário
-      { wch: 12 }, // Preço Total Item
+      { wch: 12 }, // Pre��o Total Item
       { wch: 12 }, // Tipo Item
     ];
     ws["!cols"] = colWidths;
