@@ -309,9 +309,9 @@ function Store() {
                       
                       {/* Category Badge */}
                       {product.category_name && (
-                        <Badge 
-                          variant="secondary" 
-                          className="absolute top-2 left-2 text-xs bg-white/90 backdrop-blur-sm"
+                        <Badge
+                          variant="secondary"
+                          className="absolute top-1 left-1 sm:top-2 sm:left-2 text-xs bg-white/90 backdrop-blur-sm"
                         >
                           {product.category_name}
                         </Badge>
