@@ -428,14 +428,14 @@ router.get("/export-products", async (req, res) => {
       ORDER BY p.created_at DESC
     `);
 
-    // For each product, get colors, size group, and stock info
+    // For each product, create one row per color
     const exportData = [];
 
     for (const product of products as any[]) {
       // Get product colors
       const [colors] = await db.execute(
         `
-        SELECT DISTINCT co.name
+        SELECT DISTINCT co.name, co.id
         FROM product_variants pv
         LEFT JOIN colors co ON pv.color_id = co.id
         WHERE pv.product_id = ? AND co.name IS NOT NULL
@@ -443,8 +443,6 @@ router.get("/export-products", async (req, res) => {
       `,
         [product.id],
       );
-
-      const colorNames = (colors as any[]).map((c) => c.name).join(",");
 
       // Get size group (find the most common size group for this product)
       const [sizeGroupInfo] = await db.execute(
@@ -464,21 +462,6 @@ router.get("/export-products", async (req, res) => {
       const sizeGroupId =
         sizeGroupInfo.length > 0 ? (sizeGroupInfo as any[])[0].id : "";
 
-      // Get average stock per variant
-      const [stockInfo] = await db.execute(
-        `
-        SELECT AVG(stock) as avg_stock
-        FROM product_variants
-        WHERE product_id = ?
-      `,
-        [product.id],
-      );
-
-      const avgStock =
-        stockInfo.length > 0
-          ? Math.round((stockInfo as any[])[0].avg_stock || 0)
-          : 0;
-
       // Build photo URL (convert relative path to full URL if needed)
       let photoUrl = "";
       if (product.photo) {
@@ -487,20 +470,63 @@ router.get("/export-products", async (req, res) => {
           : `${req.protocol}://${req.get("host")}${product.photo}`;
       }
 
-      exportData.push({
-        "Nome do Produto": product.name || "",
-        Categoria: product.category_id || "",
-        "Preço Base": product.base_price || "",
-        "Preço de Venda": product.sale_price || "",
-        "URL da Foto": photoUrl,
-        "Grupo de Tamanhos": sizeGroupId,
-        Cores: colorNames,
-        SKU: product.sku || "",
-        "SKU Pai": product.parent_sku || "",
-        Descrição: product.description || "",
-        "Preço Sugerido": product.suggested_price || "",
-        "Estoque por Variante": avgStock,
-      });
+      // Create one row per color
+      if ((colors as any[]).length === 0) {
+        // Product without colors, create one row anyway
+        exportData.push({
+          "Nome do Produto": product.name || "",
+          Categoria: product.category_id || "",
+          "Preço Base": product.base_price || "",
+          "Preço de Venda": product.sale_price || "",
+          "URL da Foto": photoUrl,
+          "Grupo de Tamanhos": sizeGroupId,
+          "Cor (uma por linha)": "",
+          SKU: product.sku || "",
+          "SKU Pai": product.parent_sku || "",
+          Descrição: product.description || "",
+          "Preço Sugerido": product.suggested_price || "",
+          "Estoque por Variante": 0,
+        });
+      } else {
+        // Create one row per color
+        for (const color of colors as any[]) {
+          // Get average stock for this specific color
+          const [stockInfo] = await db.execute(
+            `
+            SELECT AVG(stock) as avg_stock
+            FROM product_variants
+            WHERE product_id = ? AND color_id = ?
+          `,
+            [product.id, color.id],
+          );
+
+          const avgStock =
+            stockInfo.length > 0
+              ? Math.round((stockInfo as any[])[0].avg_stock || 0)
+              : 0;
+
+          // Generate SKU for this color variation if original SKU exists
+          let variantSku = product.sku || "";
+          if (variantSku && color.name) {
+            variantSku = `${variantSku}-${color.name.toUpperCase()}`;
+          }
+
+          exportData.push({
+            "Nome do Produto": product.name || "",
+            Categoria: product.category_id || "",
+            "Preço Base": product.base_price || "",
+            "Preço de Venda": product.sale_price || "",
+            "URL da Foto": photoUrl,
+            "Grupo de Tamanhos": sizeGroupId,
+            "Cor (uma por linha)": color.name,
+            SKU: variantSku,
+            "SKU Pai": product.parent_sku || "",
+            Descrição: product.description || "",
+            "Preço Sugerido": product.suggested_price || "",
+            "Estoque por Variante": avgStock,
+          });
+        }
+      }
     }
 
     // Convert to CSV format
