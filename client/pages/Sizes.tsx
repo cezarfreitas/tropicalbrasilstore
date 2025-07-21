@@ -277,15 +277,35 @@ export default function Sizes() {
     );
   }
 
-  return (
+    return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Tamanhos</h1>
-          <p className="text-muted-foreground">
-            Configure os tamanhos disponíveis para seus produtos
-          </p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Tamanhos</h1>
+        <p className="text-muted-foreground">
+          Configure os tamanhos e grupos de tamanhos disponíveis para seus produtos
+        </p>
+      </div>
+
+      <Tabs defaultValue="sizes" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="sizes">
+            <Ruler className="mr-2 h-4 w-4" />
+            Tamanhos
+          </TabsTrigger>
+          <TabsTrigger value="groups">
+            <Users className="mr-2 h-4 w-4" />
+            Grupos de Tamanhos
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="sizes" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">Lista de Tamanhos</h2>
+              <p className="text-muted-foreground">
+                Gerencie os tamanhos individuais disponíveis
+              </p>
+            </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={handleNewSize}>
