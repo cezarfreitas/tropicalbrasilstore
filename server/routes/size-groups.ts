@@ -27,9 +27,8 @@ router.get("/", async (req, res) => {
 
 // GET /api/size-groups/:id - Get single size group
 router.get("/:id", async (req, res) => {
-  try {
-    const db = await Database.getInstance();
-    const [rows] = await db.execute(`
+    try {
+    const [rows] = await connection.execute(`
       SELECT id, name, description, icon, sizes, active, created_at, updated_at 
       FROM size_groups 
       WHERE id = ?
@@ -63,8 +62,7 @@ router.post("/", async (req, res) => {
       });
     }
     
-    const db = await Database.getInstance();
-    const [result] = await db.execute(`
+        const [result] = await connection.execute(`
       INSERT INTO size_groups (name, description, icon, sizes, active)
       VALUES (?, ?, ?, ?, ?)
     `, [
@@ -78,7 +76,7 @@ router.post("/", async (req, res) => {
     const insertId = (result as any).insertId;
     
     // Return the created size group
-    const [rows] = await db.execute(`
+        const [rows] = await connection.execute(`
       SELECT id, name, description, icon, sizes, active, created_at, updated_at 
       FROM size_groups 
       WHERE id = ?
@@ -114,8 +112,7 @@ router.put("/:id", async (req, res) => {
       });
     }
     
-    const db = await Database.getInstance();
-    const [result] = await db.execute(`
+        const [result] = await connection.execute(`
       UPDATE size_groups 
       SET name = ?, description = ?, icon = ?, sizes = ?, active = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
@@ -133,7 +130,7 @@ router.put("/:id", async (req, res) => {
     }
     
     // Return the updated size group
-    const [rows] = await db.execute(`
+        const [rows] = await connection.execute(`
       SELECT id, name, description, icon, sizes, active, created_at, updated_at 
       FROM size_groups 
       WHERE id = ?
@@ -161,8 +158,7 @@ router.put("/:id", async (req, res) => {
 // DELETE /api/size-groups/:id - Delete size group
 router.delete("/:id", async (req, res) => {
   try {
-    const db = await Database.getInstance();
-    const [result] = await db.execute(`
+        const [result] = await connection.execute(`
       DELETE FROM size_groups WHERE id = ?
     `, [req.params.id]);
     
