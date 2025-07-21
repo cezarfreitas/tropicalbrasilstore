@@ -382,13 +382,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           {/* Drawer */}
           <div className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-left duration-300 sm:hidden">
             {/* Drawer Header */}
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-lg font-semibold">Categorias</h2>
+            <div className="flex items-center justify-between p-4 border-b bg-orange-50">
+              <h2 className="text-lg font-semibold text-orange-900">Categorias</h2>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setCategoriesOpen(false)}
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 p-0 hover:bg-orange-100"
               >
                 <X className="h-4 w-4" />
               </Button>
