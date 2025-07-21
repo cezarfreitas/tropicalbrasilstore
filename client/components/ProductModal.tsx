@@ -176,10 +176,20 @@ export function ProductModal({
 
     const selectedColorData = getAvailableColors().find(c => c.id === selectedColor);
 
-    if (hasGrades() && selectedGrade) {
+        if (hasGrades() && selectedGrade) {
       // Add grade to cart
       const grade = getAvailableGradesForColor().find(g => g.id === selectedGrade);
       if (!grade) return;
+
+      // Check if grade can be added to cart based on stock
+      if (!canAddGradeToCart(grade)) {
+        toast({
+          title: "Erro",
+          description: "Estoque insuficiente para esta grade",
+          variant: "destructive",
+        });
+        return;
+      }
 
       const gradePrice = product.base_price ? product.base_price * grade.total_quantity : 0;
 
