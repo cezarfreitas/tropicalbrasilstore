@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Package, Lock, Phone, Eye, EyeOff, UserPlus, X } from "lucide-react";
+import { Package, Lock, Phone, Eye, EyeOff, UserPlus } from "lucide-react";
 
 interface LoginModalProps {
   isOpen: boolean;
