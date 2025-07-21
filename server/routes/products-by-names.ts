@@ -197,6 +197,7 @@ router.post("/", async (req, res) => {
       suggested_price,
       sku,
       parent_sku,
+      parent_id,
       photo,
       photo_url,
       variants,
@@ -209,6 +210,14 @@ router.post("/", async (req, res) => {
 
     if (!variants || variants.length === 0) {
       return res.status(400).json({ error: "At least one variant is required" });
+    }
+
+    // Validate parent product if parent_id is provided
+    if (parent_id) {
+      const parentExists = await validateParentProduct(connection, parent_id);
+      if (!parentExists) {
+        return res.status(400).json({ error: `Parent product with ID ${parent_id} does not exist` });
+      }
     }
 
     // Get or create category
@@ -224,24 +233,31 @@ router.post("/", async (req, res) => {
       sizeGroupId = await getOrCreateSizeGroup(connection, size_group_name, sizeNames);
     }
 
-    // Handle photo download if photo_url is provided
+    // Conceito otimizado de foto: uma foto principal por produto
     let photoPath = photo || null;
     let photoDownloaded = false;
+    let photoError = null;
 
     if (photo_url && !photo) {
       try {
+        console.log(`📸 Baixando foto para produto: ${name}`);
         const downloadedPath = await downloadImage(photo_url, name);
         if (downloadedPath) {
           photoPath = downloadedPath;
           photoDownloaded = true;
+          console.log(`✅ Foto salva em: ${downloadedPath}`);
+        } else {
+          photoError = "Failed to download image";
+          console.log(`❌ Falha ao baixar foto de: ${photo_url}`);
         }
       } catch (error) {
-        console.error("Error downloading image:", error);
-        // Continue without photo if download fails
+        photoError = error.message;
+        console.error("❌ Erro no download da imagem:", error);
+        // Continue sem foto se o download falhar
       }
     }
 
-    // Create the product
+    // Create the product with parent_id
     const [result] = await connection.execute(
       `INSERT INTO products (name, description, category_id, base_price, sale_price, suggested_price, sku, parent_sku, photo, active)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -254,7 +270,7 @@ router.post("/", async (req, res) => {
         suggested_price || null,
         sku || null,
         parent_sku || null,
-        photoPath,
+        photoPath, // Foto principal do produto (não das variantes)
         true,
       ]
     );
