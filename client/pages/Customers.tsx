@@ -73,6 +73,7 @@ interface Customer {
   completed_orders: number;
   status?: "pending" | "approved" | "rejected";
   id?: number;
+  minimum_order?: number;
 }
 
 interface CustomerOrder {
