@@ -417,7 +417,7 @@ export default function Customers() {
 
   const cancelAdd = () => {
     setIsAddingCustomer(false);
-    setAddForm({ email: "", name: "", whatsapp: "" });
+    setAddForm({ email: "", name: "", whatsapp: "", minimum_order: 0 });
   };
 
   const formatCurrency = (value: number) => {
