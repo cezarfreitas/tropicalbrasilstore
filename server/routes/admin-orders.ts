@@ -58,8 +58,7 @@ router.get("/:id", async (req, res) => {
       `
       SELECT 
         oi.*,
-                p.name as product_name,
-        p.photo as product_photo,
+                        p.name as product_name,
         p.sku as product_sku,
                 CONCAT(p.sku, '-', COALESCE(co.name, ''), '-', COALESCE(s.size, '')) as sku_variant,
         s.size,
