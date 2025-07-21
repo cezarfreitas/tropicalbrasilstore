@@ -161,7 +161,7 @@ router.get("/export/excel", async (req, res) => {
       'Data Pedido': new Date(row.data_pedido).toLocaleDateString('pt-BR'),
       'Cliente Email': row.cliente_email,
       'Status': row.status_pedido,
-      'Valor Total Pedido': `R$ ${(row.valor_total || 0).toFixed(2)}`,
+            'Valor Total Pedido': `R$ ${parseFloat(row.valor_total || 0).toFixed(2)}`,
       'Produto': row.produto_nome || '',
       'SKU Produto': row.produto_sku || '',
       'SKU Pai': row.produto_parent_sku || '',
