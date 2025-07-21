@@ -360,10 +360,10 @@ export function ProductModal({
               {/* Grades or Sizes */}
               {selectedColor && (
                 <div>
-                  <div className="text-xs font-medium text-muted-foreground mb-2">
+                  <div className="text-xs font-medium text-gray-700 mb-2">
                     {hasGrades() ? 'Grade' : 'Tamanho'}
                   </div>
-                  <div className="grid grid-cols-1 gap-2">
+                  <div className="space-y-2">
                     {hasGrades() ? (
                       getAvailableGradesForColor().map((grade) => {
                         const canAdd = canAddGradeToCart(grade);
