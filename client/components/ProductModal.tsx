@@ -435,13 +435,9 @@ export function ProductModal({
                                   </div>
                                 )}
                               </div>
-                              <div className="flex gap-1.5">
-                                <Badge variant="secondary" className="text-xs font-medium text-orange-600 bg-orange-50 border-orange-200">
-                                  1 peça
-                                </Badge>
-                                <Badge variant="outline" className="text-xs font-medium text-gray-600 bg-gray-50 border-gray-200">
-                                  {size.stock} disp.
-                                </Badge>
+                              <div className="text-xs text-muted-foreground">
+                                <span className="font-medium text-orange-600">1 peça</span>
+                                <span className="ml-2">{size.stock} disponível</span>
                               </div>
                             </div>
                           </button>
