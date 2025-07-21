@@ -38,10 +38,132 @@ export default function Cart() {
 
   return (
     <StoreLayout>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Seu Carrinho</h1>
+      <div className="container mx-auto px-4 py-4 sm:py-8">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">Seu Carrinho</h1>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        {/* Mobile Layout */}
+        <div className="block lg:hidden space-y-4">
+          {/* Cart Items */}
+          <div className="space-y-3">
+            {items.map((item) => (
+              <Card key={item.id} className="overflow-hidden">
+                <CardContent className="p-3">
+                  <div className="flex gap-3">
+                    {/* Product Image */}
+                    <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
+                      {item.photo ? (
+                        <img
+                          src={item.photo}
+                          alt={item.productName}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      ) : (
+                        <Package className="h-6 w-6 text-muted-foreground/50" />
+                      )}
+                    </div>
+
+                    {/* Product Info */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-sm truncate">{item.productName}</h3>
+                      <div className="flex items-center gap-1 mt-1">
+                        <Grid3x3 className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">
+                          {item.gradeName}
+                        </span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {item.colorName}
+                      </div>
+                      <div className="font-bold text-orange-500 text-sm mt-1">
+                        R$ {item.totalPrice.toFixed(2)}
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex flex-col gap-2 items-end">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeItem(item.id)}
+                        className="h-6 w-6 p-0"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                      
+                      {/* Quantity Controls */}
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity - 1)
+                          }
+                          className="h-6 w-6 p-0"
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <span className="text-xs font-medium w-6 text-center">
+                          {item.quantity}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity + 1)
+                          }
+                          className="h-6 w-6 p-0"
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Mobile Summary */}
+          <Card className="bg-orange-50 border-orange-200">
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Itens ({totalItems})</span>
+                  <span className="font-medium">R$ {totalPrice.toFixed(2)}</span>
+                </div>
+                
+                <div className="border-t pt-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-lg">Total</span>
+                    <span className="font-bold text-lg text-orange-500">R$ {totalPrice.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2 pt-2">
+                  <Link to="/loja/checkout">
+                    <Button className="w-full bg-orange-500 hover:bg-orange-600" size="lg">
+                      Finalizar Compra
+                    </Button>
+                  </Link>
+                  <Link to="/loja">
+                    <Button variant="outline" className="w-full">
+                      Continuar Comprando
+                    </Button>
+                  </Link>
+                </div>
+
+                <div className="text-xs text-muted-foreground space-y-1 pt-2 border-t">
+                  <p>• Compras por grades (kits)</p>
+                  <p>• Mesma cor por grade</p>
+                  <p>• Confirmação via WhatsApp</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden lg:grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
             {items.map((item) => (
@@ -132,7 +254,7 @@ export default function Cart() {
             ))}
           </div>
 
-          {/* Order Summary */}
+          {/* Desktop Order Summary */}
           <div className="lg:col-span-1">
             <Card className="sticky top-4">
               <CardHeader>
