@@ -220,8 +220,9 @@ router.post("/", async (req, res) => {
       [
         name,
         description || null,
-        category_id || null,
+                category_id || null,
         base_price || null,
+        suggested_price || null,
                 sku || null,
         parent_sku || null,
         true,
