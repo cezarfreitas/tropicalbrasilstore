@@ -351,6 +351,17 @@ function Store() {
                         Adicionar ao Carrinho
                       </Button>
                     </div>
+
+                    {/* Add to Cart Icon - Mobile only, positioned in bottom right */}
+                    <div
+                      className="sm:hidden absolute bottom-2 right-2 bg-orange-500 hover:bg-orange-600 rounded-full p-2 shadow-lg transition-all duration-200 active:scale-95"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleProductClick(product.id);
+                      }}
+                    >
+                      <ShoppingCart className="h-4 w-4 text-white" />
+                    </div>
                   </CardContent>
                 </Card>
               ))}
