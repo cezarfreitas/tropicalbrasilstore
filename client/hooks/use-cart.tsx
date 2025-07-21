@@ -150,6 +150,9 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         totalPrice: 0,
       };
 
+    case "LOAD_CART":
+      return action.state;
+
     default:
       return state;
   }
