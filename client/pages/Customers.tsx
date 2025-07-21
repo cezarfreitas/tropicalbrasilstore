@@ -759,6 +759,42 @@ export default function Customers() {
                             <Phone className="h-3 w-3" />
                             {customer.whatsapp}
                           </div>
+                                                )}
+                      </TableCell>
+                      <TableCell>
+                        {editingCustomer === customer.email ? (
+                          <Select
+                            value={editForm.status}
+                            onValueChange={(value: "pending" | "approved" | "rejected") =>
+                              setEditForm({ ...editForm, status: value })
+                            }
+                          >
+                            <SelectTrigger className="h-8 w-full">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="approved">
+                                <div className="flex items-center gap-2">
+                                  <Check className="h-3 w-3 text-green-600" />
+                                  Aprovado
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="pending">
+                                <div className="flex items-center gap-2">
+                                  <Clock className="h-3 w-3 text-yellow-600" />
+                                  Pendente
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="rejected">
+                                <div className="flex items-center gap-2">
+                                  <XCircle className="h-3 w-3 text-red-600" />
+                                  Rejeitado
+                                </div>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          getCustomerStatusBadge(customer.status || "approved")
                         )}
                       </TableCell>
                       <TableCell>
