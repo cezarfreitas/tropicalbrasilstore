@@ -451,7 +451,8 @@ export default function ProductImport() {
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>• <strong>Nome:</strong> Nome do produto</li>
                   <li>• <strong>Categoria:</strong> ID ou nome da categoria</li>
-                  <li>• <strong>Preço Base:</strong> Valor numérico</li>
+                  <li>• <strong>Preço Base:</strong> Preço de custo/base do produto</li>
+                  <li>• <strong>Preço de Venda:</strong> Preço final de venda ao cliente</li>
                   <li>• <strong>URL da Foto:</strong> Link direto para imagem</li>
                   <li>• <strong>Grupo de Tamanhos:</strong> ID do grupo (ex: 1=Feminino, 2=Masculino)</li>
                   <li>• <strong>Cores:</strong> Nomes separados por vírgula</li>
