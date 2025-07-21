@@ -60,6 +60,7 @@ interface ProductDetail {
   suggested_price?: number;
   photo?: string;
   category_name?: string;
+  sell_without_stock?: boolean;
   variants: ProductVariant[];
   available_grades?: AvailableGrade[];
 }
