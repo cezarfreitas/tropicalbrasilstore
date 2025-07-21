@@ -4,11 +4,9 @@ import { StoreLayout } from '@/components/StoreLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProductModal } from '@/components/ProductModal';
 import { ProductImage } from '@/components/ProductImage';
-import { Package, Search, Filter, RefreshCw, AlertCircle } from 'lucide-react';
+import { Package, AlertCircle } from 'lucide-react';
 
 interface StoreProduct {
   id: number;
