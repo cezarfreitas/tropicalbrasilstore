@@ -145,8 +145,22 @@ export function useCart() {
 
   const { state, dispatch } = context;
 
-  const addItem = (item: Omit<CartItem, "id" | "totalPrice">) => {
-    const id = `grade-${item.productId}-${item.colorId}-${item.gradeId}`;
+    const addItem = (item: Omit<CartItem, "id" | "totalPrice">) => {
+    let id: string;
+
+    switch (item.type) {
+      case "grade":
+        id = `grade-${item.productId}-${item.colorId}-${item.gradeId}`;
+        break;
+      case "variant":
+        id = `variant-${item.productId}-${item.colorId}-${item.sizeId}`;
+        break;
+      case "unit":
+        id = `unit-${item.productId}-${item.colorId || 'default'}`;
+        break;
+      default:
+        id = `item-${item.productId}-${Date.now()}`;
+    }
     dispatch({
       type: "ADD_ITEM",
       item: {
