@@ -318,8 +318,8 @@ export default function Store() {
       }
 
       const endpoint = useBackup
-        ? `/api/store/products-paginated?${params}`
-        : `/api/store-old/products-paginated?${params}`;
+        ? `/api/store-old/products-paginated?${params}`
+        : `/api/store/products-paginated?${params}`;
 
       console.log(`Fetching products from ${endpoint}`, retryCount > 0 ? `(retry ${retryCount})` : "");
 
