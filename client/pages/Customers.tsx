@@ -550,6 +550,20 @@ export default function Customers() {
                   placeholder="(11) 99999-9999"
                 />
               </div>
+              <div>
+                <Label htmlFor="minimum_order">Pedido Mínimo (R$)</Label>
+                <Input
+                  id="minimum_order"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={addForm.minimum_order}
+                  onChange={(e) =>
+                    setAddForm({ ...addForm, minimum_order: parseFloat(e.target.value) || 0 })
+                  }
+                  placeholder="0.00"
+                />
+              </div>
               <div className="flex gap-2 pt-4">
                 <Button
                   onClick={addCustomer}
