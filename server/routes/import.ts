@@ -460,7 +460,7 @@ router.get("/export-products", async (req, res) => {
       );
 
       const sizeGroupId =
-        sizeGroupInfo.length > 0 ? (sizeGroupInfo as any[])[0].id : "";
+        (sizeGroupInfo as any[]).length > 0 ? (sizeGroupInfo as any[])[0].id : "";
 
       // Build photo URL (convert relative path to full URL if needed)
       let photoUrl = "";
