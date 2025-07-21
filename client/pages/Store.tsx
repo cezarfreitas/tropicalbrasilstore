@@ -282,7 +282,7 @@ function Store() {
 
                       {/* Add to Cart Button */}
                       <Button
-                        className="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm"
+                        className="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm h-7 sm:h-8"
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
