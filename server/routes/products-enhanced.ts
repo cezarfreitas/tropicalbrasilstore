@@ -258,4 +258,37 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// Toggle product status (quick endpoint)
+router.patch("/:id/toggle", async (req, res) => {
+  try {
+    // Get current status
+    const [currentRows] = await db.execute(
+      "SELECT active FROM products WHERE id = ?",
+      [req.params.id],
+    );
+
+    if (currentRows.length === 0) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    const currentProduct = (currentRows as any)[0];
+    const newStatus = !currentProduct.active;
+
+    // Update status
+    await db.execute(
+      "UPDATE products SET active = ? WHERE id = ?",
+      [newStatus, req.params.id],
+    );
+
+    res.json({
+      success: true,
+      active: newStatus,
+      message: `Produto ${newStatus ? "ativado" : "desativado"} com sucesso`,
+    });
+  } catch (error) {
+    console.error("Error toggling product status:", error);
+    res.status(500).json({ error: "Failed to toggle product status" });
+  }
+});
+
 export { router as productsEnhancedRouter };
