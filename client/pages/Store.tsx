@@ -280,7 +280,17 @@ function Store() {
                         </div>
                       )}
 
-
+                      {/* Add to Cart Button */}
+                      <Button
+                        className="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleProductClick(product.id);
+                        }}
+                      >
+                        Adicionar ao Carrinho
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
