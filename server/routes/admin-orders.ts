@@ -153,7 +153,7 @@ router.get("/export/excel", async (req, res) => {
       ORDER BY o.created_at DESC, oi.id
     `);
 
-    // Format data for Excel
+        // Format data for Excel
     const excelData = (orderData as any[]).map(row => ({
       'ID Pedido': row.pedido_id,
       'Data Pedido': new Date(row.data_pedido).toLocaleDateString('pt-BR'),
@@ -163,6 +163,7 @@ router.get("/export/excel", async (req, res) => {
       'Produto': row.produto_nome || '',
       'SKU Produto': row.produto_sku || '',
       'SKU Pai': row.produto_parent_sku || '',
+      'SKU Variante': row.sku_variante || '',
       'Cor': row.cor_nome || '',
       'Cor Hex': row.cor_hex || '',
       'Tamanho': row.tamanho || '',
@@ -171,6 +172,7 @@ router.get("/export/excel", async (req, res) => {
       'Quantidade': row.quantidade || 0,
       'Preço Unitário': `R$ ${(row.preco_unitario || 0).toFixed(2)}`,
       'Preço Total Item': `R$ ${(row.preco_total || 0).toFixed(2)}`,
+      'Estoque Variante': row.estoque_variante || 0,
       'Tipo Item': row.tipo_item || ''
     }));
 
