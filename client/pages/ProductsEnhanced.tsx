@@ -170,9 +170,8 @@ export default function ProductsEnhanced() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [gradeDialogOpen, setGradeDialogOpen] = useState(false);
-  const [variantViewMode, setVariantViewMode] = useState<"table" | "grid">(
-    "grid",
-  );
+    // Removed variant view mode - only showing collapsed by color
+  const [variantGeneratorVisible, setVariantGeneratorVisible] = useState(false);
 
   // Pagination and filtering states
   const [currentPage, setCurrentPage] = useState(1);
@@ -1019,15 +1018,32 @@ export default function ProductsEnhanced() {
                   </div>
                 </TabsContent>
 
-                                <TabsContent value="variants" className="space-y-6">
-                  {/* Interface Simplificada para Criar Variantes */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Criar Variantes Facilmente</CardTitle>
-                      <CardDescription>
-                        Selecione uma cor e os tamanhos desejados para criar variantes automaticamente
-                      </CardDescription>
-                    </CardHeader>
+                                                <TabsContent value="variants" className="space-y-6">
+                  {/* Botão para mostrar/ocultar gerador de variantes */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-base">
+                      Variantes Criadas ({formData.variants.length})
+                    </Label>
+                    <Button
+                      type="button"
+                      variant={variantGeneratorVisible ? "default" : "outline"}
+                      onClick={() => setVariantGeneratorVisible(!variantGeneratorVisible)}
+                      className="flex items-center gap-2"
+                    >
+                      <Wand2 className="h-4 w-4" />
+                      {variantGeneratorVisible ? "Ocultar Gerador" : "Mostrar Gerador"}
+                    </Button>
+                  </div>
+
+                  {/* Interface Simplificada para Criar Variantes - Oculta por padrão */}
+                  {variantGeneratorVisible && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">Criar Variantes Facilmente</CardTitle>
+                        <CardDescription>
+                          Selecione uma cor e os tamanhos desejados para criar variantes automaticamente
+                        </CardDescription>
+                      </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
