@@ -399,29 +399,20 @@ export function ProductModal({
                                 )}
                               </div>
 
-                              {/* Single Line Grade Breakdown */}
-                              <div className="text-xs text-muted-foreground">
-                                <span className="font-medium text-orange-600">
-                                  {grade.total_quantity} peças:
-                                </span>
-                                <span className="ml-1">
-                                  {sortedTemplates.map((template, index) => (
-                                    <span key={`${template.size_id}-${index}`}>
-                                      {template.size}({template.required_quantity}un){index < sortedTemplates.length - 1 ? ' • ' : ''}
-                                    </span>
-                                  ))}
-                                </span>
-                              </div>
-
-                              {/* Stock Status - Compact */}
-                              <div className="text-xs text-muted-foreground">
-                                {product?.sell_without_stock
-                                  ? "✓ Disponível (venda sem estoque)"
-                                  : grade.has_full_stock
-                                    ? "✓ Estoque completo"
-                                    : grade.has_any_stock
-                                      ? "⚠ Estoque parcial"
-                                      : "✗ Sem estoque"}
+                              {/* Size and Quantity Badges */}
+                              <div className="flex flex-wrap gap-1.5">
+                                <Badge variant="secondary" className="text-xs font-medium text-orange-600 bg-orange-50 border-orange-200">
+                                  {grade.total_quantity} peças
+                                </Badge>
+                                {sortedTemplates.map((template, index) => (
+                                  <Badge
+                                    key={`${template.size_id}-${index}`}
+                                    variant="outline"
+                                    className="text-xs font-medium text-gray-700 bg-gray-50 border-gray-200"
+                                  >
+                                    {template.size}: {template.required_quantity}un
+                                  </Badge>
+                                ))}
                               </div>
                             </div>
                           </button>
