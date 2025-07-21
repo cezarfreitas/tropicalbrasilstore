@@ -185,19 +185,22 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               )}
 
               {/* Cart */}
-              <Link to="/loja/carrinho">
-                <Button variant="outline" size="sm" className="relative h-9">
-                  <ShoppingCart className="h-4 w-4" />
-                  {totalItems > 0 && (
-                    <Badge
-                      variant="destructive"
-                      className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center text-xs"
-                    >
-                      {totalItems}
-                    </Badge>
-                  )}
-                </Button>
-              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCartOpen(true)}
+                className="relative h-9"
+              >
+                <ShoppingCart className="h-4 w-4" />
+                {totalItems > 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center text-xs"
+                  >
+                    {totalItems}
+                  </Badge>
+                )}
+              </Button>
             </div>
           </div>
 
