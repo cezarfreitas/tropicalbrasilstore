@@ -450,6 +450,7 @@ export default function ProductImport() {
 
       <Tabs defaultValue="upload" className="space-y-4">
         <TabsList>
+          <TabsTrigger value="export">Exportação</TabsTrigger>
           <TabsTrigger value="upload">1. Upload do Arquivo</TabsTrigger>
           <TabsTrigger value="mapping" disabled={!csvHeaders.length}>
             2. Mapeamento de Colunas
