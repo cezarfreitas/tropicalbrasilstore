@@ -155,11 +155,11 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(cartReducer, {
-    items: [],
-    totalItems: 0,
-    totalPrice: 0,
-  });
+  const [state, dispatch] = useReducer(cartReducer, loadCartFromStorage());
+
+  useEffect(() => {
+    saveCartToStorage(state);
+  }, [state]);
 
   return (
     <CartContext.Provider value={{ state, dispatch }}>
