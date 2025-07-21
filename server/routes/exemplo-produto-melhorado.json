@@ -1,0 +1,120 @@
+{
+  "produto_principal": {
+    "name": "Chinelo Havaianas Brasil Collection",
+    "description": "Coleção especial Havaianas com design patriótico brasileiro. Solado resistente e confortável, perfeito para o verão. Produto principal da linha Brasil.",
+    "category_name": "Calçados Patrióticos",
+    "base_price": 25.00,
+    "sale_price": 45.90,
+    "suggested_price": 65.00,
+    "sku": "HAV-BRASIL-MAIN",
+    "parent_sku": "HAV-BRASIL",
+    "photo_url": "https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=500",
+    "size_group_name": "Unissex Adulto",
+    "variants": [
+      {
+        "size_name": "35",
+        "color_name": "Verde Brasil",
+        "stock": 50
+      },
+      {
+        "size_name": "36",
+        "color_name": "Verde Brasil", 
+        "stock": 60
+      },
+      {
+        "size_name": "37",
+        "color_name": "Verde Brasil",
+        "stock": 75
+      },
+      {
+        "size_name": "38",
+        "color_name": "Verde Brasil",
+        "stock": 80
+      },
+      {
+        "size_name": "39",
+        "color_name": "Verde Brasil",
+        "stock": 70
+      },
+      {
+        "size_name": "35",
+        "color_name": "Amarelo Canário",
+        "stock": 45
+      },
+      {
+        "size_name": "36", 
+        "color_name": "Amarelo Canário",
+        "stock": 55
+      },
+      {
+        "size_name": "37",
+        "color_name": "Amarelo Canário",
+        "stock": 65
+      },
+      {
+        "size_name": "38",
+        "color_name": "Amarelo Canário",
+        "stock": 75
+      },
+      {
+        "size_name": "39",
+        "color_name": "Amarelo Canário",
+        "stock": 60
+      }
+    ]
+  },
+
+  "produto_filho": {
+    "name": "Chinelo Havaianas Brasil Collection Edição Copa",
+    "description": "Versão limitada da Brasil Collection com detalhes especiais da Copa do Mundo. Mesmo conforto do produto principal, com design exclusivo.",
+    "category_name": "Calçados Edição Limitada",
+    "parent_id": "{{ID_DO_PRODUTO_PRINCIPAL}}", 
+    "base_price": 35.00,
+    "sale_price": 65.90,
+    "suggested_price": 89.90,
+    "sku": "HAV-BRASIL-COPA",
+    "parent_sku": "HAV-BRASIL",
+    "photo_url": "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=500",
+    "size_group_name": "Unissex Adulto",
+    "variants": [
+      {
+        "size_name": "37",
+        "color_name": "Azul Copa",
+        "stock": 25
+      },
+      {
+        "size_name": "38", 
+        "color_name": "Azul Copa",
+        "stock": 30
+      },
+      {
+        "size_name": "39",
+        "color_name": "Azul Copa",
+        "stock": 20
+      }
+    ]
+  },
+
+  "instrucoes": {
+    "passo_1": "Primeiro crie o produto principal usando o objeto 'produto_principal'",
+    "passo_2": "Anote o ID retornado do produto criado",
+    "passo_3": "Substitua '{{ID_DO_PRODUTO_PRINCIPAL}}' pelo ID real no 'produto_filho'",
+    "passo_4": "Crie o produto filho que referenciará o produto principal",
+    
+    "conceitos_aplicados": {
+      "hierarquia": "O produto filho tem parent_id apontando para o produto principal",
+      "foto_otimizada": "Cada produto tem sua própria foto principal (não por variante)",
+      "criacao_automatica": "Categorias, cores e tamanhos são criados automaticamente",
+      "validacao": "Sistema valida se o parent_id existe antes de criar",
+      "relatorio_detalhado": "Resposta inclui status de download, recursos criados e resumo"
+    },
+
+    "vantagens": {
+      "gestao_hierarquica": "Produtos podem ter relação pai/filho para melhor organização",
+      "foto_centralizada": "Uma foto por produto, não por variante, economiza espaço e facilita gestão",
+      "criacao_inteligente": "Sistema cria automaticamente recursos que não existem",
+      "validacao_robusta": "Verifica integridade de dados antes de criar",
+      "feedback_completo": "Retorna detalhes de tudo que foi criado ou erro encontrado"
+    }
+  }
+}
