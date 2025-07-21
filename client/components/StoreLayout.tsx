@@ -547,10 +547,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => {
-                                const { updateQuantity } = useCart.getState();
-                                updateQuantity(item.id, item.quantity - 1);
-                              }}
+                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
                               className="h-6 w-6 p-0"
                             >
                               <Minus className="h-3 w-3" />
@@ -561,10 +558,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => {
-                                const { updateQuantity } = useCart.getState();
-                                updateQuantity(item.id, item.quantity + 1);
-                              }}
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
                               className="h-6 w-6 p-0"
                             >
                               <Plus className="h-3 w-3" />
