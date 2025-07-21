@@ -250,14 +250,23 @@ router.post("/", async (req, res) => {
       }
     }
 
-    // Assign grades if provided
+        // Assign grades if provided
     if (grades && grades.length > 0) {
+      // Get available colors for this product to assign grades
+      const [colors] = await connection.execute(
+        "SELECT DISTINCT color_id FROM product_variants WHERE product_id = ?",
+        [productId],
+      );
+
       for (const gradeId of grades) {
-        await connection.execute(
-          `INSERT IGNORE INTO product_color_grades (product_id, grade_template_id)
-           VALUES (?, ?)`,
-          [productId, gradeId],
-        );
+        // Assign grade to each color variant of the product
+        for (const color of colors as any[]) {
+          await connection.execute(
+            `INSERT IGNORE INTO product_color_grades (product_id, color_id, grade_id)
+             VALUES (?, ?, ?)`,
+            [productId, color.color_id, gradeId],
+          );
+        }
       }
     }
 
