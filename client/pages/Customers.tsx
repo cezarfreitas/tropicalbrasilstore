@@ -694,17 +694,29 @@ export default function Customers() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {customers.map((customer) => (
+                                    {customers.map((customer) => (
                     <TableRow key={customer.email}>
                       <TableCell>
                         {editingCustomer === customer.email ? (
-                          <Input
-                            value={editForm.name}
-                            onChange={(e) =>
-                              setEditForm({ ...editForm, name: e.target.value })
-                            }
-                            className="h-8"
-                          />
+                          <div className="space-y-2">
+                            <Input
+                              value={editForm.name}
+                              onChange={(e) =>
+                                setEditForm({ ...editForm, name: e.target.value })
+                              }
+                              placeholder="Nome"
+                              className="h-8"
+                            />
+                            <Input
+                              value={editForm.email}
+                              onChange={(e) =>
+                                setEditForm({ ...editForm, email: e.target.value })
+                              }
+                              placeholder="Email"
+                              className="h-8"
+                              type="email"
+                            />
+                          </div>
                         ) : (
                           <div>
                             <div className="font-medium">{customer.name}</div>
@@ -716,17 +728,31 @@ export default function Customers() {
                       </TableCell>
                       <TableCell>
                         {editingCustomer === customer.email ? (
-                          <Input
-                            value={editForm.whatsapp}
-                            onChange={(e) =>
-                              setEditForm({
-                                ...editForm,
-                                whatsapp: e.target.value,
-                              })
-                            }
-                            className="h-8"
-                            placeholder="(11) 99999-9999"
-                          />
+                          <div className="space-y-2">
+                            <Input
+                              value={editForm.whatsapp}
+                              onChange={(e) =>
+                                setEditForm({
+                                  ...editForm,
+                                  whatsapp: e.target.value,
+                                })
+                              }
+                              className="h-8"
+                              placeholder="(11) 99999-9999"
+                            />
+                            <Input
+                              value={editForm.newPassword}
+                              onChange={(e) =>
+                                setEditForm({
+                                  ...editForm,
+                                  newPassword: e.target.value,
+                                })
+                              }
+                              className="h-8"
+                              placeholder="Nova senha (opcional)"
+                              type="password"
+                            />
+                          </div>
                         ) : (
                           <div className="flex items-center gap-1">
                             <Phone className="h-3 w-3" />
