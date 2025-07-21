@@ -440,13 +440,14 @@ export default function ProductsEnhanced() {
         const productGrades =
           detailedProduct.grades?.map((g: any) => g.id) || [];
         setSelectedGrades(productGrades);
-        setFormData({
+                setFormData({
           name: detailedProduct.name,
           description: detailedProduct.description || "",
           category_id: detailedProduct.category_id || undefined,
           base_price: detailedProduct.base_price || undefined,
           suggested_price: detailedProduct.suggested_price || undefined,
           sku: detailedProduct.sku || "",
+          parent_sku: detailedProduct.parent_sku || "",
           photo: detailedProduct.photo || "",
           stock: detailedProduct.stock || 0,
           variants: detailedProduct.variants || [],
