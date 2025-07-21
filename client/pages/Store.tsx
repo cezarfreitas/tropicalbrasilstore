@@ -925,14 +925,18 @@ export default function Store() {
                                         : "Faça login para ver preços"
                                     : "Faça login para ver preços"}
                                 </div>
-                                {!isAuthenticated && (
+                                                                {!isAuthenticated && (
                                   <div className="text-[10px] sm:text-xs text-muted-foreground mt-1">
-                                    <Link
-                                      to="/login"
+                                    <button
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setLoginModalOpen(true);
+                                      }}
                                       className="text-primary hover:underline"
                                     >
                                       Clique para entrar
-                                    </Link>
+                                    </button>
                                   </div>
                                 )}
                               </div>
