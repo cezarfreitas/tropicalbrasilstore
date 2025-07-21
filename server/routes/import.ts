@@ -477,7 +477,7 @@ router.get("/export-products", async (req, res) => {
     const csvContent = csvRows.join("\n");
 
     // Set response headers for file download
-    const filterSuffix = filter === 'active' ? '_ativos' : '';
+    const filterSuffix = filter === 'active' ? '_ativos' : filter === 'inactive' ? '_inativos' : '';
     const filename = `produtos_exportados${filterSuffix}_${new Date().toISOString().split("T")[0]}.csv`;
     res.setHeader("Content-Type", "text/csv; charset=utf-8");
     res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
