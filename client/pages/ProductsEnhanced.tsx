@@ -554,7 +554,7 @@ export default function ProductsEnhanced() {
     setFormData({ ...formData, variants: newVariants });
   };
 
-      const selectSizeGroup = (groupKey: keyof typeof SIZE_GROUPS) => {
+        const selectSizeGroup = (groupKey: keyof typeof SIZE_GROUPS) => {
     const group = SIZE_GROUPS[groupKey];
     const groupSizeIds = sizes
       .filter(size => group.sizes.includes(size.size))
@@ -566,6 +566,24 @@ export default function ProductsEnhanced() {
       title: "Grupo Selecionado",
       description: `${group.name}: ${groupSizeIds.length} tamanhos selecionados`,
     });
+  };
+
+  const getSizeGroupStatus = (groupKey: keyof typeof SIZE_GROUPS) => {
+    const group = SIZE_GROUPS[groupKey];
+    const groupSizeIds = sizes
+      .filter(size => group.sizes.includes(size.size))
+      .map(size => size.id);
+
+    const selectedFromGroup = groupSizeIds.filter(id =>
+      selectedSizesForVariants.includes(id)
+    ).length;
+
+    return {
+      total: groupSizeIds.length,
+      selected: selectedFromGroup,
+      isComplete: selectedFromGroup === groupSizeIds.length && groupSizeIds.length > 0,
+      isPartial: selectedFromGroup > 0 && selectedFromGroup < groupSizeIds.length
+    };
   };
 
   const addVariantsForColorAndSizes = () => {
