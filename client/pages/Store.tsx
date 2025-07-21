@@ -383,7 +383,7 @@ export default function Store() {
         console.error("API response not ok:", response.status, response.statusText);
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-    } catch (error) {
+        } catch (error) {
       console.error("Error fetching products:", error);
 
       // Safe error logging
@@ -392,7 +392,9 @@ export default function Store() {
         if (error instanceof Error) {
           errorInfo.message = error.message;
           errorInfo.name = error.name;
-          errorInfo.stack = error.stack;
+          if (error.name === 'AbortError') {
+            errorInfo.reason = 'Request timeout';
+          }
         } else {
           errorInfo.error = String(error);
         }
@@ -401,7 +403,17 @@ export default function Store() {
         console.error("Could not log error details:", logError);
       }
 
-      // Set empty state as fallback
+      // Retry logic for network errors
+      if (retryCount < 2 && (
+        error instanceof TypeError ||
+        (error instanceof Error && error.name === 'AbortError')
+      )) {
+        console.log(`Retrying fetch... (attempt ${retryCount + 1})`);
+        setTimeout(() => fetchProducts(retryCount + 1), 1000 * (retryCount + 1)); // Progressive delay
+        return;
+      }
+
+      // Set empty state as fallback after all retries failed
       setAllProducts([]);
       setCategories([
         {
@@ -414,7 +426,9 @@ export default function Store() {
       setMaxPrice(100);
       setPriceRange([0, 100]);
     } finally {
-      setLoading(false);
+      if (retryCount === 0) { // Only set loading false on the initial call, not retries
+        setLoading(false);
+      }
     }
   };
 
