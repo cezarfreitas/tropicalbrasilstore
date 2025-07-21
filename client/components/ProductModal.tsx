@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +9,7 @@ import {
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useCart } from "@/hooks/use-cart";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, Package, X, Minus, Plus, Check } from "lucide-react";
+import { ShoppingCart, Package, X, Minus, Plus } from "lucide-react";
 
 interface ProductVariant {
   id: number;
@@ -74,7 +72,6 @@ export function ProductModal({
   const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [step, setStep] = useState<'color' | 'selection' | 'quantity'>('color');
   const { addItem } = useCart();
   const { toast } = useToast();
 
@@ -93,12 +90,16 @@ export function ProductModal({
       if (response.ok) {
         const data = await response.json();
         setProduct(data);
-        // Reset selections when new product loads
-        setSelectedColor(null);
+        // Auto-select first color if only one available
+        const colors = getAvailableColors(data);
+        if (colors.length === 1) {
+          setSelectedColor(colors[0].id);
+        } else {
+          setSelectedColor(null);
+        }
         setSelectedGrade(null);
         setSelectedSize(null);
         setQuantity(1);
-        setStep('color');
       }
     } catch (error) {
       console.error("Error fetching product:", error);
@@ -107,11 +108,11 @@ export function ProductModal({
     }
   };
 
-  const getAvailableColors = () => {
-    if (!product?.variants) return [];
+  const getAvailableColors = (productData = product) => {
+    if (!productData?.variants) return [];
     
     const colorMap = new Map();
-    product.variants.forEach((variant) => {
+    productData.variants.forEach((variant) => {
       if (variant.stock > 0 && !colorMap.has(variant.color_id)) {
         colorMap.set(variant.color_id, {
           id: variant.color_id,
@@ -199,8 +200,8 @@ export function ProductModal({
       });
 
       toast({
-        title: "Grade adicionada!",
-        description: `${quantity}x ${grade.name} - ${selectedColorData?.name}`,
+        title: "Adicionado!",
+        description: `${grade.name} - ${selectedColorData?.name}`,
       });
     } else if (!hasGrades() && selectedSize) {
       const variant = product.variants.find(v => 
@@ -232,8 +233,8 @@ export function ProductModal({
       });
 
       toast({
-        title: "Produto adicionado!",
-        description: `${quantity}x ${product.name} - ${selectedColorData?.name}`,
+        title: "Adicionado!",
+        description: `${product.name} - ${selectedColorData?.name}`,
       });
     } else {
       toast({
@@ -253,56 +254,73 @@ export function ProductModal({
     setSelectedGrade(null);
     setSelectedSize(null);
     setQuantity(1);
-    setStep('color');
     onClose();
   };
 
-  const handleColorSelect = (colorId: number) => {
-    setSelectedColor(colorId);
-    setSelectedGrade(null);
-    setSelectedSize(null);
-    setStep('selection');
-  };
-
-  const handleSelectionComplete = () => {
-    if ((hasGrades() && selectedGrade) || (!hasGrades() && selectedSize)) {
-      setStep('quantity');
+  const canAddToCart = () => {
+    if (!selectedColor) return false;
+    if (hasGrades()) {
+      return selectedGrade !== null;
+    } else {
+      return selectedSize !== null;
     }
   };
 
-  const canProceed = () => {
-    if (step === 'color') return selectedColor !== null;
-    if (step === 'selection') return (hasGrades() && selectedGrade) || (!hasGrades() && selectedSize);
-    return true;
-  };
-
-  const getStepTitle = () => {
-    switch (step) {
-      case 'color': return 'Escolha a cor';
-      case 'selection': return hasGrades() ? 'Escolha a grade' : 'Escolha o tamanho';
-      case 'quantity': return 'Quantidade';
-      default: return '';
+  // Auto-select single options
+  useEffect(() => {
+    if (selectedColor && hasGrades()) {
+      const grades = getAvailableGradesForColor();
+      if (grades.length === 1 && canAddGradeToCart(grades[0])) {
+        setSelectedGrade(grades[0].id);
+      }
+    } else if (selectedColor && !hasGrades()) {
+      const sizes = getAvailableSizes();
+      if (sizes.length === 1) {
+        setSelectedSize(sizes[0].id);
+      }
     }
-  };
+  }, [selectedColor, product]);
 
   if (!isOpen) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-4xl max-w-full h-full sm:h-auto sm:max-h-[90vh] p-0 overflow-hidden">
+      <DialogContent className="max-w-sm mx-auto p-0 gap-0 overflow-hidden rounded-2xl">
         <VisuallyHidden>
           <DialogTitle>
             {product ? `Adicionar ${product.name} ao carrinho` : 'Adicionar produto ao carrinho'}
           </DialogTitle>
         </VisuallyHidden>
+
         {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500"></div>
           </div>
         ) : product ? (
-          <div className="flex flex-col h-full">
-            {/* Mobile Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-white sticky top-0 z-10">
+          <div className="bg-white">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
+                  {product.photo ? (
+                    <img
+                      src={product.photo}
+                      alt={product.name}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  ) : (
+                    <Package className="h-5 w-5 text-muted-foreground" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-sm truncate">{product.name}</h3>
+                  {product.base_price && (
+                    <p className="text-orange-500 font-bold text-sm">
+                      R$ {parseFloat(product.base_price.toString()).toFixed(2)}
+                    </p>
+                  )}
+                </div>
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -311,275 +329,133 @@ export function ProductModal({
               >
                 <X className="h-4 w-4" />
               </Button>
-              <h2 className="font-medium text-lg">{product.name}</h2>
-              <div className="w-8" />
             </div>
 
-            {/* Product Image */}
-            <div className="aspect-square sm:aspect-video bg-muted relative">
-              {product.photo ? (
-                <img
-                  src={product.photo}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              ) : (
-                <div className="flex items-center justify-center w-full h-full">
-                  <Package className="h-16 w-16 text-muted-foreground/50" />
-                </div>
-              )}
-              
-              {/* Price overlay */}
-              {product.base_price && (
-                <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg px-3 py-2">
-                  <div className="text-lg font-bold text-orange-500">
-                    R$ {parseFloat(product.base_price.toString()).toFixed(2)}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {hasGrades() ? 'por peça' : 'unitário'}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-              {/* Step Indicator */}
-              <div className="flex items-center justify-center space-x-2 py-2">
-                <div className={`w-2 h-2 rounded-full ${step === 'color' ? 'bg-orange-500' : selectedColor ? 'bg-green-500' : 'bg-gray-300'}`} />
-                <div className={`w-2 h-2 rounded-full ${step === 'selection' ? 'bg-orange-500' : (hasGrades() ? selectedGrade : selectedSize) ? 'bg-green-500' : 'bg-gray-300'}`} />
-                <div className={`w-2 h-2 rounded-full ${step === 'quantity' ? 'bg-orange-500' : 'bg-gray-300'}`} />
-              </div>
-
-              <div className="text-center">
-                <h3 className="text-lg font-medium">{getStepTitle()}</h3>
-              </div>
-
-              {/* Color Selection */}
-              {step === 'color' && (
-                <div className="grid grid-cols-2 gap-3">
+            {/* Quick Selection */}
+            <div className="p-4 space-y-4">
+              {/* Colors */}
+              <div>
+                <div className="text-xs font-medium text-muted-foreground mb-2">Cor</div>
+                <div className="flex gap-2 flex-wrap">
                   {getAvailableColors().map((color) => (
                     <button
                       key={color.id}
-                      onClick={() => handleColorSelect(color.id)}
-                      className={`p-4 border-2 rounded-xl flex items-center gap-3 transition-all ${
+                      onClick={() => setSelectedColor(color.id)}
+                      className={`flex items-center gap-2 p-2 border rounded-lg text-xs ${
                         selectedColor === color.id
                           ? 'border-orange-500 bg-orange-50'
-                          : 'border-gray-200 hover:border-orange-300'
+                          : 'border-gray-200'
                       }`}
                     >
                       <div
-                        className="w-8 h-8 rounded-full border-2 border-white shadow-sm"
-                        style={{ backgroundColor: color.hex_code || '#999999' }}
+                        className="w-4 h-4 rounded-full border border-gray-300"
+                        style={{ backgroundColor: color.hex_code || '#999' }}
                       />
-                      <span className="font-medium text-left">{color.name}</span>
-                      {selectedColor === color.id && (
-                        <Check className="h-5 w-5 text-orange-500 ml-auto" />
-                      )}
+                      <span className="font-medium">{color.name}</span>
                     </button>
                   ))}
                 </div>
-              )}
+              </div>
 
-              {/* Grade/Size Selection */}
-              {step === 'selection' && selectedColor && (
-                <div className="space-y-3">
-                  {hasGrades() ? (
-                    getAvailableGradesForColor().length === 0 ? (
-                      <p className="text-muted-foreground text-center py-8">
-                        Nenhuma grade disponível para esta cor
-                      </p>
-                    ) : (
+              {/* Grades or Sizes */}
+              {selectedColor && (
+                <div>
+                  <div className="text-xs font-medium text-muted-foreground mb-2">
+                    {hasGrades() ? 'Grade' : 'Tamanho'}
+                  </div>
+                  <div className="grid grid-cols-1 gap-2">
+                    {hasGrades() ? (
                       getAvailableGradesForColor().map((grade) => {
                         const canAdd = canAddGradeToCart(grade);
-                        const hasStock = grade.has_full_stock;
-                        
                         return (
                           <button
                             key={grade.id}
                             onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
                             disabled={!canAdd}
-                            className={`w-full p-4 border-2 rounded-xl text-left transition-all ${
+                            className={`p-3 border rounded-lg text-left text-xs ${
                               !canAdd
-                                ? 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed'
+                                ? 'border-gray-200 bg-gray-50 opacity-60'
                                 : selectedGrade === grade.id
                                   ? 'border-orange-500 bg-orange-50'
-                                  : 'border-gray-200 hover:border-orange-300'
+                                  : 'border-gray-200'
                             }`}
                           >
-                            <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <h4 className="font-medium text-base">{grade.name}</h4>
-                                <div className="flex items-center gap-2 mt-2">
-                                  <Badge variant="outline" className="text-xs">
-                                    {grade.total_quantity} peças
-                                  </Badge>
-                                  <Badge variant={canAdd ? (hasStock ? "default" : "secondary") : "destructive"} className="text-xs">
-                                    {product?.sell_without_stock
-                                      ? "Disponível"
-                                      : hasStock
-                                        ? "Estoque OK"
-                                        : grade.has_any_stock
-                                          ? "Estoque parcial"
-                                          : "Sem estoque"}
-                                  </Badge>
-                                </div>
-                                <div className="text-sm text-muted-foreground mt-1">
-                                  {grade.templates.map(t => t.size).join(', ')}
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <div className="font-medium">{grade.name}</div>
+                                <div className="text-muted-foreground">
+                                  {grade.total_quantity} peças • {grade.templates.map(t => t.size).join(', ')}
                                 </div>
                               </div>
-                              <div className="text-right ml-4">
-                                {selectedGrade === grade.id && (
-                                  <Check className="h-5 w-5 text-orange-500 mb-2" />
-                                )}
-                                {product.base_price && (
-                                  <div className={`font-bold ${canAdd ? 'text-orange-500' : 'text-muted-foreground'}`}>
-                                    R$ {(product.base_price * grade.total_quantity).toFixed(2)}
-                                  </div>
-                                )}
-                              </div>
+                              {product.base_price && (
+                                <div className="text-orange-500 font-bold">
+                                  R$ {(product.base_price * grade.total_quantity).toFixed(2)}
+                                </div>
+                              )}
                             </div>
                           </button>
                         );
                       })
-                    )
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3">
-                      {getAvailableSizes().length === 0 ? (
-                        <p className="text-muted-foreground text-center py-8 col-span-2">
-                          Nenhum tamanho disponível para esta cor
-                        </p>
-                      ) : (
-                        getAvailableSizes().map((size) => (
+                    ) : (
+                      <div className="grid grid-cols-3 gap-2">
+                        {getAvailableSizes().map((size) => (
                           <button
                             key={size.id}
                             onClick={() => setSelectedSize(size.id)}
-                            className={`p-4 border-2 rounded-xl text-center transition-all ${
+                            className={`p-2 border rounded-lg text-center text-xs ${
                               selectedSize === size.id
                                 ? 'border-orange-500 bg-orange-50'
-                                : 'border-gray-200 hover:border-orange-300'
+                                : 'border-gray-200'
                             }`}
                           >
-                            <div className="font-medium text-lg">{size.name}</div>
-                            <div className="text-xs text-muted-foreground mt-1">
-                              {size.stock} disponível
-                            </div>
-                            {selectedSize === size.id && (
-                              <Check className="h-5 w-5 text-orange-500 mx-auto mt-2" />
-                            )}
+                            <div className="font-medium">{size.name}</div>
+                            <div className="text-muted-foreground">{size.stock}</div>
                           </button>
-                        ))
-                      )}
-                    </div>
-                  )}
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 
-              {/* Quantity Selection */}
-              {step === 'quantity' && (
-                <div className="space-y-6">
-                  <div className="text-center">
-                    <div className="text-lg font-medium mb-2">Quantidade</div>
-                    <div className="flex items-center justify-center gap-4">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="h-12 w-12"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <Input
-                        type="number"
-                        min="1"
-                        value={quantity}
-                        onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="w-20 h-12 text-center text-lg font-medium"
-                      />
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => setQuantity(quantity + 1)}
-                        className="h-12 w-12"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
+              {/* Quantity & Add Button */}
+              {canAddToCart() && (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Minus className="h-3 w-3" />
+                    </Button>
+                    <span className="w-8 text-center text-sm font-medium">{quantity}</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Plus className="h-3 w-3" />
+                    </Button>
                   </div>
 
-                  {/* Summary */}
-                  <Card className="bg-orange-50 border-orange-200">
-                    <CardContent className="p-4">
-                      <div className="text-center">
-                        <div className="text-sm text-muted-foreground mb-2">Resumo do pedido</div>
-                        <div className="text-lg font-medium">
-                          {quantity}x {product.name}
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          Cor: {getAvailableColors().find(c => c.id === selectedColor)?.name}
-                        </div>
-                        {hasGrades() && selectedGrade && (
-                          <div className="text-sm text-muted-foreground">
-                            Grade: {getAvailableGradesForColor().find(g => g.id === selectedGrade)?.name}
-                          </div>
-                        )}
-                        {!hasGrades() && selectedSize && (
-                          <div className="text-sm text-muted-foreground">
-                            Tamanho: {getAvailableSizes().find(s => s.id === selectedSize)?.name}
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <Button 
+                    onClick={addToCart}
+                    className="bg-orange-500 hover:bg-orange-600 text-white"
+                    size="sm"
+                  >
+                    <ShoppingCart className="mr-1 h-3 w-3" />
+                    Adicionar
+                  </Button>
                 </div>
               )}
-            </div>
-
-            {/* Bottom Navigation */}
-            <div className="p-4 border-t bg-white">
-              <div className="flex gap-3">
-                {step !== 'color' && (
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      if (step === 'quantity') setStep('selection');
-                      else if (step === 'selection') setStep('color');
-                    }}
-                    className="flex-1"
-                  >
-                    Voltar
-                  </Button>
-                )}
-                
-                {step === 'quantity' ? (
-                  <Button
-                    onClick={addToCart}
-                    className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
-                    size="lg"
-                  >
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    Adicionar ao Carrinho
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => {
-                      if (step === 'color' && selectedColor) setStep('selection');
-                      else if (step === 'selection') handleSelectionComplete();
-                    }}
-                    disabled={!canProceed()}
-                    className="flex-1 bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-300"
-                    size="lg"
-                  >
-                    Continuar
-                  </Button>
-                )}
-              </div>
             </div>
           </div>
         ) : (
-          <div className="text-center py-16">
-            <p className="text-muted-foreground">Produto não encontrado</p>
+          <div className="text-center py-8">
+            <p className="text-muted-foreground text-sm">Produto não encontrado</p>
           </div>
         )}
       </DialogContent>
