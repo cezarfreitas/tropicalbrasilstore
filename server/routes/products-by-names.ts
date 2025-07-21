@@ -7,6 +7,41 @@ import { promisify } from "util";
 import { pipeline } from "stream";
 
 const router = Router();
+const streamPipeline = promisify(pipeline);
+
+// Download image from URL and save to public folder
+async function downloadImage(url: string, filename: string): Promise<string | null> {
+  try {
+    const publicDir = path.join(process.cwd(), "public", "uploads", "products");
+
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(publicDir)) {
+      fs.mkdirSync(publicDir, { recursive: true });
+    }
+
+    const ext = path.extname(url) || ".jpg";
+    const safeName = filename.replace(/[^a-z0-9]/gi, "_").toLowerCase();
+    const imagePath = path.join(publicDir, `${safeName}${ext}`);
+    const publicPath = `/uploads/products/${safeName}${ext}`;
+
+    const response = await axios({
+      method: "GET",
+      url: url,
+      responseType: "stream",
+      timeout: 30000,
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      },
+    });
+
+    await streamPipeline(response.data, fs.createWriteStream(imagePath));
+
+    return publicPath;
+  } catch (error) {
+    console.error(`Error downloading image from ${url}:`, error);
+    return null;
+  }
+}
 
 interface ProductByNamesRequest {
   name: string;
