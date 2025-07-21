@@ -103,6 +103,7 @@ export function createServer() {
   app.use("/api/colors", colorsRouter);
   app.use("/api/products", productsRouter);
   app.use("/api/products-enhanced", productsEnhancedRouter);
+  app.use("/api/products-by-names", productsByNamesRouter);
   app.use("/api/grades", gradesRouter);
   app.use("/api/seed", seedRouter);
   app.use("/api/stats", statsRouter);
