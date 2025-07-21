@@ -220,4 +220,169 @@ router.patch("/", async (req, res) => {
   }
 });
 
+// Backup database
+router.post("/backup", async (req, res) => {
+  try {
+    // Get all tables data
+    const tables = [
+      'products', 'categories', 'sizes', 'colors', 'size_groups',
+      'grade_vendida', 'grade_templates', 'product_color_grades', 'product_variants',
+      'store_settings', 'customers', 'orders', 'order_items', 'customer_auth'
+    ];
+
+    const backup: any = {
+      timestamp: new Date().toISOString(),
+      version: "1.0",
+      tables: {}
+    };
+
+    for (const table of tables) {
+      try {
+        const [rows] = await db.execute(`SELECT * FROM ${table}`);
+        backup.tables[table] = rows;
+      } catch (error: any) {
+        console.log(`Table ${table} not found or error:`, error.message);
+        backup.tables[table] = [];
+      }
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="backup-${new Date().toISOString().split('T')[0]}.json"`);
+    res.json(backup);
+  } catch (error) {
+    console.error("Error creating backup:", error);
+    res.status(500).json({ error: "Failed to create backup" });
+  }
+});
+
+// Restore database (template creation)
+router.post("/restore-template", async (req, res) => {
+  const connection = await db.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    // Clear existing data (except customers and orders for safety)
+    const tablesToClear = [
+      'product_variants', 'product_color_grades', 'grade_templates',
+      'grade_vendida', 'products', 'colors', 'sizes', 'categories', 'size_groups'
+    ];
+
+    for (const table of tablesToClear) {
+      try {
+        await connection.execute(`DELETE FROM ${table}`);
+        await connection.execute(`ALTER TABLE ${table} AUTO_INCREMENT = 1`);
+      } catch (error: any) {
+        console.log(`Could not clear table ${table}:`, error.message);
+      }
+    }
+
+    // Create template data
+    await createTemplateData(connection);
+
+    await connection.commit();
+    res.json({ message: "Template database created successfully" });
+  } catch (error) {
+    await connection.rollback();
+    console.error("Error creating template database:", error);
+    res.status(500).json({ error: "Failed to create template database" });
+  } finally {
+    connection.release();
+  }
+});
+
+// Import backup data
+router.post("/restore", async (req, res) => {
+  const connection = await db.getConnection();
+  try {
+    const { backup, preserveOrders = true } = req.body;
+
+    if (!backup || !backup.tables) {
+      return res.status(400).json({ error: "Invalid backup data" });
+    }
+
+    await connection.beginTransaction();
+
+    // Tables to restore (excluding sensitive data if preserveOrders is true)
+    const tablesToRestore = preserveOrders
+      ? ['products', 'categories', 'sizes', 'colors', 'size_groups', 'grade_vendida', 'grade_templates', 'product_color_grades', 'product_variants', 'store_settings']
+      : Object.keys(backup.tables);
+
+    for (const table of tablesToRestore) {
+      if (!backup.tables[table]) continue;
+
+      try {
+        // Clear table data
+        await connection.execute(`DELETE FROM ${table}`);
+        await connection.execute(`ALTER TABLE ${table} AUTO_INCREMENT = 1`);
+
+        // Insert backup data
+        const data = backup.tables[table];
+        if (data.length > 0) {
+          const columns = Object.keys(data[0]);
+          const placeholders = columns.map(() => '?').join(', ');
+          const sql = `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`;
+
+          for (const row of data) {
+            const values = columns.map(col => row[col]);
+            await connection.execute(sql, values);
+          }
+        }
+      } catch (error: any) {
+        console.log(`Error restoring table ${table}:`, error.message);
+      }
+    }
+
+    await connection.commit();
+    res.json({ message: "Database restored successfully" });
+  } catch (error) {
+    await connection.rollback();
+    console.error("Error restoring database:", error);
+    res.status(500).json({ error: "Failed to restore database" });
+  } finally {
+    connection.release();
+  }
+});
+
+async function createTemplateData(connection: any) {
+  // Create basic categories
+  await connection.execute(`
+    INSERT INTO categories (name, description) VALUES
+    ('Masculino', 'Chinelos masculinos'),
+    ('Feminino', 'Chinelos femininos'),
+    ('Infantil', 'Chinelos infantis'),
+    ('Unissex', 'Chinelos unissex')
+  `);
+
+  // Create basic sizes
+  await connection.execute(`
+    INSERT INTO sizes (size, display_order) VALUES
+    ('32', 1), ('33', 2), ('34', 3), ('35', 4), ('36', 5),
+    ('37', 6), ('38', 7), ('39', 8), ('40', 9), ('41', 10),
+    ('42', 11), ('43', 12), ('44', 13), ('45', 14)
+  `);
+
+  // Create basic colors
+  await connection.execute(`
+    INSERT INTO colors (name, hex_code) VALUES
+    ('Preto', '#000000'),
+    ('Branco', '#FFFFFF'),
+    ('Azul Marinho', '#000080'),
+    ('Vermelho', '#FF0000'),
+    ('Rosa', '#FFC0CB'),
+    ('Verde', '#008000'),
+    ('Amarelo', '#FFFF00'),
+    ('Cinza', '#808080')
+  `);
+
+  // Create sample products
+  await connection.execute(`
+    INSERT INTO products (name, description, base_price, category_id, active) VALUES
+    ('Chinelo Clássico Masculino', 'Chinelo confortável para o dia a dia', 25.90, 1, true),
+    ('Chinelo Feminino Delicado', 'Chinelo elegante para mulheres', 29.90, 2, true),
+    ('Chinelo Infantil Colorido', 'Chinelo divertido para crianças', 19.90, 3, true)
+  `);
+
+  console.log("Template data created successfully");
+}
+
 export { router as settingsRouter };
