@@ -433,28 +433,24 @@ export function ProductModal({
                           <button
                             key={size.id}
                             onClick={() => setSelectedSize(size.id)}
-                            className={`p-3 border rounded-lg text-left ${
+                            className={`p-2.5 border rounded-lg text-left ${
                               selectedSize === size.id
                                 ? 'border-orange-500 bg-orange-50'
                                 : 'border-gray-200'
                             }`}
                           >
-                            <div className="flex justify-between items-center">
-                              <div>
+                            <div className="space-y-1">
+                              <div className="flex justify-between items-center">
                                 <div className="font-medium text-sm">{size.name}</div>
-                                <div className="text-xs text-orange-600 font-medium">
-                                  1 peça
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <div className="text-xs font-bold text-muted-foreground">
-                                  {size.stock} disp.
-                                </div>
                                 {product.base_price && (
                                   <div className="text-orange-500 font-bold text-xs">
                                     R$ {parseFloat(product.base_price.toString()).toFixed(2)}
                                   </div>
                                 )}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                <span className="font-medium text-orange-600">1 peça</span>
+                                <span className="ml-2">{size.stock} disponível</span>
                               </div>
                             </div>
                           </button>
