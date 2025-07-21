@@ -162,16 +162,25 @@ function Store() {
     } catch (err: any) {
       console.error('Error fetching products:', err);
 
-      // Retry logic for network errors
-      if (retryCount < 2 && (err.name === 'TypeError' || err.message?.includes('Failed to fetch'))) {
-        console.log(`Retrying... (attempt ${retryCount + 1})`);
-        setTimeout(() => fetchProducts(page, retryCount + 1), 1000);
+      // Retry logic for network errors, fetch failures, and browser compatibility issues
+      const shouldRetry = retryCount < 3 && (
+        err.name === 'TypeError' ||
+        err.message?.includes('Failed to fetch') ||
+        err.message?.includes('Network error') ||
+        err.message?.includes('Request timeout') ||
+        !err.message // Unknown errors
+      );
+
+      if (shouldRetry) {
+        console.log(`Retrying... (attempt ${retryCount + 1}/3)`);
+        const delay = Math.min(1000 * Math.pow(2, retryCount), 5000); // Exponential backoff
+        setTimeout(() => fetchProducts(page, retryCount + 1), delay);
         return;
       }
 
       // Set error state
-      const errorMessage = err.message || 'Erro ao carregar produtos';
-      console.error('Final error:', errorMessage);
+      const errorMessage = err.message || 'Erro de conexão. Verifique sua internet e tente novamente.';
+      console.error('Final error after retries:', errorMessage);
       setError(errorMessage);
       setProducts([]);
       setPagination(null);
