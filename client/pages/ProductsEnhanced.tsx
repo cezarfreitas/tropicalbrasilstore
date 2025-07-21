@@ -369,8 +369,56 @@ export default function ProductsEnhanced() {
         description: error.message,
         variant: "destructive",
       });
-    } finally {
+        } finally {
       setToggleLoading(null);
+    }
+  };
+
+  const handleToggleSellWithoutStock = async (product: EnhancedProduct) => {
+    try {
+      setToggleSellLoading(product.id);
+
+      // Atualiza o estado local imediatamente para resposta instantânea
+      setProducts(prevProducts =>
+        prevProducts.map(p =>
+          p.id === product.id ? { ...p, sell_without_stock: !p.sell_without_stock } : p
+        )
+      );
+
+      const response = await fetch(`/api/products-enhanced/${product.id}/toggle-sell-without-stock`, {
+        method: "PATCH",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        toast({
+          title: "Sucesso",
+          description: data.message,
+        });
+        // Não precisa fazer fetchProducts() - já atualizou o estado local
+      } else {
+        // Se falhou, reverte o estado local
+        setProducts(prevProducts =>
+          prevProducts.map(p =>
+            p.id === product.id ? { ...p, sell_without_stock: product.sell_without_stock } : p
+          )
+        );
+        throw new Error("Erro ao alterar configuração de venda sem estoque");
+      }
+    } catch (error: any) {
+      // Se houver erro, reverte o estado local
+      setProducts(prevProducts =>
+        prevProducts.map(p =>
+          p.id === product.id ? { ...p, sell_without_stock: product.sell_without_stock } : p
+        )
+      );
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setToggleSellLoading(null);
     }
   };
 
