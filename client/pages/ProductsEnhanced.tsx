@@ -1087,7 +1087,7 @@ export default function ProductsEnhanced() {
                         <div className="space-y-3 mt-3">
                           <div>
                             <Label className="text-sm font-medium">Grupos Rápidos:</Label>
-                                                        <div className="flex flex-wrap gap-2 mt-2">
+                                                                                    <div className="flex flex-wrap gap-2 mt-2">
                               {Object.entries(SIZE_GROUPS).map(([key, group]) => {
                                 const status = getSizeGroupStatus(key as keyof typeof SIZE_GROUPS);
                                 return (
@@ -1109,6 +1109,16 @@ export default function ProductsEnhanced() {
                                   </Button>
                                 );
                               })}
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setSelectedSizesForVariants([])}
+                                className="flex items-center gap-2"
+                              >
+                                <X className="h-4 w-4" />
+                                Limpar
+                              </Button>
                             </div>
                             <p className="text-xs text-muted-foreground mt-1">
                               Clique em um grupo para selecionar automaticamente os tamanhos correspondentes
