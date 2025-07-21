@@ -59,8 +59,8 @@ router.get("/products", async (req, res) => {
 
     const [products] = await db.execute(productQuery, [
       ...queryParams,
-      limit,
-      offset,
+      parseInt(limit.toString()),
+      parseInt(offset.toString()),
     ]);
 
     // For each product, get available colors
