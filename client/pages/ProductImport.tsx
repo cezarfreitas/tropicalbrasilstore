@@ -247,7 +247,7 @@ export default function ProductImport() {
       sale_price: ["preco_venda", "sale_price", "preco", "price", "valor"],
       photo_url: ["foto", "photo", "photo_url", "imagem", "image"],
       size_group_id: ["grupo_tamanho", "size_group", "tamanhos", "sizes"],
-      colors: ["cores", "colors", "cor", "color"],
+      color: ["cor", "color", "cores", "colors"],
       sku: ["sku", "codigo"],
       description: ["descricao", "description", "desc"],
       stock_per_variant: ["estoque", "stock", "quantity", "qtd"],
