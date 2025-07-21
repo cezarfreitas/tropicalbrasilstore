@@ -104,8 +104,9 @@ export function createServer() {
   app.use("/api/settings", settingsRouter);
     app.use("/api/expanded-seed", expandedSeedRouter);
   app.use("/api/notifications", notificationsRouter);
-  app.use("/api/mockup-data", mockupDataRouter);
+    app.use("/api/mockup-data", mockupDataRouter);
   app.use("/api/reset-products", resetProductsRouter);
+  app.use("/api/verify-products", verifyProductsRouter);
 
   return app;
 }
