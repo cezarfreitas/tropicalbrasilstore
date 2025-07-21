@@ -1593,22 +1593,26 @@ export default function ProductsEnhanced() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {products.map((product) => (
+                                    {products.map((product) => (
                     <TableRow key={product.id}>
                       <TableCell>
-                        <div className="flex items-center gap-3">
-                          {product.photo && (
+                        <div className="w-16 h-16 rounded border overflow-hidden bg-muted flex items-center justify-center">
+                          {product.photo ? (
                             <img
                               src={product.photo}
                               alt={product.name}
-                              className="w-12 h-12 rounded object-cover border"
+                              className="w-full h-full object-cover"
                             />
+                          ) : (
+                            <Package className="h-6 w-6 text-muted-foreground" />
                           )}
-                          <div>
-                            <div className="font-medium">{product.name}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {product.sku && `SKU: ${product.sku}`}
-                            </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{product.name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {product.sku && `SKU: ${product.sku}`}
                           </div>
                         </div>
                       </TableCell>
