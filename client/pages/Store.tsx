@@ -142,38 +142,10 @@ function Store() {
     }
   };
 
-  // Fetch categories
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('/api/store/categories');
-      if (response.ok) {
-        const data = await response.json();
-        setCategories([
-          { id: 'all', name: 'Todas as Categorias' },
-          ...data
-        ]);
-      }
-    } catch (err) {
-      console.warn('Failed to fetch categories:', err);
-      setCategories([
-        { id: 'all', name: 'Todas as Categorias' },
-        { id: '1', name: 'Chinelos' },
-      ]);
-    }
-  };
-
   // Effects
   useEffect(() => {
-    fetchCategories();
     fetchProducts(1);
   }, []);
-
-  useEffect(() => {
-    if (currentPage !== 1) {
-      setCurrentPage(1);
-    }
-    fetchProducts(1);
-  }, [selectedCategory]);
 
   // Handlers
   const handleProductClick = (productId: number) => {
