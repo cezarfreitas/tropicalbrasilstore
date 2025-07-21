@@ -46,8 +46,9 @@ export function createServer() {
       await createStoreSchema(); // This creates store-specific tables (customers, orders, order_items)
       await createCustomerAuthTable(); // Authentication tables
             await createNotificationSettings(); // Settings tables
-            await addSellWithoutStockColumn(); // Add sell without stock functionality
+                  await addSellWithoutStockColumn(); // Add sell without stock functionality
       await addParentSkuColumn(); // Add parent SKU for variant grouping
+      await addSizeGroupsTable(); // Add size groups table and default data
       await fixOrdersTable(); // Fix any missing columns
       await checkAndFixTables(); // Final table structure checks
       console.log("✅ All database initialization completed successfully");
