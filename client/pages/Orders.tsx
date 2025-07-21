@@ -299,13 +299,25 @@ export default function Orders() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Pedidos</h1>
           <p className="text-muted-foreground">
             Gerencie todos os pedidos da loja
           </p>
         </div>
+        <Button
+          onClick={exportToExcel}
+          disabled={exporting || orders.length === 0}
+          variant="outline"
+        >
+          {exporting ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Download className="mr-2 h-4 w-4" />
+          )}
+          {exporting ? "Exportando..." : "Exportar Excel"}
+        </Button>
       </div>
 
       {/* Statistics Cards */}
