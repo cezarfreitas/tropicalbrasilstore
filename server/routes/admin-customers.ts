@@ -119,9 +119,9 @@ router.post("/", async (req, res) => {
 // Update customer information
 router.patch("/:email", async (req, res) => {
   try {
-    const { name, whatsapp } = req.body;
+    const { name, whatsapp, minimum_order } = req.body;
 
-    if (!name && !whatsapp) {
+    if (!name && !whatsapp && minimum_order === undefined) {
       return res.status(400).json({ error: "No fields to update" });
     }
 
