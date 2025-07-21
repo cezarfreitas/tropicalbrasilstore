@@ -104,23 +104,13 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="flex items-center gap-2">
-              <div className="inline-flex items-center justify-center w-8 h-8 bg-primary rounded-lg">
-                <Package className="h-4 w-4 text-primary-foreground" />
-              </div>
-              Entrar na Chinelos Store
-            </DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-6 w-6 p-0"
-              onClick={handleClose}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+                <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <div className="inline-flex items-center justify-center w-8 h-8 bg-primary rounded-lg">
+              <Package className="h-4 w-4 text-primary-foreground" />
+            </div>
+            Entrar na Chinelos Store
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
