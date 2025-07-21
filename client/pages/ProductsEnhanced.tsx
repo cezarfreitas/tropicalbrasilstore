@@ -65,34 +65,7 @@ import {
   
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-// Grupos de tamanhos predefinidos
-const SIZE_GROUPS = {
-  masculino: {
-    name: "Masculino",
-    description: "Tamanhos masculinos adultos",
-    sizes: ["38", "39", "40", "41", "42", "43", "44"],
-    icon: "👨"
-  },
-  feminino: {
-    name: "Feminino",
-    description: "Tamanhos femininos adultos",
-    sizes: ["33", "34", "35", "36", "37", "38", "39"],
-    icon: "👩"
-  },
-  infantil: {
-    name: "Infantil",
-    description: "Tamanhos infantis",
-    sizes: ["32", "33", "34", "35", "36"],
-    icon: "👶"
-  },
-  todos: {
-    name: "Todos",
-    description: "Todos os tamanhos disponíveis",
-    sizes: ["32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44"],
-    icon: "👥"
-  }
-};
+import { useSizeGroups } from "@/hooks/use-size-groups";
 
 interface ProductVariant {
   id?: number;
@@ -431,7 +404,7 @@ export default function ProductsEnhanced() {
           title: "Sucesso",
           description: data.message,
         });
-        // Não precisa fazer fetchProducts() - já atualizou o estado local
+        // Não precisa fazer fetchProducts() - j�� atualizou o estado local
       } else {
         // Se falhou, reverte o estado local
         setProducts(prevProducts =>
