@@ -443,7 +443,13 @@ export default function ProductImport() {
 
         toast({
           title: "Exportação Concluída",
-          description: `Arquivo de produtos ${filter === "active" ? "ativos" : "todos"} baixado com sucesso`,
+          description: `Arquivo de produtos ${
+            filter === "active"
+              ? "ativos"
+              : filter === "inactive"
+                ? "inativos"
+                : "todos"
+          } baixado com sucesso`,
         });
       } else {
         throw new Error("Erro ao exportar produtos");
@@ -570,7 +576,7 @@ export default function ProductImport() {
                     <li>• Edição em massa no Excel</li>
                     <li>• Migração para outro sistema</li>
                     <li>• Análise de dados de produtos</li>
-                    <li>• Compartilhamento de catálogo</li>
+                    <li>• Compartilhamento de cat��logo</li>
                     <li>• Importação em outro ambiente</li>
                   </ul>
                 </div>
