@@ -54,7 +54,8 @@ export function createServer() {
       await addParentSkuColumn(); // Add parent SKU for variant grouping
             await addSizeGroupsTable(); // Add size groups table and default data
             await createProductVariantsTable(); // Create product variants table
-      await redesignGradeSystem(); // Create grade templates and product color grades tables
+            await redesignGradeSystem(); // Create grade templates and product color grades tables
+      await createStoreSettingsTable(); // Create store settings table
       await fixOrdersTable(); // Fix any missing columns
       await checkAndFixTables(); // Final table structure checks
       console.log("✅ All database initialization completed successfully");
