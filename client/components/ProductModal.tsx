@@ -290,6 +290,11 @@ export function ProductModal({
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-4xl max-w-full h-full sm:h-auto sm:max-h-[90vh] p-0 overflow-hidden">
+        <VisuallyHidden>
+          <DialogTitle>
+            {product ? `Adicionar ${product.name} ao carrinho` : 'Adicionar produto ao carrinho'}
+          </DialogTitle>
+        </VisuallyHidden>
         {loading ? (
           <div className="flex items-center justify-center py-16">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
