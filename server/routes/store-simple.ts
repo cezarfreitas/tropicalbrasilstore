@@ -391,4 +391,25 @@ router.get("/products/:id", async (req, res) => {
   }
 });
 
+// Get categories for store filtering
+router.get("/categories", async (req, res) => {
+  try {
+    const [categories] = await db.execute(`
+      SELECT DISTINCT
+        c.id,
+        c.name,
+        c.description
+      FROM categories c
+      INNER JOIN products p ON c.id = p.category_id
+      WHERE p.active = true
+      ORDER BY c.name
+    `);
+
+    res.json(categories);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ error: "Failed to fetch categories" });
+  }
+});
+
 export { router as storeSimpleRouter };
