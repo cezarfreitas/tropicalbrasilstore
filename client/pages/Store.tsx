@@ -42,13 +42,8 @@ interface PaginationInfo {
 function Store() {
   // State
   const [products, setProducts] = useState<StoreProduct[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  // Filters
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState('');
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
