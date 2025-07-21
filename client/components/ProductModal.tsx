@@ -383,58 +383,45 @@ export function ProductModal({
                                   : 'border-gray-200'
                             }`}
                           >
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
                               {/* Grade Header */}
-                              <div className="flex justify-between items-start">
-                                <div>
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
                                   <div className="font-medium text-sm">{grade.name}</div>
-                                  <div className="text-orange-600 text-xs font-medium">
-                                    {grade.total_quantity} peças total
-                                  </div>
+                                  <div className={`w-1.5 h-1.5 rounded-full ${
+                                    canAdd ? 'bg-green-500' : 'bg-red-500'
+                                  }`} />
                                 </div>
                                 {product.base_price && (
-                                  <div className="text-right">
-                                    <div className="text-orange-500 font-bold text-sm">
-                                      R$ {(product.base_price * grade.total_quantity).toFixed(2)}
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                      total da grade
-                                    </div>
+                                  <div className="text-orange-500 font-bold text-sm">
+                                    R$ {(product.base_price * grade.total_quantity).toFixed(2)}
                                   </div>
                                 )}
                               </div>
 
-                              {/* Size Breakdown */}
-                              <div className="grid grid-cols-2 gap-1">
-                                {sortedTemplates.map((template, index) => (
-                                  <div
-                                    key={`${template.size_id}-${index}`}
-                                    className="flex justify-between items-center bg-white rounded px-2 py-1 border border-gray-100"
-                                  >
-                                    <span className="text-xs font-medium text-gray-700">
-                                      {template.size}
+                              {/* Single Line Grade Breakdown */}
+                              <div className="text-xs text-muted-foreground">
+                                <span className="font-medium text-orange-600">
+                                  {grade.total_quantity} peças:
+                                </span>
+                                <span className="ml-1">
+                                  {sortedTemplates.map((template, index) => (
+                                    <span key={`${template.size_id}-${index}`}>
+                                      {template.size}({template.required_quantity}un){index < sortedTemplates.length - 1 ? ' • ' : ''}
                                     </span>
-                                    <span className="text-xs font-bold text-orange-600">
-                                      {template.required_quantity}un
-                                    </span>
-                                  </div>
-                                ))}
+                                  ))}
+                                </span>
                               </div>
 
-                              {/* Stock Status */}
-                              <div className="flex items-center gap-2">
-                                <div className={`w-2 h-2 rounded-full ${
-                                  canAdd ? 'bg-green-500' : 'bg-red-500'
-                                }`} />
-                                <span className="text-xs text-muted-foreground">
-                                  {product?.sell_without_stock
-                                    ? "Disponível (venda sem estoque)"
-                                    : grade.has_full_stock
-                                      ? "Estoque completo disponível"
-                                      : grade.has_any_stock
-                                        ? "Estoque parcial - indisponível"
-                                        : "Sem estoque"}
-                                </span>
+                              {/* Stock Status - Compact */}
+                              <div className="text-xs text-muted-foreground">
+                                {product?.sell_without_stock
+                                  ? "✓ Disponível (venda sem estoque)"
+                                  : grade.has_full_stock
+                                    ? "✓ Estoque completo"
+                                    : grade.has_any_stock
+                                      ? "⚠ Estoque parcial"
+                                      : "✗ Sem estoque"}
                               </div>
                             </div>
                           </button>
