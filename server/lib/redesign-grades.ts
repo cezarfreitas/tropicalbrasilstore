@@ -2,44 +2,76 @@ import db from "./db";
 
 export async function redesignGradeSystem() {
   try {
-    console.log("Redesigning Grade system...");
+    console.log("Setting up Grade system tables...");
 
-    // 1. Backup existing grade_items data before changes
-    const [existingGradeItems] = await db.execute(`
-      SELECT * FROM grade_items
+    // Check if grade_templates table already exists
+    const [templatesTable] = await db.execute(`
+      SELECT TABLE_NAME
+      FROM information_schema.TABLES
+      WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'grade_templates'
     `);
 
-    // 2. Drop existing grade_items table (wrong design)
+    const [productColorGradesTable] = await db.execute(`
+      SELECT TABLE_NAME
+      FROM information_schema.TABLES
+      WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'product_color_grades'
+    `);
+
+    if ((templatesTable as any[]).length > 0 && (productColorGradesTable as any[]).length > 0) {
+      console.log("✅ Grade system tables already exist");
+      return;
+    }
+
+    // 1. Backup existing grade_items data before changes (only if table exists)
+    let existingGradeItems: any[] = [];
+    try {
+      const [items] = await db.execute(`SELECT * FROM grade_items`);
+      existingGradeItems = items as any[];
+    } catch (error: any) {
+      if (error.code !== 'ER_NO_SUCH_TABLE') {
+        console.log("grade_items table doesn't exist, continuing...");
+      }
+    }
+
+    // 2. Drop existing grade_items table (wrong design) - only if exists
     await db.execute("DROP TABLE IF EXISTS grade_items");
 
     // 3. Create new grade_templates table (defines size quantities only)
-    await db.execute(`
-      CREATE TABLE grade_templates (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        grade_id INT NOT NULL,
-        size_id INT NOT NULL,
-        required_quantity INT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (grade_id) REFERENCES grade_vendida(id) ON DELETE CASCADE,
-        FOREIGN KEY (size_id) REFERENCES sizes(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_grade_size (grade_id, size_id)
-      )
-    `);
+    if ((templatesTable as any[]).length === 0) {
+      await db.execute(`
+        CREATE TABLE grade_templates (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          grade_id INT NOT NULL,
+          size_id INT NOT NULL,
+          required_quantity INT NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (grade_id) REFERENCES grade_vendida(id) ON DELETE CASCADE,
+          FOREIGN KEY (size_id) REFERENCES sizes(id) ON DELETE CASCADE,
+          UNIQUE KEY unique_grade_size (grade_id, size_id)
+        )
+      `);
+      console.log("✅ Created grade_templates table");
+    }
 
     // 4. Create product_color_grades table (assigns grades to product+color combinations)
-    await db.execute(`
-      CREATE TABLE product_color_grades (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        product_id INT NOT NULL,
-        color_id INT NOT NULL,
-        grade_id INT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-        FOREIGN KEY (color_id) REFERENCES colors(id) ON DELETE CASCADE,
-        FOREIGN KEY (grade_id) REFERENCES grade_vendida(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_product_color_grade (product_id, color_id, grade_id)
-      )
-    `);
+    if ((productColorGradesTable as any[]).length === 0) {
+      await db.execute(`
+        CREATE TABLE product_color_grades (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          product_id INT NOT NULL,
+          color_id INT NOT NULL,
+          grade_id INT NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+          FOREIGN KEY (color_id) REFERENCES colors(id) ON DELETE CASCADE,
+          FOREIGN KEY (grade_id) REFERENCES grade_vendida(id) ON DELETE CASCADE,
+          UNIQUE KEY unique_product_color_grade (product_id, color_id, grade_id)
+        )
+      `);
+      console.log("✅ Created product_color_grades table");
+    }
 
     // 5. Clean up grade_vendida table - remove fields that don't make sense for templates
     try {
