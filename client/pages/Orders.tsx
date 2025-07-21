@@ -534,16 +534,16 @@ export default function Orders() {
               </SelectContent>
             </Select>
 
-            {/* Date Filter */}
+                        {/* Date Filter */}
             <Select
-              value={dateFilter}
-              onValueChange={(value) => setDateFilter(value)}
+              value={dateFilter || "all"}
+              onValueChange={(value) => setDateFilter(value === "all" ? "" : value)}
             >
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Período" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="today">Hoje</SelectItem>
                 <SelectItem value="week">Esta semana</SelectItem>
                 <SelectItem value="month">Este mês</SelectItem>
