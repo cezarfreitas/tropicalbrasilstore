@@ -679,7 +679,7 @@ export default function Store() {
                                                     <h3 className="font-semibold text-xs sm:text-sm line-clamp-2 leading-tight min-h-[28px] sm:min-h-[32px]">
                             {product.name}
                           </h3>
-                          <div className="flex items-center justify-between">
+                                                    <div className="flex items-center justify-center">
                             
                                                         {product.available_colors &&
                               product.available_colors.length > 0 ? (
