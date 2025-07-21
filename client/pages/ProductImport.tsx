@@ -661,11 +661,12 @@ export default function ProductImport() {
                     <TableCell>{item.data.name}</TableCell>
                     <TableCell>{item.data.category_id}</TableCell>
                     <TableCell>{item.data.base_price}</TableCell>
+                    <TableCell>{item.data.sale_price}</TableCell>
                     <TableCell>
                       {item.data.photo_url && (
-                        <a 
-                          href={item.data.photo_url} 
-                          target="_blank" 
+                        <a
+                          href={item.data.photo_url}
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:underline text-xs"
                         >
