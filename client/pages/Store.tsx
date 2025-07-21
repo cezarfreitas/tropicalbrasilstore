@@ -279,7 +279,7 @@ function Store() {
                             R$ {parseFloat(product.base_price.toString()).toFixed(2)}
                           </div>
                           {product.suggested_price && (
-                            <div className="text-xs text-muted-foreground line-through">
+                            <div className="text-xs text-muted-foreground">
                               Sugerido: R$ {parseFloat(product.suggested_price.toString()).toFixed(2)}
                             </div>
                           )}
