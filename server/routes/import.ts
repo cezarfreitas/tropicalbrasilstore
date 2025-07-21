@@ -230,70 +230,124 @@ router.post("/products", async (req, res) => {
 async function processImport(data: any[]) {
   const connection = await db.getConnection();
 
-  for (let i = 0; i < data.length; i++) {
-    const item = data[i];
+  // Group data by product identifier (name + parent_sku or just name)
+  const productGroups = new Map<string, any[]>();
 
+  for (const item of data) {
+    const productKey = item.parent_sku ? `${item.name}_${item.parent_sku}` : item.name;
+    if (!productGroups.has(productKey)) {
+      productGroups.set(productKey, []);
+    }
+    productGroups.get(productKey)!.push(item);
+  }
+
+  let processedItems = 0;
+
+  for (const [productKey, productItems] of productGroups) {
     try {
-      importProgress.current = item.name || `Item ${i + 1}`;
+      const firstItem = productItems[0];
+      importProgress.current = firstItem.name || `Produto ${processedItems + 1}`;
 
       await connection.beginTransaction();
 
       // Validate required fields
       if (
-        !item.name ||
-        !item.category_id ||
-        !item.base_price ||
-        !item.size_group_id
+        !firstItem.name ||
+        !firstItem.category_id ||
+        !firstItem.base_price ||
+        !firstItem.size_group_id
       ) {
         throw new Error(
           "Missing required fields: name, category_id, base_price, size_group_id",
         );
       }
 
-      // Download image if URL provided
-      let photoPath = null;
-      if (item.photo_url) {
-        photoPath = await downloadImage(item.photo_url, item.name);
-      }
+      // Check if product already exists (by name + parent_sku or just name)
+      let productId: number;
+      const searchKey = firstItem.parent_sku || firstItem.name;
+      const searchField = firstItem.parent_sku ? 'parent_sku' : 'name';
 
-      // Process colors
-      const colorIds = await processColors(item.colors || "");
-      if (colorIds.length === 0) {
-        throw new Error("At least one color is required");
+      const [existingProduct] = await connection.execute(
+        `SELECT id FROM products WHERE ${searchField} = ?`,
+        [searchKey]
+      );
+
+      if ((existingProduct as any[]).length > 0) {
+        productId = (existingProduct as any[])[0].id;
+
+        // Delete existing variants to recreate them
+        await connection.execute(
+          'DELETE FROM product_variants WHERE product_id = ?',
+          [productId]
+        );
+
+        // Update product info
+        let photoPath = firstItem.photo_url ? await downloadImage(firstItem.photo_url, firstItem.name) : null;
+
+        await connection.execute(
+          `UPDATE products SET
+           name = ?, description = ?, category_id = ?, base_price = ?,
+           sale_price = ?, suggested_price = ?, sku = ?, photo = ?
+           WHERE id = ?`,
+          [
+            firstItem.name,
+            firstItem.description || null,
+            parseInt(firstItem.category_id),
+            parseFloat(firstItem.base_price),
+            firstItem.sale_price ? parseFloat(firstItem.sale_price) : null,
+            firstItem.suggested_price ? parseFloat(firstItem.suggested_price) : null,
+            firstItem.sku || null,
+            photoPath,
+            productId,
+          ]
+        );
+      } else {
+        // Download image if URL provided
+        let photoPath = null;
+        if (firstItem.photo_url) {
+          photoPath = await downloadImage(firstItem.photo_url, firstItem.name);
+        }
+
+        // Create new product
+        const [productResult] = await connection.execute(
+          `INSERT INTO products (
+            name, description, category_id, base_price, sale_price, suggested_price,
+            sku, parent_sku, photo, active
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            firstItem.name,
+            firstItem.description || null,
+            parseInt(firstItem.category_id),
+            parseFloat(firstItem.base_price),
+            firstItem.sale_price ? parseFloat(firstItem.sale_price) : null,
+            firstItem.suggested_price ? parseFloat(firstItem.suggested_price) : null,
+            firstItem.sku || null,
+            firstItem.parent_sku || null,
+            photoPath,
+            true,
+          ],
+        );
+
+        productId = (productResult as any).insertId;
       }
 
       // Get sizes for the group
-      const sizes = await getSizesForGroup(parseInt(item.size_group_id));
+      const sizes = await getSizesForGroup(parseInt(firstItem.size_group_id));
       if (sizes.length === 0) {
-        throw new Error(`No sizes found for size group ${item.size_group_id}`);
+        throw new Error(`No sizes found for size group ${firstItem.size_group_id}`);
       }
 
-      // Create product
-      const [productResult] = await connection.execute(
-        `INSERT INTO products (
-          name, description, category_id, base_price, sale_price, suggested_price,
-          sku, parent_sku, photo, active
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          item.name,
-          item.description || null,
-          parseInt(item.category_id),
-          parseFloat(item.base_price),
-          item.sale_price ? parseFloat(item.sale_price) : null,
-          item.suggested_price ? parseFloat(item.suggested_price) : null,
-          item.sku || null,
-          item.parent_sku || null,
-          photoPath,
-          true,
-        ],
-      );
+      // Process each color variation
+      for (const item of productItems) {
+        if (!item.color) {
+          throw new Error("Color is required for each row");
+        }
 
-      const productId = (productResult as any).insertId;
+        // Process single color
+        const colorId = await processColor(item.color);
+        const stockPerVariant = parseInt(item.stock_per_variant) || 0;
 
-      // Create variants for each color and size combination
-      const stockPerVariant = parseInt(item.stock_per_variant) || 0;
-
-      for (const colorId of colorIds) {
+        // Create variants for this color and all sizes
         for (const size of sizes) {
           await connection.execute(
             `INSERT INTO product_variants (product_id, size_id, color_id, stock)
@@ -305,13 +359,15 @@ async function processImport(data: any[]) {
 
       await connection.commit();
       importProgress.success++;
+      processedItems += productItems.length;
     } catch (error) {
       await connection.rollback();
-      console.error(`Error processing item ${i + 1}:`, error);
-      importProgress.errors++;
+      console.error(`Error processing product ${productKey}:`, error);
+      importProgress.errors += productItems.length;
+      processedItems += productItems.length;
     }
 
-    importProgress.processed++;
+    importProgress.processed = processedItems;
   }
 
   connection.release();
