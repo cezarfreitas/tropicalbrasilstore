@@ -301,8 +301,8 @@ export default function Settings() {
         </Button>
       </div>
 
-      <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
+            <Tabs defaultValue="general" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="general">
             <Store className="h-4 w-4 mr-2" />
             Geral
@@ -322,6 +322,10 @@ export default function Settings() {
           <TabsTrigger value="social">
             <Share2 className="h-4 w-4 mr-2" />
             Social
+          </TabsTrigger>
+          <TabsTrigger value="backup">
+            <Database className="h-4 w-4 mr-2" />
+            Backup
           </TabsTrigger>
           <TabsTrigger value="advanced">
             <Shield className="h-4 w-4 mr-2" />
