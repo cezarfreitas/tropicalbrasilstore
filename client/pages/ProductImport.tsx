@@ -624,6 +624,34 @@ export default function ProductImport() {
                       {isExporting ? "Exportando..." : "Exportar Ativos"}
                     </Button>
                   </div>
+
+                  <div className="p-4 border rounded-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h4 className="font-semibold">
+                          Apenas Produtos Inativos
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          {exportStats.inactive_products > 0
+                            ? `${exportStats.inactive_products} produtos inativos`
+                            : "Produtos desabilitados"} no sistema
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => exportProducts("inactive")}
+                      variant="secondary"
+                      className="w-full"
+                      disabled={isExporting || exportStats.inactive_products === 0}
+                    >
+                      {isExporting ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Download className="h-4 w-4 mr-2" />
+                      )}
+                      {isExporting ? "Exportando..." : "Exportar Inativos"}
+                    </Button>
+                  </div>
                 </div>
               </div>
 
