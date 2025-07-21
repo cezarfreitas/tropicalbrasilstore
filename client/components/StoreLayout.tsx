@@ -31,20 +31,140 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             {/* Header */}
       <header className="border-b bg-card shadow-sm sticky top-0 z-40">
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/loja" className="flex items-center gap-2 sm:gap-3">
-              <div className="rounded-lg sm:rounded-xl bg-primary p-2 sm:p-3">
-                <Package className="h-6 w-6 sm:h-8 sm:w-8 text-primary-foreground" />
+          {/* Mobile Layout - Centered Logo */}
+          <div className="flex sm:hidden items-center justify-center relative">
+            <Link to="/loja" className="flex items-center gap-2">
+              <div className="rounded-lg bg-primary p-2">
+                <Package className="h-6 w-6 text-primary-foreground" />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg sm:text-2xl font-bold text-primary">
+                <span className="text-lg font-bold text-primary">
                   Chinelos
                 </span>
-                <span className="text-xs sm:text-sm text-muted-foreground">
+                <span className="text-xs text-muted-foreground">
                   Loja Online
                 </span>
               </div>
             </Link>
+
+            {/* Mobile Cart - Absolute positioned */}
+            <div className="absolute right-0 flex items-center gap-2">
+              {/* Authentication Status */}
+              {isAuthenticated ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-9">
+                      <User className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuLabel>
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {customer?.name || "Cliente"}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {customer?.whatsapp}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="text-xs">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            isApproved ? "bg-green-500" : "bg-yellow-500"
+                          }`}
+                        />
+                        {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={logout}>
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sair
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9"
+                  onClick={() => setLoginModalOpen(true)}
+                >
+                  <LogIn className="h-4 w-4" />
+                </Button>
+              )}
+
+              {/* Cart */}
+              <Link to="/loja/carrinho">
+                <Button variant="outline" size="sm" className="relative h-9">
+                  <ShoppingCart className="h-4 w-4" />
+                  {totalItems > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center text-xs"
+                    >
+                      {totalItems}
+                    </Badge>
+                  )}
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Desktop Layout - Logo left, Collections center, Actions right */}
+          <div className="hidden sm:flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <Link to="/loja" className="flex items-center gap-3">
+                <div className="rounded-xl bg-primary p-3">
+                  <Package className="h-8 w-8 text-primary-foreground" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold text-primary">
+                    Chinelos
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    Loja Online
+                  </span>
+                </div>
+              </Link>
+
+              {/* Collections Navigation */}
+              <nav className="flex items-center gap-4 ml-8">
+                <Link
+                  to="/loja"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Todos
+                </Link>
+                <Link
+                  to="/loja?categoria=havaianas"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Havaianas
+                </Link>
+                <Link
+                  to="/loja?categoria=adidas"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Adidas
+                </Link>
+                <Link
+                  to="/loja?categoria=nike"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Nike
+                </Link>
+                <Link
+                  to="/loja?categoria=feminino"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Feminino
+                </Link>
+              </nav>
+            </div>
 
                         <div className="flex items-center gap-2 sm:gap-3">
               {/* Authentication Status */}
