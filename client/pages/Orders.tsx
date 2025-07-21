@@ -55,6 +55,9 @@ interface OrderItem {
   id: number;
   product_name: string;
   product_photo: string;
+  product_sku: string;
+  sku_variant: string;
+  size: string;
   color_name: string;
   color_hex: string;
   grade_name: string;
