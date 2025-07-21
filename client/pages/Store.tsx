@@ -453,3 +453,5 @@ function Store() {
     </StoreLayout>
   );
 }
+
+export default Store;
