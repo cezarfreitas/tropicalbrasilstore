@@ -139,14 +139,8 @@ router.get("/:id", async (req, res) => {
 // Create new product (simplified)
 router.post("/", async (req, res) => {
   try {
-        const {
-      name,
-      description,
-      category_id,
-      base_price,
-      sku,
-      parent_sku,
-    } = req.body;
+    const { name, description, category_id, base_price, sku, parent_sku } =
+      req.body;
 
     if (!name) {
       return res.status(400).json({ error: "Name is required" });
@@ -161,7 +155,7 @@ router.post("/", async (req, res) => {
         description || null,
         category_id || null,
         base_price || null,
-                sku || null,
+        sku || null,
         parent_sku || null,
       ],
     );
@@ -190,7 +184,7 @@ router.post("/", async (req, res) => {
 // Update product (simplified)
 router.put("/:id", async (req, res) => {
   try {
-            const {
+    const {
       name,
       description,
       category_id,
@@ -216,7 +210,7 @@ router.put("/:id", async (req, res) => {
         description || null,
         category_id || null,
         base_price || null,
-                sku || null,
+        sku || null,
         parent_sku || null,
         active !== undefined ? active : true,
         sell_without_stock !== undefined ? sell_without_stock : false,
@@ -283,10 +277,10 @@ router.patch("/:id/toggle", async (req, res) => {
     const newStatus = !currentProduct.active;
 
     // Update status
-    await db.execute(
-      "UPDATE products SET active = ? WHERE id = ?",
-      [newStatus, req.params.id],
-    );
+    await db.execute("UPDATE products SET active = ? WHERE id = ?", [
+      newStatus,
+      req.params.id,
+    ]);
 
     res.json({
       success: true,

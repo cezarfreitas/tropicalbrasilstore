@@ -43,28 +43,30 @@ export default function Sizes() {
     size: "",
     display_order: 0,
   });
-  
+
   // Hook para grupos de tamanhos integrado com banco de dados
-  const { 
-    sizeGroups, 
-    loading: sizeGroupsLoading, 
+  const {
+    sizeGroups,
+    loading: sizeGroupsLoading,
     error: sizeGroupsError,
-    addGroup, 
-    updateGroup, 
+    addGroup,
+    updateGroup,
     deleteGroup,
-    refetch: refetchSizeGroups
+    refetch: refetchSizeGroups,
   } = useSizeGroups();
-  
+
   const [groupDialogOpen, setGroupDialogOpen] = useState(false);
   const [editingGroup, setEditingGroup] = useState<SizeGroup | null>(null);
-  const [groupFormData, setGroupFormData] = useState<Omit<SizeGroup, 'id' | 'created_at' | 'updated_at'>>({
+  const [groupFormData, setGroupFormData] = useState<
+    Omit<SizeGroup, "id" | "created_at" | "updated_at">
+  >({
     name: "",
     description: "",
     icon: "",
     sizes: [],
-    active: true
+    active: true,
   });
-  
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -142,7 +144,7 @@ export default function Sizes() {
       description: "",
       icon: "",
       sizes: [],
-      active: true
+      active: true,
     });
   };
 
@@ -198,7 +200,7 @@ export default function Sizes() {
       description: group.description || "",
       icon: group.icon || "",
       sizes: group.sizes,
-      active: group.active
+      active: group.active,
     });
     setGroupDialogOpen(true);
   };
@@ -223,7 +225,7 @@ export default function Sizes() {
       } else {
         await addGroup(groupFormData);
         toast({
-          title: "Sucesso", 
+          title: "Sucesso",
           description: "Grupo criado com sucesso",
         });
       }
@@ -241,7 +243,7 @@ export default function Sizes() {
 
   const handleDeleteGroup = async (groupId: number) => {
     if (!confirm("Tem certeza que deseja excluir este grupo?")) return;
-    
+
     try {
       await deleteGroup(groupId);
       toast({
@@ -258,11 +260,11 @@ export default function Sizes() {
   };
 
   const toggleSizeInGroup = (sizeValue: string) => {
-    setGroupFormData(prev => ({
+    setGroupFormData((prev) => ({
       ...prev,
       sizes: prev.sizes.includes(sizeValue)
-        ? prev.sizes.filter(s => s !== sizeValue)
-        : [...prev.sizes, sizeValue]
+        ? prev.sizes.filter((s) => s !== sizeValue)
+        : [...prev.sizes, sizeValue],
     }));
   };
 
@@ -284,7 +286,8 @@ export default function Sizes() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Tamanhos</h1>
         <p className="text-muted-foreground">
-          Configure os tamanhos e grupos de tamanhos disponíveis para seus produtos
+          Configure os tamanhos e grupos de tamanhos disponíveis para seus
+          produtos
         </p>
       </div>
 
@@ -397,7 +400,9 @@ export default function Sizes() {
                   ) : (
                     sizes.map((size) => (
                       <TableRow key={size.id}>
-                        <TableCell className="font-medium">{size.size}</TableCell>
+                        <TableCell className="font-medium">
+                          {size.size}
+                        </TableCell>
                         <TableCell>{size.display_order}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
@@ -432,7 +437,8 @@ export default function Sizes() {
             <div>
               <h2 className="text-xl font-semibold">Grupos de Tamanhos</h2>
               <p className="text-muted-foreground">
-                Crie grupos para facilitar a seleção de tamanhos durante a criação de produtos
+                Crie grupos para facilitar a seleção de tamanhos durante a
+                criação de produtos
               </p>
             </div>
             <Dialog open={groupDialogOpen} onOpenChange={setGroupDialogOpen}>
@@ -461,7 +467,10 @@ export default function Sizes() {
                         id="groupName"
                         value={groupFormData.name}
                         onChange={(e) =>
-                          setGroupFormData({ ...groupFormData, name: e.target.value })
+                          setGroupFormData({
+                            ...groupFormData,
+                            name: e.target.value,
+                          })
                         }
                         placeholder="Ex: Masculino, Feminino, Infantil"
                         required
@@ -473,20 +482,26 @@ export default function Sizes() {
                         id="groupIcon"
                         value={groupFormData.icon}
                         onChange={(e) =>
-                          setGroupFormData({ ...groupFormData, icon: e.target.value })
+                          setGroupFormData({
+                            ...groupFormData,
+                            icon: e.target.value,
+                          })
                         }
                         placeholder="Ex: 👨, 👩, 👶"
                       />
                     </div>
                   </div>
-                  
+
                   <div className="grid gap-2">
                     <Label htmlFor="groupDescription">Descrição</Label>
                     <Input
                       id="groupDescription"
                       value={groupFormData.description}
                       onChange={(e) =>
-                        setGroupFormData({ ...groupFormData, description: e.target.value })
+                        setGroupFormData({
+                          ...groupFormData,
+                          description: e.target.value,
+                        })
                       }
                       placeholder="Descrição do grupo"
                     />
@@ -496,13 +511,19 @@ export default function Sizes() {
                     <Label>Tamanhos do Grupo</Label>
                     <div className="grid grid-cols-6 gap-2 p-4 border rounded-lg">
                       {sizes.map((size) => (
-                        <div key={size.id} className="flex items-center space-x-2">
+                        <div
+                          key={size.id}
+                          className="flex items-center space-x-2"
+                        >
                           <Checkbox
                             id={`size-${size.id}`}
                             checked={groupFormData.sizes.includes(size.size)}
                             onCheckedChange={() => toggleSizeInGroup(size.size)}
                           />
-                          <Label htmlFor={`size-${size.id}`} className="text-sm">
+                          <Label
+                            htmlFor={`size-${size.id}`}
+                            className="text-sm"
+                          >
                             {size.size}
                           </Label>
                         </div>
@@ -514,7 +535,11 @@ export default function Sizes() {
                           Selecionados:
                         </span>
                         {groupFormData.sizes.map((size) => (
-                          <Badge key={size} variant="secondary" className="text-xs">
+                          <Badge
+                            key={size}
+                            variant="secondary"
+                            className="text-xs"
+                          >
                             {size}
                           </Badge>
                         ))}
@@ -552,7 +577,11 @@ export default function Sizes() {
               <CardContent className="pt-6">
                 <div className="text-center text-red-500">
                   <p>Erro ao carregar grupos: {sizeGroupsError}</p>
-                  <Button onClick={refetchSizeGroups} variant="outline" className="mt-2">
+                  <Button
+                    onClick={refetchSizeGroups}
+                    variant="outline"
+                    className="mt-2"
+                  >
                     Tentar novamente
                   </Button>
                 </div>
@@ -579,14 +608,20 @@ export default function Sizes() {
                         <div className="flex items-center gap-3">
                           <div className="text-2xl">{group.icon}</div>
                           <div>
-                            <CardTitle className="text-lg">{group.name}</CardTitle>
+                            <CardTitle className="text-lg">
+                              {group.name}
+                            </CardTitle>
                             {group.description && (
-                              <CardDescription>{group.description}</CardDescription>
+                              <CardDescription>
+                                {group.description}
+                              </CardDescription>
                             )}
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge variant={group.active ? "default" : "secondary"}>
+                          <Badge
+                            variant={group.active ? "default" : "secondary"}
+                          >
                             {group.active ? "Ativo" : "Inativo"}
                           </Badge>
                           <Button
@@ -613,7 +648,11 @@ export default function Sizes() {
                         </Label>
                         <div className="flex flex-wrap gap-1 mt-2">
                           {group.sizes.map((size) => (
-                            <Badge key={size} variant="outline" className="text-xs">
+                            <Badge
+                              key={size}
+                              variant="outline"
+                              className="text-xs"
+                            >
                               {size}
                             </Badge>
                           ))}

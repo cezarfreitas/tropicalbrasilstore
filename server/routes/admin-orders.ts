@@ -1,6 +1,6 @@
 import { Router } from "express";
 import db from "../lib/db";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 const router = Router();
 
@@ -123,7 +123,7 @@ router.patch("/:id/status", async (req, res) => {
 // Export orders to Excel
 router.get("/export/excel", async (req, res) => {
   try {
-            // Get all orders with detailed item information
+    // Get all orders with detailed item information
     const [orderData] = await db.execute(`
       SELECT
         o.id as pedido_id,
@@ -154,33 +154,33 @@ router.get("/export/excel", async (req, res) => {
       ORDER BY o.created_at DESC, oi.id
     `);
 
-        // Format data for Excel
-    const excelData = (orderData as any[]).map(row => ({
-      'ID Pedido': row.pedido_id,
-      'Data Pedido': new Date(row.data_pedido).toLocaleDateString('pt-BR'),
-      'Cliente Email': row.cliente_email,
-      'Status': row.status_pedido,
-            'Valor Total Pedido': `R$ ${parseFloat(row.valor_total || 0).toFixed(2)}`,
-      'Produto': row.produto_nome || '',
-      'SKU Produto': row.produto_sku || '',
-      'SKU Pai': row.produto_parent_sku || '',
-      'SKU Variante': row.sku_variante || '',
-      'Cor': row.cor_nome || '',
-      'Cor Hex': row.cor_hex || '',
-      'Tamanho': row.tamanho || '',
-      'Grade': row.grade_nome || '',
-      'Descrição Grade': row.grade_descricao || '',
-      'Quantidade': row.quantidade || 0,
-                  'Preço Unitário': `R$ ${parseFloat(row.preco_unitario || 0).toFixed(2)}`,
-      'Preço Total Item': `R$ ${parseFloat(row.preco_total || 0).toFixed(2)}`,
-      'Tipo Item': row.tipo_item || ''
+    // Format data for Excel
+    const excelData = (orderData as any[]).map((row) => ({
+      "ID Pedido": row.pedido_id,
+      "Data Pedido": new Date(row.data_pedido).toLocaleDateString("pt-BR"),
+      "Cliente Email": row.cliente_email,
+      Status: row.status_pedido,
+      "Valor Total Pedido": `R$ ${parseFloat(row.valor_total || 0).toFixed(2)}`,
+      Produto: row.produto_nome || "",
+      "SKU Produto": row.produto_sku || "",
+      "SKU Pai": row.produto_parent_sku || "",
+      "SKU Variante": row.sku_variante || "",
+      Cor: row.cor_nome || "",
+      "Cor Hex": row.cor_hex || "",
+      Tamanho: row.tamanho || "",
+      Grade: row.grade_nome || "",
+      "Descrição Grade": row.grade_descricao || "",
+      Quantidade: row.quantidade || 0,
+      "Preço Unitário": `R$ ${parseFloat(row.preco_unitario || 0).toFixed(2)}`,
+      "Preço Total Item": `R$ ${parseFloat(row.preco_total || 0).toFixed(2)}`,
+      "Tipo Item": row.tipo_item || "",
     }));
 
     // Create workbook and worksheet
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(excelData);
 
-            // Auto-size columns
+    // Auto-size columns
     const colWidths = [
       { wch: 10 }, // ID Pedido
       { wch: 12 }, // Data Pedido
@@ -201,19 +201,22 @@ router.get("/export/excel", async (req, res) => {
       { wch: 12 }, // Preço Total Item
       { wch: 12 }, // Tipo Item
     ];
-    ws['!cols'] = colWidths;
+    ws["!cols"] = colWidths;
 
     // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(wb, ws, 'Pedidos');
+    XLSX.utils.book_append_sheet(wb, ws, "Pedidos");
 
     // Generate Excel buffer
-    const excelBuffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+    const excelBuffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
 
     // Set response headers for file download
-    const filename = `pedidos_${new Date().toISOString().split('T')[0]}.xlsx`;
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    res.setHeader('Content-Length', excelBuffer.length);
+    const filename = `pedidos_${new Date().toISOString().split("T")[0]}.xlsx`;
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.setHeader("Content-Length", excelBuffer.length);
 
     // Send the Excel file
     res.send(excelBuffer);

@@ -99,7 +99,7 @@ export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [stats, setStats] = useState<OrderStats | null>(null);
   const [loading, setLoading] = useState(true);
-    const [selectedOrder, setSelectedOrder] = useState<OrderDetails | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderDetails | null>(null);
   const [orderDetailsLoading, setOrderDetailsLoading] = useState(false);
   const [statusUpdating, setStatusUpdating] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
@@ -161,7 +161,7 @@ export default function Orders() {
     }
   };
 
-    const updateOrderStatus = async (orderId: number, newStatus: string) => {
+  const updateOrderStatus = async (orderId: number, newStatus: string) => {
     setStatusUpdating(orderId);
     try {
       const response = await fetch(`/api/admin/orders/${orderId}/status`, {
@@ -207,12 +207,12 @@ export default function Orders() {
       if (response.ok) {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
 
         // Get filename from response headers or use default
-        const contentDisposition = response.headers.get('Content-Disposition');
-        let filename = `pedidos_${new Date().toISOString().split('T')[0]}.xlsx`;
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let filename = `pedidos_${new Date().toISOString().split("T")[0]}.xlsx`;
 
         if (contentDisposition) {
           const filenameMatch = contentDisposition.match(/filename="([^"]+)"/);
@@ -301,7 +301,7 @@ export default function Orders() {
 
   return (
     <div className="space-y-6">
-            <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Pedidos</h1>
           <p className="text-muted-foreground">
@@ -501,21 +501,25 @@ export default function Orders() {
                                     key={item.id}
                                     className="flex items-center justify-between p-3 border rounded-lg"
                                   >
-                                                                        <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-3">
                                       <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
                                         <Package className="h-6 w-6 text-muted-foreground" />
                                       </div>
-                                                                            <div>
+                                      <div>
                                         <div className="font-medium">
                                           {item.product_name}
                                         </div>
                                         <div className="text-sm text-muted-foreground">
-                                          {item.product_sku && `SKU: ${item.product_sku}`}
-                                          {item.sku_variant && ` • Variante: ${item.sku_variant}`}
+                                          {item.product_sku &&
+                                            `SKU: ${item.product_sku}`}
+                                          {item.sku_variant &&
+                                            ` • Variante: ${item.sku_variant}`}
                                         </div>
                                         <div className="text-sm text-muted-foreground">
-                                          Grade: {item.grade_name} • Cor: {item.color_name}
-                                          {item.size && ` • Tamanho: ${item.size}`}
+                                          Grade: {item.grade_name} • Cor:{" "}
+                                          {item.color_name}
+                                          {item.size &&
+                                            ` • Tamanho: ${item.size}`}
                                         </div>
                                         <div className="text-sm text-muted-foreground">
                                           Quantidade: {item.quantity} kit(s)

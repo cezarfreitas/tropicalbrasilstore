@@ -20,16 +20,16 @@ export function useSizeGroups() {
   const fetchSizeGroups = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/size-groups');
+      const response = await fetch("/api/size-groups");
       if (response.ok) {
         const data = await response.json();
         setSizeGroups(data);
       } else {
-        throw new Error('Failed to fetch size groups');
+        throw new Error("Failed to fetch size groups");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      console.error('Error fetching size groups:', err);
+      setError(err instanceof Error ? err.message : "Unknown error");
+      console.error("Error fetching size groups:", err);
     } finally {
       setLoading(false);
     }
@@ -40,50 +40,57 @@ export function useSizeGroups() {
     fetchSizeGroups();
   }, []);
 
-  const addGroup = async (group: Omit<SizeGroup, 'id' | 'created_at' | 'updated_at'>) => {
+  const addGroup = async (
+    group: Omit<SizeGroup, "id" | "created_at" | "updated_at">,
+  ) => {
     try {
-      const response = await fetch('/api/size-groups', {
-        method: 'POST',
+      const response = await fetch("/api/size-groups", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(group),
       });
 
       if (response.ok) {
         const newGroup = await response.json();
-        setSizeGroups(prev => [...prev, newGroup]);
+        setSizeGroups((prev) => [...prev, newGroup]);
         return newGroup;
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create size group');
+        throw new Error(errorData.error || "Failed to create size group");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : "Unknown error");
       throw err;
     }
   };
 
-  const updateGroup = async (id: number, group: Partial<Omit<SizeGroup, 'id' | 'created_at' | 'updated_at'>>) => {
+  const updateGroup = async (
+    id: number,
+    group: Partial<Omit<SizeGroup, "id" | "created_at" | "updated_at">>,
+  ) => {
     try {
       const response = await fetch(`/api/size-groups/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(group),
       });
 
       if (response.ok) {
         const updatedGroup = await response.json();
-        setSizeGroups(prev => prev.map(g => g.id === id ? updatedGroup : g));
+        setSizeGroups((prev) =>
+          prev.map((g) => (g.id === id ? updatedGroup : g)),
+        );
         return updatedGroup;
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update size group');
+        throw new Error(errorData.error || "Failed to update size group");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : "Unknown error");
       throw err;
     }
   };
@@ -91,23 +98,23 @@ export function useSizeGroups() {
   const deleteGroup = async (id: number) => {
     try {
       const response = await fetch(`/api/size-groups/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (response.ok) {
-        setSizeGroups(prev => prev.filter(g => g.id !== id));
+        setSizeGroups((prev) => prev.filter((g) => g.id !== id));
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to delete size group');
+        throw new Error(errorData.error || "Failed to delete size group");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : "Unknown error");
       throw err;
     }
   };
 
   const getGroupById = (id: number) => {
-    return sizeGroups.find(g => g.id === id);
+    return sizeGroups.find((g) => g.id === id);
   };
 
   return {
@@ -119,6 +126,6 @@ export function useSizeGroups() {
     updateGroup,
     deleteGroup,
     getGroupById,
-    refetch: fetchSizeGroups
+    refetch: fetchSizeGroups,
   };
 }

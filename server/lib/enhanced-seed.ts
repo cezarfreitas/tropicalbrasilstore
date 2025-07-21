@@ -16,142 +16,142 @@ export async function addEnhancedMockupData() {
         name: "Havaianas Top Mix",
         description: "Chinelo tradicional brasileiro com estampa única",
         category_id: 1, // Chinelos Masculinos
-        base_price: 28.90,
+        base_price: 28.9,
         sku: "HAV004",
       },
       {
         name: "Ipanema Class Pop",
         description: "Sandália feminina moderna e colorida",
         category_id: 2, // Chinelos Femininos
-        base_price: 35.90,
+        base_price: 35.9,
         sku: "IPA002",
       },
       {
         name: "Rider Strike Plus",
         description: "Chinelo masculino esportivo com maior durabilidade",
         category_id: 1,
-        base_price: 42.90,
+        base_price: 42.9,
         sku: "RID002",
       },
       {
         name: "Melissa Beach Slide Fashion",
         description: "Sandália premium com design exclusivo",
         category_id: 2,
-        base_price: 95.90,
+        base_price: 95.9,
         sku: "MEL002",
       },
       {
         name: "Havaianas Kids Minions",
         description: "Chinelo infantil com personagens dos Minions",
         category_id: 3, // Chinelos Infantis
-        base_price: 24.90,
+        base_price: 24.9,
         sku: "HAV005",
       },
       {
         name: "Nike Benassi JDI",
         description: "Sandália esportiva premium da Nike",
         category_id: 4, // Sandálias Esportivas
-        base_price: 159.90,
+        base_price: 159.9,
         sku: "NIK001",
       },
       {
         name: "Kenner Acqua Pro",
         description: "Chinelo de borracha profissional",
         category_id: 5, // Chinelos de Borracha
-        base_price: 33.90,
+        base_price: 33.9,
         sku: "KEN002",
       },
       {
         name: "Grendene Zaxy Garden",
         description: "Sandália feminina com estampa floral",
         category_id: 2,
-        base_price: 48.90,
+        base_price: 48.9,
         sku: "ZAX002",
       },
       {
         name: "Havaianas You Metallic",
         description: "Chinelo feminino com acabamento metalizado",
         category_id: 2,
-        base_price: 39.90,
+        base_price: 39.9,
         sku: "HAV006",
       },
       {
         name: "Rider Dunas Evolution",
         description: "Chinelo masculino anatomico premium",
         category_id: 1,
-        base_price: 55.90,
+        base_price: 55.9,
         sku: "RID003",
       },
       {
         name: "Ipanema Gisele Bundchen",
         description: "Sandália assinada pela Gisele Bundchen",
         category_id: 2,
-        base_price: 67.90,
+        base_price: 67.9,
         sku: "IPA003",
       },
       {
         name: "Reef Fanning",
         description: "Chinelo com abridor de garrafa embutido",
         category_id: 4,
-        base_price: 189.90,
+        base_price: 189.9,
         sku: "REE001",
       },
       {
         name: "Havaianas Baby",
         description: "Chinelo especial para bebês",
         category_id: 3,
-        base_price: 21.90,
+        base_price: 21.9,
         sku: "HAV007",
       },
       {
         name: "Quiksilver Molokai",
         description: "Chinelo surf style masculino",
         category_id: 1,
-        base_price: 79.90,
+        base_price: 79.9,
         sku: "QUI001",
       },
       {
         name: "Roxy Sandy",
         description: "Sandália feminina estilo praia",
         category_id: 2,
-        base_price: 89.90,
+        base_price: 89.9,
         sku: "ROX001",
       },
       {
         name: "Kenner Rhaco Onda",
         description: "Chinelo de borracha com design ondulado",
         category_id: 5,
-        base_price: 29.90,
+        base_price: 29.9,
         sku: "KEN003",
       },
       {
         name: "Melissa Possession",
         description: "Sandália alta fashion feminina",
         category_id: 2,
-        base_price: 129.90,
+        base_price: 129.9,
         sku: "MEL003",
       },
       {
         name: "Havaianas Urban Craft",
         description: "Chinelo masculino urbano com solado diferenciado",
         category_id: 1,
-        base_price: 49.90,
+        base_price: 49.9,
         sku: "HAV008",
       },
       {
         name: "Ipanema Nectar",
         description: "Sandália perfumada com essência floral",
         category_id: 2,
-        base_price: 41.90,
+        base_price: 41.9,
         sku: "IPA004",
       },
       {
         name: "Rider Infinity",
         description: "Chinelo anatomico com tecnologia de amortecimento",
         category_id: 1,
-        base_price: 62.90,
+        base_price: 62.9,
         sku: "RID004",
-      }
+      },
     ];
 
     // Add new products
@@ -252,31 +252,31 @@ export async function addEnhancedMockupData() {
     const sampleOrders = [
       {
         customer_email: "maria.silva@email.com",
-        total_amount: 89.80,
+        total_amount: 89.8,
         status: "delivered",
         notes: "Entrega realizada com sucesso",
       },
       {
         customer_email: "joao.pedro@email.com",
-        total_amount: 159.90,
+        total_amount: 159.9,
         status: "shipped",
         notes: "Produto em transporte",
       },
       {
         customer_email: "ana.carolina@email.com",
-        total_amount: 67.90,
+        total_amount: 67.9,
         status: "processing",
         notes: "Pedido em preparação",
       },
       {
         customer_email: "carlos.eduardo@email.com",
-        total_amount: 129.80,
+        total_amount: 129.8,
         status: "confirmed",
         notes: "Pagamento confirmado",
       },
       {
         customer_email: "fernanda.costa@email.com",
-        total_amount: 49.90,
+        total_amount: 49.9,
         status: "pending",
         notes: "Aguardando confirmação de pagamento",
       },
@@ -302,7 +302,15 @@ export async function addEnhancedMockupData() {
 
         await db.execute(
           "INSERT INTO order_items (order_id, product_id, size_id, color_id, quantity, unit_price, total_price, type) VALUES (?, ?, ?, ?, ?, ?, ?, 'individual')",
-          [orderId, productId, sizeId, colorId, quantity, unitPrice, totalPrice],
+          [
+            orderId,
+            productId,
+            sizeId,
+            colorId,
+            quantity,
+            unitPrice,
+            totalPrice,
+          ],
         );
       }
     }

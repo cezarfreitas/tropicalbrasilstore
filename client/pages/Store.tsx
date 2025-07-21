@@ -297,7 +297,7 @@ export default function Store() {
     allProducts,
   ]);
 
-    const fetchProducts = async () => {
+  const fetchProducts = async () => {
     setLoading(true);
     try {
       console.log("Fetching products from /api/store-old/products");
@@ -306,7 +306,11 @@ export default function Store() {
 
       if (response.ok) {
         const productsData = await response.json();
-        console.log("Products fetched successfully:", productsData.length, "products");
+        console.log(
+          "Products fetched successfully:",
+          productsData.length,
+          "products",
+        );
         setAllProducts(productsData);
 
         // Extract filter options
@@ -355,21 +359,23 @@ export default function Store() {
         setMaxPrice(Math.ceil(maxProductPrice));
         setPriceRange([0, Math.ceil(maxProductPrice)]);
       }
-        } catch (error) {
+    } catch (error) {
       console.error("Error fetching products:", error);
       console.error("Error details:", {
         message: error.message,
         stack: error.stack,
-        name: error.name
+        name: error.name,
       });
 
       // Set empty state as fallback
       setAllProducts([]);
-      setCategories([{
-        id: "all",
-        name: "Todas as Categorias",
-        count: 0
-      }]);
+      setCategories([
+        {
+          id: "all",
+          name: "Todas as Categorias",
+          count: 0,
+        },
+      ]);
       setColors([]);
       setMaxPrice(100);
       setPriceRange([0, 100]);
@@ -549,7 +555,7 @@ export default function Store() {
         </div>
       </StoreLayout>
     );
-    }
+  }
 
   return (
     <StoreLayout>
@@ -564,7 +570,7 @@ export default function Store() {
             className="fixed inset-0 bg-black/20"
             onClick={() => setSidebarOpen(false)}
           />
-                    <div className="fixed inset-y-0 left-0 z-50 w-72 sm:w-80 bg-white shadow-xl">
+          <div className="fixed inset-y-0 left-0 z-50 w-72 sm:w-80 bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-lg font-semibold">Filtros</h2>
               <Button
@@ -629,7 +635,7 @@ export default function Store() {
 
         {/* Main content */}
         <div className="flex-1 overflow-auto">
-                    <div className="lg:hidden flex items-center justify-between p-3 sm:p-4 bg-white border-b">
+          <div className="lg:hidden flex items-center justify-between p-3 sm:p-4 bg-white border-b">
             <Button
               variant="outline"
               size="sm"
@@ -639,17 +645,21 @@ export default function Store() {
               <Menu className="h-4 w-4 mr-2" />
               Filtros
             </Button>
-            <h1 className="text-base sm:text-lg font-semibold">Chinelos Store</h1>
+            <h1 className="text-base sm:text-lg font-semibold">
+              Chinelos Store
+            </h1>
           </div>
 
-                    <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-5 pb-6 sm:pb-8">
+          <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-5 pb-6 sm:pb-8">
             {/* Hero Section - Removed */}
             <div />
 
             {/* Products Grid */}
-                        <div className="mb-6 sm:mb-8">
+            <div className="mb-6 sm:mb-8">
               <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold">Nossos Produtos</h2>
+                <h2 className="text-xl sm:text-2xl font-bold">
+                  Nossos Produtos
+                </h2>
                 <span className="text-xs sm:text-sm text-muted-foreground">
                   {filteredProducts.length} produto
                   {filteredProducts.length !== 1 ? "s" : ""} encontrado
@@ -667,13 +677,13 @@ export default function Store() {
                   </p>
                 </div>
               ) : (
-                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                   {filteredProducts.map((product) => (
                     <Card
                       key={product.id}
                       className="overflow-hidden h-full transition-transform hover:scale-105"
                     >
-                                            <div className="aspect-square bg-muted flex items-center justify-center relative">
+                      <div className="aspect-square bg-muted flex items-center justify-center relative">
                         {product.photo ? (
                           <img
                             src={product.photo}
@@ -693,49 +703,48 @@ export default function Store() {
                           </Badge>
                         )}
                       </div>
-                                            <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
-                                                {/* Header - Nome */}
+                      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
+                        {/* Header - Nome */}
                         <div className="space-y-2">
-                                                    <h3 className="font-semibold text-xs sm:text-sm line-clamp-2 leading-tight min-h-[28px] sm:min-h-[32px]">
+                          <h3 className="font-semibold text-xs sm:text-sm line-clamp-2 leading-tight min-h-[28px] sm:min-h-[32px]">
                             {product.name}
                           </h3>
-                                                    <div className="flex items-center justify-center">
-                            
-                                                        {product.available_colors &&
-                              product.available_colors.length > 0 ? (
-                                <div className="flex items-center gap-1.5">
-                                  {product.available_colors
-                                    .slice(0, 5)
-                                    .map((color, index) => (
+                          <div className="flex items-center justify-center">
+                            {product.available_colors &&
+                            product.available_colors.length > 0 ? (
+                              <div className="flex items-center gap-1.5">
+                                {product.available_colors
+                                  .slice(0, 5)
+                                  .map((color, index) => (
+                                    <div
+                                      key={color.id}
+                                      className="relative group"
+                                    >
                                       <div
-                                        key={color.id}
-                                        className="relative group"
-                                      >
-                                                                                <div
-                                          className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform cursor-pointer"
-                                          style={{
-                                            backgroundColor:
-                                              color.hex_code || "#999999",
-                                            boxShadow:
-                                              "0 0 0 1px rgba(0,0,0,0.1)",
-                                          }}
-                                        />
-                                        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
-                                          {color.name}
-                                        </div>
+                                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform cursor-pointer"
+                                        style={{
+                                          backgroundColor:
+                                            color.hex_code || "#999999",
+                                          boxShadow:
+                                            "0 0 0 1px rgba(0,0,0,0.1)",
+                                        }}
+                                      />
+                                      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                                        {color.name}
                                       </div>
-                                    ))}
-                                  {product.available_colors.length > 5 && (
-                                                                        <span className="text-[10px] sm:text-xs text-muted-foreground font-medium ml-1">
-                                      +{product.available_colors.length - 5}
-                                    </span>
-                                  )}
-                                </div>
-                              ) : (
-                                                                <span className="text-[10px] sm:text-xs text-muted-foreground bg-muted px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
-                                  {product.variant_count} cores
-                                </span>
-                                                            )}
+                                    </div>
+                                  ))}
+                                {product.available_colors.length > 5 && (
+                                  <span className="text-[10px] sm:text-xs text-muted-foreground font-medium ml-1">
+                                    +{product.available_colors.length - 5}
+                                  </span>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="text-[10px] sm:text-xs text-muted-foreground bg-muted px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
+                                {product.variant_count} cores
+                              </span>
+                            )}
                           </div>
                         </div>
 
@@ -745,7 +754,7 @@ export default function Store() {
                             <div className="flex items-center justify-center gap-3">
                               {product.base_price && (
                                 <div>
-                                                                    <div className="text-lg sm:text-2xl font-bold text-primary">
+                                  <div className="text-lg sm:text-2xl font-bold text-primary">
                                     R${" "}
                                     {parseFloat(product.base_price).toFixed(2)}
                                   </div>
@@ -759,7 +768,7 @@ export default function Store() {
                                 product.suggested_price !==
                                   product.base_price && (
                                   <div className="text-right">
-                                                                        <div className="text-xs sm:text-sm text-muted-foreground">
+                                    <div className="text-xs sm:text-sm text-muted-foreground">
                                       R${" "}
                                       {parseFloat(
                                         product.suggested_price,
@@ -772,10 +781,10 @@ export default function Store() {
                                 )}
                             </div>
                           ) : (
-                                                        <div className="flex items-center justify-center gap-2 py-3 sm:py-4 px-2 sm:px-3 bg-gray-50 border border-gray-200 rounded-lg">
+                            <div className="flex items-center justify-center gap-2 py-3 sm:py-4 px-2 sm:px-3 bg-gray-50 border border-gray-200 rounded-lg">
                               <Lock className="h-4 w-4 text-muted-foreground" />
                               <div className="text-center">
-                                                                <div className="text-xs sm:text-sm font-medium text-muted-foreground text-center">
+                                <div className="text-xs sm:text-sm font-medium text-muted-foreground text-center">
                                   {isAuthenticated
                                     ? customer?.status === "pending"
                                       ? "Aguardando aprovação"
@@ -785,7 +794,7 @@ export default function Store() {
                                     : "Faça login para ver preços"}
                                 </div>
                                 {!isAuthenticated && (
-                                                                    <div className="text-[10px] sm:text-xs text-muted-foreground mt-1">
+                                  <div className="text-[10px] sm:text-xs text-muted-foreground mt-1">
                                     <Link
                                       to="/login"
                                       className="text-primary hover:underline"
@@ -802,7 +811,7 @@ export default function Store() {
                         {/* Add to Cart Button */}
                         <div className="border-t pt-3">
                           {isApproved ? (
-                                                        <Button
+                            <Button
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -812,7 +821,10 @@ export default function Store() {
                               size="sm"
                             >
                               <ShoppingCart className="mr-1 sm:mr-2 h-3 w-3" />
-                              <span className="hidden sm:inline">Adicionar ao </span>Carrinho
+                              <span className="hidden sm:inline">
+                                Adicionar ao{" "}
+                              </span>
+                              Carrinho
                             </Button>
                           ) : (
                             <Button
@@ -821,7 +833,7 @@ export default function Store() {
                                 e.stopPropagation();
                               }}
                               variant="outline"
-                                                            className="w-full h-8 sm:h-9 text-[10px] sm:text-xs font-medium cursor-not-allowed"
+                              className="w-full h-8 sm:h-9 text-[10px] sm:text-xs font-medium cursor-not-allowed"
                               size="sm"
                               disabled
                               asChild

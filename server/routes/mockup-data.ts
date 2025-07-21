@@ -7,7 +7,7 @@ router.post("/add", async (req, res) => {
   try {
     console.log("Adding enhanced mockup data...");
     const success = await addEnhancedMockupData();
-    
+
     if (success) {
       res.json({
         success: true,
@@ -16,8 +16,8 @@ router.post("/add", async (req, res) => {
           products: "20 produtos adicionais",
           colors: "8 cores novas",
           customers: "8 clientes de exemplo",
-          orders: "5 pedidos com itens"
-        }
+          orders: "5 pedidos com itens",
+        },
       });
     } else {
       res.status(500).json({
@@ -38,7 +38,7 @@ router.post("/add", async (req, res) => {
 router.get("/status", (req, res) => {
   res.json({
     message: "Endpoint de dados mockup está pronto",
-    endpoint: "POST /api/mockup-data/add - Adicionar dados de exemplo"
+    endpoint: "POST /api/mockup-data/add - Adicionar dados de exemplo",
   });
 });
 

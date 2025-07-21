@@ -62,7 +62,6 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowUpDown,
-  
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSizeGroups } from "@/hooks/use-size-groups";
@@ -143,7 +142,7 @@ export default function ProductsEnhanced() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [gradeDialogOpen, setGradeDialogOpen] = useState(false);
-      // Removed variant view mode - only showing collapsed by color
+  // Removed variant view mode - only showing collapsed by color
   const [variantGeneratorVisible, setVariantGeneratorVisible] = useState(false);
 
   // Hook para grupos de tamanhos do banco de dados
@@ -156,20 +155,26 @@ export default function ProductsEnhanced() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
-    const [sortBy, setSortBy] = useState("name");
-      const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortBy, setSortBy] = useState("name");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [toggleLoading, setToggleLoading] = useState<number | null>(null);
-  const [toggleSellLoading, setToggleSellLoading] = useState<number | null>(null);
+  const [toggleSellLoading, setToggleSellLoading] = useState<number | null>(
+    null,
+  );
 
   // Estados para criação simplificada de variantes
-  const [selectedColorForVariants, setSelectedColorForVariants] = useState<number | null>(null);
-  const [selectedSizesForVariants, setSelectedSizesForVariants] = useState<number[]>([]);
+  const [selectedColorForVariants, setSelectedColorForVariants] = useState<
+    number | null
+  >(null);
+  const [selectedSizesForVariants, setSelectedSizesForVariants] = useState<
+    number[]
+  >([]);
   const [variantStock, setVariantStock] = useState<number>(0);
 
   const [editingProduct, setEditingProduct] = useState<EnhancedProduct | null>(
     null,
   );
-    const [formData, setFormData] = useState<CreateProductRequest>({
+  const [formData, setFormData] = useState<CreateProductRequest>({
     name: "",
     description: "",
     category_id: undefined,
@@ -323,7 +328,7 @@ export default function ProductsEnhanced() {
   const resetForm = () => {
     setEditingProduct(null);
     setSelectedGrades([]);
-        setFormData({
+    setFormData({
       name: "",
       description: "",
       category_id: undefined,
@@ -338,20 +343,23 @@ export default function ProductsEnhanced() {
     });
   };
 
-                  const handleToggleStatus = async (product: EnhancedProduct) => {
+  const handleToggleStatus = async (product: EnhancedProduct) => {
     try {
       setToggleLoading(product.id);
 
       // Atualiza o estado local imediatamente para resposta instantânea
-      setProducts(prevProducts =>
-        prevProducts.map(p =>
-          p.id === product.id ? { ...p, active: !p.active } : p
-        )
+      setProducts((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === product.id ? { ...p, active: !p.active } : p,
+        ),
       );
 
-      const response = await fetch(`/api/products-enhanced/${product.id}/toggle`, {
-        method: "PATCH",
-      });
+      const response = await fetch(
+        `/api/products-enhanced/${product.id}/toggle`,
+        {
+          method: "PATCH",
+        },
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -362,26 +370,26 @@ export default function ProductsEnhanced() {
         // Não precisa fazer fetchProducts() - já atualizou o estado local
       } else {
         // Se falhou, reverte o estado local
-        setProducts(prevProducts =>
-          prevProducts.map(p =>
-            p.id === product.id ? { ...p, active: product.active } : p
-          )
+        setProducts((prevProducts) =>
+          prevProducts.map((p) =>
+            p.id === product.id ? { ...p, active: product.active } : p,
+          ),
         );
         throw new Error("Erro ao alterar status do produto");
       }
     } catch (error: any) {
       // Se houver erro, reverte o estado local
-      setProducts(prevProducts =>
-        prevProducts.map(p =>
-          p.id === product.id ? { ...p, active: product.active } : p
-        )
+      setProducts((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === product.id ? { ...p, active: product.active } : p,
+        ),
       );
       toast({
         title: "Erro",
         description: error.message,
         variant: "destructive",
       });
-        } finally {
+    } finally {
       setToggleLoading(null);
     }
   };
@@ -391,15 +399,20 @@ export default function ProductsEnhanced() {
       setToggleSellLoading(product.id);
 
       // Atualiza o estado local imediatamente para resposta instantânea
-      setProducts(prevProducts =>
-        prevProducts.map(p =>
-          p.id === product.id ? { ...p, sell_without_stock: !p.sell_without_stock } : p
-        )
+      setProducts((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === product.id
+            ? { ...p, sell_without_stock: !p.sell_without_stock }
+            : p,
+        ),
       );
 
-      const response = await fetch(`/api/products-enhanced/${product.id}/toggle-sell-without-stock`, {
-        method: "PATCH",
-      });
+      const response = await fetch(
+        `/api/products-enhanced/${product.id}/toggle-sell-without-stock`,
+        {
+          method: "PATCH",
+        },
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -410,19 +423,23 @@ export default function ProductsEnhanced() {
         // Não precisa fazer fetchProducts() - já atualizou o estado local
       } else {
         // Se falhou, reverte o estado local
-        setProducts(prevProducts =>
-          prevProducts.map(p =>
-            p.id === product.id ? { ...p, sell_without_stock: product.sell_without_stock } : p
-          )
+        setProducts((prevProducts) =>
+          prevProducts.map((p) =>
+            p.id === product.id
+              ? { ...p, sell_without_stock: product.sell_without_stock }
+              : p,
+          ),
         );
         throw new Error("Erro ao alterar configuração de venda sem estoque");
       }
     } catch (error: any) {
       // Se houver erro, reverte o estado local
-      setProducts(prevProducts =>
-        prevProducts.map(p =>
-          p.id === product.id ? { ...p, sell_without_stock: product.sell_without_stock } : p
-        )
+      setProducts((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === product.id
+            ? { ...p, sell_without_stock: product.sell_without_stock }
+            : p,
+        ),
       );
       toast({
         title: "Erro",
@@ -443,7 +460,7 @@ export default function ProductsEnhanced() {
         const productGrades =
           detailedProduct.grades?.map((g: any) => g.id) || [];
         setSelectedGrades(productGrades);
-                setFormData({
+        setFormData({
           name: detailedProduct.name,
           description: detailedProduct.description || "",
           category_id: detailedProduct.category_id || undefined,
@@ -529,13 +546,13 @@ export default function ProductsEnhanced() {
     setFormData({ ...formData, variants: newVariants });
   };
 
-                const selectSizeGroup = (groupId: number) => {
-    const group = sizeGroups.find(g => g.id === groupId);
+  const selectSizeGroup = (groupId: number) => {
+    const group = sizeGroups.find((g) => g.id === groupId);
     if (!group) return;
 
     const groupSizeIds = sizes
-      .filter(size => group.sizes.includes(size.size))
-      .map(size => size.id);
+      .filter((size) => group.sizes.includes(size.size))
+      .map((size) => size.id);
 
     setSelectedSizesForVariants(groupSizeIds);
 
@@ -545,23 +562,26 @@ export default function ProductsEnhanced() {
     });
   };
 
-    const getSizeGroupStatus = (groupId: number) => {
-    const group = sizeGroups.find(g => g.id === groupId);
-    if (!group) return { total: 0, selected: 0, isComplete: false, isPartial: false };
+  const getSizeGroupStatus = (groupId: number) => {
+    const group = sizeGroups.find((g) => g.id === groupId);
+    if (!group)
+      return { total: 0, selected: 0, isComplete: false, isPartial: false };
 
     const groupSizeIds = sizes
-      .filter(size => group.sizes.includes(size.size))
-      .map(size => size.id);
+      .filter((size) => group.sizes.includes(size.size))
+      .map((size) => size.id);
 
-    const selectedFromGroup = groupSizeIds.filter(id =>
-      selectedSizesForVariants.includes(id)
+    const selectedFromGroup = groupSizeIds.filter((id) =>
+      selectedSizesForVariants.includes(id),
     ).length;
 
     return {
       total: groupSizeIds.length,
       selected: selectedFromGroup,
-      isComplete: selectedFromGroup === groupSizeIds.length && groupSizeIds.length > 0,
-      isPartial: selectedFromGroup > 0 && selectedFromGroup < groupSizeIds.length
+      isComplete:
+        selectedFromGroup === groupSizeIds.length && groupSizeIds.length > 0,
+      isPartial:
+        selectedFromGroup > 0 && selectedFromGroup < groupSizeIds.length,
     };
   };
 
@@ -580,7 +600,7 @@ export default function ProductsEnhanced() {
     selectedSizesForVariants.forEach((sizeId) => {
       // Verifica se a combinação já existe
       const exists = formData.variants.some(
-        (v) => v.size_id === sizeId && v.color_id === selectedColorForVariants
+        (v) => v.size_id === sizeId && v.color_id === selectedColorForVariants,
       );
 
       if (!exists) {
@@ -827,7 +847,7 @@ export default function ProductsEnhanced() {
                 </TabsList>
 
                 <TabsContent value="basic" className="space-y-4">
-                                    <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="name">Nome do Produto</Label>
                       <Input
@@ -854,7 +874,9 @@ export default function ProductsEnhanced() {
                   </div>
 
                   <div className="grid gap-2">
-                    <Label htmlFor="parent_sku">SKU do Produto Pai (Para Agrupamento)</Label>
+                    <Label htmlFor="parent_sku">
+                      SKU do Produto Pai (Para Agrupamento)
+                    </Label>
                     <Input
                       id="parent_sku"
                       value={formData.parent_sku}
@@ -864,7 +886,8 @@ export default function ProductsEnhanced() {
                       placeholder="Ex: CHM-BASE (para agrupar variantes)"
                     />
                     <p className="text-xs text-muted-foreground">
-                      Use o mesmo SKU pai para produtos que são variantes (cor/tamanho) do mesmo produto base
+                      Use o mesmo SKU pai para produtos que são variantes
+                      (cor/tamanho) do mesmo produto base
                     </p>
                   </div>
 
@@ -998,7 +1021,7 @@ export default function ProductsEnhanced() {
                   </div>
                 </TabsContent>
 
-                                                <TabsContent value="variants" className="space-y-6">
+                <TabsContent value="variants" className="space-y-6">
                   {/* Botão para mostrar/ocultar gerador de variantes */}
                   <div className="flex items-center justify-between">
                     <Label className="text-base">
@@ -1007,11 +1030,15 @@ export default function ProductsEnhanced() {
                     <Button
                       type="button"
                       variant={variantGeneratorVisible ? "default" : "outline"}
-                      onClick={() => setVariantGeneratorVisible(!variantGeneratorVisible)}
+                      onClick={() =>
+                        setVariantGeneratorVisible(!variantGeneratorVisible)
+                      }
                       className="flex items-center gap-2"
                     >
                       <Wand2 className="h-4 w-4" />
-                      {variantGeneratorVisible ? "Ocultar Gerador" : "Mostrar Gerador"}
+                      {variantGeneratorVisible
+                        ? "Ocultar Gerador"
+                        : "Mostrar Gerador"}
                     </Button>
                   </div>
 
@@ -1019,138 +1046,179 @@ export default function ProductsEnhanced() {
                   {variantGeneratorVisible && (
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Criar Variantes Facilmente</CardTitle>
+                        <CardTitle className="text-lg">
+                          Criar Variantes Facilmente
+                        </CardTitle>
                         <CardDescription>
-                          Selecione uma cor e os tamanhos desejados para criar variantes automaticamente
+                          Selecione uma cor e os tamanhos desejados para criar
+                          variantes automaticamente
                         </CardDescription>
                       </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <Label>1. Selecione a Cor</Label>
-                          <Select
-                            value={selectedColorForVariants?.toString() || ""}
-                            onValueChange={(value) => setSelectedColorForVariants(parseInt(value))}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Escolher cor" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {colors.map((color) => (
-                                <SelectItem key={color.id} value={color.id.toString()}>
-                                  <div className="flex items-center gap-2">
-                                    <div
-                                      className="w-4 h-4 rounded border"
-                                      style={{ backgroundColor: color.hex_code || "#999999" }}
-                                    />
-                                    {color.name}
-                                  </div>
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div>
-                          <Label>2. Estoque por Variante</Label>
-                          <Input
-                            type="number"
-                            min="0"
-                            value={variantStock}
-                            onChange={(e) => setVariantStock(parseInt(e.target.value) || 0)}
-                            placeholder="Quantidade"
-                          />
-                        </div>
-
-                        <div>
-                          <Label>3. Ação</Label>
-                          <Button
-                            type="button"
-                            onClick={addVariantsForColorAndSizes}
-                            className="w-full"
-                            disabled={!selectedColorForVariants || selectedSizesForVariants.length === 0}
-                          >
-                            <Plus className="mr-2 h-4 w-4" />
-                            Criar Variantes
-                          </Button>
-                        </div>
-                      </div>
-
-                                            <div>
-                        <Label>2. Selecione os Tamanhos</Label>
-
-                        {/* Grupos de Tamanhos */}
-                        <div className="space-y-3 mt-3">
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
-                            <Label className="text-sm font-medium">Grupos Rápidos:</Label>
-                                                                                                                                                                        <div className="flex flex-wrap gap-2 mt-2">
-                              {sizeGroups.filter(group => group.active).map((group) => {
-                                const status = getSizeGroupStatus(group.id);
-                                return (
-                                  <Button
-                                    key={group.id}
-                                    type="button"
-                                    variant={status.isComplete ? "default" : status.isPartial ? "secondary" : "outline"}
-                                    size="sm"
-                                    onClick={() => selectSizeGroup(group.id)}
-                                    className="flex items-center gap-2"
+                            <Label>1. Selecione a Cor</Label>
+                            <Select
+                              value={selectedColorForVariants?.toString() || ""}
+                              onValueChange={(value) =>
+                                setSelectedColorForVariants(parseInt(value))
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Escolher cor" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {colors.map((color) => (
+                                  <SelectItem
+                                    key={color.id}
+                                    value={color.id.toString()}
                                   >
-                                    <span>{group.icon}</span>
-                                    {group.name}
-                                    {status.selected > 0 && (
-                                      <Badge variant="secondary" className="ml-1 text-xs">
-                                        {status.selected}/{status.total}
-                                      </Badge>
-                                    )}
-                                  </Button>
-                                );
-                              })}
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setSelectedSizesForVariants([])}
-                                className="flex items-center gap-2"
-                              >
-                                <X className="h-4 w-4" />
-                                Limpar
-                              </Button>
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Clique em um grupo para selecionar automaticamente os tamanhos correspondentes
-                            </p>
+                                    <div className="flex items-center gap-2">
+                                      <div
+                                        className="w-4 h-4 rounded border"
+                                        style={{
+                                          backgroundColor:
+                                            color.hex_code || "#999999",
+                                        }}
+                                      />
+                                      {color.name}
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
 
-                          {/* Seleção Individual */}
                           <div>
-                            <Label className="text-sm font-medium">Seleção Individual:</Label>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                              {sizes.map((size) => (
-                                <Button
-                                  key={size.id}
-                                  type="button"
-                                  variant={selectedSizesForVariants.includes(size.id) ? "default" : "outline"}
-                                  size="sm"
-                                  onClick={() => {
-                                    setSelectedSizesForVariants(prev =>
-                                      prev.includes(size.id)
-                                        ? prev.filter(id => id !== size.id)
-                                        : [...prev, size.id]
-                                    );
-                                  }}
-                                >
-                                  {size.size}
-                                </Button>
-                              ))}
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Ou clique nos tamanhos individuais para ajustar a seleção
-                            </p>
+                            <Label>2. Estoque por Variante</Label>
+                            <Input
+                              type="number"
+                              min="0"
+                              value={variantStock}
+                              onChange={(e) =>
+                                setVariantStock(parseInt(e.target.value) || 0)
+                              }
+                              placeholder="Quantidade"
+                            />
+                          </div>
+
+                          <div>
+                            <Label>3. Ação</Label>
+                            <Button
+                              type="button"
+                              onClick={addVariantsForColorAndSizes}
+                              className="w-full"
+                              disabled={
+                                !selectedColorForVariants ||
+                                selectedSizesForVariants.length === 0
+                              }
+                            >
+                              <Plus className="mr-2 h-4 w-4" />
+                              Criar Variantes
+                            </Button>
                           </div>
                         </div>
-                      </div>
-                                        </CardContent>
-                  </Card>
+
+                        <div>
+                          <Label>2. Selecione os Tamanhos</Label>
+
+                          {/* Grupos de Tamanhos */}
+                          <div className="space-y-3 mt-3">
+                            <div>
+                              <Label className="text-sm font-medium">
+                                Grupos Rápidos:
+                              </Label>
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {sizeGroups
+                                  .filter((group) => group.active)
+                                  .map((group) => {
+                                    const status = getSizeGroupStatus(group.id);
+                                    return (
+                                      <Button
+                                        key={group.id}
+                                        type="button"
+                                        variant={
+                                          status.isComplete
+                                            ? "default"
+                                            : status.isPartial
+                                              ? "secondary"
+                                              : "outline"
+                                        }
+                                        size="sm"
+                                        onClick={() =>
+                                          selectSizeGroup(group.id)
+                                        }
+                                        className="flex items-center gap-2"
+                                      >
+                                        <span>{group.icon}</span>
+                                        {group.name}
+                                        {status.selected > 0 && (
+                                          <Badge
+                                            variant="secondary"
+                                            className="ml-1 text-xs"
+                                          >
+                                            {status.selected}/{status.total}
+                                          </Badge>
+                                        )}
+                                      </Button>
+                                    );
+                                  })}
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    setSelectedSizesForVariants([])
+                                  }
+                                  className="flex items-center gap-2"
+                                >
+                                  <X className="h-4 w-4" />
+                                  Limpar
+                                </Button>
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Clique em um grupo para selecionar
+                                automaticamente os tamanhos correspondentes
+                              </p>
+                            </div>
+
+                            {/* Seleção Individual */}
+                            <div>
+                              <Label className="text-sm font-medium">
+                                Seleção Individual:
+                              </Label>
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {sizes.map((size) => (
+                                  <Button
+                                    key={size.id}
+                                    type="button"
+                                    variant={
+                                      selectedSizesForVariants.includes(size.id)
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    size="sm"
+                                    onClick={() => {
+                                      setSelectedSizesForVariants((prev) =>
+                                        prev.includes(size.id)
+                                          ? prev.filter((id) => id !== size.id)
+                                          : [...prev, size.id],
+                                      );
+                                    }}
+                                  >
+                                    {size.size}
+                                  </Button>
+                                ))}
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Ou clique nos tamanhos individuais para ajustar
+                                a seleção
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   )}
 
                   {/* Ações rápidas para variantes */}
@@ -1170,7 +1238,7 @@ export default function ProductsEnhanced() {
                     </Button>
                   </div>
 
-                                    {formData.variants.length === 0 ? (
+                  {formData.variants.length === 0 ? (
                     <div className="text-center py-8 border-2 border-dashed rounded-lg">
                       <Package className="mx-auto h-8 w-8 text-muted-foreground/50" />
                       <p className="mt-2 text-sm text-muted-foreground">
@@ -1392,7 +1460,7 @@ export default function ProductsEnhanced() {
                           </div>
                         );
                       })}
-                                        </div>
+                    </div>
                   )}
                 </TabsContent>
 
@@ -1524,7 +1592,7 @@ export default function ProductsEnhanced() {
         </DialogContent>
       </Dialog>
 
-            {/* Filters and Search - Compactado */}
+      {/* Filters and Search - Compactado */}
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-wrap items-center gap-4">
@@ -1554,10 +1622,7 @@ export default function ProductsEnhanced() {
               <SelectContent>
                 <SelectItem value="all">Todas</SelectItem>
                 {categories.map((category) => (
-                  <SelectItem
-                    key={category.id}
-                    value={category.id.toString()}
-                  >
+                  <SelectItem key={category.id} value={category.id.toString()}>
                     {category.name}
                   </SelectItem>
                 ))}
@@ -1648,7 +1713,7 @@ export default function ProductsEnhanced() {
           ) : (
             <>
               <Table>
-                                <TableHeader>
+                <TableHeader>
                   <TableRow>
                     <TableHead className="w-[80px]">Foto</TableHead>
                     <TableHead>
@@ -1682,13 +1747,13 @@ export default function ProductsEnhanced() {
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
-                                        <TableHead>Variantes</TableHead>
+                    <TableHead>Variantes</TableHead>
                     <TableHead>Venda s/ estoque</TableHead>
                     <TableHead className="w-[140px]">Ativado</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                                    {products.map((product) => (
+                  {products.map((product) => (
                     <TableRow key={product.id}>
                       <TableCell>
                         <div className="w-16 h-16 rounded border overflow-hidden bg-muted flex items-center justify-center">
@@ -1758,14 +1823,20 @@ export default function ProductsEnhanced() {
                         <Badge variant="outline">
                           {product.variant_count} variantes
                         </Badge>
-                                            </TableCell>
+                      </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-center">
                           <Switch
                             checked={product.sell_without_stock}
-                            onCheckedChange={() => handleToggleSellWithoutStock(product)}
+                            onCheckedChange={() =>
+                              handleToggleSellWithoutStock(product)
+                            }
                             disabled={toggleSellLoading === product.id}
-                            title={product.sell_without_stock ? "Desativar venda sem estoque" : "Ativar venda sem estoque"}
+                            title={
+                              product.sell_without_stock
+                                ? "Desativar venda sem estoque"
+                                : "Ativar venda sem estoque"
+                            }
                           />
                         </div>
                       </TableCell>
@@ -1775,7 +1846,11 @@ export default function ProductsEnhanced() {
                             checked={product.active}
                             onCheckedChange={() => handleToggleStatus(product)}
                             disabled={toggleLoading === product.id}
-                            title={product.active ? "Desativar produto" : "Ativar produto"}
+                            title={
+                              product.active
+                                ? "Desativar produto"
+                                : "Ativar produto"
+                            }
                           />
                           <Button
                             variant="outline"

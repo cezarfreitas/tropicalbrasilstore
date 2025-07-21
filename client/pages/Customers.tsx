@@ -130,13 +130,13 @@ export default function Customers() {
   const [selectedCustomer, setSelectedCustomer] =
     useState<CustomerDetails | null>(null);
   const [customerDetailsLoading, setCustomerDetailsLoading] = useState(false);
-    const [editingCustomer, setEditingCustomer] = useState<string | null>(null);
+  const [editingCustomer, setEditingCustomer] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({
     name: "",
     email: "",
     whatsapp: "",
     status: "approved" as "pending" | "approved" | "rejected",
-    newPassword: ""
+    newPassword: "",
   });
   const [updating, setUpdating] = useState(false);
   const [deletingCustomer, setDeletingCustomer] = useState<string | null>(null);
@@ -272,25 +272,25 @@ export default function Customers() {
     return digits.slice(-4);
   };
 
-    const startEdit = (customer: Customer) => {
+  const startEdit = (customer: Customer) => {
     setEditingCustomer(customer.email);
     setEditForm({
       name: customer.name,
       email: customer.email,
       whatsapp: customer.whatsapp,
       status: customer.status || "approved",
-      newPassword: ""
+      newPassword: "",
     });
   };
 
-    const cancelEdit = () => {
+  const cancelEdit = () => {
     setEditingCustomer(null);
     setEditForm({
       name: "",
       email: "",
       whatsapp: "",
       status: "approved",
-      newPassword: ""
+      newPassword: "",
     });
   };
 
@@ -335,7 +335,7 @@ export default function Customers() {
     }
   };
 
-    const deleteCustomer = async (email: string) => {
+  const deleteCustomer = async (email: string) => {
     setDeletingCustomer(email);
     try {
       const response = await fetch(
@@ -690,7 +690,7 @@ export default function Customers() {
             <CardContent>
               <Table>
                 <TableHeader>
-                                    <TableRow>
+                  <TableRow>
                     <TableHead>Cliente</TableHead>
                     <TableHead>Contato</TableHead>
                     <TableHead>Status</TableHead>
@@ -702,7 +702,7 @@ export default function Customers() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                                    {customers.map((customer) => (
+                  {customers.map((customer) => (
                     <TableRow key={customer.email}>
                       <TableCell>
                         {editingCustomer === customer.email ? (
@@ -710,7 +710,10 @@ export default function Customers() {
                             <Input
                               value={editForm.name}
                               onChange={(e) =>
-                                setEditForm({ ...editForm, name: e.target.value })
+                                setEditForm({
+                                  ...editForm,
+                                  name: e.target.value,
+                                })
                               }
                               placeholder="Nome"
                               className="h-8"
@@ -718,7 +721,10 @@ export default function Customers() {
                             <Input
                               value={editForm.email}
                               onChange={(e) =>
-                                setEditForm({ ...editForm, email: e.target.value })
+                                setEditForm({
+                                  ...editForm,
+                                  email: e.target.value,
+                                })
                               }
                               placeholder="Email"
                               className="h-8"
@@ -766,15 +772,15 @@ export default function Customers() {
                             <Phone className="h-3 w-3" />
                             {customer.whatsapp}
                           </div>
-                                                )}
+                        )}
                       </TableCell>
                       <TableCell>
                         {editingCustomer === customer.email ? (
                           <Select
                             value={editForm.status}
-                            onValueChange={(value: "pending" | "approved" | "rejected") =>
-                              setEditForm({ ...editForm, status: value })
-                            }
+                            onValueChange={(
+                              value: "pending" | "approved" | "rejected",
+                            ) => setEditForm({ ...editForm, status: value })}
                           >
                             <SelectTrigger className="h-8 w-full">
                               <SelectValue />
@@ -847,7 +853,7 @@ export default function Customers() {
                             </>
                           ) : (
                             <>
-                                                            <Button
+                              <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => startEdit(customer)}
@@ -859,7 +865,9 @@ export default function Customers() {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    disabled={deletingCustomer === customer.email}
+                                    disabled={
+                                      deletingCustomer === customer.email
+                                    }
                                   >
                                     {deletingCustomer === customer.email ? (
                                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -870,16 +878,24 @@ export default function Customers() {
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                   <AlertDialogHeader>
-                                    <AlertDialogTitle>Deletar Cliente</AlertDialogTitle>
+                                    <AlertDialogTitle>
+                                      Deletar Cliente
+                                    </AlertDialogTitle>
                                     <AlertDialogDescription>
-                                      Tem certeza que deseja deletar o cliente {customer.name}?
-                                      Esta ação não pode ser desfeita e todos os dados do cliente serão perdidos.
+                                      Tem certeza que deseja deletar o cliente{" "}
+                                      {customer.name}? Esta ação não pode ser
+                                      desfeita e todos os dados do cliente serão
+                                      perdidos.
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
                                   <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                    <AlertDialogCancel>
+                                      Cancelar
+                                    </AlertDialogCancel>
                                     <AlertDialogAction
-                                      onClick={() => deleteCustomer(customer.email)}
+                                      onClick={() =>
+                                        deleteCustomer(customer.email)
+                                      }
                                       className="bg-red-600 hover:bg-red-700"
                                     >
                                       Deletar

@@ -11,13 +11,13 @@ router.get("/", async (req, res) => {
       FROM size_groups 
       ORDER BY name ASC
     `);
-    
-            // MySQL automatically parses JSON columns, so sizes is already an array
-    const sizeGroups = (rows as any[]).map(row => ({
+
+    // MySQL automatically parses JSON columns, so sizes is already an array
+    const sizeGroups = (rows as any[]).map((row) => ({
       ...row,
-      sizes: row.sizes || []
+      sizes: row.sizes || [],
     }));
-    
+
     res.json(sizeGroups);
   } catch (error) {
     console.error("Error fetching size groups:", error);
@@ -27,23 +27,26 @@ router.get("/", async (req, res) => {
 
 // GET /api/size-groups/:id - Get single size group
 router.get("/:id", async (req, res) => {
-    try {
-    const [rows] = await connection.execute(`
+  try {
+    const [rows] = await connection.execute(
+      `
       SELECT id, name, description, icon, sizes, active, created_at, updated_at 
       FROM size_groups 
       WHERE id = ?
-    `, [req.params.id]);
-    
+    `,
+      [req.params.id],
+    );
+
     const sizeGroups = rows as any[];
     if (sizeGroups.length === 0) {
       return res.status(404).json({ error: "Size group not found" });
     }
-    
-        const sizeGroup = {
+
+    const sizeGroup = {
       ...sizeGroups[0],
-      sizes: sizeGroups[0].sizes || []
+      sizes: sizeGroups[0].sizes || [],
     };
-    
+
     res.json(sizeGroup);
   } catch (error) {
     console.error("Error fetching size group:", error);
@@ -55,48 +58,54 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const { name, description, icon, sizes, active } = req.body;
-    
+
     if (!name || !sizes || !Array.isArray(sizes)) {
-      return res.status(400).json({ 
-        error: "Name and sizes (array) are required" 
+      return res.status(400).json({
+        error: "Name and sizes (array) are required",
       });
     }
-    
-        const [result] = await connection.execute(`
+
+    const [result] = await connection.execute(
+      `
       INSERT INTO size_groups (name, description, icon, sizes, active)
       VALUES (?, ?, ?, ?, ?)
-    `, [
-      name,
-      description || null,
-      icon || null,
-      JSON.stringify(sizes),
-      active !== undefined ? active : true
-    ]);
-    
+    `,
+      [
+        name,
+        description || null,
+        icon || null,
+        JSON.stringify(sizes),
+        active !== undefined ? active : true,
+      ],
+    );
+
     const insertId = (result as any).insertId;
-    
+
     // Return the created size group
-        const [rows] = await connection.execute(`
+    const [rows] = await connection.execute(
+      `
       SELECT id, name, description, icon, sizes, active, created_at, updated_at 
       FROM size_groups 
       WHERE id = ?
-    `, [insertId]);
-    
-        const createdGroup = {
+    `,
+      [insertId],
+    );
+
+    const createdGroup = {
       ...(rows as any[])[0],
-      sizes: (rows as any[])[0].sizes || []
+      sizes: (rows as any[])[0].sizes || [],
     };
-    
+
     res.status(201).json(createdGroup);
   } catch (error: any) {
     console.error("Error creating size group:", error);
-    
-    if (error.code === 'ER_DUP_ENTRY') {
-      return res.status(400).json({ 
-        error: "A size group with this name already exists" 
+
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(400).json({
+        error: "A size group with this name already exists",
       });
     }
-    
+
     res.status(500).json({ error: "Failed to create size group" });
   }
 });
@@ -105,52 +114,58 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { name, description, icon, sizes, active } = req.body;
-    
+
     if (!name || !sizes || !Array.isArray(sizes)) {
-      return res.status(400).json({ 
-        error: "Name and sizes (array) are required" 
+      return res.status(400).json({
+        error: "Name and sizes (array) are required",
       });
     }
-    
-        const [result] = await connection.execute(`
+
+    const [result] = await connection.execute(
+      `
       UPDATE size_groups 
       SET name = ?, description = ?, icon = ?, sizes = ?, active = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
-    `, [
-      name,
-      description || null,
-      icon || null,
-      JSON.stringify(sizes),
-      active !== undefined ? active : true,
-      req.params.id
-    ]);
-    
+    `,
+      [
+        name,
+        description || null,
+        icon || null,
+        JSON.stringify(sizes),
+        active !== undefined ? active : true,
+        req.params.id,
+      ],
+    );
+
     if ((result as any).affectedRows === 0) {
       return res.status(404).json({ error: "Size group not found" });
     }
-    
+
     // Return the updated size group
-        const [rows] = await connection.execute(`
+    const [rows] = await connection.execute(
+      `
       SELECT id, name, description, icon, sizes, active, created_at, updated_at 
       FROM size_groups 
       WHERE id = ?
-    `, [req.params.id]);
-    
-        const updatedGroup = {
+    `,
+      [req.params.id],
+    );
+
+    const updatedGroup = {
       ...(rows as any[])[0],
-      sizes: (rows as any[])[0].sizes || []
+      sizes: (rows as any[])[0].sizes || [],
     };
-    
+
     res.json(updatedGroup);
   } catch (error: any) {
     console.error("Error updating size group:", error);
-    
-    if (error.code === 'ER_DUP_ENTRY') {
-      return res.status(400).json({ 
-        error: "A size group with this name already exists" 
+
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(400).json({
+        error: "A size group with this name already exists",
       });
     }
-    
+
     res.status(500).json({ error: "Failed to update size group" });
   }
 });
@@ -158,14 +173,17 @@ router.put("/:id", async (req, res) => {
 // DELETE /api/size-groups/:id - Delete size group
 router.delete("/:id", async (req, res) => {
   try {
-        const [result] = await connection.execute(`
+    const [result] = await connection.execute(
+      `
       DELETE FROM size_groups WHERE id = ?
-    `, [req.params.id]);
-    
+    `,
+      [req.params.id],
+    );
+
     if ((result as any).affectedRows === 0) {
       return res.status(404).json({ error: "Size group not found" });
     }
-    
+
     res.json({ message: "Size group deleted successfully" });
   } catch (error) {
     console.error("Error deleting size group:", error);

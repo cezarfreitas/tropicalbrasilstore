@@ -31,8 +31,11 @@ export async function addParentSkuColumn() {
       `);
       console.log("✅ parent_sku index created successfully!");
     } catch (error: any) {
-      if (error.code !== 'ER_DUP_KEYNAME') {
-        console.log("ℹ️ parent_sku index already exists or error:", error.message);
+      if (error.code !== "ER_DUP_KEYNAME") {
+        console.log(
+          "ℹ️ parent_sku index already exists or error:",
+          error.message,
+        );
       }
     }
 
