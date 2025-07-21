@@ -653,7 +653,7 @@ export default function Store() {
                       key={product.id}
                       className="overflow-hidden h-full transition-transform hover:scale-105"
                     >
-                      <div className="aspect-square bg-muted flex items-center justify-center">
+                                            <div className="aspect-square bg-muted flex items-center justify-center relative">
                         {product.photo ? (
                           <img
                             src={product.photo}
@@ -662,6 +662,15 @@ export default function Store() {
                           />
                         ) : (
                           <Package className="h-12 w-12 text-muted-foreground/50" />
+                        )}
+                        {/* Category badge overlay */}
+                        {product.category_name && (
+                          <Badge
+                            variant="secondary"
+                            className="absolute top-2 left-2 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white/90 backdrop-blur-sm shadow-sm border-0"
+                          >
+                            {product.category_name}
+                          </Badge>
                         )}
                       </div>
                                             <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
