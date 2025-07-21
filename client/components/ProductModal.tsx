@@ -152,8 +152,16 @@ export function ProductModal({
     return product.available_grades.filter(grade => grade.color_id === selectedColor);
   };
 
-  const hasGrades = () => {
+    const hasGrades = () => {
     return product?.available_grades && product.available_grades.length > 0;
+  };
+
+  const canAddGradeToCart = (grade: any) => {
+    // If sell without stock is enabled, always allow
+    if (product?.sell_without_stock) return true;
+
+    // If sell without stock is disabled, check if has full stock
+    return grade.has_full_stock;
   };
 
   const addToCart = () => {
