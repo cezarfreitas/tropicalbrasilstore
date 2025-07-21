@@ -142,7 +142,7 @@ router.put("/:id", async (req, res) => {
     }
 
     // Return the updated size group
-    const [rows] = await connection.execute(
+    const [rows] = await db.execute(
       `
       SELECT id, name, description, icon, sizes, active, created_at, updated_at 
       FROM size_groups 
