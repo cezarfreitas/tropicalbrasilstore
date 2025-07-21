@@ -570,7 +570,7 @@ export default function ProductImport() {
               </div>
 
               <div className="border-t pt-6 space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="p-4 border rounded-lg">
                     <div className="flex items-center justify-between mb-3">
                       <div>
