@@ -202,9 +202,11 @@ const produtoCompleto = {
 
 ✅ **Criação Automática**: Categorias, cores e tamanhos são criados automaticamente
 ✅ **Flexibilidade**: Use nomes intuitivos ao invés de IDs
+✅ **Hierarquia de Produtos**: Suporte a parent_id para produtos pai/filho
+✅ **Foto Otimizada**: Uma foto principal por produto (não por variante)
 ✅ **Download Automático**: Fotos são baixadas e salvas automaticamente
-✅ **Relatório**: Retorna quais recursos foram criados
-✅ **Validação**: Verifica dados obrigatórios
+✅ **Relatório Detalhado**: Retorna quais recursos foram criados e status
+✅ **Validação**: Verifica dados obrigatórios e referências
 ✅ **Transação**: Operação atômica (tudo ou nada)
 
 ## Erros Comuns
