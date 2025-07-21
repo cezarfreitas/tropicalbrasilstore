@@ -365,12 +365,7 @@ function Store() {
                         </div>
                       )}
 
-                      {/* Stock Info */}
-                      {product.total_stock !== undefined && (
-                        <div className="text-xs text-slate-500 hidden sm:block">
-                          {product.total_stock > 0 ? `${product.total_stock} em estoque` : 'Sem estoque'}
-                        </div>
-                      )}
+
                     </div>
                   </CardContent>
                 </Card>
