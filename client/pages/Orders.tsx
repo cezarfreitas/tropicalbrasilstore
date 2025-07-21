@@ -514,13 +514,17 @@ export default function Orders() {
                                           <Package className="h-6 w-6 text-muted-foreground" />
                                         )}
                                       </div>
-                                      <div>
+                                                                            <div>
                                         <div className="font-medium">
                                           {item.product_name}
                                         </div>
                                         <div className="text-sm text-muted-foreground">
-                                          Grade: {item.grade_name} • Cor:{" "}
-                                          {item.color_name}
+                                          {item.product_sku && `SKU: ${item.product_sku}`}
+                                          {item.sku_variant && ` • Variante: ${item.sku_variant}`}
+                                        </div>
+                                        <div className="text-sm text-muted-foreground">
+                                          Grade: {item.grade_name} • Cor: {item.color_name}
+                                          {item.size && ` • Tamanho: ${item.size}`}
                                         </div>
                                         <div className="text-sm text-muted-foreground">
                                           Quantidade: {item.quantity} kit(s)
