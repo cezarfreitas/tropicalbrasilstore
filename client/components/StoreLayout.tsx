@@ -128,7 +128,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             {/* Main content */}
       <main className="min-h-[calc(100vh-140px)] sm:min-h-[calc(100vh-160px)]">{children}</main>
 
-            {/* Footer */}
+                  {/* Footer */}
       <footer className="border-t bg-card mt-8 sm:mt-16">
         <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
           <div className="text-center text-xs sm:text-sm text-muted-foreground">
@@ -137,6 +137,16 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           </div>
         </div>
       </footer>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onSuccess={() => {
+          // Optionally refresh the page or update state
+          window.location.reload();
+        }}
+      />
     </div>
   );
 }
