@@ -18,13 +18,12 @@ router.get("/products", async (req, res) => {
         p.active,
         c.name as category_name,
         COUNT(DISTINCT pv.id) as variant_count,
-        SUM(pv.stock) as total_stock
+                COALESCE(SUM(pv.stock), 0) as total_stock
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
       LEFT JOIN product_variants pv ON p.id = pv.product_id
       WHERE p.active = true
       GROUP BY p.id
-      HAVING total_stock > 0
       ORDER BY p.name
     `);
 
