@@ -1,9 +1,19 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Package } from "lucide-react";
+import { ShoppingCart, Package, User, LogOut, LogIn } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
+import { useCustomerAuth } from "@/hooks/use-customer-auth";
+import { LoginModal } from "@/components/LoginModal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface StoreLayoutProps {
   children: ReactNode;
