@@ -25,10 +25,7 @@ interface StoreProduct {
   total_stock?: number;
 }
 
-interface Category {
-  id: string;
-  name: string;
-}
+
 
 interface PaginationInfo {
   currentPage: number;
