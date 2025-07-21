@@ -11,9 +11,9 @@ Esta API permite criar produtos usando **nomes** ao invés de IDs para categoria
   "name": "Nome do Produto",
   "description": "Descrição do produto",
   "category_name": "Nome da Categoria",
-  "base_price": 18.50,
-  "sale_price": 25.90,
-  "suggested_price": 35.90,
+  "base_price": 18.5,
+  "sale_price": 25.9,
+  "suggested_price": 35.9,
   "sku": "PROD001",
   "parent_sku": "PROD",
   "parent_id": 123,
@@ -28,7 +28,7 @@ Esta API permite criar produtos usando **nomes** ao invés de IDs para categoria
     },
     {
       "size_name": "38",
-      "color_name": "Azul", 
+      "color_name": "Azul",
       "stock": 80
     },
     {
@@ -115,7 +115,8 @@ Esta API permite criar produtos usando **nomes** ao invés de IDs para categoria
 ## Exemplos de Uso
 
 ### 1. Produto Simples
-```javascript
+
+````javascript
 const produto = {
   "name": "Chinelo Havaianas",
   "description": "Chinelo confortável e durável",
@@ -157,44 +158,45 @@ fetch('/api/products-by-names', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(produto)
 });
-```
+````
 
 ### 3. Produto com Múltiplas Variantes
+
 ```javascript
 const produtoCompleto = {
-  "name": "Tênis Nike Air Max",
-  "description": "Tênis esportivo confortável",
-  "category_name": "Tênis Esportivos",
-  "base_price": 150.00,
-  "sale_price": 299.99,
-  "suggested_price": 399.99,
-  "sku": "NIKE-AIR-MAX",
-  "parent_sku": "NIKE",
-  "photo_url": "https://nike.com/images/air-max.jpg",
-  "size_group_name": "Unissex",
-  "variants": [
+  name: "Tênis Nike Air Max",
+  description: "Tênis esportivo confortável",
+  category_name: "Tênis Esportivos",
+  base_price: 150.0,
+  sale_price: 299.99,
+  suggested_price: 399.99,
+  sku: "NIKE-AIR-MAX",
+  parent_sku: "NIKE",
+  photo_url: "https://nike.com/images/air-max.jpg",
+  size_group_name: "Unissex",
+  variants: [
     {
-      "size_name": "37",
-      "color_name": "Preto",
-      "stock": 25
+      size_name: "37",
+      color_name: "Preto",
+      stock: 25,
     },
     {
-      "size_name": "38",
-      "color_name": "Preto",
-      "stock": 30
+      size_name: "38",
+      color_name: "Preto",
+      stock: 30,
     },
     {
-      "size_name": "37",
-      "color_name": "Branco",
-      "stock": 20
+      size_name: "37",
+      color_name: "Branco",
+      stock: 20,
     },
     {
-      "size_name": "38",
-      "color_name": "Branco",
-      "stock": 15,
-      "price_override": 319.99
-    }
-  ]
+      size_name: "38",
+      color_name: "Branco",
+      stock: 15,
+      price_override: 319.99,
+    },
+  ],
 };
 ```
 
@@ -212,7 +214,7 @@ const produtoCompleto = {
 ## Erros Comuns
 
 - **400**: Nome do produto obrigatório
-- **400**: Pelo menos uma variante é obrigatória  
+- **400**: Pelo menos uma variante é obrigatória
 - **400**: SKU já existe
 - **400**: Nome e cor obrigatórios para cada variante
 - **500**: Erro interno do servidor

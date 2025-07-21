@@ -10,7 +10,10 @@ const router = Router();
 const streamPipeline = promisify(pipeline);
 
 // Download image from URL and save to public folder
-async function downloadImage(url: string, filename: string): Promise<string | null> {
+async function downloadImage(
+  url: string,
+  filename: string,
+): Promise<string | null> {
   try {
     const publicDir = path.join(process.cwd(), "public", "uploads", "products");
 
@@ -30,7 +33,8 @@ async function downloadImage(url: string, filename: string): Promise<string | nu
       responseType: "stream",
       timeout: 30000,
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
       },
     });
 
@@ -65,7 +69,10 @@ interface ProductByNamesRequest {
 }
 
 // Helper function to get or create category
-async function getOrCreateCategory(connection: any, categoryName: string): Promise<number> {
+async function getOrCreateCategory(
+  connection: any,
+  categoryName: string,
+): Promise<number> {
   if (!categoryName) {
     throw new Error("Category name is required");
   }
@@ -73,7 +80,7 @@ async function getOrCreateCategory(connection: any, categoryName: string): Promi
   // Check if category exists
   const [existing] = await connection.execute(
     "SELECT id FROM categories WHERE LOWER(name) = LOWER(?)",
-    [categoryName.trim()]
+    [categoryName.trim()],
   );
 
   if ((existing as any[]).length > 0) {
@@ -83,14 +90,17 @@ async function getOrCreateCategory(connection: any, categoryName: string): Promi
   // Create new category
   const [result] = await connection.execute(
     "INSERT INTO categories (name) VALUES (?)",
-    [categoryName.trim()]
+    [categoryName.trim()],
   );
 
   return (result as any).insertId;
 }
 
 // Helper function to get or create color
-async function getOrCreateColor(connection: any, colorName: string): Promise<number> {
+async function getOrCreateColor(
+  connection: any,
+  colorName: string,
+): Promise<number> {
   if (!colorName) {
     throw new Error("Color name is required");
   }
@@ -98,7 +108,7 @@ async function getOrCreateColor(connection: any, colorName: string): Promise<num
   // Check if color exists
   const [existing] = await connection.execute(
     "SELECT id FROM colors WHERE LOWER(name) = LOWER(?)",
-    [colorName.trim()]
+    [colorName.trim()],
   );
 
   if ((existing as any[]).length > 0) {
@@ -106,19 +116,26 @@ async function getOrCreateColor(connection: any, colorName: string): Promise<num
   }
 
   // Generate random hex color
-  const randomHex = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0");
+  const randomHex =
+    "#" +
+    Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, "0");
 
   // Create new color
   const [result] = await connection.execute(
     "INSERT INTO colors (name, hex_code) VALUES (?, ?)",
-    [colorName.trim(), randomHex]
+    [colorName.trim(), randomHex],
   );
 
   return (result as any).insertId;
 }
 
 // Helper function to get or create size
-async function getOrCreateSize(connection: any, sizeName: string): Promise<number> {
+async function getOrCreateSize(
+  connection: any,
+  sizeName: string,
+): Promise<number> {
   if (!sizeName) {
     throw new Error("Size name is required");
   }
@@ -126,7 +143,7 @@ async function getOrCreateSize(connection: any, sizeName: string): Promise<numbe
   // Check if size exists
   const [existing] = await connection.execute(
     "SELECT id FROM sizes WHERE LOWER(size) = LOWER(?)",
-    [sizeName.trim()]
+    [sizeName.trim()],
   );
 
   if ((existing as any[]).length > 0) {
@@ -136,26 +153,33 @@ async function getOrCreateSize(connection: any, sizeName: string): Promise<numbe
   // Create new size
   const [result] = await connection.execute(
     "INSERT INTO sizes (size) VALUES (?)",
-    [sizeName.trim()]
+    [sizeName.trim()],
   );
 
   return (result as any).insertId;
 }
 
 // Helper function to validate parent product exists
-async function validateParentProduct(connection: any, parentId: number): Promise<boolean> {
+async function validateParentProduct(
+  connection: any,
+  parentId: number,
+): Promise<boolean> {
   if (!parentId) return true; // Optional field
 
   const [existing] = await connection.execute(
     "SELECT id FROM products WHERE id = ?",
-    [parentId]
+    [parentId],
   );
 
   return (existing as any[]).length > 0;
 }
 
 // Helper function to get or create size group
-async function getOrCreateSizeGroup(connection: any, sizeGroupName: string, sizeNames: string[]): Promise<number> {
+async function getOrCreateSizeGroup(
+  connection: any,
+  sizeGroupName: string,
+  sizeNames: string[],
+): Promise<number> {
   if (!sizeGroupName) {
     throw new Error("Size group name is required");
   }
@@ -163,7 +187,7 @@ async function getOrCreateSizeGroup(connection: any, sizeGroupName: string, size
   // Check if size group exists
   const [existing] = await connection.execute(
     "SELECT id FROM size_groups WHERE LOWER(name) = LOWER(?)",
-    [sizeGroupName.trim()]
+    [sizeGroupName.trim()],
   );
 
   if ((existing as any[]).length > 0) {
@@ -171,11 +195,11 @@ async function getOrCreateSizeGroup(connection: any, sizeGroupName: string, size
   }
 
   // Create new size group with the sizes from variants
-  const uniqueSizes = [...new Set(sizeNames.map(s => s.trim()))];
-  
+  const uniqueSizes = [...new Set(sizeNames.map((s) => s.trim()))];
+
   const [result] = await connection.execute(
     "INSERT INTO size_groups (name, sizes) VALUES (?, ?)",
-    [sizeGroupName.trim(), JSON.stringify(uniqueSizes)]
+    [sizeGroupName.trim(), JSON.stringify(uniqueSizes)],
   );
 
   return (result as any).insertId;
@@ -209,14 +233,20 @@ router.post("/", async (req, res) => {
     }
 
     if (!variants || variants.length === 0) {
-      return res.status(400).json({ error: "At least one variant is required" });
+      return res
+        .status(400)
+        .json({ error: "At least one variant is required" });
     }
 
     // Validate parent product if parent_id is provided
     if (parent_id) {
       const parentExists = await validateParentProduct(connection, parent_id);
       if (!parentExists) {
-        return res.status(400).json({ error: `Parent product with ID ${parent_id} does not exist` });
+        return res
+          .status(400)
+          .json({
+            error: `Parent product with ID ${parent_id} does not exist`,
+          });
       }
     }
 
@@ -229,8 +259,12 @@ router.post("/", async (req, res) => {
     // Get or create size group if provided
     let sizeGroupId = null;
     if (size_group_name) {
-      const sizeNames = variants.map(v => v.size_name);
-      sizeGroupId = await getOrCreateSizeGroup(connection, size_group_name, sizeNames);
+      const sizeNames = variants.map((v) => v.size_name);
+      sizeGroupId = await getOrCreateSizeGroup(
+        connection,
+        size_group_name,
+        sizeNames,
+      );
     }
 
     // Conceito otimizado de foto: uma foto principal por produto
@@ -273,7 +307,7 @@ router.post("/", async (req, res) => {
         parent_id || null, // ID do produto pai para hierarquia
         photoPath, // Foto principal do produto (não das variantes)
         true,
-      ]
+      ],
     );
 
     const productId = (result as any).insertId;
@@ -281,7 +315,9 @@ router.post("/", async (req, res) => {
     // Process variants
     for (const variant of variants) {
       if (!variant.size_name || !variant.color_name) {
-        throw new Error("Size name and color name are required for each variant");
+        throw new Error(
+          "Size name and color name are required for each variant",
+        );
       }
 
       // Get or create size and color
@@ -298,7 +334,7 @@ router.post("/", async (req, res) => {
           colorId,
           variant.stock || 0,
           variant.price_override || null,
-        ]
+        ],
       );
     }
 
@@ -310,7 +346,7 @@ router.post("/", async (req, res) => {
        FROM products p 
        LEFT JOIN categories c ON p.category_id = c.id 
        WHERE p.id = ?`,
-      [productId]
+      [productId],
     );
 
     const product = (productRows as any)[0];
@@ -322,14 +358,14 @@ router.post("/", async (req, res) => {
        LEFT JOIN sizes s ON pv.size_id = s.id
        LEFT JOIN colors c ON pv.color_id = c.id
        WHERE pv.product_id = ?`,
-      [productId]
+      [productId],
     );
 
     product.variants = variantRows;
     product.variant_count = (variantRows as any[]).length;
     product.total_stock = (variantRows as any[]).reduce(
       (sum, variant) => sum + (variant.stock || 0),
-      0
+      0,
     );
 
     // Get parent product info if exists
@@ -337,7 +373,7 @@ router.post("/", async (req, res) => {
     if (parent_id) {
       const [parentRows] = await db.execute(
         "SELECT id, name, sku FROM products WHERE id = ?",
-        [parent_id]
+        [parent_id],
       );
       parentProduct = (parentRows as any[])[0] || null;
     }
@@ -346,47 +382,48 @@ router.post("/", async (req, res) => {
       message: "Product created successfully",
       product: {
         ...product,
-        parent_product: parentProduct
+        parent_product: parentProduct,
       },
       created_resources: {
         category_created: category_name ? true : false,
-        colors_created: [...new Set(variants.map(v => v.color_name))], // Remove duplicates
-        sizes_created: [...new Set(variants.map(v => v.size_name))], // Remove duplicates
+        colors_created: [...new Set(variants.map((v) => v.color_name))], // Remove duplicates
+        sizes_created: [...new Set(variants.map((v) => v.size_name))], // Remove duplicates
         size_group_created: size_group_name ? true : false,
         photo_status: {
           downloaded: photoDownloaded,
           url_original: photo_url || null,
           path_saved: photoPath || null,
-          error: photoError || null
+          error: photoError || null,
         },
-        parent_reference: parent_id ? {
-          parent_id: parent_id,
-          parent_found: parentProduct !== null,
-          parent_name: parentProduct?.name || null
-        } : null
+        parent_reference: parent_id
+          ? {
+              parent_id: parent_id,
+              parent_found: parentProduct !== null,
+              parent_name: parentProduct?.name || null,
+            }
+          : null,
       },
       summary: {
         product_name: name,
         variants_created: variants.length,
-        unique_colors: [...new Set(variants.map(v => v.color_name))].length,
-        unique_sizes: [...new Set(variants.map(v => v.size_name))].length,
+        unique_colors: [...new Set(variants.map((v) => v.color_name))].length,
+        unique_sizes: [...new Set(variants.map((v) => v.size_name))].length,
         total_stock: variants.reduce((sum, v) => sum + (v.stock || 0), 0),
         has_parent: !!parent_id,
-        has_photo: !!photoPath
-      }
+        has_photo: !!photoPath,
+      },
     });
-
   } catch (error: any) {
     await connection.rollback();
     console.error("Error creating product by names:", error);
-    
+
     if (error.code === "ER_DUP_ENTRY") {
       return res.status(400).json({ error: "SKU already exists" });
     }
-    
-    res.status(500).json({ 
-      error: "Failed to create product", 
-      details: error.message 
+
+    res.status(500).json({
+      error: "Failed to create product",
+      details: error.message,
     });
   } finally {
     connection.release();

@@ -433,8 +433,11 @@ export default function ProductImport() {
       ],
     ];
 
-    const csvContent = headers.join(",") + "\n" +
-      sampleRows.map(row => row.join(",")).join("\n") + "\n";
+    const csvContent =
+      headers.join(",") +
+      "\n" +
+      sampleRows.map((row) => row.join(",")).join("\n") +
+      "\n";
     const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -793,7 +796,8 @@ export default function ProductImport() {
                       1=Feminino, 2=Masculino)
                     </li>
                     <li>
-                      • <strong>Cor:</strong> Uma cor por linha (repita produto para cada cor)
+                      • <strong>Cor:</strong> Uma cor por linha (repita produto
+                      para cada cor)
                     </li>
                     <li>
                       • <strong>Estoque:</strong> Quantidade por variante
@@ -811,16 +815,21 @@ export default function ProductImport() {
                       </h5>
                       <div className="text-sm text-amber-800 space-y-2">
                         <p>
-                          <strong>Agora cada cor deve ser uma linha separada!</strong>
+                          <strong>
+                            Agora cada cor deve ser uma linha separada!
+                          </strong>
                         </p>
                         <p>
-                          Se um produto tem 3 cores, você deve criar 3 linhas com as mesmas
-                          informações do produto, mudando apenas a cor e opcionalmente o SKU.
+                          Se um produto tem 3 cores, você deve criar 3 linhas
+                          com as mesmas informações do produto, mudando apenas a
+                          cor e opcionalmente o SKU.
                         </p>
                         <p className="font-medium">Exemplo:</p>
                         <div className="bg-white/50 rounded p-2 text-xs font-mono">
-                          Havaianas Top,1,18.50,25.90,...,azul,HAV001-AZUL<br/>
-                          Havaianas Top,1,18.50,25.90,...,branco,HAV001-BRANCO<br/>
+                          Havaianas Top,1,18.50,25.90,...,azul,HAV001-AZUL
+                          <br />
+                          Havaianas Top,1,18.50,25.90,...,branco,HAV001-BRANCO
+                          <br />
                           Havaianas Top,1,18.50,25.90,...,preto,HAV001-PRETO
                         </div>
                       </div>
@@ -1052,9 +1061,7 @@ export default function ProductImport() {
                         </a>
                       )}
                     </TableCell>
-                    <TableCell className="text-xs">
-                      {item.data.color}
-                    </TableCell>
+                    <TableCell className="text-xs">{item.data.color}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

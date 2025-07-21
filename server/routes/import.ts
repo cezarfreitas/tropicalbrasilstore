@@ -234,7 +234,9 @@ async function processImport(data: any[]) {
   const productGroups = new Map<string, any[]>();
 
   for (const item of data) {
-    const productKey = item.parent_sku ? `${item.name}_${item.parent_sku}` : item.name;
+    const productKey = item.parent_sku
+      ? `${item.name}_${item.parent_sku}`
+      : item.name;
     if (!productGroups.has(productKey)) {
       productGroups.set(productKey, []);
     }
@@ -246,7 +248,8 @@ async function processImport(data: any[]) {
   for (const [productKey, productItems] of productGroups) {
     try {
       const firstItem = productItems[0];
-      importProgress.current = firstItem.name || `Produto ${processedItems + 1}`;
+      importProgress.current =
+        firstItem.name || `Produto ${processedItems + 1}`;
 
       await connection.beginTransaction();
 
@@ -265,11 +268,11 @@ async function processImport(data: any[]) {
       // Check if product already exists (by name + parent_sku or just name)
       let productId: number;
       const searchKey = firstItem.parent_sku || firstItem.name;
-      const searchField = firstItem.parent_sku ? 'parent_sku' : 'name';
+      const searchField = firstItem.parent_sku ? "parent_sku" : "name";
 
       const [existingProduct] = await connection.execute(
         `SELECT id FROM products WHERE ${searchField} = ?`,
-        [searchKey]
+        [searchKey],
       );
 
       if ((existingProduct as any[]).length > 0) {
@@ -277,12 +280,14 @@ async function processImport(data: any[]) {
 
         // Delete existing variants to recreate them
         await connection.execute(
-          'DELETE FROM product_variants WHERE product_id = ?',
-          [productId]
+          "DELETE FROM product_variants WHERE product_id = ?",
+          [productId],
         );
 
         // Update product info
-        let photoPath = firstItem.photo_url ? await downloadImage(firstItem.photo_url, firstItem.name) : null;
+        let photoPath = firstItem.photo_url
+          ? await downloadImage(firstItem.photo_url, firstItem.name)
+          : null;
 
         await connection.execute(
           `UPDATE products SET
@@ -295,11 +300,13 @@ async function processImport(data: any[]) {
             parseInt(firstItem.category_id),
             parseFloat(firstItem.base_price),
             firstItem.sale_price ? parseFloat(firstItem.sale_price) : null,
-            firstItem.suggested_price ? parseFloat(firstItem.suggested_price) : null,
+            firstItem.suggested_price
+              ? parseFloat(firstItem.suggested_price)
+              : null,
             firstItem.sku || null,
             photoPath,
             productId,
-          ]
+          ],
         );
       } else {
         // Download image if URL provided
@@ -320,7 +327,9 @@ async function processImport(data: any[]) {
             parseInt(firstItem.category_id),
             parseFloat(firstItem.base_price),
             firstItem.sale_price ? parseFloat(firstItem.sale_price) : null,
-            firstItem.suggested_price ? parseFloat(firstItem.suggested_price) : null,
+            firstItem.suggested_price
+              ? parseFloat(firstItem.suggested_price)
+              : null,
             firstItem.sku || null,
             firstItem.parent_sku || null,
             photoPath,
@@ -334,7 +343,9 @@ async function processImport(data: any[]) {
       // Get sizes for the group
       const sizes = await getSizesForGroup(parseInt(firstItem.size_group_id));
       if (sizes.length === 0) {
-        throw new Error(`No sizes found for size group ${firstItem.size_group_id}`);
+        throw new Error(
+          `No sizes found for size group ${firstItem.size_group_id}`,
+        );
       }
 
       // Process each color variation
@@ -460,7 +471,9 @@ router.get("/export-products", async (req, res) => {
       );
 
       const sizeGroupId =
-        (sizeGroupInfo as any[]).length > 0 ? (sizeGroupInfo as any[])[0].id : "";
+        (sizeGroupInfo as any[]).length > 0
+          ? (sizeGroupInfo as any[])[0].id
+          : "";
 
       // Build photo URL (convert relative path to full URL if needed)
       let photoUrl = "";
