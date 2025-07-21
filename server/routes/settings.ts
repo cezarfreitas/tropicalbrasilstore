@@ -225,15 +225,26 @@ router.post("/backup", async (req, res) => {
   try {
     // Get all tables data
     const tables = [
-      'products', 'categories', 'sizes', 'colors', 'size_groups',
-      'grade_vendida', 'grade_templates', 'product_color_grades', 'product_variants',
-      'store_settings', 'customers', 'orders', 'order_items', 'customer_auth'
+      "products",
+      "categories",
+      "sizes",
+      "colors",
+      "size_groups",
+      "grade_vendida",
+      "grade_templates",
+      "product_color_grades",
+      "product_variants",
+      "store_settings",
+      "customers",
+      "orders",
+      "order_items",
+      "customer_auth",
     ];
 
     const backup: any = {
       timestamp: new Date().toISOString(),
       version: "1.0",
-      tables: {}
+      tables: {},
     };
 
     for (const table of tables) {
@@ -246,8 +257,11 @@ router.post("/backup", async (req, res) => {
       }
     }
 
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Content-Disposition', `attachment; filename="backup-${new Date().toISOString().split('T')[0]}.json"`);
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="backup-${new Date().toISOString().split("T")[0]}.json"`,
+    );
     res.json(backup);
   } catch (error) {
     console.error("Error creating backup:", error);
@@ -263,8 +277,15 @@ router.post("/restore-template", async (req, res) => {
 
     // Clear existing data (except customers and orders for safety)
     const tablesToClear = [
-      'product_variants', 'product_color_grades', 'grade_templates',
-      'grade_vendida', 'products', 'colors', 'sizes', 'categories', 'size_groups'
+      "product_variants",
+      "product_color_grades",
+      "grade_templates",
+      "grade_vendida",
+      "products",
+      "colors",
+      "sizes",
+      "categories",
+      "size_groups",
     ];
 
     for (const table of tablesToClear) {
@@ -304,7 +325,18 @@ router.post("/restore", async (req, res) => {
 
     // Tables to restore (excluding sensitive data if preserveOrders is true)
     const tablesToRestore = preserveOrders
-      ? ['products', 'categories', 'sizes', 'colors', 'size_groups', 'grade_vendida', 'grade_templates', 'product_color_grades', 'product_variants', 'store_settings']
+      ? [
+          "products",
+          "categories",
+          "sizes",
+          "colors",
+          "size_groups",
+          "grade_vendida",
+          "grade_templates",
+          "product_color_grades",
+          "product_variants",
+          "store_settings",
+        ]
       : Object.keys(backup.tables);
 
     for (const table of tablesToRestore) {
@@ -319,11 +351,11 @@ router.post("/restore", async (req, res) => {
         const data = backup.tables[table];
         if (data.length > 0) {
           const columns = Object.keys(data[0]);
-          const placeholders = columns.map(() => '?').join(', ');
-          const sql = `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`;
+          const placeholders = columns.map(() => "?").join(", ");
+          const sql = `INSERT INTO ${table} (${columns.join(", ")}) VALUES (${placeholders})`;
 
           for (const row of data) {
-            const values = columns.map(col => row[col]);
+            const values = columns.map((col) => row[col]);
             await connection.execute(sql, values);
           }
         }

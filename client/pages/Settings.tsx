@@ -129,7 +129,7 @@ export default function Settings() {
     });
   };
 
-    const togglePaymentMethod = (methodId: string) => {
+  const togglePaymentMethod = (methodId: string) => {
     if (!settings) return;
     const methods = [...settings.payment_methods];
     const index = methods.indexOf(methodId);
@@ -156,7 +156,7 @@ export default function Settings() {
         const a = document.createElement("a");
         a.style.display = "none";
         a.href = url;
-        a.download = `backup-${new Date().toISOString().split('T')[0]}.json`;
+        a.download = `backup-${new Date().toISOString().split("T")[0]}.json`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -217,7 +217,11 @@ export default function Settings() {
   };
 
   const createTemplate = async () => {
-    if (!confirm("Isso irá substituir todos os produtos, categorias e configurações por dados de template. Pedidos e clientes serão preservados. Tem certeza?")) {
+    if (
+      !confirm(
+        "Isso irá substituir todos os produtos, categorias e configurações por dados de template. Pedidos e clientes serão preservados. Tem certeza?",
+      )
+    ) {
       return;
     }
 
@@ -301,7 +305,7 @@ export default function Settings() {
         </Button>
       </div>
 
-            <Tabs defaultValue="general" className="space-y-6">
+      <Tabs defaultValue="general" className="space-y-6">
         <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="general">
             <Store className="h-4 w-4 mr-2" />
@@ -581,7 +585,7 @@ export default function Settings() {
           </Card>
         </TabsContent>
 
-                <TabsContent value="backup" className="space-y-6">
+        <TabsContent value="backup" className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Backup e Restauração</CardTitle>
@@ -591,7 +595,8 @@ export default function Settings() {
                 <div>
                   <h4 className="text-lg font-medium">Fazer Backup</h4>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Crie um backup completo de todos os dados da loja (produtos, pedidos, configurações)
+                    Crie um backup completo de todos os dados da loja (produtos,
+                    pedidos, configurações)
                   </p>
                   <Button
                     onClick={downloadBackup}
@@ -612,19 +617,22 @@ export default function Settings() {
                 <div>
                   <h4 className="text-lg font-medium">Restaurar Backup</h4>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Restaure dados de um arquivo de backup (pedidos e clientes serão preservados)
+                    Restaure dados de um arquivo de backup (pedidos e clientes
+                    serão preservados)
                   </p>
                   <div className="space-y-2">
                     <input
                       type="file"
                       accept=".json"
                       onChange={handleFileUpload}
-                      style={{ display: 'none' }}
+                      style={{ display: "none" }}
                       id="backup-upload"
                       disabled={restoreLoading}
                     />
                     <Button
-                      onClick={() => document.getElementById('backup-upload')?.click()}
+                      onClick={() =>
+                        document.getElementById("backup-upload")?.click()
+                      }
                       disabled={restoreLoading}
                       variant="outline"
                     >
@@ -643,8 +651,9 @@ export default function Settings() {
                 <div>
                   <h4 className="text-lg font-medium">Criar Banco Template</h4>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Crie um banco de dados com produtos, categorias e configurações de exemplo.
-                    Ideal para começar uma nova loja do zero.
+                    Crie um banco de dados com produtos, categorias e
+                    configurações de exemplo. Ideal para começar uma nova loja
+                    do zero.
                   </p>
                   <Button
                     onClick={createTemplate}

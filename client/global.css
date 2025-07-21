@@ -104,7 +104,9 @@
     }
 
     /* Better touch targets */
-    button, [role="button"], a {
+    button,
+    [role="button"],
+    a {
       min-height: 44px;
       min-width: 44px;
     }
