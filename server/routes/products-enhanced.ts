@@ -167,13 +167,13 @@ router.get("/:id", async (req, res) => {
       [req.params.id],
     );
 
-    // Get product grades (if they exist)
+        // Get product grades (if they exist)
     const [gradeRows] = await db.execute(
-      `SELECT g.id, g.name, g.description, g.active
-       FROM grade_templates g
-       JOIN product_color_grades pcg ON g.id = pcg.grade_template_id
-       WHERE pcg.product_id = ?
-       GROUP BY g.id`,
+      `SELECT DISTINCT gv.id, gv.name, gv.description, gv.active
+       FROM grade_vendida gv
+       JOIN grade_templates gt ON gv.id = gt.grade_id
+       JOIN product_color_grades pcg ON gt.id = pcg.grade_template_id
+       WHERE pcg.product_id = ?`,
       [req.params.id],
     );
 
