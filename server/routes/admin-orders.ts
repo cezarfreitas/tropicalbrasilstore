@@ -306,6 +306,116 @@ router.get("/export/excel", async (req, res) => {
   }
 });
 
+// Export single order to Excel
+router.get("/:id/export/excel", async (req, res) => {
+  try {
+    const orderId = req.params.id;
+
+    // Get single order with detailed item information
+    const [orderData] = await db.execute(`
+      SELECT
+        o.id as pedido_id,
+        o.customer_email as cliente_email,
+        o.status as status_pedido,
+        o.total_amount as valor_total,
+        o.created_at as data_pedido,
+        oi.id as item_id,
+        p.name as produto_nome,
+        p.sku as produto_sku,
+        p.parent_sku as produto_parent_sku,
+        CONCAT(p.sku, '-', COALESCE(co.name, ''), '-', COALESCE(s.size, '')) as sku_variante,
+        co.name as cor_nome,
+        co.hex_code as cor_hex,
+        s.size as tamanho,
+        g.name as grade_nome,
+        g.description as grade_descricao,
+        oi.quantity as quantidade,
+        oi.unit_price as preco_unitario,
+        oi.total_price as preco_total,
+        oi.type as tipo_item
+      FROM orders o
+      LEFT JOIN order_items oi ON o.id = oi.order_id
+      LEFT JOIN products p ON oi.product_id = p.id
+      LEFT JOIN colors co ON oi.color_id = co.id
+      LEFT JOIN sizes s ON oi.size_id = s.id
+      LEFT JOIN grade_vendida g ON oi.grade_id = g.id
+      WHERE o.id = ?
+      ORDER BY oi.id
+    `, [orderId]);
+
+    if ((orderData as any[]).length === 0) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    // Format data for Excel
+    const excelData = (orderData as any[]).map(row => ({
+      'ID Pedido': row.pedido_id,
+      'Data Pedido': new Date(row.data_pedido).toLocaleDateString('pt-BR'),
+      'Cliente Email': row.cliente_email,
+      'Status': row.status_pedido,
+      'Valor Total Pedido': `R$ ${parseFloat(row.valor_total || 0).toFixed(2)}`,
+      'Produto': row.produto_nome || '',
+      'SKU Produto': row.produto_sku || '',
+      'SKU Pai': row.produto_parent_sku || '',
+      'SKU Variante': row.sku_variante || '',
+      'Cor': row.cor_nome || '',
+      'Cor Hex': row.cor_hex || '',
+      'Tamanho': row.tamanho || '',
+      'Grade': row.grade_nome || '',
+      'Descrição Grade': row.grade_descricao || '',
+      'Quantidade': row.quantidade || 0,
+      'Preço Unitário': `R$ ${parseFloat(row.preco_unitario || 0).toFixed(2)}`,
+      'Preço Total Item': `R$ ${parseFloat(row.preco_total || 0).toFixed(2)}`,
+      'Tipo Item': row.tipo_item || ''
+    }));
+
+    // Create workbook and worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(excelData);
+
+    // Auto-size columns
+    const colWidths = [
+      { wch: 10 }, // ID Pedido
+      { wch: 12 }, // Data Pedido
+      { wch: 25 }, // Cliente Email
+      { wch: 12 }, // Status
+      { wch: 15 }, // Valor Total Pedido
+      { wch: 25 }, // Produto
+      { wch: 15 }, // SKU Produto
+      { wch: 15 }, // SKU Pai
+      { wch: 20 }, // SKU Variante
+      { wch: 15 }, // Cor
+      { wch: 10 }, // Cor Hex
+      { wch: 10 }, // Tamanho
+      { wch: 15 }, // Grade
+      { wch: 25 }, // Descrição Grade
+      { wch: 10 }, // Quantidade
+      { wch: 12 }, // Preço Unitário
+      { wch: 12 }, // Preço Total Item
+      { wch: 12 }, // Tipo Item
+    ];
+    ws['!cols'] = colWidths;
+
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, `Pedido ${orderId}`);
+
+    // Generate Excel buffer
+    const excelBuffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+
+    // Set response headers for file download
+    const filename = `pedido_${orderId}_${new Date().toISOString().split('T')[0]}.xlsx`;
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', excelBuffer.length);
+
+    // Send the Excel file
+    res.send(excelBuffer);
+  } catch (error) {
+    console.error("Error exporting single order to Excel:", error);
+    res.status(500).json({ error: "Failed to export order to Excel" });
+  }
+});
+
 // Get order statistics for dashboard
 router.get("/stats/summary", async (req, res) => {
   try {
