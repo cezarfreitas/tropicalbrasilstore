@@ -35,6 +35,7 @@ import {
   Mail,
   Loader2,
   Clock,
+  Download,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
