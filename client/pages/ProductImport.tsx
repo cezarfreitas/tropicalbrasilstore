@@ -604,7 +604,9 @@ export default function ProductImport() {
                           Apenas Produtos Ativos
                         </h4>
                         <p className="text-sm text-muted-foreground">
-                          Somente produtos disponíveis na loja
+                          {exportStats.active_products > 0
+                            ? `${exportStats.active_products} produtos ativos`
+                            : "Somente produtos disponíveis"} na loja
                         </p>
                       </div>
                     </div>
