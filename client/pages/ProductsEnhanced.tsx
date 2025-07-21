@@ -66,6 +66,34 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+// Grupos de tamanhos predefinidos
+const SIZE_GROUPS = {
+  masculino: {
+    name: "Masculino",
+    description: "Tamanhos masculinos adultos",
+    sizes: ["38", "39", "40", "41", "42", "43", "44"],
+    icon: "👨"
+  },
+  feminino: {
+    name: "Feminino",
+    description: "Tamanhos femininos adultos",
+    sizes: ["33", "34", "35", "36", "37", "38", "39"],
+    icon: "👩"
+  },
+  infantil: {
+    name: "Infantil",
+    description: "Tamanhos infantis",
+    sizes: ["32", "33", "34", "35", "36"],
+    icon: "👶"
+  },
+  todos: {
+    name: "Todos",
+    description: "Todos os tamanhos disponíveis",
+    sizes: ["32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44"],
+    icon: "👥"
+  }
+};
+
 interface ProductVariant {
   id?: number;
   size_id: number;
