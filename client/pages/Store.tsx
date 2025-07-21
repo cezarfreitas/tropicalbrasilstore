@@ -458,10 +458,15 @@ export default function Store() {
       });
     }
 
-    // Price filter
+        // Price filter
     filtered = filtered.filter((product) => {
-      const price = product.suggested_price || product.base_price || 0;
-      return price >= priceRange[0] && price <= priceRange[1];
+      try {
+        const price = parseFloat(product.suggested_price?.toString() || product.base_price?.toString() || "0");
+        return !isNaN(price) && price >= priceRange[0] && price <= priceRange[1];
+      } catch (error) {
+        console.warn("Error parsing price for product:", product.id, error);
+        return true; // Include product if price parsing fails
+      }
     });
 
     // Apply pagination
@@ -686,7 +691,7 @@ export default function Store() {
                       </div>
                       <div className="flex-1 text-center sm:text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Faça login para ver preços especiais
+                          Fa��a login para ver preços especiais
                         </h3>
                         <p className="text-sm text-gray-600 mt-1">
                           Entre com sua conta para acessar preços exclusivos e fazer pedidos de grades
