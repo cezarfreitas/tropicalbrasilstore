@@ -306,46 +306,100 @@ router.get("/export/excel", async (req, res) => {
         p.name as produto_nome,
         p.sku as produto_sku,
         p.parent_sku as produto_parent_sku,
-        CONCAT(p.sku, '-', COALESCE(co.name, ''), '-', COALESCE(s.size, '')) as sku_variante,
-        co.name as cor_nome,
-        co.hex_code as cor_hex,
-        s.size as tamanho,
+        oi.color_id,
+        oi.grade_id,
         g.name as grade_nome,
         g.description as grade_descricao,
-        oi.quantity as quantidade,
-        oi.unit_price as preco_unitario,
-        oi.total_price as preco_total,
+        oi.quantity as quantidade_kits,
+        oi.unit_price as preco_unitario_kit,
+        oi.total_price as preco_total_kit,
         oi.type as tipo_item
       FROM orders o
       LEFT JOIN order_items oi ON o.id = oi.order_id
       LEFT JOIN products p ON oi.product_id = p.id
-      LEFT JOIN colors co ON oi.color_id = co.id
-      LEFT JOIN sizes s ON oi.size_id = s.id
       LEFT JOIN grade_vendida g ON oi.grade_id = g.id
+      WHERE oi.type = 'grade'
       ORDER BY o.created_at DESC, oi.id
     `);
 
-    // Format data for Excel
-    const excelData = (orderData as any[]).map((row) => ({
-      "ID Pedido": row.pedido_id,
-      "Data Pedido": new Date(row.data_pedido).toLocaleDateString("pt-BR"),
-      "Cliente Email": row.cliente_email,
-      Status: row.status_pedido,
-      "Valor Total Pedido": `R$ ${parseFloat(row.valor_total || 0).toFixed(2)}`,
-      Produto: row.produto_nome || "",
-      "SKU Produto": row.produto_sku || "",
-      "SKU Pai": row.produto_parent_sku || "",
-      "SKU Variante": row.sku_variante || "",
-      Cor: row.cor_nome || "",
-      "Cor Hex": row.cor_hex || "",
-      Tamanho: row.tamanho || "",
-      Grade: row.grade_nome || "",
-      "Descrição Grade": row.grade_descricao || "",
-      Quantidade: row.quantidade || 0,
-      "Preço Unitário": `R$ ${parseFloat(row.preco_unitario || 0).toFixed(2)}`,
-      "Preço Total Item": `R$ ${parseFloat(row.preco_total || 0).toFixed(2)}`,
-      "Tipo Item": row.tipo_item || "",
-    }));
+    // Expand each kit into individual variants
+    const excelData = [];
+
+    for (const row of orderData as any[]) {
+      if (row.grade_id && row.color_id) {
+        // Get grade template to break down the kit
+        const [gradeTemplates] = await db.execute(`
+          SELECT
+            gt.size_id,
+            gt.required_quantity,
+            s.size as tamanho,
+            c.name as cor_nome,
+            c.hex_code as cor_hex
+          FROM grade_templates gt
+          LEFT JOIN sizes s ON gt.size_id = s.id
+          LEFT JOIN colors c ON c.id = ?
+          WHERE gt.grade_id = ?
+          ORDER BY s.display_order
+        `, [row.color_id, row.grade_id]);
+
+        // Calculate total items in kit and unit price per piece
+        const totalPiecesInKit = (gradeTemplates as any[]).reduce(
+          (sum, template) => sum + template.required_quantity, 0
+        );
+        const pricePerPiece = row.preco_unitario_kit / totalPiecesInKit;
+
+        // Create a row for each variant in the kit
+        for (const template of gradeTemplates as any[]) {
+          const variantQuantity = template.required_quantity * row.quantidade_kits;
+          const variantTotalPrice = template.required_quantity * row.quantidade_kits * pricePerPiece;
+
+          excelData.push({
+            "ID Pedido": row.pedido_id,
+            "Data Pedido": new Date(row.data_pedido).toLocaleDateString("pt-BR"),
+            "Cliente Email": row.cliente_email,
+            Status: row.status_pedido,
+            "Valor Total Pedido": `R$ ${parseFloat(row.valor_total || 0).toFixed(2)}`,
+            Produto: row.produto_nome || "",
+            "SKU Produto": row.produto_sku || "",
+            "SKU Pai": row.produto_parent_sku || "",
+            "SKU Variante": `${row.produto_sku}-${template.cor_nome}-${template.tamanho}`,
+            Cor: template.cor_nome || "",
+            "Cor Hex": template.cor_hex || "",
+            Tamanho: template.tamanho || "",
+            Grade: row.grade_nome || "",
+            "Descrição Grade": row.grade_descricao || "",
+            "Qtd Kits": row.quantidade_kits || 0,
+            "Qtd Unidades": variantQuantity,
+            "Preço por Unidade": `R$ ${pricePerPiece.toFixed(2)}`,
+            "Preço Total Variante": `R$ ${variantTotalPrice.toFixed(2)}`,
+            "Tipo Item": "variante_de_kit",
+          });
+        }
+      } else {
+        // Handle non-grade items (if any)
+        excelData.push({
+          "ID Pedido": row.pedido_id,
+          "Data Pedido": new Date(row.data_pedido).toLocaleDateString("pt-BR"),
+          "Cliente Email": row.cliente_email,
+          Status: row.status_pedido,
+          "Valor Total Pedido": `R$ ${parseFloat(row.valor_total || 0).toFixed(2)}`,
+          Produto: row.produto_nome || "",
+          "SKU Produto": row.produto_sku || "",
+          "SKU Pai": row.produto_parent_sku || "",
+          "SKU Variante": row.produto_sku || "",
+          Cor: "",
+          "Cor Hex": "",
+          Tamanho: "",
+          Grade: row.grade_nome || "",
+          "Descrição Grade": row.grade_descricao || "",
+          "Qtd Kits": row.quantidade_kits || 0,
+          "Qtd Unidades": row.quantidade_kits || 0,
+          "Preço por Unidade": `R$ ${parseFloat(row.preco_unitario_kit || 0).toFixed(2)}`,
+          "Preço Total Variante": `R$ ${parseFloat(row.preco_total_kit || 0).toFixed(2)}`,
+          "Tipo Item": row.tipo_item || "",
+        });
+      }
+    }
 
     // Create workbook and worksheet
     const wb = XLSX.utils.book_new();
