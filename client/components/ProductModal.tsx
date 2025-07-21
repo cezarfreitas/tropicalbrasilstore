@@ -166,7 +166,20 @@ export function ProductModal({
       }
     });
 
-    return Array.from(colorMap.values());
+    const colors = Array.from(colorMap.values());
+
+    // If product has grades, filter colors to only show those with available grades
+    if (productData?.available_grades && productData.available_grades.length > 0) {
+      return colors.filter(color => {
+        const gradesForColor = productData.available_grades.filter(grade => grade.color_id === color.id);
+        return gradesForColor.some(grade => {
+          // Check if grade is available (either sell without stock is enabled or has full stock)
+          return productData.sell_without_stock || grade.has_full_stock;
+        });
+      });
+    }
+
+    return colors;
   };
 
   const getAvailableSizes = () => {
