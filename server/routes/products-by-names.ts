@@ -310,6 +310,9 @@ router.post("/", async (req, res) => {
         colors_created: variants.map(v => v.color_name),
         sizes_created: variants.map(v => v.size_name),
         size_group_created: size_group_name ? true : false,
+        photo_downloaded: photoDownloaded,
+        photo_url_original: photo_url || null,
+        photo_path_saved: photoPath || null,
       }
     });
 
