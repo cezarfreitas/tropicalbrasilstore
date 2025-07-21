@@ -715,8 +715,7 @@ export default function Store() {
                                                                 <span className="text-[10px] sm:text-xs text-muted-foreground bg-muted px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
                                   {product.variant_count} cores
                                 </span>
-                              )}
-                            </div>
+                                                            )}
                           </div>
                         </div>
 
