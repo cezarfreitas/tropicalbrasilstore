@@ -86,6 +86,20 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     fetchCategories();
   }, []);
 
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    if (categoriesOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [categoriesOpen]);
+
   return (
     <div className="min-h-screen bg-background">
             {/* Header */}
