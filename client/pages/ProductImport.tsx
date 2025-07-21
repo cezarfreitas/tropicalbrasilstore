@@ -108,6 +108,7 @@ export default function ProductImport() {
     fetchCategories();
     fetchSizeGroups();
     fetchColors();
+    fetchProductCount();
   }, []);
 
   const fetchCategories = async () => {
