@@ -462,7 +462,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 z-50 sm:hidden animate-in fade-in duration-300"
+            className="fixed inset-0 bg-black/50 z-50 animate-in fade-in duration-300"
             onClick={() => setCartOpen(false)}
           />
 
