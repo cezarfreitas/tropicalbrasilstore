@@ -23,6 +23,7 @@ import { settingsRouter } from "./routes/settings";
 import { notificationsRouter } from "./routes/notifications";
 import { customerAuthRouter } from "./routes/customer-auth";
 import { mockupDataRouter } from "./routes/mockup-data";
+import { importRouter } from "./routes/import";
 import { resetProductsRouter } from "./routes/reset-products";
 import { verifyProductsRouter } from "./routes/verify-products";
 import { seedChinelosRouter } from "./routes/seed-chinelos";
