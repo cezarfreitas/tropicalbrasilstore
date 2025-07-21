@@ -19,12 +19,12 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024, // 10MB limit
   },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['.csv', '.xlsx'];
+    const allowedTypes = [".csv", ".xlsx"];
     const ext = path.extname(file.originalname).toLowerCase();
     if (allowedTypes.includes(ext)) {
       cb(null, true);
     } else {
-      cb(new Error('Only CSV and Excel files are allowed'));
+      cb(new Error("Only CSV and Excel files are allowed"));
     }
   },
 });
@@ -35,7 +35,7 @@ let importProgress = {
   processed: 0,
   success: 0,
   errors: 0,
-  current: '',
+  current: "",
   isRunning: false,
 };
 
@@ -51,35 +51,35 @@ router.post("/parse-csv", upload.single("file"), async (req, res) => {
     let data: any[] = [];
     let headers: string[] = [];
 
-    if (fileExtension === '.csv') {
+    if (fileExtension === ".csv") {
       // Parse CSV
       await new Promise((resolve, reject) => {
         const results: any[] = [];
         fs.createReadStream(filePath)
           .pipe(csv())
-          .on('headers', (headerList) => {
+          .on("headers", (headerList) => {
             headers = headerList;
           })
-          .on('data', (data) => results.push(data))
-          .on('end', () => {
+          .on("data", (data) => results.push(data))
+          .on("end", () => {
             data = results;
             resolve(data);
           })
-          .on('error', reject);
+          .on("error", reject);
       });
-    } else if (fileExtension === '.xlsx') {
+    } else if (fileExtension === ".xlsx") {
       // Parse Excel
       const workbook = XLSX.readFile(filePath);
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      
+
       if (jsonData.length > 0) {
         headers = jsonData[0] as string[];
         data = jsonData.slice(1).map((row: any) => {
           const obj: any = {};
           headers.forEach((header, index) => {
-            obj[header] = row[index] || '';
+            obj[header] = row[index] || "";
           });
           return obj;
         });
@@ -101,32 +101,36 @@ router.post("/parse-csv", upload.single("file"), async (req, res) => {
 });
 
 // Download image from URL and save to public folder
-async function downloadImage(url: string, filename: string): Promise<string | null> {
+async function downloadImage(
+  url: string,
+  filename: string,
+): Promise<string | null> {
   try {
-    const publicDir = path.join(process.cwd(), 'public', 'uploads', 'products');
-    
+    const publicDir = path.join(process.cwd(), "public", "uploads", "products");
+
     // Create directory if it doesn't exist
     if (!fs.existsSync(publicDir)) {
       fs.mkdirSync(publicDir, { recursive: true });
     }
 
-    const ext = path.extname(url) || '.jpg';
-    const safeName = filename.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const ext = path.extname(url) || ".jpg";
+    const safeName = filename.replace(/[^a-z0-9]/gi, "_").toLowerCase();
     const imagePath = path.join(publicDir, `${safeName}${ext}`);
     const publicPath = `/uploads/products/${safeName}${ext}`;
 
     const response = await axios({
-      method: 'GET',
+      method: "GET",
       url: url,
-      responseType: 'stream',
+      responseType: "stream",
       timeout: 30000,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      }
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      },
     });
 
     await streamPipeline(response.data, fs.createWriteStream(imagePath));
-    
+
     return publicPath;
   } catch (error) {
     console.error(`Error downloading image from ${url}:`, error);
@@ -137,15 +141,18 @@ async function downloadImage(url: string, filename: string): Promise<string | nu
 // Process colors string and ensure they exist in database
 async function processColors(colorsString: string): Promise<number[]> {
   if (!colorsString) return [];
-  
-  const colorNames = colorsString.split(',').map(c => c.trim()).filter(c => c);
+
+  const colorNames = colorsString
+    .split(",")
+    .map((c) => c.trim())
+    .filter((c) => c);
   const colorIds: number[] = [];
 
   for (const colorName of colorNames) {
     // Check if color exists
     const [existing] = await db.execute(
       "SELECT id FROM colors WHERE LOWER(name) = LOWER(?)",
-      [colorName]
+      [colorName],
     );
 
     let colorId: number;
@@ -155,11 +162,11 @@ async function processColors(colorsString: string): Promise<number[]> {
       // Create new color with default hex
       const [result] = await db.execute(
         "INSERT INTO colors (name, hex_code) VALUES (?, ?)",
-        [colorName, generateRandomHex()]
+        [colorName, generateRandomHex()],
       );
       colorId = (result as any).insertId;
     }
-    
+
     colorIds.push(colorId);
   }
 
@@ -167,14 +174,19 @@ async function processColors(colorsString: string): Promise<number[]> {
 }
 
 function generateRandomHex(): string {
-  return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+  return (
+    "#" +
+    Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, "0")
+  );
 }
 
 // Get available sizes for a size group
 async function getSizesForGroup(sizeGroupId: number): Promise<any[]> {
   const [sizeGroup] = await db.execute(
     "SELECT sizes FROM size_groups WHERE id = ?",
-    [sizeGroupId]
+    [sizeGroupId],
   );
 
   if ((sizeGroup as any[]).length === 0) {
@@ -182,11 +194,11 @@ async function getSizesForGroup(sizeGroupId: number): Promise<any[]> {
   }
 
   const sizes = (sizeGroup as any[])[0].sizes;
-  
+
   // Get size IDs from database
   const [sizeRows] = await db.execute(
-    `SELECT id, size FROM sizes WHERE size IN (${sizes.map(() => '?').join(',')})`,
-    sizes
+    `SELECT id, size FROM sizes WHERE size IN (${sizes.map(() => "?").join(",")})`,
+    sizes,
   );
 
   return sizeRows as any[];
@@ -196,7 +208,7 @@ async function getSizesForGroup(sizeGroupId: number): Promise<any[]> {
 router.post("/products", async (req, res) => {
   try {
     const { data } = req.body;
-    
+
     if (!data || !Array.isArray(data)) {
       return res.status(400).json({ error: "Invalid data format" });
     }
@@ -207,7 +219,7 @@ router.post("/products", async (req, res) => {
       processed: 0,
       success: 0,
       errors: 0,
-      current: '',
+      current: "",
       isRunning: true,
     };
 
@@ -226,15 +238,22 @@ async function processImport(data: any[]) {
 
   for (let i = 0; i < data.length; i++) {
     const item = data[i];
-    
+
     try {
       importProgress.current = item.name || `Item ${i + 1}`;
-      
+
       await connection.beginTransaction();
 
       // Validate required fields
-      if (!item.name || !item.category_id || !item.base_price || !item.size_group_id) {
-        throw new Error("Missing required fields: name, category_id, base_price, size_group_id");
+      if (
+        !item.name ||
+        !item.category_id ||
+        !item.base_price ||
+        !item.size_group_id
+      ) {
+        throw new Error(
+          "Missing required fields: name, category_id, base_price, size_group_id",
+        );
       }
 
       // Download image if URL provided
@@ -244,7 +263,7 @@ async function processImport(data: any[]) {
       }
 
       // Process colors
-      const colorIds = await processColors(item.colors || '');
+      const colorIds = await processColors(item.colors || "");
       if (colorIds.length === 0) {
         throw new Error("At least one color is required");
       }
@@ -271,28 +290,27 @@ async function processImport(data: any[]) {
           item.sku || null,
           item.parent_sku || null,
           photoPath,
-          true
-        ]
+          true,
+        ],
       );
 
       const productId = (productResult as any).insertId;
 
       // Create variants for each color and size combination
       const stockPerVariant = parseInt(item.stock_per_variant) || 0;
-      
+
       for (const colorId of colorIds) {
         for (const size of sizes) {
           await connection.execute(
             `INSERT INTO product_variants (product_id, size_id, color_id, stock)
              VALUES (?, ?, ?, ?)`,
-            [productId, size.id, colorId, stockPerVariant]
+            [productId, size.id, colorId, stockPerVariant],
           );
         }
       }
 
       await connection.commit();
       importProgress.success++;
-      
     } catch (error) {
       await connection.rollback();
       console.error(`Error processing item ${i + 1}:`, error);
@@ -304,7 +322,7 @@ async function processImport(data: any[]) {
 
   connection.release();
   importProgress.isRunning = false;
-  importProgress.current = '';
+  importProgress.current = "";
 }
 
 // Get import progress
@@ -319,7 +337,7 @@ router.post("/reset", (req, res) => {
     processed: 0,
     success: 0,
     errors: 0,
-    current: '',
+    current: "",
     isRunning: false,
   };
   res.json({ message: "Progress reset" });
@@ -354,18 +372,22 @@ router.get("/export-products", async (req, res) => {
 
     for (const product of products as any[]) {
       // Get product colors
-      const [colors] = await db.execute(`
+      const [colors] = await db.execute(
+        `
         SELECT DISTINCT co.name
         FROM product_variants pv
         LEFT JOIN colors co ON pv.color_id = co.id
         WHERE pv.product_id = ? AND co.name IS NOT NULL
         ORDER BY co.name
-      `, [product.id]);
+      `,
+        [product.id],
+      );
 
-      const colorNames = (colors as any[]).map(c => c.name).join(',');
+      const colorNames = (colors as any[]).map((c) => c.name).join(",");
 
       // Get size group (find the most common size group for this product)
-      const [sizeGroupInfo] = await db.execute(`
+      const [sizeGroupInfo] = await db.execute(
+        `
         SELECT sg.id, sg.name, sg.sizes
         FROM product_variants pv
         LEFT JOIN sizes s ON pv.size_id = s.id
@@ -374,40 +396,49 @@ router.get("/export-products", async (req, res) => {
         GROUP BY sg.id, sg.name, sg.sizes
         ORDER BY COUNT(*) DESC
         LIMIT 1
-      `, [product.id]);
+      `,
+        [product.id],
+      );
 
-      const sizeGroupId = sizeGroupInfo.length > 0 ? (sizeGroupInfo as any[])[0].id : '';
+      const sizeGroupId =
+        sizeGroupInfo.length > 0 ? (sizeGroupInfo as any[])[0].id : "";
 
       // Get average stock per variant
-      const [stockInfo] = await db.execute(`
+      const [stockInfo] = await db.execute(
+        `
         SELECT AVG(stock) as avg_stock
         FROM product_variants
         WHERE product_id = ?
-      `, [product.id]);
+      `,
+        [product.id],
+      );
 
-      const avgStock = stockInfo.length > 0 ? Math.round((stockInfo as any[])[0].avg_stock || 0) : 0;
+      const avgStock =
+        stockInfo.length > 0
+          ? Math.round((stockInfo as any[])[0].avg_stock || 0)
+          : 0;
 
       // Build photo URL (convert relative path to full URL if needed)
-      let photoUrl = '';
+      let photoUrl = "";
       if (product.photo) {
-        photoUrl = product.photo.startsWith('http')
+        photoUrl = product.photo.startsWith("http")
           ? product.photo
-          : `${req.protocol}://${req.get('host')}${product.photo}`;
+          : `${req.protocol}://${req.get("host")}${product.photo}`;
       }
 
       exportData.push({
-        'Nome do Produto': product.name || '',
-        'Categoria': product.category_id || '',
-        'Preço Base': product.base_price || '',
-        'Preço de Venda': product.sale_price || '',
-        'URL da Foto': photoUrl,
-        'Grupo de Tamanhos': sizeGroupId,
-        'Cores': colorNames,
-        'SKU': product.sku || '',
-        'SKU Pai': product.parent_sku || '',
-        'Descrição': product.description || '',
-        'Preço Sugerido': product.suggested_price || '',
-        'Estoque por Variante': avgStock,
+        "Nome do Produto": product.name || "",
+        Categoria: product.category_id || "",
+        "Preço Base": product.base_price || "",
+        "Preço de Venda": product.sale_price || "",
+        "URL da Foto": photoUrl,
+        "Grupo de Tamanhos": sizeGroupId,
+        Cores: colorNames,
+        SKU: product.sku || "",
+        "SKU Pai": product.parent_sku || "",
+        Descrição: product.description || "",
+        "Preço Sugerido": product.suggested_price || "",
+        "Estoque por Variante": avgStock,
       });
     }
 
@@ -418,29 +449,30 @@ router.get("/export-products", async (req, res) => {
 
     const headers = Object.keys(exportData[0]);
     const csvRows = [
-      headers.join(','),
-      ...exportData.map(row =>
-        headers.map(header => {
-          const value = row[header]?.toString() || '';
-          // Escape commas and quotes in CSV
-          return value.includes(',') || value.includes('"')
-            ? `"${value.replace(/"/g, '""')}"`
-            : value;
-        }).join(',')
-      )
+      headers.join(","),
+      ...exportData.map((row) =>
+        headers
+          .map((header) => {
+            const value = row[header]?.toString() || "";
+            // Escape commas and quotes in CSV
+            return value.includes(",") || value.includes('"')
+              ? `"${value.replace(/"/g, '""')}"`
+              : value;
+          })
+          .join(","),
+      ),
     ];
 
-    const csvContent = csvRows.join('\n');
+    const csvContent = csvRows.join("\n");
 
     // Set response headers for file download
-    const filename = `produtos_exportados_${new Date().toISOString().split('T')[0]}.csv`;
-    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    res.setHeader('Content-Length', Buffer.byteLength(csvContent, 'utf8'));
+    const filename = `produtos_exportados_${new Date().toISOString().split("T")[0]}.csv`;
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.setHeader("Content-Length", Buffer.byteLength(csvContent, "utf8"));
 
     // Add BOM for proper UTF-8 encoding in Excel
-    res.send('\ufeff' + csvContent);
-
+    res.send("\ufeff" + csvContent);
   } catch (error) {
     console.error("Error exporting products:", error);
     res.status(500).json({ error: "Failed to export products" });
