@@ -401,14 +401,13 @@ export default function Store() {
         return;
       }
 
-            // Set empty state as fallback after all retries failed
+                  // Set empty state as fallback after all retries failed
       setFetchError("Não foi possível carregar os produtos. Verifique sua conexão e tente novamente.");
-      setAllProducts([]);
+      setFilteredProducts([]);
       setCategories([
         {
           id: "all",
           name: "Todas as Categorias",
-          count: 0,
         },
       ]);
       setColors([]);
@@ -418,6 +417,40 @@ export default function Store() {
       if (retryCount === 0) { // Only set loading false on the initial call, not retries
         setLoading(false);
       }
+    }
+  };
+
+  const fetchFilters = async () => {
+    try {
+      // Fetch categories
+      const categoriesResponse = await fetch("/api/store-old/categories");
+      if (categoriesResponse.ok) {
+        const categoriesData = await categoriesResponse.json();
+        setCategories(categoriesData);
+      }
+
+      // Extract colors from current products
+      // This is simpler than making another API call
+      const uniqueColors = new Set<string>();
+      filteredProducts.forEach((product: StoreProduct) => {
+        if (product.available_colors && Array.isArray(product.available_colors)) {
+          product.available_colors.forEach((color) => {
+            if (color && color.name) {
+              uniqueColors.add(color.name);
+            }
+          });
+        }
+      });
+
+      setColors([
+        ...Array.from(uniqueColors).map((color) => ({
+          id: color.toLowerCase(),
+          name: color,
+        })),
+      ]);
+
+    } catch (error) {
+      console.error("Error fetching filters:", error);
     }
   };
 
