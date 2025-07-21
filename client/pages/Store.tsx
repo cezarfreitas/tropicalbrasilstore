@@ -650,9 +650,65 @@ export default function Store() {
             </h1>
           </div>
 
-          <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-5 pb-6 sm:pb-8">
-            {/* Hero Section - Removed */}
-            <div />
+                    <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-5 pb-6 sm:pb-8">
+            {/* Login Prompt for non-authenticated users */}
+            {!isAuthenticated && (
+              <div className="mb-6 sm:mb-8">
+                <Card className="bg-gradient-to-r from-orange-50 to-orange-100 border-orange-200">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
+                          <Lock className="h-6 w-6 text-primary-foreground" />
+                        </div>
+                      </div>
+                      <div className="flex-1 text-center sm:text-left">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Faça login para ver preços especiais
+                        </h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Entre com sua conta para acessar preços exclusivos e fazer pedidos de grades
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <Button
+                          onClick={() => setLoginModalOpen(true)}
+                          className="bg-primary hover:bg-primary/90"
+                        >
+                          <LogIn className="h-4 w-4 mr-2" />
+                          Entrar agora
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Account status for authenticated but not approved users */}
+            {isAuthenticated && !isApproved && (
+              <div className="mb-6 sm:mb-8">
+                <Card className="bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
+                          <User className="h-6 w-6 text-white" />
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Conta em análise
+                        </h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Sua conta está sendo analisada. Em breve você terá acesso aos preços e poderá fazer pedidos.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
 
             {/* Products Grid */}
             <div className="mb-6 sm:mb-8">
@@ -759,7 +815,7 @@ export default function Store() {
                                     {parseFloat(product.base_price).toFixed(2)}
                                   </div>
                                   <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">
-                                    UNITÁRIO
+                                    UNIT��RIO
                                   </div>
                                 </div>
                               )}
