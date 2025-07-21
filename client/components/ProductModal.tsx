@@ -386,11 +386,8 @@ export function ProductModal({
                             <div className="space-y-1.5">
                               {/* Grade Header */}
                               <div className="flex justify-between items-center">
-                                <div className="flex items-center gap-2">
-                                  <div className="font-medium text-sm">{grade.name}</div>
-                                  <div className={`w-1.5 h-1.5 rounded-full ${
-                                    canAdd ? 'bg-green-500' : 'bg-red-500'
-                                  }`} />
+                                <div className="font-semibold text-sm text-gray-900">
+                                  {grade.name}
                                 </div>
                                 {product.base_price && (
                                   <div className="text-orange-500 font-bold text-sm">
