@@ -332,6 +332,9 @@ export default function Store() {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
+        // Add credentials and other options for better compatibility
+        credentials: 'same-origin',
+        mode: 'cors',
       });
 
       clearTimeout(timeoutId);
