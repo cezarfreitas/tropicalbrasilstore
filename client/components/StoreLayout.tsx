@@ -195,7 +195,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 {totalItems > 0 && (
                   <Badge
                     variant="destructive"
-                    className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center text-xs"
+                    className="absolute -top-1 -right-1 h-3 w-3 rounded-full p-0 flex items-center justify-center text-[10px]"
                   >
                     {totalItems}
                   </Badge>
