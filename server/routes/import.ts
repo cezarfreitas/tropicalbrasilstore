@@ -352,6 +352,8 @@ router.get("/export-products", async (req, res) => {
     let whereClause = '';
     if (filter === 'active') {
       whereClause = 'WHERE p.active = true';
+    } else if (filter === 'inactive') {
+      whereClause = 'WHERE p.active = false';
     }
 
     // Get all products with related data
