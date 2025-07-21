@@ -146,12 +146,7 @@ function FiltersSidebar({
                   : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
               }`}
             >
-              <span>{category.name}</span>
-              {category.count && (
-                <span className="text-xs text-muted-foreground">
-                  {category.count}
-                </span>
-              )}
+                            <span>{category.name}</span>
             </button>
           ))}
         </nav>
