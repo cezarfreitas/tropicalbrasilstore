@@ -143,7 +143,7 @@ export default function Customers() {
   const [updating, setUpdating] = useState(false);
   const [deletingCustomer, setDeletingCustomer] = useState<string | null>(null);
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
-  const [addForm, setAddForm] = useState({ email: "", name: "", whatsapp: "" });
+  const [addForm, setAddForm] = useState({ email: "", name: "", whatsapp: "", minimum_order: 0 });
   const [adding, setAdding] = useState(false);
   const [approvingCustomer, setApprovingCustomer] = useState<number | null>(
     null,
