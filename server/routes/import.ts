@@ -346,6 +346,14 @@ router.post("/reset", (req, res) => {
 // Export products to CSV
 router.get("/export-products", async (req, res) => {
   try {
+    const filter = req.query.filter as string || 'all';
+
+    // Build WHERE clause based on filter
+    let whereClause = '';
+    if (filter === 'active') {
+      whereClause = 'WHERE p.active = true';
+    }
+
     // Get all products with related data
     const [products] = await db.execute(`
       SELECT
@@ -364,6 +372,7 @@ router.get("/export-products", async (req, res) => {
         p.created_at
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
+      ${whereClause}
       ORDER BY p.created_at DESC
     `);
 
