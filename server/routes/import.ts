@@ -366,12 +366,12 @@ router.get("/export-products", async (req, res) => {
 
       // Get size group (find the most common size group for this product)
       const [sizeGroupInfo] = await db.execute(`
-        SELECT sg.id, sg.name
+        SELECT sg.id, sg.name, sg.sizes
         FROM product_variants pv
         LEFT JOIN sizes s ON pv.size_id = s.id
         LEFT JOIN size_groups sg ON JSON_CONTAINS(sg.sizes, JSON_QUOTE(s.size))
         WHERE pv.product_id = ? AND sg.id IS NOT NULL
-        GROUP BY sg.id, sg.name
+        GROUP BY sg.id, sg.name, sg.sizes
         ORDER BY COUNT(*) DESC
         LIMIT 1
       `, [product.id]);
