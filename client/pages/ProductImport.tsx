@@ -169,6 +169,18 @@ export default function ProductImport() {
     }
   };
 
+  const fetchExportStats = async () => {
+    try {
+      const response = await fetch("/api/import/export-stats");
+      if (response.ok) {
+        const data = await response.json();
+        setExportStats(data);
+      }
+    } catch (error) {
+      console.error("Error fetching export stats:", error);
+    }
+  };
+
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
