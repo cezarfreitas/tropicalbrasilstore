@@ -32,6 +32,7 @@ import { addSellWithoutStockColumn } from "./lib/add-sell-without-stock";
 import { addParentSkuColumn } from "./lib/add-parent-sku";
 import { addSizeGroupsTable } from "./lib/add-size-groups-table";
 import { createProductVariantsTable } from "./lib/create-product-variants";
+import { redesignGradeSystem } from "./lib/redesign-grades";
 
 export function createServer() {
   const app = express();
