@@ -21,8 +21,7 @@ router.get("/products-paginated", async (req, res) => {
     const totalProducts = (countResult as any)[0].total;
     const totalPages = Math.ceil(totalProducts / limit);
 
-        // Get paginated products with enhanced data
-    console.log("Executing query with limit:", limit, "offset:", offset, "types:", typeof limit, typeof offset);
+            // Get paginated products with enhanced data (using inline values as workaround)
     const [products] = await db.execute(`
       SELECT
         p.id,
@@ -39,8 +38,8 @@ router.get("/products-paginated", async (req, res) => {
       WHERE p.active = true
       GROUP BY p.id
       ORDER BY p.name
-      LIMIT ? OFFSET ?
-    `, [Number(limit), Number(offset)]);
+      LIMIT ${limit} OFFSET ${offset}
+    `);
 
     // For each product, get available colors and variants
     const productsWithDetails = [];
