@@ -1662,14 +1662,7 @@ export default function ProductsEnhanced() {
                         <Badge variant="outline">
                           {product.variant_count} variantes
                         </Badge>
-                      </TableCell>
-                                            <TableCell>
-                        <Badge
-                          variant={product.active ? "default" : "secondary"}
-                        >
-                          {product.active ? "Ativo" : "Inativo"}
-                        </Badge>
-                      </TableCell>
+                                            </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-center">
                           <Switch
