@@ -393,25 +393,33 @@ export function ProductModal({
               {/* Colors */}
               <div>
                 <div className="text-xs font-medium text-gray-700 mb-2">Cor</div>
-                <div className="flex gap-2 flex-wrap">
-                  {getAvailableColors().map((color) => (
-                    <button
-                      key={color.id}
-                      onClick={() => setSelectedColor(color.id)}
-                      className={`flex items-center gap-2 p-2 border rounded-lg text-xs ${
-                        selectedColor === color.id
-                          ? 'border-orange-500 bg-orange-50'
-                          : 'border-gray-200'
-                      }`}
-                    >
-                      <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
-                        style={{ backgroundColor: color.hex_code || '#999' }}
-                      />
-                      <span className="font-medium">{color.name}</span>
-                    </button>
-                  ))}
-                </div>
+                {getAvailableColors().length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-sm text-muted-foreground">
+                      Nenhuma variação disponível para este produto
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex gap-2 flex-wrap">
+                    {getAvailableColors().map((color) => (
+                      <button
+                        key={color.id}
+                        onClick={() => setSelectedColor(color.id)}
+                        className={`flex items-center gap-2 p-2 border rounded-lg text-xs ${
+                          selectedColor === color.id
+                            ? 'border-orange-500 bg-orange-50'
+                            : 'border-gray-200'
+                        }`}
+                      >
+                        <div
+                          className="w-4 h-4 rounded-full border border-gray-300"
+                          style={{ backgroundColor: color.hex_code || '#999' }}
+                        />
+                        <span className="font-medium">{color.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Grades or Sizes */}
