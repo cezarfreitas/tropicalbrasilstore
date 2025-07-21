@@ -159,7 +159,7 @@ fetch('/api/products-by-names', {
 });
 ```
 
-### 2. Produto com Múltiplas Variantes
+### 3. Produto com Múltiplas Variantes
 ```javascript
 const produtoCompleto = {
   "name": "Tênis Nike Air Max",
