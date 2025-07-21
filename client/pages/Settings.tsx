@@ -129,7 +129,7 @@ export default function Settings() {
     });
   };
 
-  const togglePaymentMethod = (methodId: string) => {
+    const togglePaymentMethod = (methodId: string) => {
     if (!settings) return;
     const methods = [...settings.payment_methods];
     const index = methods.indexOf(methodId);
@@ -141,6 +141,118 @@ export default function Settings() {
     }
 
     updateSettings("payment_methods", methods);
+  };
+
+  const downloadBackup = async () => {
+    setBackupLoading(true);
+    try {
+      const response = await fetch("/api/settings/backup", {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = `backup-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+        toast({
+          title: "Sucesso",
+          description: "Backup criado e baixado com sucesso",
+        });
+      } else {
+        throw new Error("Failed to create backup");
+      }
+    } catch (error) {
+      console.error("Error creating backup:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível criar o backup",
+        variant: "destructive",
+      });
+    } finally {
+      setBackupLoading(false);
+    }
+  };
+
+  const restoreBackup = async (file: File) => {
+    setRestoreLoading(true);
+    try {
+      const text = await file.text();
+      const backup = JSON.parse(text);
+
+      const response = await fetch("/api/settings/restore", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ backup, preserveOrders: true }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Sucesso",
+          description: "Backup restaurado com sucesso",
+        });
+        // Refresh settings
+        fetchSettings();
+      } else {
+        throw new Error("Failed to restore backup");
+      }
+    } catch (error) {
+      console.error("Error restoring backup:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível restaurar o backup",
+        variant: "destructive",
+      });
+    } finally {
+      setRestoreLoading(false);
+    }
+  };
+
+  const createTemplate = async () => {
+    if (!confirm("Isso irá substituir todos os produtos, categorias e configurações por dados de template. Pedidos e clientes serão preservados. Tem certeza?")) {
+      return;
+    }
+
+    setTemplateLoading(true);
+    try {
+      const response = await fetch("/api/settings/restore-template", {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Sucesso",
+          description: "Banco de dados template criado com sucesso",
+        });
+        fetchSettings();
+      } else {
+        throw new Error("Failed to create template");
+      }
+    } catch (error) {
+      console.error("Error creating template:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível criar o banco template",
+        variant: "destructive",
+      });
+    } finally {
+      setTemplateLoading(false);
+    }
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      restoreBackup(file);
+    }
   };
 
   if (loading) {
