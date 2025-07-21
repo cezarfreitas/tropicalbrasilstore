@@ -712,6 +712,7 @@ export default function Customers() {
                     <TableHead>Cliente</TableHead>
                     <TableHead>Contato</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Pedido Mín.</TableHead>
                     <TableHead>Pedidos</TableHead>
                     <TableHead>Total Gasto</TableHead>
                     <TableHead>Último Pedido</TableHead>
