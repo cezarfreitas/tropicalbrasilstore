@@ -23,6 +23,7 @@ import {
   Download,
   Upload,
   RefreshCw,
+  Palette,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -353,7 +354,7 @@ export default function Settings() {
                 />
               </div>
               <div>
-                <Label htmlFor="store_description">Descrição</Label>
+                <Label htmlFor="store_description">Descri��ão</Label>
                 <Textarea
                   id="store_description"
                   value={settings.store_description}
