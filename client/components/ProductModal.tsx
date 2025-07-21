@@ -332,10 +332,10 @@ export function ProductModal({
             </div>
 
             {/* Quick Selection */}
-            <div className="p-4 space-y-4">
+            <div className="p-4 space-y-3">
               {/* Colors */}
               <div>
-                <div className="text-xs font-medium text-muted-foreground mb-2">Cor</div>
+                <div className="text-xs font-medium text-gray-700 mb-2">Cor</div>
                 <div className="flex gap-2 flex-wrap">
                   {getAvailableColors().map((color) => (
                     <button
