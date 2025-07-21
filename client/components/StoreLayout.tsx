@@ -211,14 +211,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <div className="rounded-xl bg-primary p-3">
                   <Package className="h-8 w-8 text-primary-foreground" />
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-2xl font-bold text-primary">
-                    Chinelos
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    Loja Online
-                  </span>
-                </div>
+                <div className="flex flex-col" />
               </Link>
 
               {/* Collections Navigation */}
