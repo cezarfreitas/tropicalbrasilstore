@@ -43,6 +43,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import {
   Plus,
   Edit2,
@@ -61,8 +62,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowUpDown,
-  ToggleLeft,
-  ToggleRight,
+  
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -1600,18 +1600,11 @@ export default function ProductsEnhanced() {
                       </TableCell>
                                             <TableCell>
                         <div className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleToggleStatus(product)}
+                                                    <Switch
+                            checked={product.active}
+                            onCheckedChange={() => handleToggleStatus(product)}
                             title={product.active ? "Desativar produto" : "Ativar produto"}
-                          >
-                            {product.active ? (
-                              <ToggleRight className="h-4 w-4 text-green-600" />
-                            ) : (
-                              <ToggleLeft className="h-4 w-4 text-gray-400" />
-                            )}
-                          </Button>
+                          />
                           <Button
                             variant="outline"
                             size="icon"
