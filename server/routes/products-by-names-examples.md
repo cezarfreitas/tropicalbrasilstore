@@ -55,7 +55,8 @@ Esta API permite criar produtos usando **nomes** ao invés de IDs para categoria
 - **suggested_price**: Preço sugerido
 - **sku**: Código SKU único
 - **parent_sku**: SKU pai para agrupamento
-- **photo**: URL da foto
+- **photo**: Caminho local da foto (se já estiver no servidor)
+- **photo_url**: URL externa da foto (será baixada automaticamente)
 - **size_group_name**: Nome do grupo de tamanhos
 - **variants[].stock**: Estoque (padrão: 0)
 - **variants[].price_override**: Preço específico para esta variante
