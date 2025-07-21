@@ -25,7 +25,7 @@ interface CreateProductRequest {
   grades: number[];
 }
 
-// Get all products with complete information (simplified to work with current schema)
+// Get all products with complete information (paginated)
 router.get("/", async (req, res) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
@@ -73,7 +73,7 @@ router.get("/", async (req, res) => {
       orderByClause = `ORDER BY p.${sortBy} ${orderDirection}`;
     }
 
-    // Get total count first (simplified to work with current schema)
+    // Get total count
     const [countRows] = await db.execute(
       `SELECT COUNT(p.id) as total
        FROM products p 
@@ -84,7 +84,7 @@ router.get("/", async (req, res) => {
 
     const total = (countRows as any)[0].total;
 
-    // Get paginated results (simplified to work with current schema)
+    // Get paginated results with variant and stock information
     const paginatedQuery = `
       SELECT 
         p.id,
@@ -92,18 +92,20 @@ router.get("/", async (req, res) => {
         p.description,
         p.category_id,
         p.base_price,
-                p.sku,
+        p.sku,
         p.parent_sku,
-                p.active,
+        p.active,
         p.sell_without_stock,
         p.created_at,
         p.updated_at,
         c.name as category_name,
-        0 as variant_count,
-        0 as total_stock
+        COUNT(DISTINCT pv.id) as variant_count,
+        COALESCE(SUM(pv.stock), 0) as total_stock
       FROM products p 
       LEFT JOIN categories c ON p.category_id = c.id 
+      LEFT JOIN product_variants pv ON p.id = pv.product_id
       ${whereClause}
+      GROUP BY p.id, p.name, p.description, p.category_id, p.base_price, p.sku, p.parent_sku, p.active, p.sell_without_stock, p.created_at, p.updated_at, c.name
       ${orderByClause}
       LIMIT ${limit} OFFSET ${offset}
     `;
@@ -127,7 +129,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get product by ID with all information
+// Get product by ID with all information including variants and grades
 router.get("/:id", async (req, res) => {
   try {
     // Get basic product info
@@ -143,11 +145,11 @@ router.get("/:id", async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-        const product = (productRows as any)[0];
+    const product = (productRows as any)[0];
 
     // Get product variants
     const [variantRows] = await db.execute(
-      `SELECT
+      `SELECT 
         pv.id,
         pv.size_id,
         pv.color_id,
@@ -187,20 +189,35 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Create new product (simplified)
+// Create new product with variants and grades
 router.post("/", async (req, res) => {
+  const connection = await db.getConnection();
+  
   try {
-    const { name, description, category_id, base_price, sku, parent_sku } =
-      req.body;
+    await connection.beginTransaction();
+
+    const {
+      name,
+      description,
+      category_id,
+      base_price,
+      suggested_price,
+      sku,
+      parent_sku,
+      photo,
+      stock,
+      variants,
+      grades,
+    }: CreateProductRequest = req.body;
 
     if (!name) {
       return res.status(400).json({ error: "Name is required" });
     }
 
     // Create the product
-    const [result] = await db.execute(
-      `INSERT INTO products (name, description, category_id, base_price, sku, parent_sku) 
-       VALUES (?, ?, ?, ?, ?, ?)`,
+    const [result] = await connection.execute(
+      `INSERT INTO products (name, description, category_id, base_price, sku, parent_sku, stock, active) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         name,
         description || null,
@@ -208,10 +225,44 @@ router.post("/", async (req, res) => {
         base_price || null,
         sku || null,
         parent_sku || null,
+        stock || 0,
+        true,
       ],
     );
 
     const productId = (result as any).insertId;
+
+    // Create variants if provided
+    if (variants && variants.length > 0) {
+      for (const variant of variants) {
+        if (variant.size_id && variant.color_id) {
+          await connection.execute(
+            `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override)
+             VALUES (?, ?, ?, ?, ?)`,
+            [
+              productId,
+              variant.size_id,
+              variant.color_id,
+              variant.stock || 0,
+              variant.price_override || null,
+            ],
+          );
+        }
+      }
+    }
+
+    // Assign grades if provided
+    if (grades && grades.length > 0) {
+      for (const gradeId of grades) {
+        await connection.execute(
+          `INSERT IGNORE INTO product_color_grades (product_id, grade_template_id)
+           VALUES (?, ?)`,
+          [productId, gradeId],
+        );
+      }
+    }
+
+    await connection.commit();
 
     // Fetch the created product with all information
     const [productRows] = await db.execute(
@@ -222,39 +273,67 @@ router.post("/", async (req, res) => {
       [productId],
     );
 
-    res.status(201).json((productRows as any)[0]);
+    const product = (productRows as any)[0];
+
+    // Get variants
+    const [variantRows] = await db.execute(
+      `SELECT pv.*, s.size, c.name as color_name, c.hex_code
+       FROM product_variants pv
+       LEFT JOIN sizes s ON pv.size_id = s.id
+       LEFT JOIN colors c ON pv.color_id = c.id
+       WHERE pv.product_id = ?`,
+      [productId],
+    );
+
+    product.variants = variantRows;
+    product.variant_count = (variantRows as any[]).length;
+    product.total_stock = (variantRows as any[]).reduce((sum, variant) => sum + (variant.stock || 0), 0);
+
+    res.status(201).json(product);
   } catch (error: any) {
+    await connection.rollback();
     console.error("Error creating product:", error);
     if (error.code === "ER_DUP_ENTRY") {
       return res.status(400).json({ error: "SKU already exists" });
     }
     res.status(500).json({ error: "Failed to create product" });
+  } finally {
+    connection.release();
   }
 });
 
-// Update product (simplified)
+// Update product with variants and grades
 router.put("/:id", async (req, res) => {
+  const connection = await db.getConnection();
+  
   try {
+    await connection.beginTransaction();
+
     const {
       name,
       description,
       category_id,
       base_price,
+      suggested_price,
       sku,
       parent_sku,
+      photo,
+      stock,
       active,
       sell_without_stock,
-    } = req.body;
+      variants,
+      grades,
+    }: CreateProductRequest & { active?: boolean; sell_without_stock?: boolean } = req.body;
 
     if (!name) {
       return res.status(400).json({ error: "Name is required" });
     }
 
     // Update the product
-    await db.execute(
+    await connection.execute(
       `UPDATE products SET 
          name = ?, description = ?, category_id = ?, base_price = ?, 
-                           sku = ?, parent_sku = ?, active = ?, sell_without_stock = ?
+         sku = ?, parent_sku = ?, stock = ?, active = ?, sell_without_stock = ?
        WHERE id = ?`,
       [
         name,
@@ -263,11 +342,62 @@ router.put("/:id", async (req, res) => {
         base_price || null,
         sku || null,
         parent_sku || null,
+        stock || 0,
         active !== undefined ? active : true,
         sell_without_stock !== undefined ? sell_without_stock : false,
         req.params.id,
       ],
     );
+
+    // Update variants if provided
+    if (variants !== undefined) {
+      // Delete existing variants
+      await connection.execute(
+        "DELETE FROM product_variants WHERE product_id = ?",
+        [req.params.id],
+      );
+
+      // Create new variants
+      if (variants.length > 0) {
+        for (const variant of variants) {
+          if (variant.size_id && variant.color_id) {
+            await connection.execute(
+              `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override)
+               VALUES (?, ?, ?, ?, ?)`,
+              [
+                req.params.id,
+                variant.size_id,
+                variant.color_id,
+                variant.stock || 0,
+                variant.price_override || null,
+              ],
+            );
+          }
+        }
+      }
+    }
+
+    // Update grades if provided
+    if (grades !== undefined) {
+      // Delete existing grade assignments
+      await connection.execute(
+        "DELETE FROM product_color_grades WHERE product_id = ?",
+        [req.params.id],
+      );
+
+      // Create new grade assignments
+      if (grades.length > 0) {
+        for (const gradeId of grades) {
+          await connection.execute(
+            `INSERT IGNORE INTO product_color_grades (product_id, grade_template_id)
+             VALUES (?, ?)`,
+            [req.params.id, gradeId],
+          );
+        }
+      }
+    }
+
+    await connection.commit();
 
     // Fetch the updated product
     const [productRows] = await db.execute(
@@ -282,13 +412,42 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    res.json((productRows as any)[0]);
+    const product = (productRows as any)[0];
+
+    // Get variants
+    const [variantRows] = await db.execute(
+      `SELECT pv.*, s.size, c.name as color_name, c.hex_code
+       FROM product_variants pv
+       LEFT JOIN sizes s ON pv.size_id = s.id
+       LEFT JOIN colors c ON pv.color_id = c.id
+       WHERE pv.product_id = ?`,
+      [req.params.id],
+    );
+
+    // Get grades
+    const [gradeRows] = await db.execute(
+      `SELECT g.id, g.name, g.description, g.active
+       FROM grade_templates g
+       JOIN product_color_grades pcg ON g.id = pcg.grade_template_id
+       WHERE pcg.product_id = ?`,
+      [req.params.id],
+    );
+
+    product.variants = variantRows;
+    product.grades = gradeRows;
+    product.variant_count = (variantRows as any[]).length;
+    product.total_stock = (variantRows as any[]).reduce((sum, variant) => sum + (variant.stock || 0), 0);
+
+    res.json(product);
   } catch (error: any) {
+    await connection.rollback();
     console.error("Error updating product:", error);
     if (error.code === "ER_DUP_ENTRY") {
       return res.status(400).json({ error: "SKU already exists" });
     }
     res.status(500).json({ error: "Failed to update product" });
+  } finally {
+    connection.release();
   }
 });
 
