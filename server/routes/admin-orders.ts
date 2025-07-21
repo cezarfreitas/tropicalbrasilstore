@@ -125,7 +125,7 @@ router.patch("/:id/status", async (req, res) => {
 // Export orders to Excel
 router.get("/export/excel", async (req, res) => {
   try {
-        // Get all orders with detailed item information including variants
+            // Get all orders with detailed item information
     const [orderData] = await db.execute(`
       SELECT
         o.id as pedido_id,
@@ -137,7 +137,7 @@ router.get("/export/excel", async (req, res) => {
         p.name as produto_nome,
         p.sku as produto_sku,
         p.parent_sku as produto_parent_sku,
-        COALESCE(pv.sku_variant, CONCAT(p.sku, '-', co.name, '-', s.size)) as sku_variante,
+        CONCAT(p.sku, '-', COALESCE(co.name, ''), '-', COALESCE(s.size, '')) as sku_variante,
         co.name as cor_nome,
         co.hex_code as cor_hex,
         s.size as tamanho,
@@ -146,15 +146,13 @@ router.get("/export/excel", async (req, res) => {
         oi.quantity as quantidade,
         oi.unit_price as preco_unitario,
         oi.total_price as preco_total,
-        oi.type as tipo_item,
-        pv.stock as estoque_variante
+        oi.type as tipo_item
       FROM orders o
       LEFT JOIN order_items oi ON o.id = oi.order_id
       LEFT JOIN products p ON oi.product_id = p.id
       LEFT JOIN colors co ON oi.color_id = co.id
       LEFT JOIN sizes s ON oi.size_id = s.id
       LEFT JOIN grade_vendida g ON oi.grade_id = g.id
-      LEFT JOIN product_variants pv ON (p.id = pv.product_id AND oi.color_id = pv.color_id AND oi.size_id = pv.size_id)
       ORDER BY o.created_at DESC, oi.id
     `);
 
