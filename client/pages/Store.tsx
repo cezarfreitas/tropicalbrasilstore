@@ -34,6 +34,7 @@ import {
   LogIn,
 } from "lucide-react";
 import { LoginModal } from "@/components/LoginModal";
+import { RegisterModal } from "@/components/RegisterModal";
 
 interface StoreProduct {
   id: number;
