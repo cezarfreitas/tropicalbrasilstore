@@ -56,7 +56,7 @@ interface StoreProduct {
 interface FilterOption {
   id: string;
   name: string;
-  count?: number;
+  description?: string;
 }
 
 interface FiltersSidebarProps {
