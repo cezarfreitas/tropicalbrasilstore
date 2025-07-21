@@ -141,7 +141,7 @@ export default function Orders() {
     return () => clearTimeout(timeoutId);
   }, [searchTerm, statusFilter, dateFilter, sortBy, sortOrder, currentPage, pageSize]);
 
-  const fetchOrders = async () => {
+    const fetchOrders = async () => {
     try {
       const response = await fetch("/api/admin/orders");
       if (response.ok) {
@@ -157,6 +157,28 @@ export default function Orders() {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchFilteredOrders = async () => {
+    try {
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: pageSize.toString(),
+        search: searchTerm,
+        status: statusFilter,
+        date: dateFilter,
+        sortBy: sortBy,
+        sortOrder: sortOrder,
+      });
+
+      const response = await fetch(`/api/admin/orders/filtered?${params}`);
+      if (response.ok) {
+        const data = await response.json();
+        setOrders(data.orders || data);
+      }
+    } catch (error) {
+      console.error("Error fetching filtered orders:", error);
     }
   };
 
