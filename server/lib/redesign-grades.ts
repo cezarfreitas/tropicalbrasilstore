@@ -80,7 +80,7 @@ export async function redesignGradeSystem() {
       if (error.code !== "ER_CANT_DROP_FIELD_OR_KEY") throw error;
     }
 
-    // 6. Convert existing data to new structure
+        // 6. Convert existing data to new structure
     console.log("Converting existing grade data...");
 
     // Create grade templates from existing grade_items data
@@ -109,12 +109,12 @@ export async function redesignGradeSystem() {
           );
         }
       }
+    } else {
+      // 7. Create sample grade templates if no existing data
+      await createSampleGradeTemplates();
     }
 
-    // 7. Create sample grade templates
-    await createSampleGradeTemplates();
-
-    console.log("Grade system redesigned successfully!");
+    console.log("✅ Grade system setup completed successfully!");
     return true;
   } catch (error) {
     console.error("Error redesigning grade system:", error);
