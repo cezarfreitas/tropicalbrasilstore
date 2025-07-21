@@ -433,10 +433,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                         setCategoriesOpen(false);
                         logout();
                       }}
-                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors w-full text-left"
+                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 hover:border-red-200 border border-transparent transition-all duration-200 w-full text-left"
                     >
-                      <LogOut className="h-4 w-4 text-gray-600" />
-                      <span className="font-medium">Sair</span>
+                      <LogOut className="h-4 w-4 text-red-600" />
+                      <span className="font-medium text-gray-800">Sair</span>
                     </button>
                   ) : (
                     <button
@@ -444,10 +444,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                         setCategoriesOpen(false);
                         setLoginModalOpen(true);
                       }}
-                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors w-full text-left"
+                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-green-50 hover:border-green-200 border border-transparent transition-all duration-200 w-full text-left"
                     >
-                      <LogIn className="h-4 w-4 text-gray-600" />
-                      <span className="font-medium">Entrar</span>
+                      <LogIn className="h-4 w-4 text-green-600" />
+                      <span className="font-medium text-gray-800">Entrar</span>
                     </button>
                   )}
                 </div>
