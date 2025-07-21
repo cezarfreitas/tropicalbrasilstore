@@ -89,6 +89,13 @@ function Store() {
       let response: Response | null = null;
       let lastError: Error | null = null;
 
+      // Try to use native fetch first, then XMLHttpRequest as fallback
+      const fetchFunction = window.fetch && typeof window.fetch === 'function' ? window.fetch : undefined;
+
+      if (!fetchFunction) {
+        throw new Error('Fetch API not available');
+      }
+
       for (const endpoint of endpoints) {
         try {
           console.log(`Trying endpoint: ${endpoint}`);
