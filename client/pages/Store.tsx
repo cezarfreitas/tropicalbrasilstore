@@ -779,7 +779,24 @@ export default function Store() {
                   {filteredProducts.length !== 1 ? "s" : ""}
                 </span>
               </div>
-              {filteredProducts.length === 0 ? (
+                            {fetchError ? (
+                <div className="text-center py-12">
+                  <Package className="mx-auto h-16 w-16 text-destructive/50" />
+                  <h3 className="mt-4 text-lg font-semibold text-destructive">
+                    Erro ao carregar produtos
+                  </h3>
+                  <p className="mt-2 text-muted-foreground max-w-md mx-auto">
+                    {fetchError}
+                  </p>
+                  <Button
+                    onClick={() => fetchProducts()}
+                    className="mt-4"
+                    variant="outline"
+                  >
+                    Tentar novamente
+                  </Button>
+                </div>
+              ) : filteredProducts.length === 0 ? (
                 <div className="text-center py-12">
                   <Package className="mx-auto h-16 w-16 text-muted-foreground/50" />
                   <h3 className="mt-4 text-lg font-semibold">
