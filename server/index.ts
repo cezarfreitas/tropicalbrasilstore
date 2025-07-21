@@ -64,10 +64,7 @@ export function createServer() {
       await addPriceOverrideColumn(); // Add price_override column to product_variants
       await addSuggestedPriceColumn(); // Add suggested_price column to products
       await addPhotoColumn(); // Add photo column to products
-<<<<<<< HEAD
       await addMinimumOrderColumn(); // Add minimum_order column to customers
-=======
->>>>>>> 98356e45760c20404fbebc3fd92336ea9a3ea1d7
       await redesignGradeSystem(); // Create grade templates and product color grades tables
       await createStoreSettingsTable(); // Create store settings table
       await fixOrdersTable(); // Fix any missing columns
