@@ -179,9 +179,40 @@ router.get("/products-paginated", async (req, res) => {
 
     console.log(`Found ${(products as any[]).length} products`);
 
-    // Add simple color data for each product
+    // Add simple color data for each product and check grade availability
     const productsWithData = [];
     for (const product of products as any[]) {
+      // Check if product has grades
+      const [gradeRows] = await db.execute(
+        `SELECT COUNT(*) as grade_count
+        FROM grades g
+        WHERE g.product_id = ?`,
+        [product.id]
+      );
+
+      const hasGrades = (gradeRows as any)[0].grade_count > 0;
+
+      // If product has grades, check if any grades are available
+      if (hasGrades) {
+        const [availableGrades] = await db.execute(
+          `SELECT COUNT(*) as available_count
+          FROM grades g
+          WHERE g.product_id = ?
+          AND (
+            (SELECT sell_without_stock FROM products WHERE id = g.product_id) = 1
+            OR g.has_full_stock = 1
+          )`,
+          [product.id]
+        );
+
+        const hasAvailableGrades = (availableGrades as any)[0].available_count > 0;
+
+        // Skip products with grades but no available grades
+        if (!hasAvailableGrades) {
+          continue;
+        }
+      }
+
       // Get available colors (simplified)
       const [colorRows] = await db.execute(
         `SELECT DISTINCT
