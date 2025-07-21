@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ProductModal } from '@/components/ProductModal';
 import { ProductImage } from '@/components/ProductImage';
-import { Package, AlertCircle } from 'lucide-react';
+import { Package, AlertCircle, ShoppingCart } from 'lucide-react';
 
 interface StoreProduct {
   id: number;
