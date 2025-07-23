@@ -600,13 +600,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 )}
               </div>
 
-              {/* Cart Footer */}
+              {/* Cart Footer - Fixed at bottom */}
               {items.length > 0 && (
-                <div className="border-t bg-white p-4 space-y-4">
+                <div className="border-t bg-white p-3 sm:p-4 space-y-3 sm:space-y-4 safe-area-inset">
                   {/* Total */}
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-semibold">Total:</span>
-                    <span className="text-xl font-bold text-orange-600">
+                    <span className="text-base sm:text-lg font-semibold">Total:</span>
+                    <span className="text-lg sm:text-xl font-bold text-orange-600">
                       R$ {totalPrice.toFixed(2)}
                     </span>
                   </div>
@@ -617,7 +617,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                       to="/loja/checkout"
                       onClick={() => setCartOpen(false)}
                     >
-                      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+                      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white h-11 sm:h-10 text-sm sm:text-base font-medium">
                         Finalizar Compra
                       </Button>
                     </Link>
@@ -625,13 +625,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                       to="/loja/carrinho"
                       onClick={() => setCartOpen(false)}
                     >
-                      <Button variant="outline" className="w-full">
+                      <Button variant="outline" className="w-full h-9 sm:h-10 text-xs sm:text-sm">
                         Ver Carrinho Completo
                       </Button>
                     </Link>
                   </div>
 
-                  <div className="text-xs text-gray-500 text-center">
+                  <div className="text-[10px] sm:text-xs text-gray-500 text-center">
                     <p>• Compras por grades (kits)</p>
                     <p>• Confirmação via WhatsApp</p>
                   </div>
