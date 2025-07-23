@@ -267,11 +267,38 @@ function Store() {
                       {product.category_name && (
                         <Badge
                           variant="secondary"
-                          className="absolute top-1 left-1 sm:top-2 sm:left-2 text-xs bg-white/90 backdrop-blur-sm"
+                          className="absolute top-1 left-1 sm:top-2 sm:left-2 text-[10px] sm:text-xs bg-white/90 backdrop-blur-sm px-1 sm:px-2.5 py-0.5 sm:py-1"
                         >
                           {product.category_name}
                         </Badge>
                       )}
+
+                      {/* Colors - Mobile: bottom right corner */}
+                      {product.available_colors &&
+                        product.available_colors.length > 0 && (
+                          <div className="absolute bottom-1 right-1 sm:hidden">
+                            <div className="flex gap-1 bg-white/80 backdrop-blur-sm rounded-full px-1.5 py-1">
+                              {product.available_colors
+                                .slice(0, 3)
+                                .map((color) => (
+                                  <div
+                                    key={color.id}
+                                    className="w-2.5 h-2.5 rounded-full border border-slate-300"
+                                    style={{
+                                      backgroundColor:
+                                        color.hex_code || "#999",
+                                    }}
+                                    title={color.name}
+                                  />
+                                ))}
+                              {product.available_colors.length > 3 && (
+                                <span className="text-[9px] text-slate-600 ml-0.5">
+                                  +{product.available_colors.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
                     </div>
 
                     {/* Product Info */}
@@ -292,17 +319,17 @@ function Store() {
                                 product.base_price.toString(),
                               ).toFixed(2)}
                             </div>
-                            {/* Colors on the right side */}
+                            {/* Colors - Desktop only */}
                             {product.available_colors &&
                               product.available_colors.length > 0 && (
-                                <div className="flex items-center gap-1">
+                                <div className="hidden sm:flex items-center gap-1">
                                   <div className="flex gap-1">
                                     {product.available_colors
                                       .slice(0, 5)
                                       .map((color) => (
                                         <div
                                           key={color.id}
-                                          className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border border-slate-300"
+                                          className="w-4 h-4 rounded-full border border-slate-300"
                                           style={{
                                             backgroundColor:
                                               color.hex_code || "#999",
