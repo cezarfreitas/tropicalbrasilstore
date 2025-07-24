@@ -44,11 +44,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const { items, totalItems, updateQuantity, removeItem, totalPrice } =
     useCart();
   const { isAuthenticated, isApproved, customer, logout } = useCustomerAuth();
+  const navigate = useNavigate();
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Use global store settings for instant loading
   const storeSettings = useGlobalStoreSettings();
