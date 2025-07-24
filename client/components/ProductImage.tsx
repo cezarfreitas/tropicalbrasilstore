@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Package } from "lucide-react";
 
 interface ProductImageProps {
@@ -7,6 +7,8 @@ interface ProductImageProps {
   className?: string;
   fallbackIconSize?: "sm" | "md" | "lg";
   loading?: "lazy" | "eager";
+  priority?: boolean;
+  sizes?: string;
 }
 
 export function ProductImage({
