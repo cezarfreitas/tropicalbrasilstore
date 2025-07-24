@@ -11,6 +11,7 @@ import { FloatingColorButton } from "@/components/FloatingColorButton";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { ProductSkeleton } from "@/components/ProductSkeleton";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
+import { useProducts } from "@/hooks/use-products";
 import { LoginModal } from "@/components/LoginModal";
 import { Package, AlertCircle, ShoppingCart } from "lucide-react";
 
