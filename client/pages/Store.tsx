@@ -206,6 +206,14 @@ function Store() {
   // Effects
   useEffect(() => {
     fetchProducts(1);
+
+    // Listen for promotional banner toggle event
+    const handleToggleShowcase = () => {
+      setShowColorShowcase(true);
+    };
+
+    window.addEventListener('toggleColorShowcase', handleToggleShowcase);
+    return () => window.removeEventListener('toggleColorShowcase', handleToggleShowcase);
   }, []);
 
   // Handlers
