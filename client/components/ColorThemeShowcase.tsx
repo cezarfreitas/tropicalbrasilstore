@@ -52,7 +52,7 @@ export function ColorThemeShowcase() {
   ];
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-8">
+    <div className="w-full max-w-4xl mx-auto mt-8" data-color-showcase>
       <Card className="border-primary/20 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-background to-accent/5">
         <CardContent className="p-6">
           {/* Header */}
