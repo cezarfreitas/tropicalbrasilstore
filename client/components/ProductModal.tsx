@@ -437,8 +437,6 @@ export function ProductModal({
                       handleClose();
                       if (onLoginClick) {
                         onLoginClick();
-                      } else {
-                        setShowLoginModal(true);
                       }
                     }}
                   >
