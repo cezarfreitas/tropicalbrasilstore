@@ -64,6 +64,7 @@ export function ProductModal({
   productId,
   isOpen,
   onClose,
+  onLoginClick,
 }: ProductModalProps) {
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(false);
