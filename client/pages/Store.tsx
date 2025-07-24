@@ -12,7 +12,7 @@ import { ProductSkeleton } from "@/components/ProductSkeleton";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { useProducts } from "@/hooks/use-products";
 import { LoginModal } from "@/components/LoginModal";
-import { Package, AlertCircle, ShoppingCart } from "lucide-react";
+import { Package, AlertCircle, ShoppingCart, Search } from "lucide-react";
 
 function Store() {
   // Authentication
