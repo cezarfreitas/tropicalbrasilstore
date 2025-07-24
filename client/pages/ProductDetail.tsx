@@ -288,11 +288,13 @@ export default function ProductDetail() {
                                 Faça login para adicionar ao carrinho
                               </p>
                             </div>
-                            <Link to="/login">
-                              <Button size="sm" className="bg-primary hover:bg-primary/90">
-                                Fazer Login
-                              </Button>
-                            </Link>
+                            <Button
+                              size="sm"
+                              className="bg-primary hover:bg-primary/90"
+                              onClick={() => setShowLoginModal(true)}
+                            >
+                              Fazer Login
+                            </Button>
                           </div>
                         ) : (
                           <div className="flex items-center justify-between">
