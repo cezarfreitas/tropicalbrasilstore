@@ -12,6 +12,7 @@ export function useThemeColors(colors: ThemeColors) {
   useEffect(() => {
     if (!colors) return;
 
+    console.log('🎨 Applying theme colors:', colors);
     const root = document.documentElement;
 
     // Apply colors as CSS custom properties
