@@ -31,6 +31,48 @@ export function ProductImage({
     lg: "h-32 w-32",
   };
 
+  // Intersection Observer for smart lazy loading
+  useEffect(() => {
+    if (shouldLoad || !src) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin: "50px", // Start loading 50px before image comes into view
+        threshold: 0.1,
+      }
+    );
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [shouldLoad, src]);
+
+  // Preload high priority images
+  useEffect(() => {
+    if (priority && src && shouldLoad) {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "image";
+      link.href = src;
+      document.head.appendChild(link);
+
+      return () => {
+        if (document.head.contains(link)) {
+          document.head.removeChild(link);
+        }
+      };
+    }
+  }, [src, priority, shouldLoad]);
+
   const handleError = () => {
     setHasError(true);
     setIsLoading(false);
