@@ -104,8 +104,14 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
           const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 8000);
 
           const fallbackResponse = await fetch(fallbackEndpoint, {
+            method: 'GET',
             signal: fallbackController.signal,
-            headers: { "Accept": "application/json" },
+            mode: 'cors',
+            credentials: 'same-origin',
+            headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/json"
+            },
           });
 
           clearTimeout(fallbackTimeoutId);
