@@ -656,6 +656,169 @@ export default function Settings() {
 
               <Separator />
 
+              {/* Predefined Color Palettes */}
+              <div>
+                <Label className="text-base font-medium">Paletas Predefinidas</Label>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Escolha uma paleta de cores pronta ou personalize as suas próprias
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {/* Orange (Current) */}
+                  <div
+                    className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      updateSettings("primary_color", "#f97316");
+                      updateSettings("secondary_color", "#ea580c");
+                      updateSettings("accent_color", "#fed7aa");
+                      updateSettings("background_color", "#ffffff");
+                      updateSettings("text_color", "#000000");
+                    }}
+                  >
+                    <div className="flex gap-1 mb-2">
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#f97316" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#ea580c" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#fed7aa" }}></div>
+                    </div>
+                    <p className="text-xs font-medium">Laranja</p>
+                  </div>
+
+                  {/* Blue */}
+                  <div
+                    className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      updateSettings("primary_color", "#3b82f6");
+                      updateSettings("secondary_color", "#1d4ed8");
+                      updateSettings("accent_color", "#dbeafe");
+                      updateSettings("background_color", "#ffffff");
+                      updateSettings("text_color", "#000000");
+                    }}
+                  >
+                    <div className="flex gap-1 mb-2">
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#3b82f6" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#1d4ed8" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#dbeafe" }}></div>
+                    </div>
+                    <p className="text-xs font-medium">Azul</p>
+                  </div>
+
+                  {/* Green */}
+                  <div
+                    className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      updateSettings("primary_color", "#10b981");
+                      updateSettings("secondary_color", "#059669");
+                      updateSettings("accent_color", "#d1fae5");
+                      updateSettings("background_color", "#ffffff");
+                      updateSettings("text_color", "#000000");
+                    }}
+                  >
+                    <div className="flex gap-1 mb-2">
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#10b981" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#059669" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#d1fae5" }}></div>
+                    </div>
+                    <p className="text-xs font-medium">Verde</p>
+                  </div>
+
+                  {/* Purple */}
+                  <div
+                    className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      updateSettings("primary_color", "#8b5cf6");
+                      updateSettings("secondary_color", "#7c3aed");
+                      updateSettings("accent_color", "#ede9fe");
+                      updateSettings("background_color", "#ffffff");
+                      updateSettings("text_color", "#000000");
+                    }}
+                  >
+                    <div className="flex gap-1 mb-2">
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#8b5cf6" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#7c3aed" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#ede9fe" }}></div>
+                    </div>
+                    <p className="text-xs font-medium">Roxo</p>
+                  </div>
+
+                  {/* Red */}
+                  <div
+                    className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      updateSettings("primary_color", "#ef4444");
+                      updateSettings("secondary_color", "#dc2626");
+                      updateSettings("accent_color", "#fecaca");
+                      updateSettings("background_color", "#ffffff");
+                      updateSettings("text_color", "#000000");
+                    }}
+                  >
+                    <div className="flex gap-1 mb-2">
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#ef4444" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#dc2626" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#fecaca" }}></div>
+                    </div>
+                    <p className="text-xs font-medium">Vermelho</p>
+                  </div>
+
+                  {/* Pink */}
+                  <div
+                    className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      updateSettings("primary_color", "#ec4899");
+                      updateSettings("secondary_color", "#db2777");
+                      updateSettings("accent_color", "#fce7f3");
+                      updateSettings("background_color", "#ffffff");
+                      updateSettings("text_color", "#000000");
+                    }}
+                  >
+                    <div className="flex gap-1 mb-2">
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#ec4899" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#db2777" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#fce7f3" }}></div>
+                    </div>
+                    <p className="text-xs font-medium">Rosa</p>
+                  </div>
+
+                  {/* Dark */}
+                  <div
+                    className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      updateSettings("primary_color", "#374151");
+                      updateSettings("secondary_color", "#1f2937");
+                      updateSettings("accent_color", "#f3f4f6");
+                      updateSettings("background_color", "#ffffff");
+                      updateSettings("text_color", "#000000");
+                    }}
+                  >
+                    <div className="flex gap-1 mb-2">
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#374151" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#1f2937" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#f3f4f6" }}></div>
+                    </div>
+                    <p className="text-xs font-medium">Escuro</p>
+                  </div>
+
+                  {/* Teal */}
+                  <div
+                    className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      updateSettings("primary_color", "#14b8a6");
+                      updateSettings("secondary_color", "#0f766e");
+                      updateSettings("accent_color", "#ccfbf1");
+                      updateSettings("background_color", "#ffffff");
+                      updateSettings("text_color", "#000000");
+                    }}
+                  >
+                    <div className="flex gap-1 mb-2">
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#14b8a6" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#0f766e" }}></div>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#ccfbf1" }}></div>
+                    </div>
+                    <p className="text-xs font-medium">Turquesa</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
               {/* Preview */}
               <div>
                 <Label className="text-base font-medium">
