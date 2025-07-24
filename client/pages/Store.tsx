@@ -254,16 +254,6 @@ function Store() {
               ? `${pagination.totalProducts} produtos disponíveis`
               : "Carregando produtos..."}
           </p>
-
-          {/* Color Theme Preview */}
-          <div className="flex items-center justify-center gap-2 mt-4">
-            <span className="text-xs text-muted-foreground">Cores da loja:</span>
-            <div className="flex gap-1">
-              <div className="w-4 h-4 rounded-full bg-primary border-2 border-white shadow-sm" title="Cor Primária"></div>
-              <div className="w-4 h-4 rounded-full bg-secondary border-2 border-white shadow-sm" title="Cor Secundária"></div>
-              <div className="w-4 h-4 rounded-full bg-accent border-2 border-white shadow-sm" title="Cor de Destaque"></div>
-            </div>
-          </div>
         </div>
 
         {/* Error State */}
