@@ -31,5 +31,42 @@ function expressPlugin(): Plugin {
       // Add Express app as middleware to Vite dev server
       server.middlewares.use(app);
     },
+    transformIndexHtml: {
+      order: 'pre',
+      handler: async (html, context) => {
+        // Inject store settings script into HTML
+        const injection = `
+    <script>
+      // Store settings will be injected here by the server
+      window.__STORE_SETTINGS__ = null;
+
+      // Try to fetch settings immediately
+      (async function() {
+        try {
+          const response = await fetch('/api/settings');
+          if (response.ok) {
+            const settings = await response.json();
+            window.__STORE_SETTINGS__ = {
+              store_name: settings.store_name,
+              logo_url: settings.logo_url,
+              primary_color: settings.primary_color,
+              secondary_color: settings.secondary_color,
+              accent_color: settings.accent_color,
+              background_color: settings.background_color,
+              text_color: settings.text_color
+            };
+
+            // Dispatch event for components to update
+            window.dispatchEvent(new CustomEvent('storeSettingsLoaded', { detail: window.__STORE_SETTINGS__ }));
+          }
+        } catch (error) {
+          console.warn('Failed to load initial store settings:', error);
+        }
+      })();
+    </script>`;
+
+        return html.replace('<div id="root"></div>', `<div id="root"></div>${injection}`);
+      }
+    }
   };
 }
