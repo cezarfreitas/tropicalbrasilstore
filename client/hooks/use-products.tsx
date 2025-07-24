@@ -144,7 +144,13 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
         // If both primary and fallback fail, try one more time with simplified request
         try {
           console.log("🔧 Trying basic fetch without complex headers...");
-          const basicResponse = await fetch(`/api/store/products-paginated?page=${page}&limit=${productsPerPage}`, {
+          let basicUrl = `/api/store/products-paginated?page=${page}&limit=${productsPerPage}`;
+          if (searchTerm && searchTerm.trim()) {
+            basicUrl += `&busca=${encodeURIComponent(searchTerm.trim())}`;
+          }
+          console.log(`🔧 Basic fetch URL: ${basicUrl}`);
+
+          const basicResponse = await fetch(basicUrl, {
             method: 'GET'
           });
 
