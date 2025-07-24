@@ -147,6 +147,11 @@ router.get("/products-paginated", async (req, res) => {
       queryParams.push(category);
     }
 
+    if (searchTerm && searchTerm.trim()) {
+      whereClause += " AND p.name LIKE ?";
+      queryParams.push(`%${searchTerm.trim()}%`);
+    }
+
     // Get total count
     const countQuery = `
       SELECT COUNT(*) as total 
