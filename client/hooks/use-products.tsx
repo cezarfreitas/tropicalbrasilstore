@@ -79,9 +79,13 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       let response;
       try {
         response = await fetch(endpoint, {
+          method: 'GET',
           signal: controller.signal,
+          mode: 'cors',
+          credentials: 'same-origin',
           headers: {
             "Accept": "application/json",
+            "Content-Type": "application/json",
             "Cache-Control": "public, max-age=300",
           },
         });
