@@ -523,7 +523,7 @@ export function ProductModal({
                                     price={product.base_price * grade.total_quantity}
                                     variant="small"
                                     className="text-orange-500"
-                                    onLoginClick={() => setShowLoginModal(true)}
+                                    onLoginClick={onLoginClick || (() => setShowLoginModal(true))}
                                   />
                                 )}
                               </div>
