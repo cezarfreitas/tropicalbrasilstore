@@ -25,6 +25,18 @@ export function ThemeLoader() {
 
     // Fetch fresh colors from server
     fetchThemeColors();
+
+    // Listen for theme refresh events (when settings are updated)
+    const handleThemeRefresh = () => {
+      console.log('🎨 Theme refresh requested, fetching new colors...');
+      fetchThemeColors();
+    };
+
+    window.addEventListener('themeRefresh', handleThemeRefresh);
+
+    return () => {
+      window.removeEventListener('themeRefresh', handleThemeRefresh);
+    };
   }, []);
 
   const fetchThemeColors = async () => {
