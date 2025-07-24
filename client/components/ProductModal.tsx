@@ -399,6 +399,7 @@ export function ProductModal({
                       price={product.base_price}
                       variant="small"
                       className="text-orange-500"
+                      onLoginClick={() => setShowLoginModal(true)}
                     />
                   )}
                 </div>
