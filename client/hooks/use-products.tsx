@@ -83,7 +83,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       console.log(`🔍 Client making request to: ${endpoint}`);
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000);
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // Increased timeout
 
       let response;
       try {
