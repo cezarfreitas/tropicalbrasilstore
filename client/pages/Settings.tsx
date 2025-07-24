@@ -73,6 +73,15 @@ export default function Settings() {
   const [templateLoading, setTemplateLoading] = useState(false);
   const { toast } = useToast();
 
+  // Apply theme colors in real time
+  useThemeColors(settings ? {
+    primary_color: settings.primary_color,
+    secondary_color: settings.secondary_color,
+    accent_color: settings.accent_color,
+    background_color: settings.background_color,
+    text_color: settings.text_color,
+  } : {});
+
   useEffect(() => {
     fetchSettings();
   }, []);
