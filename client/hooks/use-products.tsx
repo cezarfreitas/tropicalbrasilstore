@@ -102,7 +102,12 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
         clearTimeout(timeoutId);
       } catch (fetchError) {
         clearTimeout(timeoutId);
-        console.warn(`Primary fetch failed: ${fetchError}`);
+        console.warn(`Primary fetch failed: ${fetchError}`, {
+          endpoint,
+          searchTerm,
+          page,
+          error: fetchError instanceof Error ? fetchError.message : String(fetchError)
+        });
 
         // Try fallback endpoint immediately
         try {
