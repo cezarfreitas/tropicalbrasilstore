@@ -230,6 +230,9 @@ function Store() {
 
   return (
     <StoreLayout>
+      {/* Promotional Banner */}
+      <PromoBanner />
+
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <div className="text-center space-y-4">
