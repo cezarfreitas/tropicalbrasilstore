@@ -272,7 +272,7 @@ function Store() {
                     variant="outline"
                     size="default"
                   >
-                    Recarregar Página
+                    🔄 Recarregar Página
                   </Button>
                 </div>
               </div>
