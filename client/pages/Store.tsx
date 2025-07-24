@@ -105,7 +105,7 @@ function Store() {
 
             xhr.onerror = () => reject(new Error("Network error"));
             xhr.ontimeout = () => reject(new Error("Request timeout"));
-            xhr.timeout = 8000;
+            xhr.timeout = 20000; // Increased to 20 seconds
 
             xhr.send();
           });
