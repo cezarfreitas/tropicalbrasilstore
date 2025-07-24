@@ -47,8 +47,8 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSearchTerm, setCurrentSearchTerm] = useState<string>("");
 
-  const fetchProducts = useCallback(async (page: number = 1, retryCount: number = 0) => {
-    const cacheKey = `products-${page}-${productsPerPage}`;
+  const fetchProducts = useCallback(async (page: number = 1, retryCount: number = 0, searchTerm: string = "") => {
+    const cacheKey = `products-${page}-${productsPerPage}-${searchTerm}`;
 
     // Check cache first
     const cached = globalCache.get(cacheKey);
