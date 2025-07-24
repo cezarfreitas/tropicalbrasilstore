@@ -3,6 +3,7 @@ import db from "../lib/db";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import { clearSettingsCache } from "../lib/inject-store-settings";
 
 const router = Router();
 
