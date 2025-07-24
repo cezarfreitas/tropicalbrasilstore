@@ -1,7 +1,8 @@
 import { ReactNode, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   ShoppingCart,
   Package,
@@ -13,6 +14,7 @@ import {
   Minus,
   Plus,
   Trash2,
+  Search,
 } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
