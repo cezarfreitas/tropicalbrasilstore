@@ -1,7 +1,6 @@
 import { Lock } from "lucide-react";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 
 interface PriceDisplayProps {
   price: number;
@@ -9,6 +8,7 @@ interface PriceDisplayProps {
   variant?: "default" | "large" | "small";
   showCurrency?: boolean;
   suggestedPrice?: number;
+  onLoginClick?: () => void;
 }
 
 export function PriceDisplay({
