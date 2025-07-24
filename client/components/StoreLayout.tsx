@@ -51,12 +51,15 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   // Use optimized store settings hook with caching
   const { settings: storeSettings } = useStoreSettings();
 
-  // Logo component that shows only custom logo
+  // Logo component that shows only custom logo with immediate cache loading
   const LogoDisplay = ({ size = "h-6 w-6" }: { size?: string }) => {
-    if (storeSettings?.logo_url) {
+    // Try to get logo from current settings or cached settings immediately
+    const logoUrl = storeSettings?.logo_url || getCachedStoreSettings()?.logo_url;
+
+    if (logoUrl) {
       return (
         <img
-          src={storeSettings.logo_url}
+          src={logoUrl}
           alt="Logo da Loja"
           className={`${size} object-contain`}
         />
