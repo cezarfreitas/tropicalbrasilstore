@@ -155,7 +155,7 @@ function Store() {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
         } catch (err) {
-          console.warn(`❌ Failed endpoint ${endpoint}:`, err);
+          console.warn(`��� Failed endpoint ${endpoint}:`, err);
           console.warn(`Error details:`, {
             name: (err as Error).name,
             message: (err as Error).message,
@@ -555,6 +555,7 @@ function Store() {
         productId={selectedProductId}
         isOpen={showProductModal}
         onClose={handleCloseModal}
+        onLoginClick={() => setShowLoginModal(true)}
       />
 
       {/* Floating Color Button */}
