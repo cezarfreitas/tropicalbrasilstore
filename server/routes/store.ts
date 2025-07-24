@@ -12,6 +12,9 @@ router.get("/products-paginated", async (req, res) => {
     const searchTerm = req.query.busca as string;
     const offset = (page - 1) * limit;
 
+    // Debug log
+    console.log(`🔍 Search request - term: "${searchTerm}", page: ${page}, limit: ${limit}`);
+
     // Get total count for pagination
     let countQuery = `
       SELECT COUNT(DISTINCT p.id) as total
@@ -555,7 +558,7 @@ function generateWhatsAppMessage(
   items: any[],
   orderId: number,
 ): string {
-  let message = `🛍️ *Novo Pedido - #${orderId}*\n\n`;
+  let message = `🛍�� *Novo Pedido - #${orderId}*\n\n`;
   message += `👤 *Cliente:* ${customer.name}\n`;
   message += `📧 *Email:* ${customer.email}\n`;
   message += `📱 *WhatsApp:* ${customer.whatsapp}\n\n`;
