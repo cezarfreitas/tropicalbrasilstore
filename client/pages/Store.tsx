@@ -527,6 +527,12 @@ function Store() {
         isOpen={showProductModal}
         onClose={handleCloseModal}
       />
+
+      {/* Floating Color Button */}
+      <FloatingColorButton
+        onToggleShowcase={() => setShowColorShowcase(!showColorShowcase)}
+        showcaseVisible={showColorShowcase}
+      />
     </StoreLayout>
   );
 }
