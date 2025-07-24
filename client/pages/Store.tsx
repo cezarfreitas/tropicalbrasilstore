@@ -53,6 +53,9 @@ function Store() {
   );
   const [showProductModal, setShowProductModal] = useState(false);
 
+  // Color showcase
+  const [showColorShowcase, setShowColorShowcase] = useState(false);
+
   // Fetch products function
   const fetchProducts = async (page: number = 1, retryCount: number = 0) => {
     console.log(`🛒 Fetching products - page: ${page}, retry: ${retryCount}`);
