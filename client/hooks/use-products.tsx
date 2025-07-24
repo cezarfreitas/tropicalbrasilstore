@@ -49,6 +49,13 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
 
   const fetchProducts = useCallback(async (page: number = 1, retryCount: number = 0, searchTerm: string = "") => {
+    // Prevent multiple concurrent requests
+    if (isRequestInProgress && retryCount === 0) {
+      console.log("⏸️ Request already in progress, skipping duplicate call");
+      return;
+    }
+
+    setIsRequestInProgress(true);
     const cacheKey = `products-${page}-${productsPerPage}-${searchTerm}`;
 
     // Check cache first
