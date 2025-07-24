@@ -78,7 +78,10 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       }
 
       const endpoint = `/api/store/products-paginated?${params}`;
-      
+
+      // Debug log
+      console.log(`🔍 Client making request to: ${endpoint}`);
+
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000);
 
