@@ -109,42 +109,8 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
           error: fetchError instanceof Error ? fetchError.message : String(fetchError)
         });
 
-        // Try fallback endpoint immediately
-        try {
-          const fallbackEndpoint = `/api/store-old/products-paginated?${params}`;
-          console.log(`🔄 Trying fallback: ${fallbackEndpoint}`);
-
-          const fallbackController = new AbortController();
-          const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 15000);
-
-          const fallbackResponse = await fetch(fallbackEndpoint, {
-            method: 'GET',
-            signal: fallbackController.signal,
-            mode: 'cors',
-            credentials: 'same-origin',
-            headers: {
-              "Accept": "application/json",
-              "Content-Type": "application/json"
-            },
-          });
-
-          clearTimeout(fallbackTimeoutId);
-
-          if (fallbackResponse.ok) {
-            const data = await fallbackResponse.json();
-            console.log(`✅ Fallback success: ${data.products?.length || 0} products`);
-
-            setProducts(data.products || []);
-            setPagination(data.pagination || null);
-            setCurrentPage(page);
-            setCurrentSearchTerm(searchTerm);
-            setError(null);
-            setLoading(false);
-            return;
-          }
-        } catch (fallbackError) {
-          console.warn("Fallback also failed:", fallbackError);
-        }
+        // Skip the old fallback endpoint since it doesn't exist
+        console.log("Skipping non-existent fallback endpoint");
 
         // If both primary and fallback fail, try one more time with simplified request
         try {
