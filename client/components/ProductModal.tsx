@@ -4,7 +4,10 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useCart } from "@/hooks/use-cart";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, Package, X, Minus, Plus } from "lucide-react";
+import { useCustomerAuth } from "@/hooks/use-customer-auth";
+import { PriceDisplay } from "@/components/PriceDisplay";
+import { ShoppingCart, Package, X, Minus, Plus, Lock } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface ProductVariant {
   id: number;
@@ -69,6 +72,7 @@ export function ProductModal({
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCart();
   const { toast } = useToast();
+  const { isAuthenticated, isApproved } = useCustomerAuth();
 
   useEffect(() => {
     if (productId && isOpen) {
@@ -390,9 +394,11 @@ export function ProductModal({
                     {product.name}
                   </h3>
                   {product.base_price && (
-                    <p className="text-orange-500 font-bold text-sm">
-                      R$ {parseFloat(product.base_price.toString()).toFixed(2)}
-                    </p>
+                    <PriceDisplay
+                      price={product.base_price}
+                      variant="small"
+                      className="text-orange-500"
+                    />
                   )}
                 </div>
               </div>
@@ -408,39 +414,64 @@ export function ProductModal({
 
             {/* Quick Selection */}
             <div className="p-4 space-y-3">
-              {/* Colors */}
-              <div>
-                <div className="text-xs font-medium text-gray-700 mb-2">
-                  Cor
-                </div>
-                {getAvailableColors().length === 0 ? (
-                  <div className="text-center py-8">
+              {/* Authentication Check */}
+              {!isAuthenticated || !isApproved ? (
+                <div className="text-center py-8 space-y-4">
+                  <div className="flex justify-center">
+                    <Lock className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Login necessário
+                    </h3>
                     <p className="text-sm text-muted-foreground">
-                      Nenhuma variação disponível para este produto
+                      Faça login para ver preços e adicionar produtos ao carrinho
                     </p>
                   </div>
-                ) : (
-                  <div className="flex gap-2 flex-wrap">
-                    {getAvailableColors().map((color) => (
-                      <button
-                        key={color.id}
-                        onClick={() => setSelectedColor(color.id)}
-                        className={`flex items-center gap-2 p-2 border rounded-lg text-xs ${
-                          selectedColor === color.id
-                            ? "border-orange-500 bg-orange-50"
-                            : "border-gray-200"
-                        }`}
-                      >
-                        <div
-                          className="w-4 h-4 rounded-full border border-gray-300"
-                          style={{ backgroundColor: color.hex_code || "#999" }}
-                        />
-                        <span className="font-medium">{color.name}</span>
-                      </button>
-                    ))}
+                  <Link to="/login">
+                    <Button
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                      onClick={handleClose}
+                    >
+                      Fazer Login
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <>
+                  {/* Colors */}
+                  <div>
+                    <div className="text-xs font-medium text-gray-700 mb-2">
+                      Cor
+                    </div>
+                    {getAvailableColors().length === 0 ? (
+                      <div className="text-center py-8">
+                        <p className="text-sm text-muted-foreground">
+                          Nenhuma variação disponível para este produto
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2 flex-wrap">
+                        {getAvailableColors().map((color) => (
+                          <button
+                            key={color.id}
+                            onClick={() => setSelectedColor(color.id)}
+                            className={`flex items-center gap-2 p-2 border rounded-lg text-xs ${
+                              selectedColor === color.id
+                                ? "border-orange-500 bg-orange-50"
+                                : "border-gray-200"
+                            }`}
+                          >
+                            <div
+                              className="w-4 h-4 rounded-full border border-gray-300"
+                              style={{ backgroundColor: color.hex_code || "#999" }}
+                            />
+                            <span className="font-medium">{color.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
               {/* Grades or Sizes */}
               {selectedColor && (
@@ -479,12 +510,11 @@ export function ProductModal({
                                   {grade.name}
                                 </div>
                                 {product.base_price && (
-                                  <div className="text-orange-500 font-bold text-sm">
-                                    R${" "}
-                                    {(
-                                      product.base_price * grade.total_quantity
-                                    ).toFixed(2)}
-                                  </div>
+                                  <PriceDisplay
+                                    price={product.base_price * grade.total_quantity}
+                                    variant="small"
+                                    className="text-orange-500"
+                                  />
                                 )}
                               </div>
 
@@ -527,12 +557,11 @@ export function ProductModal({
                                   {size.name}
                                 </div>
                                 {product.base_price && (
-                                  <div className="text-orange-500 font-bold text-xs">
-                                    R${" "}
-                                    {parseFloat(
-                                      product.base_price.toString(),
-                                    ).toFixed(2)}
-                                  </div>
+                                  <PriceDisplay
+                                    price={product.base_price}
+                                    variant="small"
+                                    className="text-orange-500"
+                                  />
                                 )}
                               </div>
                               <div className="text-xs text-muted-foreground">
@@ -552,40 +581,42 @@ export function ProductModal({
                 </div>
               )}
 
-              {/* Quantity & Add Button */}
-              {canAddToCart() && (
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="h-8 w-8 p-0"
-                    >
-                      <Minus className="h-3 w-3" />
-                    </Button>
-                    <span className="w-8 text-center text-sm font-medium">
-                      {quantity}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="h-8 w-8 p-0"
-                    >
-                      <Plus className="h-3 w-3" />
-                    </Button>
-                  </div>
+                  {/* Quantity & Add Button */}
+                  {canAddToCart() && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <span className="w-8 text-center text-sm font-medium">
+                          {quantity}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setQuantity(quantity + 1)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
 
-                  <Button
-                    onClick={addToCart}
-                    className="bg-orange-500 hover:bg-orange-600 text-white"
-                    size="sm"
-                  >
-                    <ShoppingCart className="mr-1 h-3 w-3" />
-                    Adicionar
-                  </Button>
-                </div>
+                      <Button
+                        onClick={addToCart}
+                        className="bg-orange-500 hover:bg-orange-600 text-white"
+                        size="sm"
+                      >
+                        <ShoppingCart className="mr-1 h-3 w-3" />
+                        Adicionar
+                      </Button>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
