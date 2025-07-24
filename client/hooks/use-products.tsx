@@ -218,7 +218,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       setLoading(false);
       setIsRequestInProgress(false);
     }
-  }, [productsPerPage]);
+  }, [productsPerPage, isRequestInProgress]);
 
   // Initial fetch
   useEffect(() => {
