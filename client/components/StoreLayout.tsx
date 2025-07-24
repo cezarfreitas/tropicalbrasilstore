@@ -47,7 +47,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [storeSettings, setStoreSettings] = useState<any>(null);
+
+  // Use optimized store settings hook with caching
+  const { settings: storeSettings } = useStoreSettings();
 
   // Logo component that shows only custom logo
   const LogoDisplay = ({ size = "h-6 w-6" }: { size?: string }) => {
