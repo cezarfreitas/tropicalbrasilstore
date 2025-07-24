@@ -182,6 +182,8 @@ export default function Settings() {
     }
 
     try {
+      console.log("🔄 Starting logo upload...", file.name, file.size);
+
       const formData = new FormData();
       formData.append("logo", file);
 
@@ -190,21 +192,41 @@ export default function Settings() {
         body: formData,
       });
 
+      console.log("📡 Upload response status:", response.status);
+
       if (response.ok) {
         const result = await response.json();
+        console.log("✅ Upload successful:", result);
+
         updateSettings("logo_url", result.logo_url);
         toast({
           title: "Sucesso",
           description: "Logo carregado com sucesso!",
         });
       } else {
-        throw new Error("Upload failed");
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        console.error("❌ Upload failed:", response.status, errorData);
+        throw new Error(errorData.error || `Upload failed with status ${response.status}`);
       }
     } catch (error) {
-      console.error("Logo upload error:", error);
+      console.error("💥 Logo upload error:", error);
+
+      let errorMessage = "Não foi possível fazer upload do logo";
+      if (error instanceof Error) {
+        if (error.message.includes("File too large")) {
+          errorMessage = "Arquivo muito grande. Tamanho máximo: 5MB";
+        } else if (error.message.includes("Only image files")) {
+          errorMessage = "Apenas arquivos de imagem são permitidos";
+        } else if (error.message.includes("No file uploaded")) {
+          errorMessage = "Nenhum arquivo foi selecionado";
+        } else if (error.message !== "Upload failed") {
+          errorMessage = error.message;
+        }
+      }
+
       toast({
-        title: "Erro",
-        description: "Não foi possível fazer upload do logo",
+        title: "Erro no Upload",
+        description: errorMessage,
         variant: "destructive",
       });
     }
