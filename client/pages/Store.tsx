@@ -10,6 +10,7 @@ import { ColorThemeShowcase } from "@/components/ColorThemeShowcase";
 import { FloatingColorButton } from "@/components/FloatingColorButton";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
+import { LoginModal } from "@/components/LoginModal";
 import { Package, AlertCircle, ShoppingCart } from "lucide-react";
 
 interface StoreProduct {
@@ -60,6 +61,9 @@ function Store() {
 
   // Color showcase
   const [showColorShowcase, setShowColorShowcase] = useState(false);
+
+  // Login modal
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Fetch products function
   const fetchProducts = async (page: number = 1, retryCount: number = 0) => {
@@ -408,6 +412,7 @@ function Store() {
                               price={product.base_price}
                               suggestedPrice={product.suggested_price}
                               variant="default"
+                              onLoginClick={() => setShowLoginModal(true)}
                             />
                             {/* Colors - Desktop only */}
                             {product.available_colors &&
@@ -556,6 +561,12 @@ function Store() {
       <FloatingColorButton
         onToggleShowcase={() => setShowColorShowcase(!showColorShowcase)}
         showcaseVisible={showColorShowcase}
+      />
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
       />
     </StoreLayout>
   );
