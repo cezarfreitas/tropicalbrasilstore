@@ -110,7 +110,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
           console.log(`🔄 Trying fallback: ${fallbackEndpoint}`);
 
           const fallbackController = new AbortController();
-          const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 8000);
+          const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 15000);
 
           const fallbackResponse = await fetch(fallbackEndpoint, {
             method: 'GET',
