@@ -51,10 +51,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   // Use global store settings for instant loading
   const storeSettings = useGlobalStoreSettings();
 
-  // Logo component that shows only custom logo with immediate cache loading
+  // Logo component that shows only custom logo with immediate global loading
   const LogoDisplay = ({ size = "h-6 w-6" }: { size?: string }) => {
-    // Try to get logo from current settings or cached settings immediately
-    const logoUrl = storeSettings?.logo_url || getCachedStoreSettings()?.logo_url;
+    // Try to get logo from current settings or global settings immediately
+    const logoUrl = storeSettings?.logo_url || getGlobalStoreSettings()?.logo_url;
 
     if (logoUrl) {
       return (
