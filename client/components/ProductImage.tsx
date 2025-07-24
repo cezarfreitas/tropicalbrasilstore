@@ -93,23 +93,32 @@ export function ProductImage({
   }
 
   return (
-    <div className="relative w-full h-full">
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-muted/50 animate-pulse">
+    <div ref={imgRef} className="relative w-full h-full">
+      {isLoading && shouldLoad && (
+        <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
           <div
-            className={`${iconSizes[fallbackIconSize]} rounded bg-muted-foreground/20`}
+            className={`${iconSizes[fallbackIconSize]} rounded bg-muted-foreground/20 animate-pulse`}
           />
         </div>
       )}
-      <img
-        src={src}
-        alt={alt}
-        className={className}
-        loading={loading}
-        onError={handleError}
-        onLoad={handleLoad}
-        style={{ display: hasError ? "none" : "block" }}
-      />
+      {shouldLoad && (
+        <img
+          src={src}
+          alt={alt}
+          className={className}
+          loading={loading}
+          sizes={sizes}
+          onError={handleError}
+          onLoad={handleLoad}
+          style={{
+            display: hasError ? "none" : "block",
+            transition: "opacity 0.2s ease-in-out",
+            opacity: isLoading ? 0.7 : 1
+          }}
+          decoding="async"
+          fetchPriority={priority ? "high" : "auto"}
+        />
+      )}
     </div>
   );
 }
