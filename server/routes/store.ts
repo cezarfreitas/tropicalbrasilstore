@@ -66,6 +66,9 @@ router.get("/products-paginated", async (req, res) => {
 
     const [products] = await db.execute(productsQuery, productsParams);
 
+    // Debug log
+    console.log(`📊 Query results - found ${(products as any[]).length} products for search: "${searchTerm}"`);
+
     // For each product, get available colors and variants
     const productsWithDetails = [];
     for (const product of products as any[]) {
@@ -558,7 +561,7 @@ function generateWhatsAppMessage(
   items: any[],
   orderId: number,
 ): string {
-  let message = `🛍�� *Novo Pedido - #${orderId}*\n\n`;
+  let message = `🛍️ *Novo Pedido - #${orderId}*\n\n`;
   message += `👤 *Cliente:* ${customer.name}\n`;
   message += `📧 *Email:* ${customer.email}\n`;
   message += `📱 *WhatsApp:* ${customer.whatsapp}\n\n`;
