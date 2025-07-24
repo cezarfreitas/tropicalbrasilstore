@@ -1025,6 +1025,9 @@ export default function Settings() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Theme Debug Component */}
+      <ThemeDebug />
     </div>
   );
 }
