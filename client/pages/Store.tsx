@@ -69,10 +69,23 @@ function Store() {
   const [productCache, setProductCache] = useState<Map<string, { data: any; timestamp: number }>>(new Map());
   const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-  // Optimized fetch products function
+  // Optimized fetch products function with cache
   const fetchProducts = async (page: number = 1, retryCount: number = 0) => {
-    console.log(`🛒 Fetching products - page: ${page}, retry: ${retryCount}`);
+    const cacheKey = `products-${page}-${productsPerPage}`;
 
+    // Check cache first
+    const cached = productCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+      console.log(`📦 Using cached products for page ${page}`);
+      setProducts(cached.data.products || []);
+      setPagination(cached.data.pagination || null);
+      setCurrentPage(page);
+      setError(null);
+      setLoading(false);
+      return;
+    }
+
+    console.log(`🛒 Fetching products - page: ${page}, retry: ${retryCount}`);
     setLoading(true);
     setError(null);
 
