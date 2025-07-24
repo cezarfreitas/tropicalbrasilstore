@@ -436,7 +436,11 @@ export function ProductModal({
                     className="bg-primary hover:bg-primary/90 text-primary-foreground"
                     onClick={() => {
                       handleClose();
-                      setShowLoginModal(true);
+                      if (onLoginClick) {
+                        onLoginClick();
+                      } else {
+                        setShowLoginModal(true);
+                      }
                     }}
                   >
                     Fazer Login
