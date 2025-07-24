@@ -116,7 +116,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card shadow-sm sticky top-0 z-40">
+      <header className="border-b bg-background/95 backdrop-blur-sm shadow-lg sticky top-0 z-40 border-primary/10">
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           {/* Mobile Layout - Centered Logo */}
           <div className="flex sm:hidden items-center justify-center relative">
@@ -133,11 +133,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             </div>
 
             <Link to="/loja" className="flex items-center gap-2">
-              <div className="rounded-lg bg-primary p-2">
+              <div className="rounded-lg bg-gradient-to-br from-primary to-secondary p-2 shadow-md">
                 <Package className="h-6 w-6 text-primary-foreground" />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold text-primary">Chinelos</span>
+                <span className="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Chinelos</span>
                 <span className="text-xs text-muted-foreground">
                   Loja Online
                 </span>
@@ -199,13 +199,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 variant="outline"
                 size="sm"
                 onClick={() => setCartOpen(true)}
-                className="relative h-9"
+                className="relative h-9 border-primary/20 hover:bg-primary/5"
               >
-                <ShoppingCart className="h-4 w-4" />
+                <ShoppingCart className="h-4 w-4 text-primary" />
                 {totalItems > 0 && (
                   <Badge
-                    variant="destructive"
-                    className="absolute -top-1 -right-1 h-3 w-3 rounded-full p-0 flex items-center justify-center text-[10px]"
+                    className="absolute -top-1 -right-1 h-3 w-3 rounded-full p-0 flex items-center justify-center text-[10px] bg-secondary text-secondary-foreground animate-pulse"
                   >
                     {totalItems}
                   </Badge>
@@ -218,41 +217,44 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           <div className="hidden sm:flex items-center justify-between">
             <div className="flex items-center gap-6">
               <Link to="/loja" className="flex items-center gap-3">
-                <div className="rounded-xl bg-primary p-3">
+                <div className="rounded-xl bg-gradient-to-br from-primary to-secondary p-3 shadow-lg">
                   <Package className="h-8 w-8 text-primary-foreground" />
                 </div>
-                <div className="flex flex-col" />
+                <div className="flex flex-col">
+                  <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Chinelos Store</span>
+                  <span className="text-sm text-muted-foreground">Loja Online</span>
+                </div>
               </Link>
 
               {/* Collections Navigation */}
               <nav className="flex items-center gap-4 ml-8">
                 <Link
                   to="/loja"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-105 px-3 py-1 rounded-md hover:bg-accent/20"
                 >
                   Todos
                 </Link>
                 <Link
                   to="/loja?categoria=havaianas"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-105 px-3 py-1 rounded-md hover:bg-accent/20"
                 >
                   Havaianas
                 </Link>
                 <Link
                   to="/loja?categoria=adidas"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-105 px-3 py-1 rounded-md hover:bg-accent/20"
                 >
                   Adidas
                 </Link>
                 <Link
                   to="/loja?categoria=nike"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-105 px-3 py-1 rounded-md hover:bg-accent/20"
                 >
                   Nike
                 </Link>
                 <Link
                   to="/loja?categoria=feminino"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-105 px-3 py-1 rounded-md hover:bg-accent/20"
                 >
                   Feminino
                 </Link>
@@ -314,15 +316,14 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="relative h-10"
+                className="relative h-10 border-primary/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-200"
                 onClick={() => setCartOpen(true)}
               >
-                <ShoppingCart className="h-4 w-4 mr-2" />
+                <ShoppingCart className="h-4 w-4 mr-2 text-primary" />
                 <span>Carrinho</span>
                 {totalItems > 0 && (
                   <Badge
-                    variant="destructive"
-                    className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                    className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse"
                   >
                     {totalItems}
                   </Badge>
@@ -394,15 +395,15 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           {/* Drawer */}
           <div className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-left duration-300 sm:hidden">
             {/* Drawer Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-orange-50">
-              <h2 className="text-lg font-semibold text-orange-900">
+            <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/10 to-secondary/10">
+              <h2 className="text-lg font-semibold text-primary">
                 Categorias
               </h2>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setCategoriesOpen(false)}
-                className="h-8 w-8 p-0 hover:bg-orange-100"
+                className="h-8 w-8 p-0 hover:bg-primary/10"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -420,7 +421,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                         : `/loja?categoria=${category.name.toLowerCase()}`
                     }
                     onClick={() => setCategoriesOpen(false)}
-                    className="block w-full p-3 text-left rounded-lg hover:bg-orange-50 hover:border-orange-200 border border-transparent transition-all duration-200"
+                    className="block w-full p-3 text-left rounded-lg hover:bg-accent/20 hover:border-primary/20 border border-transparent transition-all duration-200"
                   >
                     <span className="font-medium text-gray-800">
                       {category.name}
@@ -431,21 +432,21 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
               {/* Quick Actions */}
               <div className="mt-6 pt-6 border-t border-gray-200">
-                <h3 className="text-sm font-medium text-gray-600 mb-3">
+                <h3 className="text-sm font-medium text-primary mb-3">
                   Ações Rápidas
                 </h3>
                 <div className="space-y-2">
                   <Link
                     to="/loja/carrinho"
                     onClick={() => setCategoriesOpen(false)}
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-orange-50 hover:border-orange-200 border border-transparent transition-all duration-200"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent/20 hover:border-primary/20 border border-transparent transition-all duration-200"
                   >
-                    <ShoppingCart className="h-4 w-4 text-orange-600" />
+                    <ShoppingCart className="h-4 w-4 text-primary" />
                     <span className="font-medium text-gray-800">Carrinho</span>
                     {totalItems > 0 && (
                       <Badge
                         variant="secondary"
-                        className="ml-auto bg-orange-100 text-orange-800"
+                        className="ml-auto bg-secondary/20 text-secondary"
                       >
                         {totalItems}
                       </Badge>
@@ -494,15 +495,15 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           {/* Cart Drawer - from right side */}
           <div className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-right duration-300">
             {/* Drawer Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-orange-50">
-              <h2 className="text-lg font-semibold text-orange-900">
+            <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/10 to-secondary/10">
+              <h2 className="text-lg font-semibold text-primary">
                 Carrinho
               </h2>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setCartOpen(false)}
-                className="h-8 w-8 p-0 hover:bg-orange-100"
+                className="h-8 w-8 p-0 hover:bg-primary/10"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -547,7 +548,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                             <p className="text-xs text-gray-600 mt-1">
                               {item.gradeName} - {item.colorName}
                             </p>
-                            <p className="text-sm font-bold text-orange-600 mt-1">
+                            <p className="text-sm font-bold text-primary mt-1">
                               R$ {item.totalPrice.toFixed(2)}
                             </p>
                           </div>
@@ -606,7 +607,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   {/* Total */}
                   <div className="flex justify-between items-center">
                     <span className="text-base sm:text-lg font-semibold">Total:</span>
-                    <span className="text-lg sm:text-xl font-bold text-orange-600">
+                    <span className="text-lg sm:text-xl font-bold text-primary">
                       R$ {totalPrice.toFixed(2)}
                     </span>
                   </div>
@@ -617,7 +618,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                       to="/loja/checkout"
                       onClick={() => setCartOpen(false)}
                     >
-                      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white h-11 sm:h-10 text-sm sm:text-base font-medium">
+                      <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-11 sm:h-10 text-sm sm:text-base font-medium transition-all duration-200 hover:shadow-lg">
                         Finalizar Compra
                       </Button>
                     </Link>
