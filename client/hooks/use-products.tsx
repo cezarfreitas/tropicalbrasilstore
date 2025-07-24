@@ -31,7 +31,7 @@ interface UseProductsResult {
   pagination: PaginationInfo | null;
   loading: boolean;
   error: string | null;
-  fetchProducts: (page?: number) => Promise<void>;
+  fetchProducts: (page?: number, searchTerm?: string) => Promise<void>;
   currentPage: number;
 }
 
