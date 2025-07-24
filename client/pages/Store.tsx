@@ -76,7 +76,7 @@ function Store() {
 
       for (const endpoint of endpoints) {
         try {
-          console.log(`Trying endpoint: ${endpoint}`);
+          console.log(`🔗 Trying endpoint: ${endpoint}`);
 
           // Try XMLHttpRequest first
           try {
