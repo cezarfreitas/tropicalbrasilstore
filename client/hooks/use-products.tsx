@@ -112,17 +112,19 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
         // Skip the old fallback endpoint since it doesn't exist
         console.log("Skipping non-existent fallback endpoint");
 
-        // If both primary and fallback fail, try one more time with simplified request
+        // Try a simplified request as last resort
         try {
-          console.log("🔧 Trying basic fetch without complex headers...");
+          console.log("🔧 Trying simplified fetch...");
           let basicUrl = `/api/store/products-paginated?page=${page}&limit=${productsPerPage}`;
           if (searchTerm && searchTerm.trim()) {
             basicUrl += `&busca=${encodeURIComponent(searchTerm.trim())}`;
           }
           console.log(`🔧 Basic fetch URL: ${basicUrl}`);
 
+          // Use a simpler fetch without timeout for last resort
           const basicResponse = await fetch(basicUrl, {
-            method: 'GET'
+            method: 'GET',
+            cache: 'no-cache'
           });
 
           if (basicResponse.ok) {
@@ -136,9 +138,11 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
             setError(null);
             setLoading(false);
             return;
+          } else {
+            console.error(`Basic fetch failed with status: ${basicResponse.status}`);
           }
         } catch (basicError) {
-          console.warn("Basic fetch also failed:", basicError);
+          console.error("Basic fetch also failed:", basicError);
         }
 
         // If all methods fail, throw original error
