@@ -313,34 +313,38 @@ export default function Settings() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
           <TabsTrigger value="general">
-            <Store className="h-4 w-4 mr-2" />
-            Geral
+            <Store className="h-4 w-4 mr-0 sm:mr-2" />
+            <span className="hidden sm:inline">Geral</span>
+          </TabsTrigger>
+          <TabsTrigger value="designer">
+            <Palette className="h-4 w-4 mr-0 sm:mr-2" />
+            <span className="hidden sm:inline">Designer</span>
           </TabsTrigger>
           <TabsTrigger value="contact">
-            <Contact className="h-4 w-4 mr-2" />
-            Contato
+            <Contact className="h-4 w-4 mr-0 sm:mr-2" />
+            <span className="hidden sm:inline">Contato</span>
           </TabsTrigger>
           <TabsTrigger value="shipping">
-            <Truck className="h-4 w-4 mr-2" />
-            Entrega
+            <Truck className="h-4 w-4 mr-0 sm:mr-2" />
+            <span className="hidden sm:inline">Entrega</span>
           </TabsTrigger>
           <TabsTrigger value="payment">
-            <CreditCard className="h-4 w-4 mr-2" />
-            Pagamento
+            <CreditCard className="h-4 w-4 mr-0 sm:mr-2" />
+            <span className="hidden sm:inline">Pagamento</span>
           </TabsTrigger>
           <TabsTrigger value="social">
-            <Share2 className="h-4 w-4 mr-2" />
-            Social
+            <Share2 className="h-4 w-4 mr-0 sm:mr-2" />
+            <span className="hidden sm:inline">Social</span>
           </TabsTrigger>
           <TabsTrigger value="backup">
-            <Database className="h-4 w-4 mr-2" />
-            Backup
+            <Database className="h-4 w-4 mr-0 sm:mr-2" />
+            <span className="hidden sm:inline">Backup</span>
           </TabsTrigger>
           <TabsTrigger value="advanced">
-            <Shield className="h-4 w-4 mr-2" />
-            Avançado
+            <Shield className="h-4 w-4 mr-0 sm:mr-2" />
+            <span className="hidden sm:inline">Avançado</span>
           </TabsTrigger>
         </TabsList>
 
