@@ -55,6 +55,10 @@ export function createServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
+  // Serve static files for uploads
+  const path = require('path');
+  app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
+
   // Initialize database on startup - run sequentially to avoid dependency issues
   (async () => {
     try {
