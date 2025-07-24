@@ -639,12 +639,6 @@ export function ProductModal({
           </div>
         )}
       </DialogContent>
-
-      {/* Login Modal */}
-      <LoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-      />
     </Dialog>
   );
 }
