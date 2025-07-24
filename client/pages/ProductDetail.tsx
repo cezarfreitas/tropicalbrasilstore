@@ -232,37 +232,26 @@ export default function ProductDetail() {
                           <div className="text-right">
                             {product.base_price && (
                               <div className="space-y-1">
-                                <p className="text-xl font-bold text-primary">
-                                  R${" "}
-                                  {(
-                                    product.base_price * grade.total_quantity
-                                  ).toFixed(2)}
-                                </p>
+                                <PriceDisplay
+                                  price={product.base_price * grade.total_quantity}
+                                  variant="large"
+                                  className="text-xl font-bold"
+                                />
                                 <p className="text-xs text-muted-foreground">
                                   preço da grade
                                 </p>
-                                <div className="border-t pt-2 mt-2">
-                                  <p className="text-sm font-medium">
-                                    R${" "}
-                                    {parseFloat(product.base_price).toFixed(2)}
-                                  </p>
-                                  <p className="text-xs text-muted-foreground">
-                                    preço unitário
-                                  </p>
-                                  {product.suggested_price && (
-                                    <>
-                                      <p className="text-sm text-muted-foreground mt-1">
-                                        R${" "}
-                                        {parseFloat(
-                                          product.suggested_price,
-                                        ).toFixed(2)}
-                                      </p>
-                                      <p className="text-xs text-muted-foreground">
-                                        preço sugerido
-                                      </p>
-                                    </>
-                                  )}
-                                </div>
+                                {isAuthenticated && isApproved && (
+                                  <div className="border-t pt-2 mt-2">
+                                    <PriceDisplay
+                                      price={product.base_price}
+                                      suggestedPrice={product.suggested_price}
+                                      variant="small"
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                      preço unitário
+                                    </p>
+                                  </div>
+                                )}
                               </div>
                             )}
                           </div>
@@ -283,57 +272,78 @@ export default function ProductDetail() {
                           ))}
                         </div>
 
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Label className="text-sm">Quantidade:</Label>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() =>
-                                updateGradeQuantity(
-                                  grade.id,
-                                  getGradeQuantity(grade.id) - 1,
-                                )
-                              }
-                            >
-                              <Minus className="h-3 w-3" />
-                            </Button>
-                            <Input
-                              type="number"
-                              min="1"
-                              value={getGradeQuantity(grade.id)}
-                              onChange={(e) =>
-                                updateGradeQuantity(
-                                  grade.id,
-                                  parseInt(e.target.value) || 1,
-                                )
-                              }
-                              className="w-16 h-8 text-center text-sm"
-                            />
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() =>
-                                updateGradeQuantity(
-                                  grade.id,
-                                  getGradeQuantity(grade.id) + 1,
-                                )
-                              }
-                            >
-                              <Plus className="h-3 w-3" />
-                            </Button>
+                        {!isAuthenticated || !isApproved ? (
+                          <div className="text-center py-4 space-y-3">
+                            <div className="flex justify-center">
+                              <Lock className="h-8 w-8 text-muted-foreground" />
+                            </div>
+                            <div className="space-y-1">
+                              <p className="text-sm font-medium text-gray-900">
+                                Login necessário
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                Faça login para adicionar ao carrinho
+                              </p>
+                            </div>
+                            <Link to="/login">
+                              <Button size="sm" className="bg-primary hover:bg-primary/90">
+                                Fazer Login
+                              </Button>
+                            </Link>
                           </div>
+                        ) : (
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Label className="text-sm">Quantidade:</Label>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() =>
+                                  updateGradeQuantity(
+                                    grade.id,
+                                    getGradeQuantity(grade.id) - 1,
+                                  )
+                                }
+                              >
+                                <Minus className="h-3 w-3" />
+                              </Button>
+                              <Input
+                                type="number"
+                                min="1"
+                                value={getGradeQuantity(grade.id)}
+                                onChange={(e) =>
+                                  updateGradeQuantity(
+                                    grade.id,
+                                    parseInt(e.target.value) || 1,
+                                  )
+                                }
+                                className="w-16 h-8 text-center text-sm"
+                              />
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() =>
+                                  updateGradeQuantity(
+                                    grade.id,
+                                    getGradeQuantity(grade.id) + 1,
+                                  )
+                                }
+                              >
+                                <Plus className="h-3 w-3" />
+                              </Button>
+                            </div>
 
-                          <Button
-                            onClick={() => addGradeToCart(grade)}
+                            <Button
+                              onClick={() => addGradeToCart(grade)}
                             className="ml-4"
                           >
-                            <ShoppingCart className="mr-2 h-4 w-4" />
-                            Adicionar ao Carrinho
-                          </Button>
-                        </div>
+                              <ShoppingCart className="mr-2 h-4 w-4" />
+                              Adicionar ao Carrinho
+                            </Button>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   ))}
