@@ -28,23 +28,8 @@ function Store() {
   );
   const [showProductModal, setShowProductModal] = useState(false);
 
-  // Color showcase
-  const [showColorShowcase, setShowColorShowcase] = useState(false);
-
   // Login modal
   const [showLoginModal, setShowLoginModal] = useState(false);
-
-  // Effects
-  useEffect(() => {
-    // Listen for promotional banner toggle event
-    const handleToggleShowcase = () => {
-      setShowColorShowcase(true);
-    };
-
-    window.addEventListener("toggleColorShowcase", handleToggleShowcase);
-    return () =>
-      window.removeEventListener("toggleColorShowcase", handleToggleShowcase);
-  }, []);
 
   // Handlers
   const handleProductClick = (productId: number) => {
