@@ -41,6 +41,7 @@ export function ThemeLoader() {
 
   const fetchThemeColors = async () => {
     try {
+      console.log('🎨 Fetching theme colors from server...');
       const response = await fetch('/api/settings');
       if (response.ok) {
         const settings = await response.json();
@@ -51,7 +52,10 @@ export function ThemeLoader() {
           background_color: settings.background_color,
           text_color: settings.text_color,
         };
+        console.log('🎨 Received theme colors from server:', themeColors);
         setColors(themeColors);
+      } else {
+        console.error('Failed to fetch theme colors, status:', response.status);
       }
     } catch (error) {
       console.error('Error fetching theme colors:', error);
