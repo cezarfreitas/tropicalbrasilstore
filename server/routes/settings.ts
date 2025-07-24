@@ -34,6 +34,11 @@ router.get("/", async (req, res) => {
         maintenance_mode: false,
         allow_orders: true,
         tax_rate: 0.0,
+        primary_color: "#f97316",
+        secondary_color: "#ea580c",
+        accent_color: "#fed7aa",
+        background_color: "#ffffff",
+        text_color: "#1f2937",
       };
 
       await db.execute(
