@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ProductModal } from "@/components/ProductModal";
 import { ProductImage } from "@/components/ProductImage";
 import { ColorThemeShowcase } from "@/components/ColorThemeShowcase";
+import { FloatingColorButton } from "@/components/FloatingColorButton";
 import { Package, AlertCircle, ShoppingCart } from "lucide-react";
 
 interface StoreProduct {
