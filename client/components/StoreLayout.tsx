@@ -246,6 +246,27 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             </div>
           </div>
 
+          {/* Mobile Search Bar */}
+          <div className="flex sm:hidden mt-3">
+            <form onSubmit={handleSearch} className="relative w-full">
+              <Input
+                type="text"
+                placeholder="Buscar produtos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full h-9 pl-10 pr-16 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Button
+                type="submit"
+                size="sm"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 px-2 text-xs"
+              >
+                <Search className="h-3 w-3" />
+              </Button>
+            </form>
+          </div>
+
           {/* Desktop Layout - Logo left, Collections center, Actions right */}
           <div className="hidden sm:flex items-center justify-between">
             <div className="flex items-center gap-6">
