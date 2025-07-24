@@ -42,6 +42,7 @@ const App = () => (
       <AuthProvider>
         <CustomerAuthProvider>
           <CartProvider>
+            <ThemeLoader />
             <Toaster />
             <Sonner />
             <BrowserRouter>
