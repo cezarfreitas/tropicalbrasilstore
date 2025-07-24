@@ -9,46 +9,9 @@ interface ThemeColors {
 }
 
 export function useThemeColors(colors: ThemeColors) {
+  // Hook desabilitado - as cores são agora fixas em azul no CSS global
   useEffect(() => {
-    if (!colors) return;
-
-    console.log("🎨 Applying theme colors:", colors);
-    const root = document.documentElement;
-
-    // Apply colors as CSS custom properties
-    if (colors.primary_color) {
-      // Convert hex to HSL for better integration with existing Tailwind
-      const hsl = hexToHsl(colors.primary_color);
-      root.style.setProperty("--primary", hsl);
-      root.style.setProperty("--color-primary", colors.primary_color);
-    }
-
-    if (colors.secondary_color) {
-      const hsl = hexToHsl(colors.secondary_color);
-      root.style.setProperty("--secondary", hsl);
-      root.style.setProperty("--color-secondary", colors.secondary_color);
-    }
-
-    if (colors.accent_color) {
-      const hsl = hexToHsl(colors.accent_color);
-      root.style.setProperty("--accent", hsl);
-      root.style.setProperty("--color-accent", colors.accent_color);
-    }
-
-    if (colors.background_color) {
-      const hsl = hexToHsl(colors.background_color);
-      root.style.setProperty("--background", hsl);
-      root.style.setProperty("--color-background", colors.background_color);
-    }
-
-    if (colors.text_color) {
-      const hsl = hexToHsl(colors.text_color);
-      root.style.setProperty("--foreground", hsl);
-      root.style.setProperty("--color-text", colors.text_color);
-    }
-
-    // Store in localStorage for persistence
-    localStorage.setItem("theme-colors", JSON.stringify(colors));
+    console.log("🎨 Theme colors fixas em azul - hook desabilitado");
   }, [colors]);
 }
 
