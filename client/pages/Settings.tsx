@@ -806,8 +806,7 @@ export default function Settings() {
         </TabsContent>
       </Tabs>
 
-      {/* Theme Debug Component */}
-      <ThemeDebug />
+
     </div>
   );
 }
