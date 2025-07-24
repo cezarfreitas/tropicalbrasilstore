@@ -987,6 +987,26 @@ export default function Settings() {
                 >
                   🎨 Padrão
                 </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    // Export current colors to clipboard
+                    const colorPalette = {
+                      primary_color: settings?.primary_color || "#f97316",
+                      secondary_color: settings?.secondary_color || "#ea580c",
+                      accent_color: settings?.accent_color || "#fed7aa",
+                      background_color: settings?.background_color || "#ffffff",
+                      text_color: settings?.text_color || "#000000"
+                    };
+                    navigator.clipboard.writeText(JSON.stringify(colorPalette, null, 2));
+                    toast({
+                      title: "Paleta copiada!",
+                      description: "As cores foram copiadas para a área de transferência.",
+                    });
+                  }}
+                >
+                  📋 Copiar
+                </Button>
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
