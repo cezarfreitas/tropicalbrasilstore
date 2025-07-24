@@ -146,6 +146,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
             setCurrentSearchTerm(searchTerm);
             setError(null);
             setLoading(false);
+            setIsRequestInProgress(false);
             return;
           } else {
             console.error(`Basic fetch failed with status: ${basicResponse.status}`);
