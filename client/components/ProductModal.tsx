@@ -430,14 +430,15 @@ export function ProductModal({
                       Faça login para ver preços e adicionar produtos ao carrinho
                     </p>
                   </div>
-                  <Link to="/login">
-                    <Button
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                      onClick={handleClose}
-                    >
-                      Fazer Login
-                    </Button>
-                  </Link>
+                  <Button
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                    onClick={() => {
+                      handleClose();
+                      setShowLoginModal(true);
+                    }}
+                  >
+                    Fazer Login
+                  </Button>
                 </div>
               ) : (
                 <>
