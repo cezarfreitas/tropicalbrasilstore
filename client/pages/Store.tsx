@@ -141,6 +141,40 @@ function Store() {
           </div>
         )}
 
+        {/* No Results State */}
+        {!loading && filteredProducts.length === 0 && searchTerm && (
+          <Card className="border-yellow-200 bg-yellow-50 shadow-lg">
+            <CardContent className="p-6">
+              <div className="text-center space-y-4">
+                <div className="flex justify-center">
+                  <Search className="h-12 w-12 text-yellow-500" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-yellow-900 mb-2">
+                    Nenhum produto encontrado
+                  </h3>
+                  <p className="text-yellow-700 text-sm mb-4">
+                    Não encontramos produtos com o termo "{searchTerm}".
+                  </p>
+                  <p className="text-yellow-600 text-xs mb-4">
+                    Tente buscar por outras palavras como "chinelo", "adidas", "nike", etc.
+                  </p>
+                </div>
+                <div className="flex gap-3 justify-center">
+                  <Link to="/loja">
+                    <Button
+                      variant="default"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                    >
+                      Ver todos os produtos
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Products Grid */}
         {!loading && filteredProducts.length > 0 && (
           <>
