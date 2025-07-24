@@ -228,8 +228,6 @@ function Store() {
 
   // Effects
   useEffect(() => {
-    fetchProducts(1);
-
     // Listen for promotional banner toggle event
     const handleToggleShowcase = () => {
       setShowColorShowcase(true);
