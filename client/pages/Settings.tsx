@@ -649,10 +649,43 @@ export default function Settings() {
                 </div>
               </div>
 
+              {/* Test Colors Button */}
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    // Apply colors immediately without saving
+                    window.dispatchEvent(new CustomEvent('themeRefresh'));
+                    toast({
+                      title: "Cores aplicadas",
+                      description: "As cores foram aplicadas temporariamente. Salve para torná-las permanentes.",
+                    });
+                  }}
+                  className="flex-1"
+                >
+                  <Palette className="h-4 w-4 mr-2" />
+                  Testar Cores
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    // Reset to original colors
+                    fetchSettings();
+                    window.dispatchEvent(new CustomEvent('themeRefresh'));
+                    toast({
+                      title: "Cores resetadas",
+                      description: "As cores foram resetadas para os valores salvos.",
+                    });
+                  }}
+                >
+                  Resetar
+                </Button>
+              </div>
+
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h4 className="font-medium text-blue-900">💡 Dica</h4>
                 <p className="text-sm text-blue-800 mt-1">
-                  As cores serão aplicadas automaticamente em toda a loja após salvar as configurações.
+                  Use "Testar Cores" para aplicar as mudanças temporariamente. As cores serão aplicadas automaticamente em toda a loja após salvar as configurações.
                   Teste diferentes combinações para encontrar o visual perfeito!
                 </p>
               </div>
