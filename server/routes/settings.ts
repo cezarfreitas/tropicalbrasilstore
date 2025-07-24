@@ -417,4 +417,70 @@ async function createTemplateData(connection: any) {
   console.log("Template data created successfully");
 }
 
+// Upload logo endpoint
+router.post("/upload-logo", async (req, res) => {
+  try {
+    // Check if we have multer configured
+    const multer = require('multer');
+    const path = require('path');
+    const fs = require('fs');
+
+    // Configure multer for logo upload
+    const storage = multer.diskStorage({
+      destination: (req: any, file: any, cb: any) => {
+        const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'logos');
+        // Create directory if it doesn't exist
+        if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+      },
+      filename: (req: any, file: any, cb: any) => {
+        // Generate unique filename
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, `logo-${uniqueSuffix}${ext}`);
+      }
+    });
+
+    const upload = multer({
+      storage: storage,
+      limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB limit
+      },
+      fileFilter: (req: any, file: any, cb: any) => {
+        // Check if file is an image
+        if (file.mimetype.startsWith('image/')) {
+          cb(null, true);
+        } else {
+          cb(new Error('Only image files are allowed'));
+        }
+      }
+    }).single('logo');
+
+    upload(req, res, (err: any) => {
+      if (err) {
+        console.error('Upload error:', err);
+        return res.status(400).json({ error: err.message });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+
+      // Return the URL path for the uploaded logo
+      const logoUrl = `/uploads/logos/${req.file.filename}`;
+
+      res.json({
+        message: 'Logo uploaded successfully',
+        logo_url: logoUrl
+      });
+    });
+
+  } catch (error) {
+    console.error('Logo upload error:', error);
+    res.status(500).json({ error: 'Failed to upload logo' });
+  }
+});
+
 export { router as settingsRouter };
