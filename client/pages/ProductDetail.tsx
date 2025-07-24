@@ -237,6 +237,7 @@ export default function ProductDetail() {
                                   price={product.base_price * grade.total_quantity}
                                   variant="large"
                                   className="text-xl font-bold"
+                                  onLoginClick={() => setShowLoginModal(true)}
                                 />
                                 <p className="text-xs text-muted-foreground">
                                   preço da grade
