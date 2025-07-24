@@ -17,6 +17,7 @@ export function PriceDisplay({
   variant = "default",
   showCurrency = true,
   suggestedPrice,
+  onLoginClick,
 }: PriceDisplayProps) {
   const { isAuthenticated, isApproved } = useCustomerAuth();
 
