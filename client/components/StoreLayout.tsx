@@ -48,8 +48,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [cartOpen, setCartOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
 
-  // Use optimized store settings hook with caching
-  const { settings: storeSettings } = useStoreSettings();
+  // Use global store settings for instant loading
+  const storeSettings = useGlobalStoreSettings();
 
   // Logo component that shows only custom logo with immediate cache loading
   const LogoDisplay = ({ size = "h-6 w-6" }: { size?: string }) => {
