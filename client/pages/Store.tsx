@@ -494,8 +494,8 @@ function Store() {
           </>
         )}
 
-        {/* Color Theme Showcase - Show after products */}
-        {!loading && filteredProducts.length > 0 && (
+        {/* Color Theme Showcase - Show when toggled */}
+        {!loading && filteredProducts.length > 0 && showColorShowcase && (
           <ColorThemeShowcase />
         )}
 
