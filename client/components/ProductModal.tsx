@@ -57,6 +57,7 @@ interface ProductModalProps {
   productId: number | null;
   isOpen: boolean;
   onClose: () => void;
+  onLoginClick?: () => void;
 }
 
 export function ProductModal({
