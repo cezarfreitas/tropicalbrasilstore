@@ -68,6 +68,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       setCurrentSearchTerm(searchTerm);
       setError(null);
       setLoading(false);
+      setIsRequestInProgress(false);
       return;
     }
 
