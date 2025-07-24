@@ -260,6 +260,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   Feminino
                 </Link>
               </nav>
+
+              {/* Theme Indicator */}
+              <ThemeIndicator />
             </div>
 
             <div className="flex items-center gap-3">
