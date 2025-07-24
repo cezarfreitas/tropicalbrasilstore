@@ -361,7 +361,7 @@ function Store() {
         {!loading && filteredProducts.length > 0 && (
           <>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-              {filteredProducts.map((product) => (
+              {filteredProducts.map((product, index) => (
                 <Card
                   key={product.id}
                   className="group cursor-pointer hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 relative border hover:border-primary/20"
