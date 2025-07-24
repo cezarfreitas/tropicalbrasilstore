@@ -65,7 +65,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     return null;
   };
 
-  // Fetch categories and store settings
+  // Fetch categories for mobile menu
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -115,20 +115,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       }
     };
 
-    const fetchStoreSettings = async () => {
-      try {
-        const response = await fetch("/api/settings");
-        if (response.ok) {
-          const settings = await response.json();
-          setStoreSettings(settings);
-        }
-      } catch (error) {
-        console.warn("Failed to fetch store settings:", error);
-      }
-    };
-
     fetchCategories();
-    fetchStoreSettings();
   }, []);
 
   // Lock body scroll when any drawer is open
