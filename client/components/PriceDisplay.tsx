@@ -33,15 +33,14 @@ export function PriceDisplay({
             Faça login para ver preços
           </span>
         </div>
-        <Link to="/login">
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-6 text-xs px-2 border-primary/20 text-primary hover:bg-primary/5"
-          >
-            Entrar
-          </Button>
-        </Link>
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-6 text-xs px-2 border-primary/20 text-primary hover:bg-primary/5"
+          onClick={onLoginClick}
+        >
+          Entrar
+        </Button>
       </div>
     );
   }
