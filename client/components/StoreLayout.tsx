@@ -252,7 +252,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             <div className="flex items-center gap-6">
               <Link to="/loja" className="flex items-center gap-3">
                 <div className="rounded-xl bg-gradient-to-br from-primary to-secondary p-3 shadow-lg">
-                  <Package className="h-8 w-8 text-primary-foreground" />
+                  <LogoDisplay size="h-8 w-8" />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -674,7 +674,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                   <div className="text-[10px] sm:text-xs text-gray-500 text-center">
                     <p>• Compras por grades (kits)</p>
-                    <p>• Confirmação via WhatsApp</p>
+                    <p>• Confirma��ão via WhatsApp</p>
                   </div>
                 </div>
               )}
