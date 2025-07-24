@@ -72,6 +72,10 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
         limit: productsPerPage.toString(),
       });
 
+      if (searchTerm.trim()) {
+        params.append("busca", searchTerm.trim());
+      }
+
       const endpoint = `/api/store/products-paginated?${params}`;
       
       const controller = new AbortController();
