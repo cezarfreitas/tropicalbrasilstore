@@ -6,7 +6,6 @@ import { useCart } from "@/hooks/use-cart";
 import { useToast } from "@/hooks/use-toast";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { PriceDisplay } from "@/components/PriceDisplay";
-import { LoginModal } from "@/components/LoginModal";
 import { ShoppingCart, Package, X, Minus, Plus, Lock } from "lucide-react";
 
 interface ProductVariant {
