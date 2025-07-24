@@ -64,6 +64,26 @@ function Store() {
     <StoreLayout>
       <div className="container mx-auto px-4 py-6 space-y-6">
 
+        {/* Search Results Indicator */}
+        {searchTerm && (
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Search className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium">
+                  Resultados para: <span className="text-primary">"{searchTerm}"</span>
+                </span>
+              </div>
+              <Link
+                to="/loja"
+                className="text-xs text-muted-foreground hover:text-primary transition-colors"
+              >
+                Limpar busca
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Error State */}
         {error && (
           <Card className="border-red-200 bg-red-50 shadow-lg">
