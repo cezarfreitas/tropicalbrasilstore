@@ -162,9 +162,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             </div>
 
             <Link to="/loja" className="flex items-center gap-2">
-              <div className="rounded-lg bg-gradient-to-br from-primary to-secondary p-2 shadow-md">
-                <LogoDisplay size="h-6 w-6" />
-              </div>
+              <LogoDisplay size="h-8 w-8" />
               <div className="flex flex-col">
                 <span className="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                   {storeSettings?.store_name || "Chinelos"}
