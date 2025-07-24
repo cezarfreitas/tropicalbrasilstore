@@ -43,6 +43,7 @@ import { addSuggestedPriceColumn } from "./lib/add-suggested-price-column";
 import { addPhotoColumn } from "./lib/add-photo-column";
 import { redesignGradeSystem } from "./lib/redesign-grades";
 import { createStoreSettingsTable } from "./lib/create-settings-table";
+import { addDesignColumns } from "./lib/add-design-columns";
 import { addMinimumOrderColumn } from "./lib/add-minimum-order-column";
 import { addSalePriceColumn } from "./lib/add-sale-price-column";
 
