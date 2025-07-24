@@ -490,6 +490,11 @@ function Store() {
           </>
         )}
 
+        {/* Color Theme Showcase - Show after products */}
+        {!loading && filteredProducts.length > 0 && (
+          <ColorThemeShowcase />
+        )}
+
         {/* Empty State */}
         {!loading && filteredProducts.length === 0 && !error && (
           <div className="text-center py-12">
