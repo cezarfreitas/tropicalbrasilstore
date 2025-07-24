@@ -935,8 +935,8 @@ export default function Settings() {
                 </div>
               </div>
 
-              {/* Test Colors Button */}
-              <div className="flex gap-2">
+              {/* Color Management */}
+              <div className="flex flex-wrap gap-2">
                 <Button
                   variant="outline"
                   onClick={() => {
