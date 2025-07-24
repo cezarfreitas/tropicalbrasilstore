@@ -138,7 +138,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <Package className="h-6 w-6 text-primary-foreground" />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Chinelos</span>
+                <span className="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  Chinelos
+                </span>
                 <span className="text-xs text-muted-foreground">
                   Loja Online
                 </span>
@@ -204,9 +206,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               >
                 <ShoppingCart className="h-4 w-4 text-primary" />
                 {totalItems > 0 && (
-                  <Badge
-                    className="absolute -top-1 -right-1 h-3 w-3 rounded-full p-0 flex items-center justify-center text-[10px] bg-secondary text-secondary-foreground animate-pulse"
-                  >
+                  <Badge className="absolute -top-1 -right-1 h-3 w-3 rounded-full p-0 flex items-center justify-center text-[10px] bg-secondary text-secondary-foreground animate-pulse">
                     {totalItems}
                   </Badge>
                 )}
@@ -222,8 +222,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <Package className="h-8 w-8 text-primary-foreground" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Chinelos Store</span>
-                  <span className="text-sm text-muted-foreground">Loja Online</span>
+                  <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    Chinelos Store
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    Loja Online
+                  </span>
                 </div>
               </Link>
 
@@ -326,9 +330,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <ShoppingCart className="h-4 w-4 mr-2 text-primary" />
                 <span>Carrinho</span>
                 {totalItems > 0 && (
-                  <Badge
-                    className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse"
-                  >
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse">
                     {totalItems}
                   </Badge>
                 )}
@@ -400,9 +402,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           <div className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-left duration-300 sm:hidden">
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/10 to-secondary/10">
-              <h2 className="text-lg font-semibold text-primary">
-                Categorias
-              </h2>
+              <h2 className="text-lg font-semibold text-primary">Categorias</h2>
               <Button
                 variant="ghost"
                 size="sm"
@@ -500,9 +500,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           <div className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-right duration-300">
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/10 to-secondary/10">
-              <h2 className="text-lg font-semibold text-primary">
-                Carrinho
-              </h2>
+              <h2 className="text-lg font-semibold text-primary">Carrinho</h2>
               <Button
                 variant="ghost"
                 size="sm"
@@ -610,7 +608,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <div className="border-t bg-white p-3 sm:p-4 space-y-3 sm:space-y-4 safe-area-inset">
                   {/* Total */}
                   <div className="flex justify-between items-center">
-                    <span className="text-base sm:text-lg font-semibold">Total:</span>
+                    <span className="text-base sm:text-lg font-semibold">
+                      Total:
+                    </span>
                     <span className="text-lg sm:text-xl font-bold text-primary">
                       R$ {totalPrice.toFixed(2)}
                     </span>
@@ -630,7 +630,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                       to="/loja/carrinho"
                       onClick={() => setCartOpen(false)}
                     >
-                      <Button variant="outline" className="w-full h-9 sm:h-10 text-xs sm:text-sm">
+                      <Button
+                        variant="outline"
+                        className="w-full h-9 sm:h-10 text-xs sm:text-sm"
+                      >
                         Ver Carrinho Completo
                       </Button>
                     </Link>

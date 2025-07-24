@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { RefreshCw, Eye, Info } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { RefreshCw, Eye, Info } from "lucide-react";
 
 export function ThemeDebug() {
   const [cssColors, setCssColors] = useState<Record<string, string>>({});
@@ -13,38 +13,42 @@ export function ThemeDebug() {
     // Get CSS custom properties
     const root = document.documentElement;
     const computedStyle = getComputedStyle(root);
-    
+
     const colors = {
-      'primary': root.style.getPropertyValue('--color-primary') || 'Not set',
-      'secondary': root.style.getPropertyValue('--color-secondary') || 'Not set',
-      'accent': root.style.getPropertyValue('--color-accent') || 'Not set',
-      'background': root.style.getPropertyValue('--color-background') || 'Not set',
-      'text': root.style.getPropertyValue('--color-text') || 'Not set',
-      'primary-hsl': computedStyle.getPropertyValue('--primary').trim() || 'Not set',
-      'secondary-hsl': computedStyle.getPropertyValue('--secondary').trim() || 'Not set',
-      'accent-hsl': computedStyle.getPropertyValue('--accent').trim() || 'Not set',
+      primary: root.style.getPropertyValue("--color-primary") || "Not set",
+      secondary: root.style.getPropertyValue("--color-secondary") || "Not set",
+      accent: root.style.getPropertyValue("--color-accent") || "Not set",
+      background:
+        root.style.getPropertyValue("--color-background") || "Not set",
+      text: root.style.getPropertyValue("--color-text") || "Not set",
+      "primary-hsl":
+        computedStyle.getPropertyValue("--primary").trim() || "Not set",
+      "secondary-hsl":
+        computedStyle.getPropertyValue("--secondary").trim() || "Not set",
+      "accent-hsl":
+        computedStyle.getPropertyValue("--accent").trim() || "Not set",
     };
-    
+
     setCssColors(colors);
 
     // Get localStorage colors
     try {
-      const stored = localStorage.getItem('theme-colors');
+      const stored = localStorage.getItem("theme-colors");
       setLocalStorageColors(stored ? JSON.parse(stored) : null);
     } catch (error) {
-      setLocalStorageColors({ error: 'Failed to parse stored colors' });
+      setLocalStorageColors({ error: "Failed to parse stored colors" });
     }
   };
 
   useEffect(() => {
     refreshDebugInfo();
-    
+
     // Refresh when theme changes
     const handleThemeRefresh = refreshDebugInfo;
-    window.addEventListener('themeRefresh', handleThemeRefresh);
-    
+    window.addEventListener("themeRefresh", handleThemeRefresh);
+
     return () => {
-      window.removeEventListener('themeRefresh', handleThemeRefresh);
+      window.removeEventListener("themeRefresh", handleThemeRefresh);
     };
   }, []);
 
@@ -93,13 +97,19 @@ export function ThemeDebug() {
         <CardContent className="space-y-3 text-xs">
           {/* CSS Colors */}
           <div>
-            <Badge variant="outline" className="mb-2">CSS Vars</Badge>
+            <Badge variant="outline" className="mb-2">
+              CSS Vars
+            </Badge>
             <div className="space-y-1">
               {Object.entries(cssColors).map(([key, value]) => (
                 <div key={key} className="flex justify-between">
-                  <span className="font-mono text-muted-foreground">{key}:</span>
-                  <span className={`font-mono ${value === 'Not set' ? 'text-red-500' : 'text-green-600'}`}>
-                    {value === 'Not set' ? 'Not set' : value}
+                  <span className="font-mono text-muted-foreground">
+                    {key}:
+                  </span>
+                  <span
+                    className={`font-mono ${value === "Not set" ? "text-red-500" : "text-green-600"}`}
+                  >
+                    {value === "Not set" ? "Not set" : value}
                   </span>
                 </div>
               ))}
@@ -108,7 +118,9 @@ export function ThemeDebug() {
 
           {/* LocalStorage */}
           <div>
-            <Badge variant="outline" className="mb-2">localStorage</Badge>
+            <Badge variant="outline" className="mb-2">
+              localStorage
+            </Badge>
             {localStorageColors ? (
               <div className="space-y-1">
                 {localStorageColors.error ? (
@@ -116,8 +128,12 @@ export function ThemeDebug() {
                 ) : (
                   Object.entries(localStorageColors).map(([key, value]) => (
                     <div key={key} className="flex justify-between">
-                      <span className="font-mono text-muted-foreground">{key}:</span>
-                      <span className="font-mono text-green-600">{value as string}</span>
+                      <span className="font-mono text-muted-foreground">
+                        {key}:
+                      </span>
+                      <span className="font-mono text-green-600">
+                        {value as string}
+                      </span>
                     </div>
                   ))
                 )}
@@ -129,12 +145,19 @@ export function ThemeDebug() {
 
           {/* Status */}
           <div>
-            <Badge variant="outline" className="mb-2">Status</Badge>
+            <Badge variant="outline" className="mb-2">
+              Status
+            </Badge>
             <div className="space-y-1">
               <div className="flex justify-between">
                 <span>ThemeLoader:</span>
-                <Badge variant={cssColors.primary !== 'Not set' ? 'default' : 'destructive'} className="text-xs">
-                  {cssColors.primary !== 'Not set' ? 'Active' : 'Inactive'}
+                <Badge
+                  variant={
+                    cssColors.primary !== "Not set" ? "default" : "destructive"
+                  }
+                  className="text-xs"
+                >
+                  {cssColors.primary !== "Not set" ? "Active" : "Inactive"}
                 </Badge>
               </div>
             </div>

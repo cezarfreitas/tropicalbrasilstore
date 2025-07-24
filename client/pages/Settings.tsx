@@ -75,13 +75,17 @@ export default function Settings() {
   const { toast } = useToast();
 
   // Apply theme colors in real time
-  useThemeColors(settings ? {
-    primary_color: settings.primary_color,
-    secondary_color: settings.secondary_color,
-    accent_color: settings.accent_color,
-    background_color: settings.background_color,
-    text_color: settings.text_color,
-  } : {});
+  useThemeColors(
+    settings
+      ? {
+          primary_color: settings.primary_color,
+          secondary_color: settings.secondary_color,
+          accent_color: settings.accent_color,
+          background_color: settings.background_color,
+          text_color: settings.text_color,
+        }
+      : {},
+  );
 
   useEffect(() => {
     fetchSettings();
@@ -126,8 +130,8 @@ export default function Settings() {
         });
 
         // Trigger theme refresh event for all components
-        window.dispatchEvent(new CustomEvent('themeRefresh'));
-        console.log('🎨 Settings saved, triggering theme refresh...');
+        window.dispatchEvent(new CustomEvent("themeRefresh"));
+        console.log("🎨 Settings saved, triggering theme refresh...");
       } else {
         throw new Error("Failed to save settings");
       }
@@ -151,12 +155,14 @@ export default function Settings() {
     });
   };
 
-  const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file || !settings) return;
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.startsWith("image/")) {
       toast({
         title: "Erro",
         description: "Por favor, selecione um arquivo de imagem válido",
@@ -177,25 +183,25 @@ export default function Settings() {
 
     try {
       const formData = new FormData();
-      formData.append('logo', file);
+      formData.append("logo", file);
 
-      const response = await fetch('/api/settings/upload-logo', {
-        method: 'POST',
+      const response = await fetch("/api/settings/upload-logo", {
+        method: "POST",
         body: formData,
       });
 
       if (response.ok) {
         const result = await response.json();
-        updateSettings('logo_url', result.logo_url);
+        updateSettings("logo_url", result.logo_url);
         toast({
           title: "Sucesso",
           description: "Logo carregado com sucesso!",
         });
       } else {
-        throw new Error('Upload failed');
+        throw new Error("Upload failed");
       }
     } catch (error) {
-      console.error('Logo upload error:', error);
+      console.error("Logo upload error:", error);
       toast({
         title: "Erro",
         description: "Não foi possível fazer upload do logo",
@@ -503,7 +509,9 @@ export default function Settings() {
                     />
                     <Button
                       variant="outline"
-                      onClick={() => document.getElementById("logo-upload")?.click()}
+                      onClick={() =>
+                        document.getElementById("logo-upload")?.click()
+                      }
                     >
                       <Upload className="h-4 w-4 mr-2" />
                       Escolher Logo
@@ -537,12 +545,16 @@ export default function Settings() {
                         type="color"
                         id="primary_color"
                         value={settings?.primary_color || "#f97316"}
-                        onChange={(e) => updateSettings("primary_color", e.target.value)}
+                        onChange={(e) =>
+                          updateSettings("primary_color", e.target.value)
+                        }
                         className="w-12 h-10 border rounded cursor-pointer"
                       />
                       <Input
                         value={settings?.primary_color || "#f97316"}
-                        onChange={(e) => updateSettings("primary_color", e.target.value)}
+                        onChange={(e) =>
+                          updateSettings("primary_color", e.target.value)
+                        }
                         placeholder="#f97316"
                         className="font-mono"
                       />
@@ -556,12 +568,16 @@ export default function Settings() {
                         type="color"
                         id="secondary_color"
                         value={settings?.secondary_color || "#ea580c"}
-                        onChange={(e) => updateSettings("secondary_color", e.target.value)}
+                        onChange={(e) =>
+                          updateSettings("secondary_color", e.target.value)
+                        }
                         className="w-12 h-10 border rounded cursor-pointer"
                       />
                       <Input
                         value={settings?.secondary_color || "#ea580c"}
-                        onChange={(e) => updateSettings("secondary_color", e.target.value)}
+                        onChange={(e) =>
+                          updateSettings("secondary_color", e.target.value)
+                        }
                         placeholder="#ea580c"
                         className="font-mono"
                       />
@@ -575,12 +591,16 @@ export default function Settings() {
                         type="color"
                         id="accent_color"
                         value={settings?.accent_color || "#fed7aa"}
-                        onChange={(e) => updateSettings("accent_color", e.target.value)}
+                        onChange={(e) =>
+                          updateSettings("accent_color", e.target.value)
+                        }
                         className="w-12 h-10 border rounded cursor-pointer"
                       />
                       <Input
                         value={settings?.accent_color || "#fed7aa"}
-                        onChange={(e) => updateSettings("accent_color", e.target.value)}
+                        onChange={(e) =>
+                          updateSettings("accent_color", e.target.value)
+                        }
                         placeholder="#fed7aa"
                         className="font-mono"
                       />
@@ -594,12 +614,16 @@ export default function Settings() {
                         type="color"
                         id="background_color"
                         value={settings?.background_color || "#ffffff"}
-                        onChange={(e) => updateSettings("background_color", e.target.value)}
+                        onChange={(e) =>
+                          updateSettings("background_color", e.target.value)
+                        }
                         className="w-12 h-10 border rounded cursor-pointer"
                       />
                       <Input
                         value={settings?.background_color || "#ffffff"}
-                        onChange={(e) => updateSettings("background_color", e.target.value)}
+                        onChange={(e) =>
+                          updateSettings("background_color", e.target.value)
+                        }
                         placeholder="#ffffff"
                         className="font-mono"
                       />
@@ -612,23 +636,31 @@ export default function Settings() {
 
               {/* Preview */}
               <div>
-                <Label className="text-base font-medium">Prévia das Cores</Label>
+                <Label className="text-base font-medium">
+                  Prévia das Cores
+                </Label>
                 <p className="text-sm text-muted-foreground mb-3">
                   Veja como ficará a aparência com as cores selecionadas
                 </p>
                 <div
                   className="border rounded-lg p-4 space-y-3"
-                  style={{ backgroundColor: settings?.background_color || "#ffffff" }}
+                  style={{
+                    backgroundColor: settings?.background_color || "#ffffff",
+                  }}
                 >
                   <div
                     className="px-4 py-2 rounded text-white font-medium"
-                    style={{ backgroundColor: settings?.primary_color || "#f97316" }}
+                    style={{
+                      backgroundColor: settings?.primary_color || "#f97316",
+                    }}
                   >
                     Botão Primário
                   </div>
                   <div
                     className="px-4 py-2 rounded text-white font-medium"
-                    style={{ backgroundColor: settings?.secondary_color || "#ea580c" }}
+                    style={{
+                      backgroundColor: settings?.secondary_color || "#ea580c",
+                    }}
                   >
                     Botão Secundário
                   </div>
@@ -636,14 +668,16 @@ export default function Settings() {
                     className="px-4 py-2 rounded border-2"
                     style={{
                       borderColor: settings?.primary_color || "#f97316",
-                      color: settings?.primary_color || "#f97316"
+                      color: settings?.primary_color || "#f97316",
                     }}
                   >
                     Botão Outline
                   </div>
                   <div
                     className="px-4 py-2 rounded"
-                    style={{ backgroundColor: settings?.accent_color || "#fed7aa" }}
+                    style={{
+                      backgroundColor: settings?.accent_color || "#fed7aa",
+                    }}
                   >
                     Elemento de Destaque
                   </div>
@@ -656,10 +690,11 @@ export default function Settings() {
                   variant="outline"
                   onClick={() => {
                     // Apply colors immediately without saving
-                    window.dispatchEvent(new CustomEvent('themeRefresh'));
+                    window.dispatchEvent(new CustomEvent("themeRefresh"));
                     toast({
                       title: "Cores aplicadas",
-                      description: "As cores foram aplicadas temporariamente. Salve para torná-las permanentes.",
+                      description:
+                        "As cores foram aplicadas temporariamente. Salve para torná-las permanentes.",
                     });
                   }}
                   className="flex-1"
@@ -672,10 +707,11 @@ export default function Settings() {
                   onClick={() => {
                     // Reset to original colors
                     fetchSettings();
-                    window.dispatchEvent(new CustomEvent('themeRefresh'));
+                    window.dispatchEvent(new CustomEvent("themeRefresh"));
                     toast({
                       title: "Cores resetadas",
-                      description: "As cores foram resetadas para os valores salvos.",
+                      description:
+                        "As cores foram resetadas para os valores salvos.",
                     });
                   }}
                 >
@@ -686,8 +722,10 @@ export default function Settings() {
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h4 className="font-medium text-blue-900">💡 Dica</h4>
                 <p className="text-sm text-blue-800 mt-1">
-                  Use "Testar Cores" para aplicar as mudanças temporariamente. As cores serão aplicadas automaticamente em toda a loja após salvar as configurações.
-                  Teste diferentes combinações para encontrar o visual perfeito!
+                  Use "Testar Cores" para aplicar as mudanças temporariamente.
+                  As cores serão aplicadas automaticamente em toda a loja após
+                  salvar as configurações. Teste diferentes combinações para
+                  encontrar o visual perfeito!
                 </p>
               </div>
             </CardContent>

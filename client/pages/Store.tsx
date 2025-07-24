@@ -127,10 +127,10 @@ function Store() {
               response = await fetch(endpoint, {
                 signal: controller.signal,
                 headers: {
-                  "Accept": "application/json",
+                  Accept: "application/json",
                   "Content-Type": "application/json",
-                  "Cache-Control": "no-cache"
-                }
+                  "Cache-Control": "no-cache",
+                },
               });
               clearTimeout(timeoutId);
             } catch (fetchError) {
@@ -182,12 +182,18 @@ function Store() {
       let errorMessage = "Erro de conex��o. Tente novamente.";
 
       if (err instanceof Error) {
-        if (err.name === 'AbortError' || err.message.includes('timeout')) {
-          errorMessage = "⏱️ Tempo limite esgotado. Verifique sua conexão e tente novamente.";
-        } else if (err.message.includes('Network') || err.message.includes('network')) {
-          errorMessage = "🌐 Erro de rede. Verifique sua conexão com a internet.";
-        } else if (err.message.includes('All endpoints failed')) {
-          errorMessage = "🔄 Serviço temporariamente indisponível. Tente novamente em alguns minutos.";
+        if (err.name === "AbortError" || err.message.includes("timeout")) {
+          errorMessage =
+            "⏱️ Tempo limite esgotado. Verifique sua conexão e tente novamente.";
+        } else if (
+          err.message.includes("Network") ||
+          err.message.includes("network")
+        ) {
+          errorMessage =
+            "🌐 Erro de rede. Verifique sua conexão com a internet.";
+        } else if (err.message.includes("All endpoints failed")) {
+          errorMessage =
+            "🔄 Serviço temporariamente indisponível. Tente novamente em alguns minutos.";
         } else {
           errorMessage = `❌ ${err.message}`;
         }
@@ -211,8 +217,9 @@ function Store() {
       setShowColorShowcase(true);
     };
 
-    window.addEventListener('toggleColorShowcase', handleToggleShowcase);
-    return () => window.removeEventListener('toggleColorShowcase', handleToggleShowcase);
+    window.addEventListener("toggleColorShowcase", handleToggleShowcase);
+    return () =>
+      window.removeEventListener("toggleColorShowcase", handleToggleShowcase);
   }, []);
 
   // Handlers
@@ -306,20 +313,36 @@ function Store() {
               {/* Animated spinner with theme colors */}
               <div className="relative">
                 <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary/20 border-t-primary mx-auto"></div>
-                <div className="absolute inset-0 rounded-full h-12 w-12 border-4 border-transparent border-r-secondary animate-spin mx-auto" style={{animationDirection: 'reverse', animationDuration: '1.5s'}}></div>
+                <div
+                  className="absolute inset-0 rounded-full h-12 w-12 border-4 border-transparent border-r-secondary animate-spin mx-auto"
+                  style={{
+                    animationDirection: "reverse",
+                    animationDuration: "1.5s",
+                  }}
+                ></div>
               </div>
 
               {/* Loading text */}
               <div>
-                <p className="text-foreground font-medium">Carregando produtos...</p>
-                <p className="text-muted-foreground text-sm mt-1">Buscando os melhores chinelos para você</p>
+                <p className="text-foreground font-medium">
+                  Carregando produtos...
+                </p>
+                <p className="text-muted-foreground text-sm mt-1">
+                  Buscando os melhores chinelos para você
+                </p>
               </div>
 
               {/* Animated dots */}
               <div className="flex justify-center gap-1">
                 <div className="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
-                <div className="w-2 h-2 rounded-full bg-secondary animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                <div className="w-2 h-2 rounded-full bg-accent animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                <div
+                  className="w-2 h-2 rounded-full bg-secondary animate-bounce"
+                  style={{ animationDelay: "0.1s" }}
+                ></div>
+                <div
+                  className="w-2 h-2 rounded-full bg-accent animate-bounce"
+                  style={{ animationDelay: "0.2s" }}
+                ></div>
               </div>
             </div>
           </div>
@@ -366,8 +389,7 @@ function Store() {
                                     key={color.id}
                                     className="w-2.5 h-2.5 rounded-full border border-slate-300"
                                     style={{
-                                      backgroundColor:
-                                        color.hex_code || "#999",
+                                      backgroundColor: color.hex_code || "#999",
                                     }}
                                     title={color.name}
                                   />
@@ -487,7 +509,11 @@ function Store() {
                           variant={page === currentPage ? "default" : "outline"}
                           size="sm"
                           onClick={() => handlePageChange(page)}
-                          className={page === currentPage ? "bg-primary hover:bg-primary/90 text-primary-foreground" : ""}
+                          className={
+                            page === currentPage
+                              ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+                              : ""
+                          }
                         >
                           {page}
                         </Button>
@@ -508,8 +534,6 @@ function Store() {
           </>
         )}
 
-
-
         {/* Empty State */}
         {!loading && filteredProducts.length === 0 && !error && (
           <div className="text-center py-12">
@@ -525,8 +549,14 @@ function Store() {
             </p>
             <div className="flex items-center justify-center gap-1 mt-4">
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-              <div className="w-2 h-2 rounded-full bg-secondary animate-pulse" style={{animationDelay: '0.2s'}}></div>
-              <div className="w-2 h-2 rounded-full bg-accent animate-pulse" style={{animationDelay: '0.4s'}}></div>
+              <div
+                className="w-2 h-2 rounded-full bg-secondary animate-pulse"
+                style={{ animationDelay: "0.2s" }}
+              ></div>
+              <div
+                className="w-2 h-2 rounded-full bg-accent animate-pulse"
+                style={{ animationDelay: "0.4s" }}
+              ></div>
             </div>
           </div>
         )}

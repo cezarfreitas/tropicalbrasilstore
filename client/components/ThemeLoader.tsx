@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useThemeColors, loadStoredThemeColors } from '@/hooks/use-theme-colors';
+import { useEffect, useState } from "react";
+import {
+  useThemeColors,
+  loadStoredThemeColors,
+} from "@/hooks/use-theme-colors";
 
 interface ThemeColors {
   primary_color?: string;
@@ -28,21 +31,21 @@ export function ThemeLoader() {
 
     // Listen for theme refresh events (when settings are updated)
     const handleThemeRefresh = () => {
-      console.log('🎨 Theme refresh requested, fetching new colors...');
+      console.log("🎨 Theme refresh requested, fetching new colors...");
       fetchThemeColors();
     };
 
-    window.addEventListener('themeRefresh', handleThemeRefresh);
+    window.addEventListener("themeRefresh", handleThemeRefresh);
 
     return () => {
-      window.removeEventListener('themeRefresh', handleThemeRefresh);
+      window.removeEventListener("themeRefresh", handleThemeRefresh);
     };
   }, []);
 
   const fetchThemeColors = async () => {
     try {
-      console.log('🎨 Fetching theme colors from server...');
-      const response = await fetch('/api/settings');
+      console.log("🎨 Fetching theme colors from server...");
+      const response = await fetch("/api/settings");
       if (response.ok) {
         const settings = await response.json();
         const themeColors = {
@@ -52,13 +55,13 @@ export function ThemeLoader() {
           background_color: settings.background_color,
           text_color: settings.text_color,
         };
-        console.log('🎨 Received theme colors from server:', themeColors);
+        console.log("🎨 Received theme colors from server:", themeColors);
         setColors(themeColors);
       } else {
-        console.error('Failed to fetch theme colors, status:', response.status);
+        console.error("Failed to fetch theme colors, status:", response.status);
       }
     } catch (error) {
-      console.error('Error fetching theme colors:', error);
+      console.error("Error fetching theme colors:", error);
     } finally {
       setLoading(false);
     }

@@ -1,47 +1,47 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Palette, 
-  Eye, 
-  EyeOff, 
-  Sparkles, 
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Palette,
+  Eye,
+  EyeOff,
+  Sparkles,
   Settings,
   ChevronUp,
-  ChevronDown
-} from 'lucide-react';
+  ChevronDown,
+} from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+} from "@/components/ui/popover";
 
 interface FloatingColorButtonProps {
   onToggleShowcase?: () => void;
   showcaseVisible?: boolean;
 }
 
-export function FloatingColorButton({ 
-  onToggleShowcase, 
-  showcaseVisible = false 
+export function FloatingColorButton({
+  onToggleShowcase,
+  showcaseVisible = false,
 }: FloatingColorButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const colorActions = [
     {
-      id: 'toggle-showcase',
-      label: showcaseVisible ? 'Ocultar Cores' : 'Mostrar Cores',
+      id: "toggle-showcase",
+      label: showcaseVisible ? "Ocultar Cores" : "Mostrar Cores",
       icon: showcaseVisible ? EyeOff : Eye,
       onClick: onToggleShowcase,
-      color: 'primary'
+      color: "primary",
     },
     {
-      id: 'admin-colors',
-      label: 'Configurar Cores',
+      id: "admin-colors",
+      label: "Configurar Cores",
       icon: Settings,
-      onClick: () => window.open('/admin/settings', '_blank'),
-      color: 'secondary'
-    }
+      onClick: () => window.open("/admin/settings", "_blank"),
+      color: "secondary",
+    },
   ];
 
   return (
@@ -59,17 +59,22 @@ export function FloatingColorButton({
             </div>
           </Button>
         </PopoverTrigger>
-        
-        <PopoverContent 
-          side="top" 
-          align="end" 
+
+        <PopoverContent
+          side="top"
+          align="end"
           className="w-64 p-4 bg-card/95 backdrop-blur-sm border-primary/20 shadow-xl"
         >
           {/* Header */}
           <div className="flex items-center gap-2 mb-4 pb-2 border-b border-border">
             <Sparkles className="h-4 w-4 text-primary" />
-            <span className="font-medium text-sm text-foreground">Cores da Loja</span>
-            <Badge variant="outline" className="ml-auto text-xs bg-primary/10 text-primary">
+            <span className="font-medium text-sm text-foreground">
+              Cores da Loja
+            </span>
+            <Badge
+              variant="outline"
+              className="ml-auto text-xs bg-primary/10 text-primary"
+            >
               Ativo
             </Badge>
           </div>
@@ -101,7 +106,7 @@ export function FloatingColorButton({
                 >
                   <Icon className="h-4 w-4" />
                   <span className="text-sm">{action.label}</span>
-                  {action.id === 'toggle-showcase' && (
+                  {action.id === "toggle-showcase" && (
                     <div className="ml-auto">
                       {showcaseVisible ? (
                         <ChevronUp className="h-3 w-3 text-muted-foreground" />
