@@ -57,6 +57,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       setProducts(cached.data.products || []);
       setPagination(cached.data.pagination || null);
       setCurrentPage(page);
+      setCurrentSearchTerm(searchTerm);
       setError(null);
       setLoading(false);
       return;
