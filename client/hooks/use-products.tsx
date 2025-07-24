@@ -156,7 +156,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
 
           if (basicResponse.ok) {
             const data = await basicResponse.json();
-            console.log(`✅ Basic fetch success: ${data.products?.length || 0} products`);
+            console.log(`✅ Basic fetch success: ${data.products?.length || 0} products${searchTerm ? ` for search: "${searchTerm}"` : ''}`);
 
             setProducts(data.products || []);
             setPagination(data.pagination || null);
