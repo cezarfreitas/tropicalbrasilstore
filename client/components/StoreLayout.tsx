@@ -18,6 +18,7 @@ import { useCart } from "@/hooks/use-cart";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { LoginModal } from "@/components/LoginModal";
 import { RegisterModal } from "@/components/RegisterModal";
+import { ThemeIndicator } from "@/components/ThemeIndicator";
 import {
   DropdownMenu,
   DropdownMenuContent,
