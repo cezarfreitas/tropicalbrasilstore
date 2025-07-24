@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useThemeColors } from "@/hooks/use-theme-colors";
+import { ThemeDebug } from "@/components/ThemeDebug";
 
 interface StoreSettings {
   id?: number;
@@ -282,7 +283,7 @@ export default function Settings() {
       console.error("Error restoring backup:", error);
       toast({
         title: "Erro",
-        description: "Não foi possível restaurar o backup",
+        description: "Não foi poss��vel restaurar o backup",
         variant: "destructive",
       });
     } finally {
