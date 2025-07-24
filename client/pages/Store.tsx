@@ -45,15 +45,9 @@ function Store() {
   // Authentication
   const { isAuthenticated, isApproved } = useCustomerAuth();
 
-  // State
-  const [products, setProducts] = useState<StoreProduct[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pagination, setPagination] = useState<PaginationInfo | null>(null);
+  // Products with optimized hook
   const productsPerPage = 20;
+  const { products, pagination, loading, error, fetchProducts, currentPage } = useProducts(productsPerPage);
 
   // Modal
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
@@ -66,10 +60,6 @@ function Store() {
 
   // Login modal
   const [showLoginModal, setShowLoginModal] = useState(false);
-
-  // Cache for products
-  const [productCache, setProductCache] = useState<Map<string, { data: any; timestamp: number }>>(new Map());
-  const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
   // Optimized fetch products function with cache
   const fetchProducts = async (page: number = 1, retryCount: number = 0) => {
