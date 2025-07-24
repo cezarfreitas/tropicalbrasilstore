@@ -181,6 +181,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       setProducts(data.products || []);
       setPagination(data.pagination || null);
       setCurrentPage(page);
+      setCurrentSearchTerm(searchTerm);
       setError(null);
     } catch (err: any) {
       console.error("Error fetching products:", err);
