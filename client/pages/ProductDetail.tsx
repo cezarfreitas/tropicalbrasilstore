@@ -358,6 +358,12 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </StoreLayout>
   );
 }
