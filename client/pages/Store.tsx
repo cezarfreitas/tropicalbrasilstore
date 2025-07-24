@@ -65,7 +65,11 @@ function Store() {
   // Login modal
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  // Fetch products function
+  // Cache for products
+  const [productCache, setProductCache] = useState<Map<string, { data: any; timestamp: number }>>(new Map());
+  const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+  // Optimized fetch products function
   const fetchProducts = async (page: number = 1, retryCount: number = 0) => {
     console.log(`🛒 Fetching products - page: ${page}, retry: ${retryCount}`);
 
