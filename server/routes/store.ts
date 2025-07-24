@@ -13,11 +13,20 @@ router.get("/products-paginated", async (req, res) => {
     const offset = (page - 1) * limit;
 
     // Get total count for pagination
-    const [countResult] = await db.execute(`
+    let countQuery = `
       SELECT COUNT(DISTINCT p.id) as total
       FROM products p
       WHERE p.active = true
-    `);
+    `;
+
+    const countParams: any[] = [];
+
+    if (searchTerm && searchTerm.trim()) {
+      countQuery += ` AND p.name LIKE ?`;
+      countParams.push(`%${searchTerm.trim()}%`);
+    }
+
+    const [countResult] = await db.execute(countQuery, countParams);
 
     const totalProducts = (countResult as any)[0].total;
     const totalPages = Math.ceil(totalProducts / limit);
