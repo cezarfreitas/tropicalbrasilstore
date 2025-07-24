@@ -409,14 +409,10 @@ export default function Settings() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
           <TabsTrigger value="general">
             <Store className="h-4 w-4 mr-0 sm:mr-2" />
             <span className="hidden sm:inline">Geral</span>
-          </TabsTrigger>
-          <TabsTrigger value="designer">
-            <Palette className="h-4 w-4 mr-0 sm:mr-2" />
-            <span className="hidden sm:inline">Designer</span>
           </TabsTrigger>
           <TabsTrigger value="contact">
             <Contact className="h-4 w-4 mr-0 sm:mr-2" />
