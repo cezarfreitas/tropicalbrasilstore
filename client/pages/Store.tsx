@@ -348,11 +348,6 @@ function Store() {
         onLoginClick={() => setShowLoginModal(true)}
       />
 
-      {/* Floating Color Button */}
-      <FloatingColorButton
-        onToggleShowcase={() => setShowColorShowcase(!showColorShowcase)}
-        showcaseVisible={showColorShowcase}
-      />
       
       {/* Login Modal */}
       <LoginModal
