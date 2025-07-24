@@ -966,7 +966,26 @@ export default function Settings() {
                     });
                   }}
                 >
+                  <RefreshCw className="h-4 w-4 mr-2" />
                   Resetar
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    // Reset to default orange colors
+                    updateSettings("primary_color", "#f97316");
+                    updateSettings("secondary_color", "#ea580c");
+                    updateSettings("accent_color", "#fed7aa");
+                    updateSettings("background_color", "#ffffff");
+                    updateSettings("text_color", "#000000");
+                    window.dispatchEvent(new CustomEvent("themeRefresh"));
+                    toast({
+                      title: "Cores padrão aplicadas",
+                      description: "As cores foram resetadas para o tema laranja padrão.",
+                    });
+                  }}
+                >
+                  🎨 Padrão
                 </Button>
               </div>
 
