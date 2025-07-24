@@ -55,6 +55,15 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   // Use global store settings for instant loading
   const storeSettings = useGlobalStoreSettings();
 
+  // Search functionality
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/loja?busca=${encodeURIComponent(searchTerm.trim())}`);
+      setSearchTerm("");
+    }
+  };
+
   // Logo component that shows only custom logo with immediate global loading
   const LogoDisplay = ({ size = "h-6 w-6" }: { size?: string }) => {
     // Try to get logo from current settings or global settings immediately
