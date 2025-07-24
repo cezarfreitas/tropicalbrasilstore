@@ -48,9 +48,14 @@ function Store() {
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= (pagination?.totalPages || 1)) {
-      fetchProducts(newPage);
+      fetchProducts(newPage, searchTerm);
     }
   };
+
+  // Effect to handle search term changes
+  useEffect(() => {
+    fetchProducts(1, searchTerm);
+  }, [searchTerm, fetchProducts]);
 
   // Use all products since we removed filtering
   const filteredProducts = products;
