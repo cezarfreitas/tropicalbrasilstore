@@ -144,13 +144,21 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       setError(null);
     } catch (err: any) {
       console.error("Error fetching products:", err);
-      
+
       let errorMessage = "Erro de conexão. Tente novamente.";
       if (err instanceof Error) {
         if (err.name === "AbortError" || err.message.includes("timeout")) {
           errorMessage = "⏱️ Tempo limite esgotado. Verifique sua conexão.";
+        } else if (err.message.includes("Failed to fetch")) {
+          errorMessage = "🌐 Erro de rede. Verifique se você está conectado à internet.";
         } else if (err.message.includes("Network") || err.message.includes("network")) {
           errorMessage = "🌐 Erro de rede. Verifique sua conexão com a internet.";
+        } else if (err.message.includes("CORS")) {
+          errorMessage = "🔒 Erro de segurança. Recarregue a página.";
+        } else if (err.message.includes("HTTP")) {
+          errorMessage = `📡 Erro do servidor: ${err.message}`;
+        } else {
+          errorMessage = `❌ Erro inesperado: ${err.message}`;
         }
       }
 
