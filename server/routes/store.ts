@@ -9,6 +9,7 @@ router.get("/products-paginated", async (req, res) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
+    const searchTerm = req.query.busca as string;
     const offset = (page - 1) * limit;
 
     // Get total count for pagination
