@@ -50,17 +50,16 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   // Logo component that shows custom logo or default icon
   const LogoDisplay = ({ size = "h-6 w-6" }: { size?: string }) => {
-    if (storeSettings?.logo_url) {
+    const [imageError, setImageError] = useState(false);
+
+    if (storeSettings?.logo_url && !imageError) {
       return (
         <img
           src={storeSettings.logo_url}
           alt="Logo da Loja"
           className={`${size} object-contain`}
-          onError={(e) => {
-            // Fallback to default icon if image fails to load
-            e.currentTarget.style.display = 'none';
-            e.currentTarget.nextElementSibling?.classList.remove('hidden');
-          }}
+          onError={() => setImageError(true)}
+          onLoad={() => setImageError(false)}
         />
       );
     }
@@ -674,7 +673,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                   <div className="text-[10px] sm:text-xs text-gray-500 text-center">
                     <p>• Compras por grades (kits)</p>
-                    <p>• Confirma��ão via WhatsApp</p>
+                    <p>• Confirmação via WhatsApp</p>
                   </div>
                 </div>
               )}
