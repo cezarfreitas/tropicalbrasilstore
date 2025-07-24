@@ -240,7 +240,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <LogoDisplay size="h-10 w-10" />
                 <div className="flex flex-col">
                   <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    {storeSettings?.store_name || "Chinelos Store"}
+                    {storeSettings?.store_name || getCachedStoreSettings()?.store_name || "Chinelos Store"}
                   </span>
                   <span className="text-sm text-muted-foreground">
                     Loja Online
