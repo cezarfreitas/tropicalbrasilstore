@@ -56,12 +56,17 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   // Use global store settings for instant loading
   const storeSettings = useGlobalStoreSettings();
 
+  // Sync search term with URL params
+  useEffect(() => {
+    const urlSearchTerm = searchParams.get("busca") || "";
+    setSearchTerm(urlSearchTerm);
+  }, [searchParams]);
+
   // Search functionality
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/loja?busca=${encodeURIComponent(searchTerm.trim())}`);
-      setSearchTerm("");
     }
   };
 
