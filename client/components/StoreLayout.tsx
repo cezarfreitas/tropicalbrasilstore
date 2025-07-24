@@ -19,7 +19,7 @@ import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { LoginModal } from "@/components/LoginModal";
 import { RegisterModal } from "@/components/RegisterModal";
 import { ThemeIndicator } from "@/components/ThemeIndicator";
-import { useStoreSettings, getCachedStoreSettings } from "@/hooks/use-store-settings";
+import { useGlobalStoreSettings, getGlobalStoreSettings } from "@/hooks/use-global-store-settings";
 import {
   DropdownMenu,
   DropdownMenuContent,
