@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { ProductModal } from "@/components/ProductModal";
 import { ProductImage } from "@/components/ProductImage";
 import { ColorThemeShowcase } from "@/components/ColorThemeShowcase";
-import { FloatingColorButton } from "@/components/FloatingColorButton";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { ProductSkeleton } from "@/components/ProductSkeleton";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
