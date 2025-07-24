@@ -135,13 +135,13 @@ function Store() {
           }
 
           if (response.ok) {
-            console.log(`Success with endpoint: ${endpoint}`);
+            console.log(`✅ Success with endpoint: ${endpoint}`);
             break;
           } else {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
         } catch (err) {
-          console.warn(`Failed endpoint ${endpoint}:`, err);
+          console.warn(`❌ Failed endpoint ${endpoint}:`, err);
           console.warn(`Error details:`, {
             name: (err as Error).name,
             message: (err as Error).message,
