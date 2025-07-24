@@ -426,9 +426,6 @@ async function createTemplateData(connection: any) {
 }
 
 // Configure multer for logo upload (outside of route handler)
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
 
 // Ensure upload directory exists
 const uploadDir = path.join(process.cwd(), "public", "uploads", "logos");
