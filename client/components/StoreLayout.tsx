@@ -352,7 +352,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       </main>
 
       {/* Footer */}
-      <footer className="border-t bg-card mt-8 sm:mt-16">
+      <footer className="border-t bg-card -mt-0.5">
         <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
           <div className="text-center text-xs sm:text-sm text-muted-foreground">
             <p>&copy; 2024 Chinelos Store. Todos os direitos reservados.</p>
