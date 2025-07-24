@@ -9,6 +9,7 @@ import { ProductImage } from "@/components/ProductImage";
 import { ColorThemeShowcase } from "@/components/ColorThemeShowcase";
 import { FloatingColorButton } from "@/components/FloatingColorButton";
 import { PriceDisplay } from "@/components/PriceDisplay";
+import { ProductSkeleton } from "@/components/ProductSkeleton";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { LoginModal } from "@/components/LoginModal";
 import { Package, AlertCircle, ShoppingCart } from "lucide-react";
