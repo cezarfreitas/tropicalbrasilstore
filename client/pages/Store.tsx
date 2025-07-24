@@ -80,7 +80,7 @@ function Store() {
                 </div>
                 <div className="flex gap-3 justify-center">
                   <Button
-                    onClick={() => fetchProducts(currentPage)}
+                    onClick={() => fetchProducts(currentPage, searchTerm)}
                     variant="default"
                     className="bg-primary hover:bg-primary/90 text-primary-foreground"
                     disabled={loading}
