@@ -508,10 +508,7 @@ function Store() {
           </>
         )}
 
-        {/* Color Theme Showcase - Show when toggled */}
-        {!loading && filteredProducts.length > 0 && showColorShowcase && (
-          <ColorThemeShowcase />
-        )}
+
 
         {/* Empty State */}
         {!loading && filteredProducts.length === 0 && !error && (
