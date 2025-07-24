@@ -8,7 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/hooks/use-cart";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, Package, Grid3x3, Minus, Plus } from "lucide-react";
+import { useCustomerAuth } from "@/hooks/use-customer-auth";
+import { PriceDisplay } from "@/components/PriceDisplay";
+import { ShoppingCart, Package, Grid3x3, Minus, Plus, Lock } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface GradeTemplate {
   size_id: number;
@@ -46,6 +49,7 @@ export default function ProductDetail() {
   const [quantities, setQuantities] = useState<Record<number, number>>({});
   const { addItem } = useCart();
   const { toast } = useToast();
+  const { isAuthenticated, isApproved } = useCustomerAuth();
 
   useEffect(() => {
     if (id) {
