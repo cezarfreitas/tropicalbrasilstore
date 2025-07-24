@@ -8,6 +8,8 @@ import { ProductModal } from "@/components/ProductModal";
 import { ProductImage } from "@/components/ProductImage";
 import { ColorThemeShowcase } from "@/components/ColorThemeShowcase";
 import { FloatingColorButton } from "@/components/FloatingColorButton";
+import { PriceDisplay } from "@/components/PriceDisplay";
+import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { Package, AlertCircle, ShoppingCart } from "lucide-react";
 
 interface StoreProduct {
@@ -37,6 +39,9 @@ interface PaginationInfo {
 }
 
 function Store() {
+  // Authentication
+  const { isAuthenticated, isApproved } = useCustomerAuth();
+
   // State
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [loading, setLoading] = useState(true);
@@ -399,12 +404,11 @@ function Store() {
                       {product.base_price && (
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <div className="text-sm sm:text-lg font-bold text-primary">
-                              R${" "}
-                              {parseFloat(
-                                product.base_price.toString(),
-                              ).toFixed(2)}
-                            </div>
+                            <PriceDisplay
+                              price={product.base_price}
+                              suggestedPrice={product.suggested_price}
+                              variant="default"
+                            />
                             {/* Colors - Desktop only */}
                             {product.available_colors &&
                               product.available_colors.length > 0 && (
@@ -432,40 +436,36 @@ function Store() {
                                 </div>
                               )}
                           </div>
-                          {product.suggested_price && (
-                            <div className="text-xs text-muted-foreground">
-                              Sugerido: R${" "}
-                              {parseFloat(
-                                product.suggested_price.toString(),
-                              ).toFixed(2)}
-                            </div>
-                          )}
                         </div>
                       )}
 
-                      {/* Add to Cart Button - Desktop only */}
-                      <Button
-                        className="hidden sm:flex w-full mt-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm h-8 transition-all duration-200 hover:shadow-md"
-                        size="sm"
+                      {/* Add to Cart Button - Desktop only - Only show if authenticated and approved */}
+                      {isAuthenticated && isApproved && (
+                        <Button
+                          className="hidden sm:flex w-full mt-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm h-8 transition-all duration-200 hover:shadow-md"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleProductClick(product.id);
+                          }}
+                        >
+                          Adicionar ao Carrinho
+                        </Button>
+                      )}
+                    </div>
+
+                    {/* Add to Cart Icon - Mobile only, positioned in bottom right - Only show if authenticated and approved */}
+                    {isAuthenticated && isApproved && (
+                      <div
+                        className="sm:hidden absolute bottom-2 right-2 bg-primary hover:bg-primary/90 rounded-full p-2 shadow-lg transition-all duration-200 active:scale-95 border border-primary/20"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleProductClick(product.id);
                         }}
                       >
-                        Adicionar ao Carrinho
-                      </Button>
-                    </div>
-
-                    {/* Add to Cart Icon - Mobile only, positioned in bottom right */}
-                    <div
-                      className="sm:hidden absolute bottom-2 right-2 bg-primary hover:bg-primary/90 rounded-full p-2 shadow-lg transition-all duration-200 active:scale-95 border border-primary/20"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleProductClick(product.id);
-                      }}
-                    >
-                      <ShoppingCart className="h-4 w-4 text-primary-foreground" />
-                    </div>
+                        <ShoppingCart className="h-4 w-4 text-primary-foreground" />
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               ))}
