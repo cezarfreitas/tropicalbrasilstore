@@ -248,6 +248,7 @@ export default function ProductDetail() {
                                       price={product.base_price}
                                       suggestedPrice={product.suggested_price}
                                       variant="small"
+                                      onLoginClick={() => setShowLoginModal(true)}
                                     />
                                     <p className="text-xs text-muted-foreground">
                                       preço unitário
