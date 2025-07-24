@@ -131,7 +131,29 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
           console.warn("Fallback also failed:", fallbackError);
         }
 
-        // If both primary and fallback fail, throw original error
+        // If both primary and fallback fail, try one more time with simplified request
+        try {
+          console.log("🔧 Trying basic fetch without complex headers...");
+          const basicResponse = await fetch(`/api/store/products-paginated?page=${page}&limit=${productsPerPage}`, {
+            method: 'GET'
+          });
+
+          if (basicResponse.ok) {
+            const data = await basicResponse.json();
+            console.log(`✅ Basic fetch success: ${data.products?.length || 0} products`);
+
+            setProducts(data.products || []);
+            setPagination(data.pagination || null);
+            setCurrentPage(page);
+            setError(null);
+            setLoading(false);
+            return;
+          }
+        } catch (basicError) {
+          console.warn("Basic fetch also failed:", basicError);
+        }
+
+        // If all methods fail, throw original error
         throw fetchError;
       }
 
