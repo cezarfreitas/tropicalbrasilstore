@@ -17,9 +17,13 @@ export function ProductImage({
   className = "w-full h-full object-cover",
   fallbackIconSize = "md",
   loading = "lazy",
+  priority = false,
+  sizes = "(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw",
 }: ProductImageProps) {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [shouldLoad, setShouldLoad] = useState(priority || loading === "eager");
+  const imgRef = useRef<HTMLImageElement>(null);
 
   const iconSizes = {
     sm: "h-8 w-8",
