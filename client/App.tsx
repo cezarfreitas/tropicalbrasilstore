@@ -12,6 +12,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { CartProvider } from "./hooks/use-cart";
 import { AuthProvider } from "./hooks/use-auth";
 import { CustomerAuthProvider } from "./hooks/use-customer-auth";
+import { loadStoredThemeColors, useThemeColors } from "./hooks/use-theme-colors";
 import Dashboard from "./pages/Dashboard";
 import ProductsEnhanced from "./pages/ProductsEnhanced";
 import Categories from "./pages/Categories";
