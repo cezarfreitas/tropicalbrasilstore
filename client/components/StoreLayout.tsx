@@ -294,6 +294,27 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <ThemeIndicator />
             </div>
 
+            {/* Search Bar - Desktop */}
+            <div className="flex-1 max-w-md mx-6">
+              <form onSubmit={handleSearch} className="relative">
+                <Input
+                  type="text"
+                  placeholder="Buscar produtos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full h-10 pl-10 pr-4 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 px-3"
+                >
+                  <Search className="h-3 w-3" />
+                </Button>
+              </form>
+            </div>
+
             <div className="flex items-center gap-3">
               {/* Authentication Status */}
               {isAuthenticated ? (
