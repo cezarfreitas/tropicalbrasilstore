@@ -304,9 +304,25 @@ function Store() {
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-              <p className="text-slate-600 mt-2">Carregando produtos...</p>
+            <div className="text-center space-y-4">
+              {/* Animated spinner with theme colors */}
+              <div className="relative">
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary/20 border-t-primary mx-auto"></div>
+                <div className="absolute inset-0 rounded-full h-12 w-12 border-4 border-transparent border-r-secondary animate-spin mx-auto" style={{animationDirection: 'reverse', animationDuration: '1.5s'}}></div>
+              </div>
+
+              {/* Loading text */}
+              <div>
+                <p className="text-foreground font-medium">Carregando produtos...</p>
+                <p className="text-muted-foreground text-sm mt-1">Buscando os melhores chinelos para você</p>
+              </div>
+
+              {/* Animated dots */}
+              <div className="flex justify-center gap-1">
+                <div className="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
+                <div className="w-2 h-2 rounded-full bg-secondary animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                <div className="w-2 h-2 rounded-full bg-accent animate-bounce" style={{animationDelay: '0.2s'}}></div>
+              </div>
             </div>
           </div>
         )}
