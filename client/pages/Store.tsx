@@ -61,7 +61,7 @@ function Store() {
   // Login modal
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  // Optimized fetch products function with cache
+
   const fetchProducts = async (page: number = 1, retryCount: number = 0) => {
     const cacheKey = `products-${page}-${productsPerPage}`;
 
