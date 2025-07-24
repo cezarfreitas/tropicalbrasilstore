@@ -46,9 +46,9 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchProducts = useCallback(async (page: number = 1) => {
+  const fetchProducts = useCallback(async (page: number = 1, retryCount: number = 0) => {
     const cacheKey = `products-${page}-${productsPerPage}`;
-    
+
     // Check cache first
     const cached = globalCache.get(cacheKey);
     if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
@@ -61,7 +61,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       return;
     }
 
-    console.log(`🚀 Fetching products - page: ${page}`);
+    console.log(`🚀 Fetching products - page: ${page}${retryCount > 0 ? ` (retry ${retryCount})` : ''}`);
     setLoading(true);
     setError(null);
 
