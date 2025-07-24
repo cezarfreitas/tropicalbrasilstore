@@ -397,6 +397,202 @@ export default function Settings() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="designer" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Palette className="h-5 w-5" />
+                Design da Loja
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Personalize as cores e visual da sua loja
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Logo Upload */}
+              <div>
+                <Label className="text-base font-medium">Logo da Loja</Label>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Faça upload do logo que aparecerá no cabeçalho da loja
+                </p>
+                <div className="flex items-center gap-4">
+                  {settings?.logo_url && (
+                    <div className="w-16 h-16 border rounded-lg overflow-hidden">
+                      <img
+                        src={settings.logo_url}
+                        alt="Logo atual"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  )}
+                  <div className="space-y-2">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleLogoUpload}
+                      style={{ display: "none" }}
+                      id="logo-upload"
+                    />
+                    <Button
+                      variant="outline"
+                      onClick={() => document.getElementById("logo-upload")?.click()}
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Escolher Logo
+                    </Button>
+                    {settings?.logo_url && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => updateSettings("logo_url", "")}
+                      >
+                        Remover
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Color Customization */}
+              <div>
+                <Label className="text-base font-medium">Cores da Loja</Label>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Personalize a paleta de cores da sua loja
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="primary_color">Cor Primária</Label>
+                    <div className="flex items-center gap-2 mt-1">
+                      <input
+                        type="color"
+                        id="primary_color"
+                        value={settings?.primary_color || "#f97316"}
+                        onChange={(e) => updateSettings("primary_color", e.target.value)}
+                        className="w-12 h-10 border rounded cursor-pointer"
+                      />
+                      <Input
+                        value={settings?.primary_color || "#f97316"}
+                        onChange={(e) => updateSettings("primary_color", e.target.value)}
+                        placeholder="#f97316"
+                        className="font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="secondary_color">Cor Secundária</Label>
+                    <div className="flex items-center gap-2 mt-1">
+                      <input
+                        type="color"
+                        id="secondary_color"
+                        value={settings?.secondary_color || "#ea580c"}
+                        onChange={(e) => updateSettings("secondary_color", e.target.value)}
+                        className="w-12 h-10 border rounded cursor-pointer"
+                      />
+                      <Input
+                        value={settings?.secondary_color || "#ea580c"}
+                        onChange={(e) => updateSettings("secondary_color", e.target.value)}
+                        placeholder="#ea580c"
+                        className="font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="accent_color">Cor de Destaque</Label>
+                    <div className="flex items-center gap-2 mt-1">
+                      <input
+                        type="color"
+                        id="accent_color"
+                        value={settings?.accent_color || "#fed7aa"}
+                        onChange={(e) => updateSettings("accent_color", e.target.value)}
+                        className="w-12 h-10 border rounded cursor-pointer"
+                      />
+                      <Input
+                        value={settings?.accent_color || "#fed7aa"}
+                        onChange={(e) => updateSettings("accent_color", e.target.value)}
+                        placeholder="#fed7aa"
+                        className="font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="background_color">Cor de Fundo</Label>
+                    <div className="flex items-center gap-2 mt-1">
+                      <input
+                        type="color"
+                        id="background_color"
+                        value={settings?.background_color || "#ffffff"}
+                        onChange={(e) => updateSettings("background_color", e.target.value)}
+                        className="w-12 h-10 border rounded cursor-pointer"
+                      />
+                      <Input
+                        value={settings?.background_color || "#ffffff"}
+                        onChange={(e) => updateSettings("background_color", e.target.value)}
+                        placeholder="#ffffff"
+                        className="font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Preview */}
+              <div>
+                <Label className="text-base font-medium">Prévia das Cores</Label>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Veja como ficará a aparência com as cores selecionadas
+                </p>
+                <div
+                  className="border rounded-lg p-4 space-y-3"
+                  style={{ backgroundColor: settings?.background_color || "#ffffff" }}
+                >
+                  <div
+                    className="px-4 py-2 rounded text-white font-medium"
+                    style={{ backgroundColor: settings?.primary_color || "#f97316" }}
+                  >
+                    Botão Primário
+                  </div>
+                  <div
+                    className="px-4 py-2 rounded text-white font-medium"
+                    style={{ backgroundColor: settings?.secondary_color || "#ea580c" }}
+                  >
+                    Botão Secundário
+                  </div>
+                  <div
+                    className="px-4 py-2 rounded border-2"
+                    style={{
+                      borderColor: settings?.primary_color || "#f97316",
+                      color: settings?.primary_color || "#f97316"
+                    }}
+                  >
+                    Botão Outline
+                  </div>
+                  <div
+                    className="px-4 py-2 rounded"
+                    style={{ backgroundColor: settings?.accent_color || "#fed7aa" }}
+                  >
+                    Elemento de Destaque
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="font-medium text-blue-900">💡 Dica</h4>
+                <p className="text-sm text-blue-800 mt-1">
+                  As cores serão aplicadas automaticamente em toda a loja após salvar as configurações.
+                  Teste diferentes combinações para encontrar o visual perfeito!
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="contact" className="space-y-6">
           <Card>
             <CardHeader>
