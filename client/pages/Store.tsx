@@ -226,20 +226,36 @@ function Store() {
     <StoreLayout>
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Header */}
-        <div className="text-center">
-          <h1 className="text-2xl lg:text-3xl font-bold text-slate-900">
-            Loja de Chinelos
-          </h1>
-          <p className="text-slate-600 mt-1">
+        <div className="text-center space-y-4">
+          {/* Main Title with theme colors */}
+          <div className="relative">
+            <h1 className="text-2xl lg:text-4xl font-bold text-primary drop-shadow-sm">
+              Loja de Chinelos
+            </h1>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-2 rounded-full"></div>
+          </div>
+
+          {/* Subtitle with product count */}
+          <p className="text-muted-foreground text-sm lg:text-base">
             {pagination
               ? `${pagination.totalProducts} produtos disponíveis`
               : "Carregando produtos..."}
           </p>
+
+          {/* Color Theme Preview */}
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <span className="text-xs text-muted-foreground">Cores da loja:</span>
+            <div className="flex gap-1">
+              <div className="w-4 h-4 rounded-full bg-primary border-2 border-white shadow-sm" title="Cor Primária"></div>
+              <div className="w-4 h-4 rounded-full bg-secondary border-2 border-white shadow-sm" title="Cor Secundária"></div>
+              <div className="w-4 h-4 rounded-full bg-accent border-2 border-white shadow-sm" title="Cor de Destaque"></div>
+            </div>
+          </div>
         </div>
 
         {/* Error State */}
         {error && (
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-red-50 shadow-lg">
             <CardContent className="p-6">
               <div className="text-center space-y-4">
                 <div className="flex justify-center">
@@ -255,7 +271,7 @@ function Store() {
                   <Button
                     onClick={() => fetchProducts(currentPage)}
                     variant="default"
-                    className="bg-red-600 hover:bg-red-700"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
                     disabled={loading}
                   >
                     {loading ? (
@@ -297,7 +313,7 @@ function Store() {
               {filteredProducts.map((product) => (
                 <Card
                   key={product.id}
-                  className="group cursor-pointer hover:shadow-lg transition-shadow duration-200 relative"
+                  className="group cursor-pointer hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 relative border hover:border-primary/20"
                   onClick={() => handleProductClick(product.id)}
                 >
                   <CardContent className="p-0 relative">
@@ -313,7 +329,7 @@ function Store() {
                       {product.category_name && (
                         <Badge
                           variant="secondary"
-                          className="absolute top-1 left-1 sm:top-2 sm:left-2 text-[10px] sm:text-xs bg-white/90 backdrop-blur-sm px-1 sm:px-2.5 py-0.5 sm:py-1"
+                          className="absolute top-1 left-1 sm:top-2 sm:left-2 text-[10px] sm:text-xs bg-accent/90 text-accent-foreground backdrop-blur-sm px-1 sm:px-2.5 py-0.5 sm:py-1 border border-accent/20"
                         >
                           {product.category_name}
                         </Badge>
@@ -350,7 +366,7 @@ function Store() {
                     {/* Product Info */}
                     <div className="p-2 sm:p-4 space-y-2 sm:space-y-3">
                       <div>
-                        <h3 className="font-medium text-xs sm:text-sm text-slate-900 line-clamp-1 group-hover:text-primary transition-colors">
+                        <h3 className="font-medium text-xs sm:text-sm text-foreground line-clamp-1 group-hover:text-primary transition-colors duration-200">
                           {product.name}
                         </h3>
                       </div>
@@ -405,7 +421,7 @@ function Store() {
 
                       {/* Add to Cart Button - Desktop only */}
                       <Button
-                        className="hidden sm:flex w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white text-sm h-8"
+                        className="hidden sm:flex w-full mt-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm h-8 transition-all duration-200 hover:shadow-md"
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -418,13 +434,13 @@ function Store() {
 
                     {/* Add to Cart Icon - Mobile only, positioned in bottom right */}
                     <div
-                      className="sm:hidden absolute bottom-2 right-2 bg-orange-500 hover:bg-orange-600 rounded-full p-2 shadow-lg transition-all duration-200 active:scale-95"
+                      className="sm:hidden absolute bottom-2 right-2 bg-primary hover:bg-primary/90 rounded-full p-2 shadow-lg transition-all duration-200 active:scale-95 border border-primary/20"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleProductClick(product.id);
                       }}
                     >
-                      <ShoppingCart className="h-4 w-4 text-white" />
+                      <ShoppingCart className="h-4 w-4 text-primary-foreground" />
                     </div>
                   </CardContent>
                 </Card>
@@ -452,6 +468,7 @@ function Store() {
                           variant={page === currentPage ? "default" : "outline"}
                           size="sm"
                           onClick={() => handlePageChange(page)}
+                          className={page === currentPage ? "bg-primary hover:bg-primary/90 text-primary-foreground" : ""}
                         >
                           {page}
                         </Button>
@@ -475,13 +492,21 @@ function Store() {
         {/* Empty State */}
         {!loading && filteredProducts.length === 0 && !error && (
           <div className="text-center py-12">
-            <Package className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">
+            <div className="relative">
+              <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+              <div className="absolute -top-1 -right-1 w-6 h-6 bg-accent rounded-full border-2 border-background"></div>
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               Nenhum produto encontrado
             </h3>
-            <p className="text-slate-600 mb-4">
+            <p className="text-muted-foreground mb-4">
               Não há produtos disponíveis no momento
             </p>
+            <div className="flex items-center justify-center gap-1 mt-4">
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+              <div className="w-2 h-2 rounded-full bg-secondary animate-pulse" style={{animationDelay: '0.2s'}}></div>
+              <div className="w-2 h-2 rounded-full bg-accent animate-pulse" style={{animationDelay: '0.4s'}}></div>
+            </div>
           </div>
         )}
       </div>
