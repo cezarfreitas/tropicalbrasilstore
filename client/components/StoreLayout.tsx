@@ -168,7 +168,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
             <Link to="/loja" className="flex items-center gap-2">
               <div className="rounded-lg bg-gradient-to-br from-primary to-secondary p-2 shadow-md">
-                <Package className="h-6 w-6 text-primary-foreground" />
+                <LogoDisplay size="h-6 w-6" />
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
