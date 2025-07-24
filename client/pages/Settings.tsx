@@ -990,13 +990,14 @@ export default function Settings() {
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-medium text-blue-900">💡 Dica</h4>
-                <p className="text-sm text-blue-800 mt-1">
-                  Use "Testar Cores" para aplicar as mudanças temporariamente.
-                  As cores serão aplicadas automaticamente em toda a loja após
-                  salvar as configurações. Teste diferentes combinações para
-                  encontrar o visual perfeito!
-                </p>
+                <h4 className="font-medium text-blue-900">💡 Como usar o controle de cores</h4>
+                <div className="text-sm text-blue-800 mt-2 space-y-1">
+                  <p>• <strong>Paletas Predefinidas:</strong> Clique em uma paleta para aplicar cores harmonizadas</p>
+                  <p>• <strong>Testar Cores:</strong> Aplica as mudanças temporariamente para visualização</p>
+                  <p>• <strong>Resetar:</strong> Volta para as cores salvas anteriormente</p>
+                  <p>• <strong>Padrão:</strong> Aplica o tema laranja original da loja</p>
+                  <p>• <strong>Salvar:</strong> Torna as cores permanentes em toda a loja</p>
+                </div>
               </div>
             </CardContent>
           </Card>
