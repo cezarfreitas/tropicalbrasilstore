@@ -171,7 +171,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  Chinelos
+                  {storeSettings?.store_name || "Chinelos"}
                 </span>
                 <span className="text-xs text-muted-foreground">
                   Loja Online
