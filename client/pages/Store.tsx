@@ -240,28 +240,37 @@ function Store() {
         {/* Error State */}
         {error && (
           <Card className="border-red-200 bg-red-50">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <AlertCircle className="h-5 w-5 text-red-600" />
-                <div>
-                  <p className="text-red-900 font-medium">
-                    Erro ao carregar produtos
-                  </p>
-                  <p className="text-red-700 text-sm">{error}</p>
+            <CardContent className="p-6">
+              <div className="text-center space-y-4">
+                <div className="flex justify-center">
+                  <AlertCircle className="h-12 w-12 text-red-500" />
                 </div>
-                <div className="flex gap-2 ml-auto">
+                <div>
+                  <h3 className="text-lg font-semibold text-red-900 mb-2">
+                    Erro ao carregar produtos
+                  </h3>
+                  <p className="text-red-700 text-sm mb-4">{error}</p>
+                </div>
+                <div className="flex gap-3 justify-center">
                   <Button
-                    onClick={() => fetchProducts(1, 0)}
-                    variant="outline"
-                    size="sm"
+                    onClick={() => fetchProducts(currentPage)}
+                    variant="default"
+                    className="bg-red-600 hover:bg-red-700"
+                    disabled={loading}
                   >
-                    Tentar Novamente
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Tentando...
+                      </>
+                    ) : (
+                      "🔄 Tentar Novamente"
+                    )}
                   </Button>
                   <Button
                     onClick={() => window.location.reload()}
                     variant="outline"
-                    size="sm"
-                    className="text-xs"
+                    size="default"
                   >
                     Recarregar Página
                   </Button>
