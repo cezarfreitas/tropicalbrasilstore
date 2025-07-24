@@ -78,37 +78,61 @@ function Store() {
         try {
           console.log(`Trying endpoint: ${endpoint}`);
 
-          // Use XMLHttpRequest directly to bypass fetch interference
-          response = await new Promise<Response>((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", endpoint, true);
-            xhr.setRequestHeader("Accept", "application/json");
-            xhr.setRequestHeader("Content-Type", "application/json");
+          // Try XMLHttpRequest first
+          try {
+            response = await new Promise<Response>((resolve, reject) => {
+              const xhr = new XMLHttpRequest();
+              xhr.open("GET", endpoint, true);
+              xhr.setRequestHeader("Accept", "application/json");
+              xhr.setRequestHeader("Content-Type", "application/json");
+              xhr.setRequestHeader("Cache-Control", "no-cache");
 
-            xhr.onload = () => {
-              const headers = new Headers();
-              xhr
-                .getAllResponseHeaders()
-                .split("\r\n")
-                .forEach((line) => {
-                  const [key, value] = line.split(": ");
-                  if (key && value) headers.set(key, value);
+              xhr.onload = () => {
+                const headers = new Headers();
+                xhr
+                  .getAllResponseHeaders()
+                  .split("\r\n")
+                  .forEach((line) => {
+                    const [key, value] = line.split(": ");
+                    if (key && value) headers.set(key, value);
+                  });
+
+                const response = new Response(xhr.responseText, {
+                  status: xhr.status,
+                  statusText: xhr.statusText,
+                  headers: headers,
                 });
+                resolve(response);
+              };
 
-              const response = new Response(xhr.responseText, {
-                status: xhr.status,
-                statusText: xhr.statusText,
-                headers: headers,
+              xhr.onerror = () => reject(new Error("Network error"));
+              xhr.ontimeout = () => reject(new Error("Request timeout"));
+              xhr.timeout = 20000; // Increased to 20 seconds
+
+              xhr.send();
+            });
+          } catch (xhrError) {
+            console.warn("XMLHttpRequest failed, trying fetch:", xhrError);
+
+            // Fallback to fetch with AbortController
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
+
+            try {
+              response = await fetch(endpoint, {
+                signal: controller.signal,
+                headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json",
+                  "Cache-Control": "no-cache"
+                }
               });
-              resolve(response);
-            };
-
-            xhr.onerror = () => reject(new Error("Network error"));
-            xhr.ontimeout = () => reject(new Error("Request timeout"));
-            xhr.timeout = 20000; // Increased to 20 seconds
-
-            xhr.send();
-          });
+              clearTimeout(timeoutId);
+            } catch (fetchError) {
+              clearTimeout(timeoutId);
+              throw fetchError;
+            }
+          }
 
           if (response.ok) {
             console.log(`Success with endpoint: ${endpoint}`);
