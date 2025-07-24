@@ -145,6 +145,19 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
     } catch (err: any) {
       console.error("Error fetching products:", err);
 
+      // Retry logic for network failures
+      if (retryCount < 2 && (
+        err.message.includes("Failed to fetch") ||
+        err.message.includes("Network") ||
+        err.name === "AbortError"
+      )) {
+        console.log(`🔄 Retrying fetch... (attempt ${retryCount + 1}/3)`);
+        setTimeout(() => {
+          fetchProducts(page, retryCount + 1);
+        }, 1000 * (retryCount + 1)); // Exponential backoff
+        return;
+      }
+
       let errorMessage = "Erro de conexão. Tente novamente.";
       if (err instanceof Error) {
         if (err.name === "AbortError" || err.message.includes("timeout")) {
