@@ -215,12 +215,15 @@ router.patch("/", async (req, res) => {
 
     await db.execute(
       `
-      UPDATE store_settings 
+      UPDATE store_settings
       SET ${updateFields.join(", ")}
       ORDER BY id LIMIT 1
     `,
       updateValues,
     );
+
+    // Clear the settings cache so next request gets fresh data
+    clearSettingsCache();
 
     res.json({ message: "Store settings updated successfully" });
   } catch (error) {
