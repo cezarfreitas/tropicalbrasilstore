@@ -825,46 +825,112 @@ export default function Settings() {
                   Prévia das Cores
                 </Label>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Veja como ficará a aparência com as cores selecionadas
+                  Veja como ficará a aparência na sua loja com as cores selecionadas
                 </p>
-                <div
-                  className="border rounded-lg p-4 space-y-3"
-                  style={{
-                    backgroundColor: settings?.background_color || "#ffffff",
-                  }}
-                >
+
+                {/* Store Preview */}
+                <div className="border rounded-lg overflow-hidden">
+                  {/* Header Preview */}
                   <div
-                    className="px-4 py-2 rounded text-white font-medium"
-                    style={{
-                      backgroundColor: settings?.primary_color || "#f97316",
-                    }}
+                    className="p-4 border-b"
+                    style={{ backgroundColor: settings?.background_color || "#ffffff" }}
                   >
-                    Botão Primário
+                    <div className="flex items-center justify-between">
+                      <h3
+                        className="font-semibold text-lg"
+                        style={{ color: settings?.text_color || "#000000" }}
+                      >
+                        🏪 Sua Loja
+                      </h3>
+                      <div className="flex gap-2">
+                        <div
+                          className="w-8 h-8 rounded-full flex items-center justify-center"
+                          style={{ backgroundColor: settings?.primary_color || "#f97316" }}
+                        >
+                          <span className="text-white text-xs">🛒</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
+
+                  {/* Product Card Preview */}
                   <div
-                    className="px-4 py-2 rounded text-white font-medium"
-                    style={{
-                      backgroundColor: settings?.secondary_color || "#ea580c",
-                    }}
+                    className="p-4 space-y-4"
+                    style={{ backgroundColor: settings?.background_color || "#ffffff" }}
                   >
-                    Botão Secundário
-                  </div>
-                  <div
-                    className="px-4 py-2 rounded border-2"
-                    style={{
-                      borderColor: settings?.primary_color || "#f97316",
-                      color: settings?.primary_color || "#f97316",
-                    }}
-                  >
-                    Botão Outline
-                  </div>
-                  <div
-                    className="px-4 py-2 rounded"
-                    style={{
-                      backgroundColor: settings?.accent_color || "#fed7aa",
-                    }}
-                  >
-                    Elemento de Destaque
+                    <div className="border rounded-lg p-3">
+                      <div
+                        className="w-full h-20 rounded mb-3 flex items-center justify-center"
+                        style={{ backgroundColor: settings?.accent_color || "#fed7aa" }}
+                      >
+                        <span className="text-2xl">👟</span>
+                      </div>
+                      <h4
+                        className="font-medium text-sm mb-2"
+                        style={{ color: settings?.text_color || "#000000" }}
+                      >
+                        Chinelo Exemplo
+                      </h4>
+                      <div className="flex items-center justify-between">
+                        <span
+                          className="font-bold text-lg"
+                          style={{ color: settings?.primary_color || "#f97316" }}
+                        >
+                          R$ 29,90
+                        </span>
+                        <button
+                          className="px-3 py-1 rounded text-sm text-white font-medium hover:opacity-90 transition-opacity"
+                          style={{ backgroundColor: settings?.primary_color || "#f97316" }}
+                        >
+                          Comprar
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Buttons Preview */}
+                    <div className="space-y-2">
+                      <div
+                        className="px-4 py-2 rounded text-white font-medium text-center"
+                        style={{ backgroundColor: settings?.primary_color || "#f97316" }}
+                      >
+                        Botão Primário
+                      </div>
+                      <div
+                        className="px-4 py-2 rounded text-white font-medium text-center"
+                        style={{ backgroundColor: settings?.secondary_color || "#ea580c" }}
+                      >
+                        Botão Secundário
+                      </div>
+                      <div
+                        className="px-4 py-2 rounded border-2 font-medium text-center"
+                        style={{
+                          borderColor: settings?.primary_color || "#f97316",
+                          color: settings?.primary_color || "#f97316",
+                          backgroundColor: "transparent"
+                        }}
+                      >
+                        Botão Outline
+                      </div>
+                    </div>
+
+                    {/* Tags Preview */}
+                    <div className="flex gap-2 flex-wrap">
+                      <span
+                        className="px-3 py-1 rounded-full text-xs font-medium"
+                        style={{
+                          backgroundColor: settings?.accent_color || "#fed7aa",
+                          color: settings?.text_color || "#000000"
+                        }}
+                      >
+                        🏷️ Promoção
+                      </span>
+                      <span
+                        className="px-3 py-1 rounded-full text-xs font-medium text-white"
+                        style={{ backgroundColor: settings?.secondary_color || "#ea580c" }}
+                      >
+                        ⭐ Destaque
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
