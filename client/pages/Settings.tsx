@@ -136,6 +136,59 @@ export default function Settings() {
     });
   };
 
+  const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !settings) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Erro",
+        description: "Por favor, selecione um arquivo de imagem válido",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Erro",
+        description: "O arquivo deve ter no máximo 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('logo', file);
+
+      const response = await fetch('/api/settings/upload-logo', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        updateSettings('logo_url', result.logo_url);
+        toast({
+          title: "Sucesso",
+          description: "Logo carregado com sucesso!",
+        });
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      console.error('Logo upload error:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível fazer upload do logo",
+        variant: "destructive",
+      });
+    }
+  };
+
   const togglePaymentMethod = (methodId: string) => {
     if (!settings) return;
     const methods = [...settings.payment_methods];
