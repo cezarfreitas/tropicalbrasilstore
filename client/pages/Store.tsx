@@ -17,7 +17,11 @@ import { Package, AlertCircle, ShoppingCart } from "lucide-react";
 function Store() {
   // Authentication
   const { isAuthenticated, isApproved } = useCustomerAuth();
-  
+
+  // URL params for search
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get("busca") || "";
+
   // Products with optimized hook
   const productsPerPage = 20;
   const { products, pagination, loading, error, fetchProducts, currentPage } = useProducts(productsPerPage);
