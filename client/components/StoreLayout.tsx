@@ -48,6 +48,25 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [storeSettings, setStoreSettings] = useState<any>(null);
 
+  // Logo component that shows custom logo or default icon
+  const LogoDisplay = ({ size = "h-6 w-6" }: { size?: string }) => {
+    if (storeSettings?.logo_url) {
+      return (
+        <img
+          src={storeSettings.logo_url}
+          alt="Logo da Loja"
+          className={`${size} object-contain`}
+          onError={(e) => {
+            // Fallback to default icon if image fails to load
+            e.currentTarget.style.display = 'none';
+            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+          }}
+        />
+      );
+    }
+    return <Package className={`${size} text-primary-foreground`} />;
+  };
+
   // Fetch categories and store settings
   useEffect(() => {
     const fetchCategories = async () => {
