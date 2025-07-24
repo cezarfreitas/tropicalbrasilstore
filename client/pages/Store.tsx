@@ -174,7 +174,20 @@ function Store() {
       }
 
       // Set error state after all retries
-      const errorMessage = err.message || "Erro de conexão. Tente novamente.";
+      let errorMessage = "Erro de conex��o. Tente novamente.";
+
+      if (err instanceof Error) {
+        if (err.name === 'AbortError' || err.message.includes('timeout')) {
+          errorMessage = "⏱️ Tempo limite esgotado. Verifique sua conexão e tente novamente.";
+        } else if (err.message.includes('Network') || err.message.includes('network')) {
+          errorMessage = "🌐 Erro de rede. Verifique sua conexão com a internet.";
+        } else if (err.message.includes('All endpoints failed')) {
+          errorMessage = "🔄 Serviço temporariamente indisponível. Tente novamente em alguns minutos.";
+        } else {
+          errorMessage = `❌ ${err.message}`;
+        }
+      }
+
       console.error("Final error after retries:", errorMessage);
       setError(errorMessage);
       setProducts([]);
