@@ -123,6 +123,10 @@ export default function Settings() {
           title: "Sucesso",
           description: "Configurações salvas com sucesso",
         });
+
+        // Trigger theme refresh event for all components
+        window.dispatchEvent(new CustomEvent('themeRefresh'));
+        console.log('🎨 Settings saved, triggering theme refresh...');
       } else {
         throw new Error("Failed to save settings");
       }
