@@ -245,23 +245,6 @@ function Store() {
   return (
     <StoreLayout>
       <div className="container mx-auto px-4 py-6 space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          {/* Main Title with theme colors */}
-          <div className="relative">
-            <h1 className="text-2xl lg:text-4xl font-bold text-primary drop-shadow-sm">
-              Loja de Chinelos
-            </h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-2 rounded-full"></div>
-          </div>
-
-          {/* Subtitle with product count */}
-          <p className="text-muted-foreground text-sm lg:text-base">
-            {pagination
-              ? `${pagination.totalProducts} produtos disponíveis`
-              : "Carregando produtos..."}
-          </p>
-        </div>
 
         {/* Error State */}
         {error && (
