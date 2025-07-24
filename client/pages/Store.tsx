@@ -15,36 +15,10 @@ import { useProducts } from "@/hooks/use-products";
 import { LoginModal } from "@/components/LoginModal";
 import { Package, AlertCircle, ShoppingCart } from "lucide-react";
 
-interface StoreProduct {
-  id: number;
-  name: string;
-  description?: string;
-  base_price?: number;
-  suggested_price?: number;
-  photo?: string;
-  category_name?: string;
-  available_colors?: Array<{
-    id: number;
-    name: string;
-    hex_code?: string;
-  }>;
-  variant_count?: number;
-  total_stock?: number;
-}
-
-interface PaginationInfo {
-  currentPage: number;
-  totalPages: number;
-  totalProducts: number;
-  productsPerPage: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-}
-
 function Store() {
   // Authentication
   const { isAuthenticated, isApproved } = useCustomerAuth();
-
+  
   // Products with optimized hook
   const productsPerPage = 20;
   const { products, pagination, loading, error, fetchProducts, currentPage } = useProducts(productsPerPage);
@@ -60,171 +34,6 @@ function Store() {
 
   // Login modal
   const [showLoginModal, setShowLoginModal] = useState(false);
-
-
-  const fetchProducts = async (page: number = 1, retryCount: number = 0) => {
-    const cacheKey = `products-${page}-${productsPerPage}`;
-
-    // Check cache first
-    const cached = productCache.get(cacheKey);
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-      console.log(`📦 Using cached products for page ${page}`);
-      setProducts(cached.data.products || []);
-      setPagination(cached.data.pagination || null);
-      setCurrentPage(page);
-      setError(null);
-      setLoading(false);
-      return;
-    }
-
-    console.log(`🛒 Fetching products - page: ${page}, retry: ${retryCount}`);
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Build query parameters
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: productsPerPage.toString(),
-      });
-
-      // Try primary endpoint first, then fallback
-      const endpoints = [
-        `/api/store/products-paginated?${params}`,
-        `/api/store-old/products-paginated?${params}`,
-      ];
-
-      let response: Response | null = null;
-      let lastError: Error | null = null;
-
-      for (const endpoint of endpoints) {
-        try {
-          console.log(`🔗 Trying endpoint: ${endpoint}`);
-
-          // Try XMLHttpRequest first
-          try {
-            response = await new Promise<Response>((resolve, reject) => {
-              const xhr = new XMLHttpRequest();
-              xhr.open("GET", endpoint, true);
-              xhr.setRequestHeader("Accept", "application/json");
-              xhr.setRequestHeader("Content-Type", "application/json");
-              xhr.setRequestHeader("Cache-Control", "no-cache");
-
-              xhr.onload = () => {
-                const headers = new Headers();
-                xhr
-                  .getAllResponseHeaders()
-                  .split("\r\n")
-                  .forEach((line) => {
-                    const [key, value] = line.split(": ");
-                    if (key && value) headers.set(key, value);
-                  });
-
-                const response = new Response(xhr.responseText, {
-                  status: xhr.status,
-                  statusText: xhr.statusText,
-                  headers: headers,
-                });
-                resolve(response);
-              };
-
-              xhr.onerror = () => reject(new Error("Network error"));
-              xhr.ontimeout = () => reject(new Error("Request timeout"));
-              xhr.timeout = 20000; // Increased to 20 seconds
-
-              xhr.send();
-            });
-          } catch (xhrError) {
-            console.warn("XMLHttpRequest failed, trying fetch:", xhrError);
-
-            // Fallback to fetch with AbortController
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 20000);
-
-            try {
-              response = await fetch(endpoint, {
-                signal: controller.signal,
-                headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json",
-                  "Cache-Control": "no-cache",
-                },
-              });
-              clearTimeout(timeoutId);
-            } catch (fetchError) {
-              clearTimeout(timeoutId);
-              throw fetchError;
-            }
-          }
-
-          if (response.ok) {
-            console.log(`✅ Success with endpoint: ${endpoint}`);
-            break;
-          } else {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-        } catch (err) {
-          console.warn(`��� Failed endpoint ${endpoint}:`, err);
-          console.warn(`Error details:`, {
-            name: (err as Error).name,
-            message: (err as Error).message,
-            stack: (err as Error).stack,
-          });
-          lastError = err as Error;
-          response = null;
-        }
-      }
-
-      if (!response || !response.ok) {
-        throw lastError || new Error("All endpoints failed");
-      }
-
-      const data = await response.json();
-      console.log(`Fetched ${data.products?.length || 0} products`);
-
-      setProducts(data.products || []);
-      setPagination(data.pagination || null);
-      setCurrentPage(page);
-      setError(null);
-    } catch (err: any) {
-      console.error("Error fetching products:", err);
-
-      // Simple retry for any error
-      if (retryCount < 2) {
-        console.log(`Retrying... (attempt ${retryCount + 1}/3)`);
-        setTimeout(() => fetchProducts(page, retryCount + 1), 1000);
-        return;
-      }
-
-      // Set error state after all retries
-      let errorMessage = "Erro de conex��o. Tente novamente.";
-
-      if (err instanceof Error) {
-        if (err.name === "AbortError" || err.message.includes("timeout")) {
-          errorMessage =
-            "⏱️ Tempo limite esgotado. Verifique sua conexão e tente novamente.";
-        } else if (
-          err.message.includes("Network") ||
-          err.message.includes("network")
-        ) {
-          errorMessage =
-            "🌐 Erro de rede. Verifique sua conexão com a internet.";
-        } else if (err.message.includes("All endpoints failed")) {
-          errorMessage =
-            "🔄 Serviço temporariamente indisponível. Tente novamente em alguns minutos.";
-        } else {
-          errorMessage = `❌ ${err.message}`;
-        }
-      }
-
-      console.error("Final error after retries:", errorMessage);
-      setError(errorMessage);
-      setProducts([]);
-      setPagination(null);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Effects
   useEffect(() => {
@@ -545,7 +354,7 @@ function Store() {
         onToggleShowcase={() => setShowColorShowcase(!showColorShowcase)}
         showcaseVisible={showColorShowcase}
       />
-
+      
       {/* Login Modal */}
       <LoginModal
         isOpen={showLoginModal}
