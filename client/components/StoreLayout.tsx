@@ -48,7 +48,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [storeSettings, setStoreSettings] = useState<any>(null);
 
-  // Fetch categories for mobile menu
+  // Fetch categories and store settings
   useEffect(() => {
     const fetchCategories = async () => {
       try {
