@@ -213,6 +213,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       setPagination(null);
     } finally {
       setLoading(false);
+      setIsRequestInProgress(false);
     }
   }, [productsPerPage]);
 
