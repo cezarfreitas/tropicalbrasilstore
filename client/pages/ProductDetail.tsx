@@ -10,8 +10,8 @@ import { useCart } from "@/hooks/use-cart";
 import { useToast } from "@/hooks/use-toast";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { PriceDisplay } from "@/components/PriceDisplay";
+import { LoginModal } from "@/components/LoginModal";
 import { ShoppingCart, Package, Grid3x3, Minus, Plus, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
 
 interface GradeTemplate {
   size_id: number;
@@ -50,6 +50,7 @@ export default function ProductDetail() {
   const { addItem } = useCart();
   const { toast } = useToast();
   const { isAuthenticated, isApproved } = useCustomerAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     if (id) {
