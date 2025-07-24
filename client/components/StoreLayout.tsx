@@ -45,6 +45,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     useCart();
   const { isAuthenticated, isApproved, customer, logout } = useCustomerAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
