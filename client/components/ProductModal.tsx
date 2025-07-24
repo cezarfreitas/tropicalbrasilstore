@@ -75,7 +75,6 @@ export function ProductModal({
   const { addItem } = useCart();
   const { toast } = useToast();
   const { isAuthenticated, isApproved } = useCustomerAuth();
-  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     if (productId && isOpen) {
