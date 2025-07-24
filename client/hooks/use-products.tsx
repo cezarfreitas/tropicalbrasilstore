@@ -152,6 +152,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
             setProducts(data.products || []);
             setPagination(data.pagination || null);
             setCurrentPage(page);
+            setCurrentSearchTerm(searchTerm);
             setError(null);
             setLoading(false);
             return;
