@@ -177,6 +177,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       setCurrentPage(page);
       setCurrentSearchTerm(searchTerm);
       setError(null);
+      setIsRequestInProgress(false);
     } catch (err: any) {
       console.error("Error fetching products:", err);
 
