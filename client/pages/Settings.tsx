@@ -26,6 +26,7 @@ import {
   Palette,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 
 interface StoreSettings {
   id?: number;
