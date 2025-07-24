@@ -400,7 +400,7 @@ export function ProductModal({
                       price={product.base_price}
                       variant="small"
                       className="text-orange-500"
-                      onLoginClick={onLoginClick || (() => setShowLoginModal(true))}
+                      onLoginClick={onLoginClick}
                     />
                   )}
                 </div>
@@ -522,7 +522,7 @@ export function ProductModal({
                                     price={product.base_price * grade.total_quantity}
                                     variant="small"
                                     className="text-orange-500"
-                                    onLoginClick={onLoginClick || (() => setShowLoginModal(true))}
+                                    onLoginClick={onLoginClick}
                                   />
                                 )}
                               </div>
@@ -570,7 +570,7 @@ export function ProductModal({
                                     price={product.base_price}
                                     variant="small"
                                     className="text-orange-500"
-                                    onLoginClick={onLoginClick || (() => setShowLoginModal(true))}
+                                    onLoginClick={onLoginClick}
                                   />
                                 )}
                               </div>
