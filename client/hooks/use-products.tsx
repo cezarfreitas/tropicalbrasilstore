@@ -76,35 +76,57 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-      const response = await fetch(endpoint, {
-        signal: controller.signal,
-        headers: {
-          "Accept": "application/json",
-          "Cache-Control": "public, max-age=300",
-        },
-      });
-      
-      clearTimeout(timeoutId);
+      let response;
+      try {
+        response = await fetch(endpoint, {
+          signal: controller.signal,
+          headers: {
+            "Accept": "application/json",
+            "Cache-Control": "public, max-age=300",
+          },
+        });
+
+        clearTimeout(timeoutId);
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        console.warn(`Primary fetch failed: ${fetchError}`);
+
+        // Try fallback endpoint immediately
+        try {
+          const fallbackEndpoint = `/api/store-old/products-paginated?${params}`;
+          console.log(`🔄 Trying fallback: ${fallbackEndpoint}`);
+
+          const fallbackController = new AbortController();
+          const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 8000);
+
+          const fallbackResponse = await fetch(fallbackEndpoint, {
+            signal: fallbackController.signal,
+            headers: { "Accept": "application/json" },
+          });
+
+          clearTimeout(fallbackTimeoutId);
+
+          if (fallbackResponse.ok) {
+            const data = await fallbackResponse.json();
+            console.log(`✅ Fallback success: ${data.products?.length || 0} products`);
+
+            setProducts(data.products || []);
+            setPagination(data.pagination || null);
+            setCurrentPage(page);
+            setError(null);
+            setLoading(false);
+            return;
+          }
+        } catch (fallbackError) {
+          console.warn("Fallback also failed:", fallbackError);
+        }
+
+        // If both primary and fallback fail, throw original error
+        throw fetchError;
+      }
 
       if (!response.ok) {
-        // Try fallback endpoint
-        const fallbackEndpoint = `/api/store-old/products-paginated?${params}`;
-        const fallbackResponse = await fetch(fallbackEndpoint, {
-          headers: { "Accept": "application/json" },
-        });
-        
-        if (!fallbackResponse.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await fallbackResponse.json();
-        console.log(`✅ Fallback success: ${data.products?.length || 0} products`);
-        
-        setProducts(data.products || []);
-        setPagination(data.pagination || null);
-        setCurrentPage(page);
-        setError(null);
-        return;
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
       const data = await response.json();
