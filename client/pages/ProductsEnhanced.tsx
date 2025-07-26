@@ -93,6 +93,7 @@ interface EnhancedProduct {
   active: boolean;
   sell_without_stock: boolean;
   variant_count: number;
+  color_count: number;
   total_stock: number;
   variants?: ProductVariant[];
   grades?: any[];
