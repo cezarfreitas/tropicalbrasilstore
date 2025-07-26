@@ -380,6 +380,16 @@ async function processImport(data: any[]) {
     } catch (error) {
       await connection.rollback();
       console.error(`Error processing product ${productKey}:`, error);
+
+      // Store error details for each item in this group
+      for (let i = 0; i < productItems.length; i++) {
+        importProgress.errorDetails.push({
+          row: processedItems + i + 1,
+          productName: firstItem.name || `Produto ${processedItems + i + 1}`,
+          error: error instanceof Error ? error.message : String(error)
+        });
+      }
+
       importProgress.errors += productItems.length;
       processedItems += productItems.length;
     }
