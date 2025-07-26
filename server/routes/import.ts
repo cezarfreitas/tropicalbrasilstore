@@ -203,18 +203,93 @@ async function getSizesForGroup(sizeGroupId: number): Promise<any[]> {
   return sizeRows as any[];
 }
 
-// Import products
+// Global variable to store all import data
+let allImportData: any[] = [];
+
+// Import products (first batch or full data)
 router.post("/products", async (req, res) => {
   try {
-    const { data } = req.body;
+    const { data, totalBatches, currentBatch } = req.body;
 
     if (!data || !Array.isArray(data)) {
       return res.status(400).json({ error: "Invalid data format" });
     }
 
-    // Reset progress
+    if (totalBatches && currentBatch === 1) {
+      // Initialize for batch processing
+      allImportData = [...data];
+
+      // Reset progress for total expected data
+      importProgress = {
+        total: 0, // Will be set when all batches are received
+        processed: 0,
+        success: 0,
+        errors: 0,
+        current: "",
+        isRunning: false, // Don't start processing until all batches received
+        errorDetails: [],
+      };
+
+      res.json({ message: "First batch received", batchSize: data.length });
+    } else {
+      // Single batch processing (original behavior)
+      allImportData = data;
+
+      // Reset progress
+      importProgress = {
+        total: data.length,
+        processed: 0,
+        success: 0,
+        errors: 0,
+        current: "",
+        isRunning: true,
+        errorDetails: [],
+      };
+
+      // Start processing in background
+      processImport(data);
+
+      res.json({ message: "Import started", total: data.length });
+    }
+  } catch (error) {
+    console.error("Error starting import:", error);
+    res.status(500).json({ error: "Failed to start import" });
+  }
+});
+
+// Process additional batches
+router.post("/products-batch", async (req, res) => {
+  try {
+    const { data, batchNumber } = req.body;
+
+    if (!data || !Array.isArray(data)) {
+      return res.status(400).json({ error: "Invalid batch data format" });
+    }
+
+    // Add to global import data
+    allImportData = [...allImportData, ...data];
+
+    res.json({
+      message: `Batch ${batchNumber} received`,
+      totalItems: allImportData.length,
+      batchSize: data.length
+    });
+  } catch (error) {
+    console.error("Error processing batch:", error);
+    res.status(500).json({ error: "Failed to process batch" });
+  }
+});
+
+// Start processing all batches
+router.post("/start-batch-processing", async (req, res) => {
+  try {
+    if (allImportData.length === 0) {
+      return res.status(400).json({ error: "No data to process" });
+    }
+
+    // Reset progress for all data
     importProgress = {
-      total: data.length,
+      total: allImportData.length,
       processed: 0,
       success: 0,
       errors: 0,
@@ -224,12 +299,12 @@ router.post("/products", async (req, res) => {
     };
 
     // Start processing in background
-    processImport(data);
+    processImport(allImportData);
 
-    res.json({ message: "Import started", total: data.length });
+    res.json({ message: "Batch processing started", total: allImportData.length });
   } catch (error) {
-    console.error("Error starting import:", error);
-    res.status(500).json({ error: "Failed to start import" });
+    console.error("Error starting batch processing:", error);
+    res.status(500).json({ error: "Failed to start batch processing" });
   }
 });
 
