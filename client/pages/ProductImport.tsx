@@ -86,6 +86,21 @@ const REQUIRED_FIELDS = [
   { key: "stock_per_variant", label: "Estoque por Variante", required: false },
 ];
 
+// Custom fetch function to avoid conflicts with external libraries
+const customFetch = async (url: string, options?: RequestInit): Promise<Response> => {
+  try {
+    // Use native fetch directly without any modifications
+    const response = await window.fetch(url, {
+      ...options,
+      credentials: 'same-origin'
+    });
+    return response;
+  } catch (error) {
+    console.error(`Network error for ${url}:`, error);
+    throw error;
+  }
+};
+
 export default function ProductImport() {
   const [file, setFile] = useState<File | null>(null);
   const [csvData, setCsvData] = useState<any[]>([]);
