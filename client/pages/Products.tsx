@@ -45,6 +45,7 @@ export default function Products() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [cleanupLoading, setCleanupLoading] = useState(false);
   const [formData, setFormData] = useState<CreateProductRequest>({
     name: "",
     description: "",
