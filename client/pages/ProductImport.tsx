@@ -58,6 +58,11 @@ interface ImportProgress {
   success: number;
   errors: number;
   current?: string;
+  errorDetails?: Array<{
+    row: number;
+    productName: string;
+    error: string;
+  }>;
 }
 
 interface ColumnMapping {
