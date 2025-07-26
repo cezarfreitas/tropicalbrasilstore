@@ -132,9 +132,12 @@ export default function ProductImport() {
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
+      } else {
+        console.error("Error response from categories:", response.status, response.statusText);
       }
     } catch (error) {
       console.error("Error fetching categories:", error);
+      setCategories([]);
     }
   };
 
@@ -144,9 +147,12 @@ export default function ProductImport() {
       if (response.ok) {
         const data = await response.json();
         setSizeGroups(data);
+      } else {
+        console.error("Error response from size-groups:", response.status, response.statusText);
       }
     } catch (error) {
       console.error("Error fetching size groups:", error);
+      setSizeGroups([]);
     }
   };
 
@@ -156,9 +162,12 @@ export default function ProductImport() {
       if (response.ok) {
         const data = await response.json();
         setColors(data);
+      } else {
+        console.error("Error response from colors:", response.status, response.statusText);
       }
     } catch (error) {
       console.error("Error fetching colors:", error);
+      setColors([]);
     }
   };
 
@@ -184,9 +193,16 @@ export default function ProductImport() {
       if (response.ok) {
         const data = await response.json();
         setExportStats(data);
+      } else {
+        console.error("Error response from export-stats:", response.status, response.statusText);
       }
     } catch (error) {
       console.error("Error fetching export stats:", error);
+      setExportStats({
+        total_products: 0,
+        active_products: 0,
+        inactive_products: 0,
+      });
     }
   };
 
