@@ -28,6 +28,7 @@ import { mockupDataRouter } from "./routes/mockup-data";
 import { importRouter } from "./routes/import";
 import { resetProductsRouter } from "./routes/reset-products";
 import { verifyProductsRouter } from "./routes/verify-products";
+import { cleanupProductsRouter } from "./routes/cleanup-products";
 import { seedChinelosRouter } from "./routes/seed-chinelos";
 import { createStoreSchema } from "./lib/store-schema";
 import { fixOrdersTable } from "./lib/fix-orders-table";
