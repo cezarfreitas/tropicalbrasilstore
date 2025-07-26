@@ -389,18 +389,44 @@ export default function ProductImport() {
     setImportData(fullImportData);
 
     try {
+      // Process in smaller batches to avoid payload size limits
+      const batchSize = 50; // Process 50 items at a time
+      const batches = [];
+
+      for (let i = 0; i < fullImportData.length; i += batchSize) {
+        const batch = fullImportData.slice(i, i + batchSize);
+        batches.push(batch.map((item) => item.data));
+      }
+
+      // Send first batch to start the import
       const response = await customFetch("/api/import/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          data: fullImportData.map((item) => item.data),
+          data: batches[0] || [],
           columnMappings,
+          totalBatches: batches.length,
+          currentBatch: 1,
         }),
       });
 
       if (response.ok) {
+        // Process remaining batches
+        for (let i = 1; i < batches.length; i++) {
+          await customFetch("/api/import/products-batch", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              data: batches[i],
+              batchNumber: i + 1,
+            }),
+          });
+        }
+
         // Start polling for progress
         pollImportProgress();
       } else {
