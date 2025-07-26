@@ -168,9 +168,13 @@ export default function ProductImport() {
       if (response.ok) {
         const data = await response.json();
         setProductCount(data.pagination?.totalProducts || 0);
+      } else {
+        console.error("Error response from products-enhanced:", response.status, response.statusText);
       }
     } catch (error) {
       console.error("Error fetching product count:", error);
+      // Set default count on error to prevent UI issues
+      setProductCount(0);
     }
   };
 
