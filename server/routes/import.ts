@@ -416,6 +416,7 @@ router.post("/reset", (req, res) => {
     errors: 0,
     current: "",
     isRunning: false,
+    errorDetails: [],
   };
   res.json({ message: "Progress reset" });
 });
