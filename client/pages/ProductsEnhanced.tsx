@@ -1822,9 +1822,7 @@ export default function ProductsEnhanced() {
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">
-                          {product.variants
-                            ? new Set(product.variants.map(v => v.color_id)).size
-                            : 0} cores
+                          {product.color_count || 0} cores
                         </Badge>
                       </TableCell>
                       <TableCell>
