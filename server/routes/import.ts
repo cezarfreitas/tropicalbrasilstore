@@ -37,6 +37,11 @@ let importProgress = {
   errors: 0,
   current: "",
   isRunning: false,
+  errorDetails: [] as Array<{
+    row: number,
+    productName: string,
+    error: string
+  }>,
 };
 
 // Parse CSV/Excel file
