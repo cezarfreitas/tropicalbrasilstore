@@ -278,6 +278,7 @@ export default function Products() {
           </Button>
         </div>
 
+        {/* Dialog for creating/editing products */}
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="sm:max-w-[600px]">
             <form onSubmit={handleSubmit}>
