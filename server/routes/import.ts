@@ -220,6 +220,7 @@ router.post("/products", async (req, res) => {
       errors: 0,
       current: "",
       isRunning: true,
+      errorDetails: [],
     };
 
     // Start processing in background
