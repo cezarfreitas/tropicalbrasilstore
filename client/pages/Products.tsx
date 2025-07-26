@@ -254,13 +254,31 @@ export default function Products() {
             Gerencie seu catálogo de chinelos
           </p>
         </div>
+        <div className="flex gap-2">
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={handleNewProduct}>
+                <Plus className="mr-2 h-4 w-4" />
+                Novo Produto
+              </Button>
+            </DialogTrigger>
+          </Dialog>
+
+          <Button
+            variant="destructive"
+            onClick={handleCleanupProducts}
+            disabled={cleanupLoading || products.length <= 1}
+          >
+            {cleanupLoading ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+            ) : (
+              <Trash2 className="mr-2 h-4 w-4" />
+            )}
+            Manter Apenas 1
+          </Button>
+        </div>
+
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={handleNewProduct}>
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Produto
-            </Button>
-          </DialogTrigger>
           <DialogContent className="sm:max-w-[600px]">
             <form onSubmit={handleSubmit}>
               <DialogHeader>
