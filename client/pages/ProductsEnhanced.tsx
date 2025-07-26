@@ -1747,7 +1747,7 @@ export default function ProductsEnhanced() {
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
-                    <TableHead>Variantes</TableHead>
+                    <TableHead>Cores</TableHead>
                     <TableHead>Venda s/ estoque</TableHead>
                     <TableHead className="w-[140px]">Ativado</TableHead>
                   </TableRow>
