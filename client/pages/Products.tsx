@@ -274,7 +274,7 @@ export default function Products() {
             ) : (
               <Trash2 className="mr-2 h-4 w-4" />
             )}
-            Manter Apenas 1
+            Manter Apenas 1 ({products.length} → 1)
           </Button>
         </div>
 
