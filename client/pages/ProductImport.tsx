@@ -155,7 +155,7 @@ export default function ProductImport() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("/api/categories");
+      const response = await customFetch("/api/categories");
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
@@ -170,7 +170,7 @@ export default function ProductImport() {
 
   const fetchSizeGroups = async () => {
     try {
-      const response = await fetch("/api/size-groups");
+      const response = await customFetch("/api/size-groups");
       if (response.ok) {
         const data = await response.json();
         setSizeGroups(data);
@@ -185,7 +185,7 @@ export default function ProductImport() {
 
   const fetchColors = async () => {
     try {
-      const response = await fetch("/api/colors");
+      const response = await customFetch("/api/colors");
       if (response.ok) {
         const data = await response.json();
         setColors(data);
@@ -200,7 +200,7 @@ export default function ProductImport() {
 
   const fetchProductCount = async () => {
     try {
-      const response = await fetch("/api/products-enhanced?page=1&limit=1");
+      const response = await customFetch("/api/products-enhanced?page=1&limit=1");
       if (response.ok) {
         const data = await response.json();
         setProductCount(data.pagination?.totalProducts || 0);
@@ -216,7 +216,7 @@ export default function ProductImport() {
 
   const fetchExportStats = async () => {
     try {
-      const response = await fetch("/api/import/export-stats");
+      const response = await customFetch("/api/import/export-stats");
       if (response.ok) {
         const data = await response.json();
         setExportStats(data);
@@ -257,7 +257,7 @@ export default function ProductImport() {
       const formData = new FormData();
       formData.append("file", uploadedFile);
 
-      const response = await fetch("/api/import/parse-csv", {
+      const response = await customFetch("/api/import/parse-csv", {
         method: "POST",
         body: formData,
       });
@@ -389,7 +389,7 @@ export default function ProductImport() {
     setImportData(fullImportData);
 
     try {
-      const response = await fetch("/api/import/products", {
+      const response = await customFetch("/api/import/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -418,7 +418,7 @@ export default function ProductImport() {
 
   const pollImportProgress = async () => {
     try {
-      const response = await fetch("/api/import/progress");
+      const response = await customFetch("/api/import/progress");
       if (response.ok) {
         const progress = await response.json();
         setImportProgress(progress);
@@ -507,7 +507,7 @@ export default function ProductImport() {
         description: "Gerando arquivo de produtos...",
       });
 
-      const response = await fetch(
+      const response = await customFetch(
         `/api/import/export-products?filter=${filter}`,
       );
 
