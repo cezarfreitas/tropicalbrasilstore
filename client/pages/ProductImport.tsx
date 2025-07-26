@@ -862,12 +862,12 @@ export default function ProductImport() {
                       </Label>
                     </div>
                     <Select
-                      value={columnMappings[index]?.csvColumn || ""}
+                      value={columnMappings[index]?.csvColumn || "__none__"}
                       onValueChange={(value) => {
                         const newMappings = [...columnMappings];
                         newMappings[index] = {
                           ...newMappings[index],
-                          csvColumn: value,
+                          csvColumn: value === "__none__" ? "" : value,
                         };
                         setColumnMappings(newMappings);
                       }}
