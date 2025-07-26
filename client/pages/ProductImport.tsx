@@ -973,50 +973,89 @@ export default function ProductImport() {
                 </div>
               )}
 
-              {importData.length > 0 && !isImporting && (
+              {!isImporting && (importData.length > 0 || importProgress.errorDetails?.length > 0) && (
                 <div className="space-y-4">
                   <h4 className="font-semibold">Resultados da Importação</h4>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Linha</TableHead>
-                        <TableHead>Produto</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Erro</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {importData.slice(0, 50).map((item) => (
-                        <TableRow key={item.row}>
-                          <TableCell>{item.row}</TableCell>
-                          <TableCell>{item.data.name}</TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={
-                                item.status === "success"
-                                  ? "default"
-                                  : item.status === "error"
-                                    ? "destructive"
-                                    : "secondary"
-                              }
-                            >
-                              {item.status === "success" && "Sucesso"}
-                              {item.status === "error" && "Erro"}
-                              {item.status === "pending" && "Pendente"}
-                              {item.status === "processing" && "Processando"}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {item.error && (
-                              <span className="text-sm text-red-600">
-                                {item.error}
-                              </span>
-                            )}
-                          </TableCell>
+
+                  {/* Show error details if available */}
+                  {importProgress.errorDetails && importProgress.errorDetails.length > 0 && (
+                    <div className="space-y-4">
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <h5 className="font-medium text-red-900 mb-3">
+                          Detalhes dos Erros ({importProgress.errorDetails.length} erros encontrados)
+                        </h5>
+                        <div className="max-h-96 overflow-y-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Linha</TableHead>
+                                <TableHead>Produto</TableHead>
+                                <TableHead>Erro</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {importProgress.errorDetails.map((errorDetail, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>{errorDetail.row}</TableCell>
+                                  <TableCell className="max-w-xs truncate">
+                                    {errorDetail.productName}
+                                  </TableCell>
+                                  <TableCell className="text-red-600 text-sm">
+                                    {errorDetail.error}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Show import data table if available */}
+                  {importData.length > 0 && (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Linha</TableHead>
+                          <TableHead>Produto</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Erro</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {importData.slice(0, 50).map((item) => (
+                          <TableRow key={item.row}>
+                            <TableCell>{item.row}</TableCell>
+                            <TableCell>{item.data.name}</TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  item.status === "success"
+                                    ? "default"
+                                    : item.status === "error"
+                                      ? "destructive"
+                                      : "secondary"
+                                }
+                              >
+                                {item.status === "success" && "Sucesso"}
+                                {item.status === "error" && "Erro"}
+                                {item.status === "pending" && "Pendente"}
+                                {item.status === "processing" && "Processando"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {item.error && (
+                                <span className="text-sm text-red-600">
+                                  {item.error}
+                                </span>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
                 </div>
               )}
             </CardContent>
