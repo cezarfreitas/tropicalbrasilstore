@@ -101,6 +101,7 @@ router.get("/", async (req, res) => {
         p.updated_at,
         c.name as category_name,
         COUNT(DISTINCT pv.id) as variant_count,
+        COUNT(DISTINCT pv.color_id) as color_count,
         COALESCE(SUM(pv.stock), 0) as total_stock
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
