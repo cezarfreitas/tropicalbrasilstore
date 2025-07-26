@@ -398,24 +398,52 @@ export default function ProductImport() {
         batches.push(batch.map((item) => item.data));
       }
 
-      // Send first batch to start the import
-      const response = await customFetch("/api/import/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          data: batches[0] || [],
-          columnMappings,
-          totalBatches: batches.length,
-          currentBatch: 1,
-        }),
-      });
+      if (batches.length === 1) {
+        // Single batch - use original method
+        const response = await customFetch("/api/import/products", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: batches[0],
+            columnMappings,
+          }),
+        });
 
-      if (response.ok) {
-        // Process remaining batches
+        if (response.ok) {
+          pollImportProgress();
+        } else {
+          throw new Error("Erro ao iniciar importação");
+        }
+      } else {
+        // Multiple batches - use batch processing
+        toast({
+          title: "Processando arquivo grande",
+          description: `Enviando dados em ${batches.length} lotes...`,
+        });
+
+        // Send first batch
+        const firstResponse = await customFetch("/api/import/products", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: batches[0],
+            columnMappings,
+            totalBatches: batches.length,
+            currentBatch: 1,
+          }),
+        });
+
+        if (!firstResponse.ok) {
+          throw new Error("Erro ao enviar primeiro lote");
+        }
+
+        // Send remaining batches
         for (let i = 1; i < batches.length; i++) {
-          await customFetch("/api/import/products-batch", {
+          const batchResponse = await customFetch("/api/import/products-batch", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -425,12 +453,29 @@ export default function ProductImport() {
               batchNumber: i + 1,
             }),
           });
+
+          if (!batchResponse.ok) {
+            throw new Error(`Erro ao enviar lote ${i + 1}`);
+          }
         }
 
-        // Start polling for progress
-        pollImportProgress();
-      } else {
-        throw new Error("Erro ao iniciar importação");
+        // Start processing all batches
+        const startResponse = await customFetch("/api/import/start-batch-processing", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (startResponse.ok) {
+          toast({
+            title: "Importação Iniciada",
+            description: `Processando ${fullImportData.length} produtos...`,
+          });
+          pollImportProgress();
+        } else {
+          throw new Error("Erro ao iniciar processamento");
+        }
       }
     } catch (error) {
       toast({
