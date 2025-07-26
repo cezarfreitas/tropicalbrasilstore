@@ -134,6 +134,7 @@ export function createServer() {
   app.use("/api/mockup-data", mockupDataRouter);
   app.use("/api/reset-products", resetProductsRouter);
   app.use("/api/verify-products", verifyProductsRouter);
+  app.use("/api/cleanup-products", cleanupProductsRouter);
   app.use("/api/seed-chinelos", seedChinelosRouter);
   app.use("/api/import", importRouter);
 
