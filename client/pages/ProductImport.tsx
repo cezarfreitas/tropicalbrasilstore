@@ -119,11 +119,23 @@ export default function ProductImport() {
 
   // Fetch required data
   useEffect(() => {
-    fetchCategories();
-    fetchSizeGroups();
-    fetchColors();
-    fetchProductCount();
-    fetchExportStats();
+    const fetchData = async () => {
+      try {
+        console.log("Starting to fetch data...");
+        await Promise.allSettled([
+          fetchCategories(),
+          fetchSizeGroups(),
+          fetchColors(),
+          fetchProductCount(),
+          fetchExportStats()
+        ]);
+        console.log("All data fetching completed");
+      } catch (error) {
+        console.error("Error in useEffect:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const fetchCategories = async () => {
