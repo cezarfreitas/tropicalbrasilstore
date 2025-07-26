@@ -95,7 +95,7 @@ router.post("/parse-csv", upload.single("file"), async (req, res) => {
     fs.unlinkSync(filePath);
 
     res.json({
-      data: data.slice(0, 1000), // Limit to 1000 rows for initial processing
+      data: data.slice(0, 100), // Limit to 100 rows for initial preview to avoid large payloads
       headers,
       total: data.length,
     });
