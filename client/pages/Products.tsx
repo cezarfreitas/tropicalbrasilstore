@@ -194,6 +194,44 @@ export default function Products() {
     setDialogOpen(true);
   };
 
+  const handleCleanupProducts = async () => {
+    if (!confirm("⚠️ ATENÇÃO: Isso irá deletar TODOS os produtos exceto o primeiro da lista. Esta ação não pode ser desfeita. Tem certeza?")) {
+      return;
+    }
+
+    setCleanupLoading(true);
+    try {
+      const response = await fetch("/api/cleanup-products/keep-one", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        toast({
+          title: "Limpeza concluída",
+          description: `${result.message}. Produto mantido: ${result.kept?.name || 'N/A'}`,
+        });
+        // Refresh the products list
+        fetchProducts();
+      } else {
+        throw new Error(result.error || "Erro ao fazer limpeza");
+      }
+    } catch (error) {
+      console.error("Error during cleanup:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível fazer a limpeza dos produtos",
+        variant: "destructive",
+      });
+    } finally {
+      setCleanupLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
