@@ -781,11 +781,11 @@ export default function ProductsWooCommerce() {
                                       <input
                                         type="checkbox"
                                         id={`grade-${variantIndex}-${grade.id}`}
-                                        checked={variant.grade_ids.includes(grade.id)}
+                                        checked={variant.grade_ids?.includes(grade.id) || false}
                                         onChange={(e) => {
                                           const newGradeIds = e.target.checked
-                                            ? [...variant.grade_ids, grade.id]
-                                            : variant.grade_ids.filter(id => id !== grade.id);
+                                            ? [...(variant.grade_ids || []), grade.id]
+                                            : (variant.grade_ids || []).filter(id => id !== grade.id);
                                           updateVariantGrades(variantIndex, newGradeIds);
                                         }}
                                         className="rounded border-gray-300"
@@ -803,7 +803,7 @@ export default function ProductsWooCommerce() {
                                       </label>
                                     </div>
                                   ))}
-                                  {variant.grade_ids.length === 0 && (
+                                  {(!variant.grade_ids || variant.grade_ids.length === 0) && (
                                     <div className="text-xs text-muted-foreground">
                                       Selecione pelo menos uma grade vendida
                                     </div>
@@ -839,14 +839,14 @@ export default function ProductsWooCommerce() {
                                 <Label className="text-sm font-medium mb-3 block">
                                   Estoque por Tamanho
                                 </Label>
-                                {variant.grade_ids.length === 0 ? (
+                                {(!variant.grade_ids || variant.grade_ids.length === 0) ? (
                                   <div className="text-center py-4 text-muted-foreground text-sm">
                                     Selecione pelo menos uma grade vendida primeiro
                                   </div>
                                 ) : (
                                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
                                     {(() => {
-                                      const selectedGrades = grades.filter(g => variant.grade_ids.includes(g.id));
+                                      const selectedGrades = grades.filter(g => variant.grade_ids?.includes(g.id) || false);
                                       const allSizeIds = selectedGrades.reduce((acc, grade) => {
                                         if (grade.templates) {
                                           grade.templates.forEach((template: any) => {
