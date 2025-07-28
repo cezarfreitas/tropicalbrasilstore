@@ -255,7 +255,7 @@ function Store() {
                         </Badge>
                       )}
 
-                      {/* Colors - Simple circles like in reference */}
+                      {/* Variant Thumbnails */}
                       {product.available_colors &&
                         product.available_colors.length > 0 && (
                           <div className="absolute bottom-1.5 right-1.5">
@@ -265,15 +265,25 @@ function Store() {
                                 .map((color) => (
                                   <div
                                     key={color.id}
-                                    className="w-6 h-6 rounded-full border-2 border-white cursor-pointer hover:scale-110 transition-all duration-200 shadow-lg"
-                                    title={`${color.name}${color.hex_code ? ` (${color.hex_code})` : ' - Cor sem código'}`}
+                                    className="w-8 h-8 rounded-lg border-2 border-white cursor-pointer hover:scale-110 transition-all duration-200 shadow-lg overflow-hidden bg-gray-100"
+                                    title={`${color.name}${color.hex_code ? ` (${color.hex_code})` : ''}`}
                                     onClick={(e) => color.image_url && handleColorVariantClick(product.id, color.image_url, e)}
-                                    style={{
-                                      backgroundColor: getColorValue(color)
-                                    }}
                                   >
-                                    {!color.hex_code && (
-                                      <div className="w-full h-full flex items-center justify-center text-[8px] font-bold text-white rounded-full bg-gray-500">
+                                    {color.image_url ? (
+                                      <ProductImage
+                                        src={color.image_url}
+                                        alt={color.name}
+                                        className="w-full h-full object-contain"
+                                        loading="lazy"
+                                        sizes="32px"
+                                      />
+                                    ) : (
+                                      <div
+                                        className="w-full h-full flex items-center justify-center text-[8px] font-bold text-white rounded-lg"
+                                        style={{
+                                          backgroundColor: getColorValue(color)
+                                        }}
+                                      >
                                         {color.name?.charAt(0)?.toUpperCase()}
                                       </div>
                                     )}
