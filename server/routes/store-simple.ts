@@ -247,12 +247,12 @@ router.get("/products-paginated", async (req, res) => {
           co.id,
           co.name,
           co.hex_code,
-          MIN(pv.image_url) as image_url
+          pcv.image_url
         FROM product_color_grades pcg
         LEFT JOIN colors co ON pcg.color_id = co.id
-        LEFT JOIN product_variants pv ON pv.product_id = pcg.product_id AND pv.color_id = co.id
+        LEFT JOIN product_color_variants pcv ON pcv.product_id = pcg.product_id AND pcv.color_id = co.id
         WHERE pcg.product_id = ? AND co.id IS NOT NULL
-        GROUP BY co.id, co.name, co.hex_code
+        GROUP BY co.id, co.name, co.hex_code, pcv.image_url
         LIMIT 5`,
         [product.id],
       );
