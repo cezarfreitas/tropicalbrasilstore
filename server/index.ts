@@ -52,6 +52,7 @@ import { addMinimumOrderColumn } from "./lib/add-minimum-order-column";
 import { addSalePriceColumn } from "./lib/add-sale-price-column";
 import { addVariantImageColumn } from "./lib/add-variant-image-column";
 import { addColorVariantsTable } from "./lib/add-color-variants-table";
+import { addShowInMenuColumn } from "./lib/add-show-in-menu-column";
 import { injectStoreSettings } from "./lib/inject-store-settings";
 
 export function createServer() {
