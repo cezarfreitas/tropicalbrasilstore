@@ -632,25 +632,14 @@ export default function ProductsWooCommerce() {
                       <Label className="text-base">
                         Variantes de Cor ({formData.color_variants.length})
                       </Label>
-                      {formData.size_group_id && (
-                        <div className="text-sm text-muted-foreground mt-1">
-                          {(() => {
-                            const selectedGroup = sizeGroups.find(g => g.id === formData.size_group_id);
-                            return selectedGroup ? (
-                              <span>
-                                Grupo: {selectedGroup.icon} {selectedGroup.name}
-                                ({selectedGroup.sizes.join(", ")})
-                              </span>
-                            ) : null;
-                          })()}
-                        </div>
-                      )}
+                      <div className="text-sm text-muted-foreground mt-1">
+                        Cada variante pode ter múltiplas grades de tamanhos
+                      </div>
                     </div>
                     <Button
                       type="button"
                       onClick={addColorVariant}
                       size="sm"
-                      disabled={!formData.size_group_id}
                     >
                       <Plus className="mr-1 h-3 w-3" />
                       Adicionar Cor
