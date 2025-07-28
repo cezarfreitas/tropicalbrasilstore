@@ -71,17 +71,30 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   };
 
   // Logo component that shows only custom logo with immediate global loading
-  const LogoDisplay = ({ size = "h-6 w-6" }: { size?: string }) => {
+  const LogoDisplay = ({
+    size = "h-6 w-6",
+    maxHeight = "max-h-12",
+    className = ""
+  }: {
+    size?: string;
+    maxHeight?: string;
+    className?: string;
+  }) => {
     // Try to get logo from current settings or global settings immediately
     const logoUrl = storeSettings?.logo_url || getGlobalStoreSettings()?.logo_url;
 
     if (logoUrl) {
       return (
-        <img
-          src={logoUrl}
-          alt="Logo da Loja"
-          className={`${size} object-contain`}
-        />
+        <div className={`${size} ${maxHeight} flex items-center justify-center ${className}`}>
+          <img
+            src={logoUrl}
+            alt="Logo da Loja"
+            className={`max-w-full max-h-full object-contain`}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        </div>
       );
     }
     return null;
