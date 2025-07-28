@@ -243,14 +243,15 @@ router.post("/", async (req, res) => {
       for (const variant of variants) {
         if (variant.size_id && variant.color_id) {
           await connection.execute(
-            `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override)
-             VALUES (?, ?, ?, ?, ?)`,
+            `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override, image_url)
+             VALUES (?, ?, ?, ?, ?, ?)`,
             [
               productId,
               variant.size_id,
               variant.color_id,
               variant.stock || 0,
               variant.price_override || null,
+              variant.image_url || null,
             ],
           );
         }
