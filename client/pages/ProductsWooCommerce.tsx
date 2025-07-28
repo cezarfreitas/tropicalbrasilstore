@@ -1125,7 +1125,8 @@ export default function ProductsWooCommerce() {
             </div>
           )}
 
-          <Table>
+          <div className="rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+            <Table>
             <TableHeader>
               <TableRow className="hover:bg-muted/50">
                 <TableHead className="w-12 p-3">
@@ -1272,7 +1273,8 @@ export default function ProductsWooCommerce() {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+            </Table>
+          </div>
 
           {products.length === 0 && (
             <div className="text-center py-8">
