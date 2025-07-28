@@ -446,7 +446,8 @@ router.get("/products/:id", async (req, res) => {
         uniqueColors.push({
           id: variant.color_id,
           name: variant.color_name,
-          hex_code: variant.hex_code
+          hex_code: variant.hex_code,
+          image_url: variant.image_url
         });
       }
     }
