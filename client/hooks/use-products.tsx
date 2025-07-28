@@ -98,7 +98,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
     }
 
     setIsRequestInProgress(true);
-    const cacheKey = `products-${page}-${productsPerPage}-${searchTerm}`;
+    const cacheKey = `products-v3-${page}-${productsPerPage}-${searchTerm}`; // v3 to force cache invalidation
 
     // Check cache first
     const cached = globalCache.get(cacheKey);
