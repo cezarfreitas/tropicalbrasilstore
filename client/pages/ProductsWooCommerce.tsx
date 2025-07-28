@@ -274,6 +274,15 @@ export default function ProductsWooCommerce() {
       const response = await fetch(`/api/products-woocommerce/${product.id}`);
       if (response.ok) {
         const fullProduct = await response.json();
+
+        // Ensure all variants have grade_ids initialized
+        if (fullProduct.color_variants) {
+          fullProduct.color_variants = fullProduct.color_variants.map((variant: ColorVariant) => ({
+            ...variant,
+            grade_ids: variant.grade_ids || [], // Initialize if undefined
+          }));
+        }
+
         setEditingProduct(fullProduct);
         setFormData(fullProduct);
         setDialogOpen(true);
