@@ -465,7 +465,7 @@ export default function ProductDetail() {
           </div>
 
           {/* Product Information */}
-          <div className="space-y-4">
+          <div className="lg:col-span-3 space-y-6">
             {/* Product Header */}
             <div className="space-y-4">
               {/* Title and Actions */}
