@@ -587,52 +587,41 @@ export default function ProductDetail() {
                                   canAdd ? setSelectedGrade(grade.id) : null
                                 }
                                 disabled={!canAdd}
-                                className={`w-full p-6 border-2 rounded-xl text-left transition-all duration-200 ${
+                                className={`w-full p-3 border-2 rounded-lg text-left transition-all duration-200 ${
                                   !canAdd
                                     ? "border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
                                     : selectedGrade === grade.id
-                                      ? "border-primary bg-primary/5 shadow-lg"
-                                      : "border-gray-200 hover:border-gray-300 hover:shadow-md"
+                                      ? "border-primary bg-primary/10"
+                                      : "border-gray-200 hover:border-gray-300"
                                 }`}
                               >
-                                <div className="space-y-3">
+                                <div className="space-y-2">
                                   <div className="flex justify-between items-start">
-                                    <div>
-                                      <div className="font-semibold text-lg text-gray-900">
+                                    <div className="flex-1">
+                                      <div className="font-semibold text-sm text-gray-900">
                                         {grade.name}
                                       </div>
-                                      {grade.description && (
-                                        <div className="text-sm text-gray-600 mt-1">
-                                          {grade.description}
-                                        </div>
-                                      )}
+                                      <div className="text-xs text-primary font-medium">
+                                        {grade.total_quantity} peças
+                                      </div>
                                     </div>
                                     {product.base_price && (
-                                      <div className="text-right">
-                                        <PriceDisplay
-                                          price={product.base_price * grade.total_quantity}
-                                          variant="default"
-                                          className="text-primary text-lg font-bold"
-                                          onLoginClick={() => setShowLoginModal(true)}
-                                        />
-                                      </div>
+                                      <PriceDisplay
+                                        price={product.base_price * grade.total_quantity}
+                                        variant="small"
+                                        className="text-primary"
+                                        onLoginClick={() => setShowLoginModal(true)}
+                                      />
                                     )}
                                   </div>
 
-                                  <div className="bg-gray-50 rounded-lg p-3">
-                                    <div className="text-sm text-gray-600 mb-2">
-                                      <span className="font-medium text-primary">
-                                        {grade.total_quantity} peças total:
+                                  <div className="flex flex-wrap gap-1">
+                                    {sortedTemplates.map((template, index) => (
+                                      <span key={`${template.size_id}-${index}`} className="inline-flex items-center gap-1 bg-gray-100 px-1.5 py-0.5 rounded text-xs">
+                                        <span className="font-medium">{template.size}</span>
+                                        <span className="text-gray-500">({template.required_quantity})</span>
                                       </span>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                      {sortedTemplates.map((template, index) => (
-                                        <span key={`${template.size_id}-${index}`} className="inline-flex items-center gap-1 bg-white px-2 py-1 rounded-md text-xs border">
-                                          <span className="font-medium">{template.size}</span>
-                                          <span className="text-gray-500">({template.required_quantity})</span>
-                                        </span>
-                                      ))}
-                                    </div>
+                                    ))}
                                   </div>
                                 </div>
                               </button>
