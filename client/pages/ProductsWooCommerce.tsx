@@ -167,8 +167,8 @@ export default function ProductsWooCommerce() {
       });
 
       if (searchTerm) params.append("search", searchTerm);
-      if (selectedCategory) params.append("category", selectedCategory);
-      if (selectedStatus) params.append("status", selectedStatus);
+      if (selectedCategory && selectedCategory !== "all") params.append("category", selectedCategory);
+      if (selectedStatus && selectedStatus !== "all") params.append("status", selectedStatus);
 
       const response = await fetch(`/api/products-woocommerce?${params}`);
       if (response.ok) {
