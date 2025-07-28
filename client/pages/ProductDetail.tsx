@@ -461,23 +461,23 @@ export default function ProductDetail() {
           </div>
 
           {/* Product Information */}
-          <div className="space-y-8">
+          <div className="space-y-4">
             {/* Product Header */}
-            <div className="space-y-6">
+            <div className="space-y-3">
               {/* Title and Actions */}
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h1 className="text-3xl font-bold text-gray-900 mb-3 leading-tight">
+                  <h1 className="text-3xl font-bold text-gray-900 mb-1.5 leading-tight">
                     {product.name}
                   </h1>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="h-10 w-10 p-0">
+                <div className="flex items-center gap-1">
+                  <Button variant="outline" size="sm" className="h-8 w-8 p-0">
                     <Heart className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="sm" className="h-10 w-10 p-0">
+                  <Button variant="outline" size="sm" className="h-8 w-8 p-0">
                     <Share2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -485,10 +485,10 @@ export default function ProductDetail() {
 
               {/* Price Section */}
               {product.base_price && (
-                <div className="bg-gray-50 rounded-xl p-6">
+                <div className="bg-gray-50 rounded-xl p-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-sm text-gray-600 mb-2">
+                      <div className="text-sm text-gray-600 mb-1">
                         Preço Unitário
                       </div>
                       <PriceDisplay
@@ -500,7 +500,7 @@ export default function ProductDetail() {
                     </div>
                     {product.suggested_price && typeof product.suggested_price === 'number' && product.suggested_price > product.base_price && (
                       <div className="text-right">
-                        <div className="text-sm text-gray-600 mb-2">Você Economiza</div>
+                        <div className="text-sm text-gray-600 mb-1">Você Economiza</div>
                         <div className="text-xl font-bold text-green-600">
                           R$ {formatPrice(product.suggested_price - product.base_price)}
                         </div>
