@@ -598,10 +598,6 @@ export default function ProductDetail() {
                                   <span className="text-primary font-medium">
                                     R$ {formatPrice(product.base_price * grade.total_quantity)}
                                   </span>
-                                  <span className="text-gray-600 mx-1">-</span>
-                                  <span className="text-gray-600">
-                                    {formatPrice(product.base_price)} cada
-                                  </span>
                                 </>
                               )}
                             </div>
