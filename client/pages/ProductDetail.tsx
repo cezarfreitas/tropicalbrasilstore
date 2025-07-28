@@ -431,33 +431,35 @@ export default function ProductDetail() {
 
         <div className="grid lg:grid-cols-5 gap-8">
           {/* Product Image Section */}
-          <div>
-            <div className="relative bg-gray-50 rounded-xl overflow-hidden max-w-md mx-auto">
-              <div className="aspect-square relative">
-                <ProductImage
-                  src={selectedVariantImage || product.photo}
-                  alt={product.name}
-                  className="w-full h-full object-contain transition-all duration-300"
-                  priority={true}
-                />
+          <div className="lg:col-span-2">
+            <div className="sticky top-4">
+              <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+                <div className="aspect-square relative p-4">
+                  <ProductImage
+                    src={selectedVariantImage || product.photo}
+                    alt={product.name}
+                    className="w-full h-full object-contain transition-all duration-300 drop-shadow-sm"
+                    priority={true}
+                  />
 
-                {/* Category Badge */}
-                {product.category_name && (
-                  <Badge
-                    variant="secondary"
-                    className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm border border-gray-200 text-xs"
-                  >
-                    {product.category_name}
-                  </Badge>
-                )}
+                  {/* Category Badge */}
+                  {product.category_name && (
+                    <Badge
+                      variant="secondary"
+                      className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm border border-white/50 text-xs font-medium shadow-sm"
+                    >
+                      {product.category_name}
+                    </Badge>
+                  )}
 
-                {/* Image indicator */}
-                {selectedVariantImage && (
-                  <div className="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-1 rounded-full text-xs flex items-center gap-1">
-                    <ImageIcon className="h-3 w-3" />
-                    Variante
-                  </div>
-                )}
+                  {/* Image indicator */}
+                  {selectedVariantImage && (
+                    <div className="absolute bottom-4 right-4 bg-black/80 text-white px-3 py-1.5 rounded-full text-xs flex items-center gap-1.5 backdrop-blur-sm">
+                      <ImageIcon className="h-3 w-3" />
+                      Variante
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
