@@ -1127,21 +1127,21 @@ export default function ProductsWooCommerce() {
 
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">
+              <TableRow className="hover:bg-muted/50">
+                <TableHead className="w-12 p-3">
                   <Checkbox
                     checked={selectedProducts.length === products.length && products.length > 0}
                     onCheckedChange={toggleSelectAll}
                     aria-label="Selecionar todos"
                   />
                 </TableHead>
-                <TableHead>Produto</TableHead>
-                <TableHead>Categoria</TableHead>
-                <TableHead>Variantes</TableHead>
-                <TableHead>Grades</TableHead>
-                <TableHead>Estoque Total</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
+                <TableHead className="min-w-[280px] p-3 font-semibold">Produto</TableHead>
+                <TableHead className="w-[120px] p-3 font-semibold text-center">Categoria</TableHead>
+                <TableHead className="w-[140px] p-3 font-semibold text-center">Variantes</TableHead>
+                <TableHead className="w-[100px] p-3 font-semibold text-center">Grades</TableHead>
+                <TableHead className="w-[100px] p-3 font-semibold text-center">Estoque</TableHead>
+                <TableHead className="w-[80px] p-3 font-semibold text-center">Status</TableHead>
+                <TableHead className="w-[100px] p-3 font-semibold text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
