@@ -293,11 +293,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             <div className="flex items-center gap-6">
               <Link to="/loja" className="flex items-center gap-4">
                 <LogoDisplay
-                  size="w-12 h-12"
+                  size="w-10 h-10 lg:w-12 lg:h-12"
                   className="flex-shrink-0"
                 />
                 <div className="flex flex-col">
-                  <span className="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  <span className="text-base lg:text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                     {storeSettings?.store_name || getGlobalStoreSettings()?.store_name || "Chinelos"}
                   </span>
                   <span className="text-xs text-muted-foreground">
