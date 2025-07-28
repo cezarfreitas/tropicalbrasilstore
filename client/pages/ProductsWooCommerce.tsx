@@ -1276,17 +1276,24 @@ export default function ProductsWooCommerce() {
             </Table>
           </div>
 
-          {products.length === 0 && (
-            <div className="text-center py-8">
-              <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
-              <h3 className="mt-4 text-lg font-semibold">Nenhum produto encontrado</h3>
-              <p className="mt-2 text-muted-foreground">
-                Comece criando seu primeiro produto WooCommerce.
-              </p>
-              <Button onClick={handleNewProduct} className="mt-4">
-                <Plus className="mr-2 h-4 w-4" />
-                Criar Produto
-              </Button>
+          {products.length === 0 && !loading && (
+            <div className="text-center py-12 px-6 bg-gray-50 rounded-lg border border-gray-200 border-dashed">
+              <div className="max-w-sm mx-auto">
+                <Package className="mx-auto h-16 w-16 text-muted-foreground/40" />
+                <h3 className="mt-6 text-lg font-semibold text-gray-900">Nenhum produto encontrado</h3>
+                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                  {searchTerm || selectedCategory || selectedStatus
+                    ? "Nenhum produto corresponde aos filtros aplicados. Tente ajustar os critérios de busca."
+                    : "Comece criando seu primeiro produto com variantes de cores e grades personalizadas."
+                  }
+                </p>
+                {!searchTerm && !selectedCategory && !selectedStatus && (
+                  <Button onClick={handleNewProduct} className="mt-6 px-6">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Criar Primeiro Produto
+                  </Button>
+                )}
+              </div>
             </div>
           )}
 
