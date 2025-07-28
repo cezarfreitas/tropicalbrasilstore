@@ -682,6 +682,52 @@ export default function ProductDetail() {
               </div>
             )}
 
+            {/* Cart Summary */}
+            {totalItems > 0 && (
+              <div className="border-t pt-4 mt-4">
+                <h3 className="text-sm font-medium text-gray-900 mb-3">
+                  Resumo do Carrinho ({totalItems} {totalItems === 1 ? 'item' : 'itens'})
+                </h3>
+                <div className="space-y-2 max-h-32 overflow-y-auto">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex justify-between items-start text-xs bg-gray-50 p-2 rounded">
+                      <div className="flex-1">
+                        <span className="font-medium text-gray-900">{item.productName}</span>
+                        {item.colorName && (
+                          <span className="text-gray-600 ml-1">• {item.colorName}</span>
+                        )}
+                        {item.gradeName && (
+                          <span className="text-gray-600 ml-1">• {item.gradeName}</span>
+                        )}
+                        {item.sizeName && (
+                          <span className="text-gray-600 ml-1">• {item.sizeName}</span>
+                        )}
+                        <div className="text-gray-500 mt-1">
+                          Qtd: {item.quantity} • R$ {(item.unitPrice || 0).toFixed(2).replace('.', ',')} cada
+                        </div>
+                      </div>
+                      <div className="text-primary font-medium text-right">
+                        R$ {(item.totalPrice || 0).toFixed(2).replace('.', ',')}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="border-t pt-2 mt-3 flex justify-between items-center">
+                  <span className="font-medium text-gray-900">Total:</span>
+                  <span className="font-bold text-primary text-lg">
+                    R$ {(totalPrice || 0).toFixed(2).replace('.', ',')}
+                  </span>
+                </div>
+                <Button
+                  onClick={() => navigate('/loja/carrinho')}
+                  className="w-full mt-3 bg-green-600 hover:bg-green-700 text-white"
+                  size="sm"
+                >
+                  Finalizar Compra
+                </Button>
+              </div>
+            )}
+
             {/* Product Description at bottom */}
             {product.description && (
               <div className="border-t pt-4 mt-4">
