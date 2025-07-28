@@ -99,6 +99,8 @@ interface WooCommerceProduct {
   variant_count?: number;
   total_stock?: number;
   available_colors?: string;
+  color_data?: string;
+  grade_count?: number;
 }
 
 interface Category {
