@@ -1218,12 +1218,9 @@ export default function ProductsWooCommerce() {
                         <div className="text-xs text-muted-foreground">
                           <span className="inline-block">SKU: {product.sku || "N/A"}</span>
                         </div>
-                        {product.suggested_price && (
+                        {product.suggested_price && !isNaN(Number(product.suggested_price)) && Number(product.suggested_price) > 0 && (
                           <div className="text-xs text-green-600 font-medium mt-1">
-                            R$ {typeof product.suggested_price === 'number'
-                              ? product.suggested_price.toFixed(2)
-                              : parseFloat(product.suggested_price).toFixed(2)
-                            }
+                            R$ {Number(product.suggested_price).toFixed(2)}
                           </div>
                         )}
                       </div>
