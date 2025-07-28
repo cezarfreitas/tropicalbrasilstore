@@ -261,10 +261,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <div className="relative">
                 <Button
                   variant="ghost"
-                  className="w-12 h-12 p-0 rounded-xl hover:bg-primary/10 hover:scale-105 transition-all duration-200 shadow-sm border border-primary/20 bg-white/50"
+                  className="w-12 h-12 p-0 rounded-xl hover:bg-white/20 hover:scale-105 transition-all duration-200 shadow-sm border border-white/30 bg-white/10"
                   onClick={() => setCartOpen(true)}
                 >
-                  <ShoppingCart className="h-6 w-6 text-primary" />
+                  <ShoppingCart className="h-6 w-6 text-white" />
                 </Button>
                 {totalItems > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 text-white animate-pulse border-2 border-white shadow-lg">
