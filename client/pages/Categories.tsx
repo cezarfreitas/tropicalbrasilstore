@@ -280,6 +280,7 @@ export default function Categories() {
                 <TableRow>
                   <TableHead>Nome</TableHead>
                   <TableHead>Descrição</TableHead>
+                  <TableHead>Menu</TableHead>
                   <TableHead>Criado em</TableHead>
                   <TableHead className="w-[100px]">Ações</TableHead>
                 </TableRow>
