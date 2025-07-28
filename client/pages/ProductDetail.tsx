@@ -644,7 +644,7 @@ export default function ProductDetail() {
                                           onLoginClick={() => setShowLoginModal(true)}
                                         />
                                         <div className="text-xs text-gray-600 mt-0.5">
-                                          R$ {(typeof product.base_price === 'number' ? product.base_price : 0).toFixed(2)} cada
+                                          R$ {formatPrice(product.base_price)} cada
                                         </div>
                                       </div>
                                     )}
