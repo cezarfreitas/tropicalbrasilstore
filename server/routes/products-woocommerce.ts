@@ -13,6 +13,7 @@ interface ColorVariant {
   image_url?: string;
   stock_total: number;
   active: boolean;
+  grade_ids: number[];
   size_stocks: SizeStock[];
 }
 
