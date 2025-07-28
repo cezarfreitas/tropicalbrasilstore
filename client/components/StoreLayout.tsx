@@ -186,7 +186,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       {/* Desktop Sidebar */}
       <aside className={`hidden lg:flex flex-col bg-card border-r border-primary/10 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'}`}>
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-primary/10">
+        <div className="border-b border-primary/10">
           <Link to="/loja" className="flex items-center justify-center" aria-label="Ir para página inicial">
             <LogoDisplay
               size="w-40 h-40"
