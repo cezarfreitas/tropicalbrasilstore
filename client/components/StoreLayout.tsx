@@ -196,20 +196,22 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           </Link>
         </div>
 
-        {/* User and Cart Actions */}
-        <div className="p-3 border-b border-primary/10 flex gap-4">
-          {/* User Menu */}
-          <div className="flex-1 flex flex-col items-center gap-1">
-            {isAuthenticated ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="justify-center h-5 p-0 hover:bg-transparent"
-                  >
-                    <User className="h-10 w-10 flex-shrink-0" />
-                  </Button>
-                </DropdownMenuTrigger>
+        {/* Quick Actions */}
+        <div className="px-4 py-6 border-b border-primary/10 bg-gradient-to-b from-transparent to-primary/5">
+          <div className="grid grid-cols-3 gap-4">
+            {/* User Menu */}
+            <div className="flex flex-col items-center gap-3">
+              <div className="relative">
+                {isAuthenticated ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="w-12 h-12 p-0 rounded-xl hover:bg-primary/10 hover:scale-105 transition-all duration-200 shadow-sm border border-primary/20 bg-white/50"
+                      >
+                        <User className="h-6 w-6 text-primary" />
+                      </Button>
+                    </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuLabel>
                     <div className="flex flex-col space-y-1">
@@ -239,51 +241,53 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
-              <Button
-                variant="ghost"
-                className="justify-center h-5 p-0 hover:bg-transparent"
-                onClick={() => setLoginModalOpen(true)}
-              >
-                <LogIn className="h-10 w-10 flex-shrink-0" />
-              </Button>
-            )}
-            <span className="text-xs text-muted-foreground">
-              {isAuthenticated ? "Perfil" : "Entrar"}
-            </span>
-          </div>
-
-          {/* Cart */}
-          <div className="flex-1 flex flex-col items-center gap-2">
-            <div className="relative">
-              <Button
-                variant="ghost"
-                className="justify-center h-auto p-2 hover:bg-primary/5 rounded-lg"
-                onClick={() => setCartOpen(true)}
-              >
-                <ShoppingCart className="h-8 w-8 text-primary flex-shrink-0" />
-              </Button>
-              {totalItems > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 text-white animate-pulse border-2 border-white">
-                  {totalItems}
-                </Badge>
-              )}
+                ) : (
+                  <Button
+                    variant="ghost"
+                    className="w-12 h-12 p-0 rounded-xl hover:bg-primary/10 hover:scale-105 transition-all duration-200 shadow-sm border border-primary/20 bg-white/50"
+                    onClick={() => setLoginModalOpen(true)}
+                  >
+                    <LogIn className="h-6 w-6 text-primary" />
+                  </Button>
+                )}
+              </div>
+              <span className="text-xs text-muted-foreground font-medium">
+                {isAuthenticated ? "Perfil" : "Entrar"}
+              </span>
             </div>
-            <span className="text-xs text-muted-foreground font-medium">Carrinho</span>
-          </div>
 
-          {/* Search */}
-          <div className="flex-1 flex flex-col items-center gap-2">
-            <div className="relative">
-              <Button
-                variant="ghost"
-                className="justify-center h-auto p-2 hover:bg-primary/5 rounded-lg"
-                onClick={() => setSearchModalOpen(true)}
-              >
-                <Search className="h-8 w-8 text-primary flex-shrink-0" />
-              </Button>
+            {/* Cart */}
+            <div className="flex flex-col items-center gap-3">
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  className="w-12 h-12 p-0 rounded-xl hover:bg-primary/10 hover:scale-105 transition-all duration-200 shadow-sm border border-primary/20 bg-white/50"
+                  onClick={() => setCartOpen(true)}
+                >
+                  <ShoppingCart className="h-6 w-6 text-primary" />
+                </Button>
+                {totalItems > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 text-white animate-pulse border-2 border-white shadow-lg">
+                    {totalItems}
+                  </Badge>
+                )}
+              </div>
+              <span className="text-xs text-muted-foreground font-medium">Carrinho</span>
             </div>
-            <span className="text-xs text-muted-foreground font-medium">Buscar</span>
+
+            {/* Search */}
+            <div className="flex flex-col items-center gap-3">
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  className="w-12 h-12 p-0 rounded-xl hover:bg-primary/10 hover:scale-105 transition-all duration-200 shadow-sm border border-primary/20 bg-white/50"
+                  onClick={() => setSearchModalOpen(true)}
+                >
+                  <Search className="h-6 w-6 text-primary" />
+                </Button>
+              </div>
+              <span className="text-xs text-muted-foreground font-medium">Buscar</span>
+            </div>
           </div>
         </div>
 
