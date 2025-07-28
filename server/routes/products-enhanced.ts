@@ -9,6 +9,7 @@ interface ProductVariant {
   color_id: number;
   stock: number;
   price_override?: number;
+  image_url?: string;
 }
 
 interface CreateProductRequest {
