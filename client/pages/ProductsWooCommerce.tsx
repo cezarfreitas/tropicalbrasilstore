@@ -56,6 +56,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ProductImage } from "@/components/ProductImage";
+import { CompactImageUpload } from "@/components/CompactImageUpload";
 
 interface SizeStock {
   size_id: number;
