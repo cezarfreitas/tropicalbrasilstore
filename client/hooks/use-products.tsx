@@ -139,7 +139,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
 
       let response;
       try {
-        response = await fetch(endpoint, {
+        response = await customFetch(endpoint, {
           method: 'GET',
           signal: controller.signal,
           mode: 'cors',
