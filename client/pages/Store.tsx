@@ -279,11 +279,20 @@ function Store() {
                                           className="w-7 h-7 rounded border border-slate-300 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                                           title={`${color.name}`}
                                         >
-                                          <ProductImage
-                                            src={color.image_url || product.photo || ""}
-                                            alt={`${product.name} - ${color.name}`}
-                                            className="w-full h-full object-cover hover:scale-105 transition-transform"
-                                          />
+                                          {color.image_url ? (
+                                            <ProductImage
+                                              src={color.image_url}
+                                              alt={`${product.name} - ${color.name}`}
+                                              className="w-full h-full object-cover hover:scale-105 transition-transform"
+                                            />
+                                          ) : (
+                                            <div
+                                              className="w-full h-full flex items-center justify-center text-xs font-medium text-white"
+                                              style={{ backgroundColor: color.hex_code }}
+                                            >
+                                              {color.name?.charAt(0)}
+                                            </div>
+                                          )}
                                         </div>
                                       ))}
                                     {product.available_colors.length > 5 && (
