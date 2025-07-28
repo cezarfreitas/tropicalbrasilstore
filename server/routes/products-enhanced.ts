@@ -151,12 +151,13 @@ router.get("/:id", async (req, res) => {
 
     // Get product variants
     const [variantRows] = await db.execute(
-      `SELECT 
+      `SELECT
         pv.id,
         pv.size_id,
         pv.color_id,
         pv.stock,
         pv.price_override,
+        pv.image_url,
         s.size,
         s.display_order,
         c.name as color_name,
