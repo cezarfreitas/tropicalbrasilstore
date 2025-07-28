@@ -580,7 +580,14 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           <div className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-right duration-300">
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/10 to-secondary/10">
-              <h2 className="text-lg font-semibold text-primary">Carrinho</h2>
+              <div>
+                <h2 className="text-lg font-semibold text-primary">Carrinho</h2>
+                {totalItems > 0 && (
+                  <p className="text-xs text-gray-600 mt-1">
+                    {totalItems} {totalItems === 1 ? 'peça' : 'peças'} • {items.length} {items.length === 1 ? 'item' : 'itens'}
+                  </p>
+                )}
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -720,7 +727,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   </div>
 
                   <div className="text-[10px] sm:text-xs text-gray-500 text-center">
-                    <p>• Compras por grades (kits)</p>
+                    <p>��� Compras por grades (kits)</p>
                     <p>• Confirmação via WhatsApp</p>
                   </div>
                 </div>
