@@ -215,6 +215,18 @@ export default function Categories() {
                     rows={3}
                   />
                 </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="show_in_menu"
+                    checked={formData.show_in_menu}
+                    onCheckedChange={(checked) =>
+                      setFormData({ ...formData, show_in_menu: checked as boolean })
+                    }
+                  />
+                  <Label htmlFor="show_in_menu" className="text-sm font-normal">
+                    Mostrar no menu da loja
+                  </Label>
+                </div>
               </div>
               <DialogFooter>
                 <Button
