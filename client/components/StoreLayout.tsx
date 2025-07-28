@@ -185,7 +185,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col bg-card border-r border-primary/10 shadow-sm w-64 min-h-screen">
+      <aside className="hidden lg:flex flex-col bg-gradient-to-b from-white to-primary/5 border-r border-primary/10 shadow-lg w-64 min-h-screen backdrop-blur-sm">
         {/* Sidebar Header */}
         <div className="border-b border-primary/10 bg-gradient-to-b from-primary/5 to-transparent">
           <Link to="/loja" className="flex items-center justify-center py-6" aria-label="Ir para página inicial">
