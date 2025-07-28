@@ -35,6 +35,9 @@ function Store() {
   // Login modal
   const [showLoginModal, setShowLoginModal] = useState(false);
 
+  // Track selected variant image for each product
+  const [selectedVariantImages, setSelectedVariantImages] = useState<Record<number, string>>({});
+
   // Handlers
   const handleProductClick = (productId: number) => {
     setSelectedProductId(productId);
