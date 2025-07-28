@@ -280,10 +280,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <div className="relative">
                 <Button
                   variant="ghost"
-                  className="w-12 h-12 p-0 rounded-xl hover:bg-primary/10 hover:scale-105 transition-all duration-200 shadow-sm border border-primary/20 bg-white/50"
+                  className="w-12 h-12 p-0 rounded-xl hover:bg-white/20 hover:scale-105 transition-all duration-200 shadow-sm border border-white/30 bg-white/10"
                   onClick={() => setSearchModalOpen(true)}
                 >
-                  <Search className="h-6 w-6 text-primary" />
+                  <Search className="h-6 w-6 text-white" />
                 </Button>
               </div>
               <span className="text-xs text-muted-foreground font-medium">Buscar</span>
