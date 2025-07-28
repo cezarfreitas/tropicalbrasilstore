@@ -256,6 +256,17 @@ router.post("/", async (req, res) => {
               );
             }
           }
+
+          // Associate grades with this product-color combination
+          if (variant.grade_ids && variant.grade_ids.length > 0) {
+            for (const gradeId of variant.grade_ids) {
+              await connection.execute(
+                `INSERT IGNORE INTO product_color_grades (product_id, color_id, grade_id)
+                 VALUES (?, ?, ?)`,
+                [productId, variant.color_id, gradeId],
+              );
+            }
+          }
         }
       }
     }
