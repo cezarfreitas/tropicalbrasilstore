@@ -429,37 +429,39 @@ export default function ProductDetail() {
           </Button>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-8">
+        <div className="grid lg:grid-cols-2 gap-12">
           {/* Product Image Section */}
-          <div className="lg:col-span-2">
+          <div>
             <div className="sticky top-4">
-              <div className="aspect-square relative">
-                <ProductImage
-                  src={selectedVariantImage || product.photo}
-                  alt={product.name}
-                  className="w-full h-full object-contain"
-                  priority={true}
-                />
+              <div className="bg-gray-50 rounded-2xl p-8">
+                <div className="aspect-square relative">
+                  <ProductImage
+                    src={selectedVariantImage || product.photo}
+                    alt={product.name}
+                    className="w-full h-full object-contain"
+                    priority={true}
+                  />
 
-                {/* Category Badge */}
-                {product.category_name && (
-                  <span className="absolute top-0 left-0 text-xs text-gray-500">
-                    {product.category_name}
-                  </span>
-                )}
+                  {/* Category Badge */}
+                  {product.category_name && (
+                    <div className="absolute top-4 left-4 bg-white px-3 py-1 rounded-full text-xs font-medium text-gray-700 shadow-sm">
+                      {product.category_name}
+                    </div>
+                  )}
 
-                {/* Image indicator */}
-                {selectedVariantImage && (
-                  <span className="absolute bottom-0 right-0 text-xs text-gray-500">
-                    Variante
-                  </span>
-                )}
+                  {/* Image indicator */}
+                  {selectedVariantImage && (
+                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-xs">
+                      Variante
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Product Information */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="space-y-8">
             {/* Product Header */}
             <div className="space-y-4">
               {/* Title and Actions */}
