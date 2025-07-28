@@ -78,16 +78,18 @@ router.get("/", async (req, res) => {
 
     // Get products with color variant summary
     const query = `
-      SELECT 
+      SELECT
         p.*,
         c.name as category_name,
         COUNT(DISTINCT pcv.id) as variant_count,
         SUM(pcv.stock_total) as total_stock,
+        COUNT(DISTINCT pcg.grade_id) as grade_count,
         GROUP_CONCAT(DISTINCT co.name ORDER BY co.name) as available_colors
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
       LEFT JOIN product_color_variants pcv ON p.id = pcv.product_id
       LEFT JOIN colors co ON pcv.color_id = co.id
+      LEFT JOIN product_color_grades pcg ON p.id = pcg.product_id
       ${whereClause}
       GROUP BY p.id, c.name
       ORDER BY p.created_at DESC
