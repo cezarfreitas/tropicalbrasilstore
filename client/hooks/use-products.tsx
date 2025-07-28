@@ -48,6 +48,14 @@ const customFetch = async (url: string, options?: RequestInit): Promise<Response
 
     xhr.open(method, url);
 
+    // Handle credentials
+    if (options?.credentials === 'include') {
+      xhr.withCredentials = true;
+    } else if (options?.credentials === 'same-origin') {
+      // Same-origin is the default for XMLHttpRequest
+      xhr.withCredentials = true;
+    }
+
     // Set headers
     if (options?.headers) {
       const headers = options.headers as Record<string, string>;
