@@ -47,17 +47,16 @@ router.get("/:id", async (req, res) => {
 
     const grade = grades[0];
 
-    // Get items for this grade
-    const [itemRows] = await db.execute(
-      `SELECT gi.*, p.name as product_name, s.size, c.name as color_name, c.hex_code
-       FROM grade_items gi
-       LEFT JOIN products p ON gi.product_id = p.id
-       LEFT JOIN sizes s ON gi.size_id = s.id
-       LEFT JOIN colors c ON gi.color_id = c.id
-       WHERE gi.grade_id = ?`,
+    // Get templates for this grade
+    const [templateRows] = await db.execute(
+      `SELECT gt.*, s.size
+       FROM grade_templates gt
+       LEFT JOIN sizes s ON gt.size_id = s.id
+       WHERE gt.grade_id = ?
+       ORDER BY s.display_order`,
       [grade.id],
     );
-    grade.items = itemRows as any[];
+    grade.templates = templateRows as any[];
 
     res.json(grade);
   } catch (error) {
