@@ -306,16 +306,13 @@ function Store() {
                       {/* Pricing */}
                       {product.base_price && (
                         <div className="bg-gray-50 rounded-lg p-1.5 sm:p-2">
-                          <div className="space-y-0.5">
-                            <div className="text-lg sm:text-xl lg:text-2xl font-bold text-primary">
-                              R$ {Number(product.base_price).toFixed(2).replace('.', ',')}
-                            </div>
-                            {product.suggested_price && (
-                              <div className="text-xs sm:text-sm text-gray-500">
-                                Sugerido: R$ {Number(product.suggested_price).toFixed(2).replace('.', ',')}
-                              </div>
-                            )}
-                          </div>
+                          <PriceDisplay
+                            price={product.base_price}
+                            suggestedPrice={product.suggested_price}
+                            variant="default"
+                            className="[&>div:first-child]:text-lg [&>div:first-child]:sm:text-xl [&>div:first-child]:lg:text-2xl"
+                            onLoginClick={() => setShowLoginModal(true)}
+                          />
                         </div>
                       )}
 
