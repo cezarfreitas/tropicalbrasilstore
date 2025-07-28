@@ -689,17 +689,22 @@ export default function ProductsWooCommerce() {
                     <div className="text-center py-8 border-2 border-dashed rounded-lg">
                       <Package className="mx-auto h-8 w-8 text-muted-foreground/50" />
                       <p className="mt-2 text-sm text-muted-foreground">
-                        Nenhuma variante de cor configurada
+                        {!formData.size_group_id
+                          ? "Selecione um grupo de tamanhos na aba 'Informações Básicas' primeiro"
+                          : "Nenhuma variante de cor configurada"
+                        }
                       </p>
-                      <Button
-                        type="button"
-                        onClick={addColorVariant}
-                        className="mt-4"
-                        variant="outline"
-                      >
-                        <Plus className="mr-2 h-4 w-4" />
-                        Adicionar Primeira Cor
-                      </Button>
+                      {formData.size_group_id && (
+                        <Button
+                          type="button"
+                          onClick={addColorVariant}
+                          className="mt-4"
+                          variant="outline"
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          Adicionar Primeira Cor
+                        </Button>
+                      )}
                     </div>
                   ) : (
                     <div className="space-y-6">
