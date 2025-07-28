@@ -15,6 +15,7 @@ import { CustomerAuthProvider } from "./hooks/use-customer-auth";
 import { ThemeLoader } from "./components/ThemeLoader";
 import Dashboard from "./pages/Dashboard";
 import ProductsEnhanced from "./pages/ProductsEnhanced";
+import ProductsWooCommerce from "./pages/ProductsWooCommerce";
 import Categories from "./pages/Categories";
 import Sizes from "./pages/Sizes";
 import Colors from "./pages/Colors";
