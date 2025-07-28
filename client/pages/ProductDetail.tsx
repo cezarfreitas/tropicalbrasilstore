@@ -563,33 +563,37 @@ export default function ProductDetail() {
                                 : "border-gray-200 hover:border-gray-300"
                             }`}
                           >
-                            {/* Variant Image or Color Circle */}
-                            {color.image_url ? (
-                              <div className="w-8 h-8 rounded overflow-hidden border border-gray-200 bg-white">
-                                <ProductImage
-                                  src={color.image_url}
-                                  alt={`${product.name} - ${color.name}`}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                            ) : (
-                              <div
-                                className="w-8 h-8 rounded border border-gray-200 flex items-center justify-center text-xs font-medium text-white"
-                                style={{ backgroundColor: color.hex_code || "#999" }}
-                              >
-                                {color.name?.charAt(0).toUpperCase()}
-                              </div>
-                            )}
+                            <div className="flex flex-col items-center gap-2">
+                              {/* Variant Image or Color Circle */}
+                              {color.image_url ? (
+                                <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 bg-white shadow-sm">
+                                  <ProductImage
+                                    src={color.image_url}
+                                    alt={`${product.name} - ${color.name}`}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              ) : (
+                                <div
+                                  className="w-12 h-12 rounded-lg border border-gray-200 flex items-center justify-center text-sm font-medium text-white shadow-sm"
+                                  style={{ backgroundColor: color.hex_code || "#999" }}
+                                >
+                                  {color.name?.charAt(0).toUpperCase()}
+                                </div>
+                              )}
 
-                            {/* Color Name */}
-                            <span className="text-sm font-medium text-gray-900 pr-1">
-                              {color.name}
-                            </span>
+                              {/* Color Name */}
+                              <span className="text-xs font-medium text-gray-900 text-center leading-tight">
+                                {color.name}
+                              </span>
 
-                            {/* Selection indicator */}
-                            {selectedColor === color.id && (
-                              <div className="w-2 h-2 bg-primary rounded-full" />
-                            )}
+                              {/* Selection indicator */}
+                              {selectedColor === color.id && (
+                                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-white flex items-center justify-center">
+                                  <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                                </div>
+                              )}
+                            </div>
                           </button>
                         ))}
                       </div>
