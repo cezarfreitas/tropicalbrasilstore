@@ -183,7 +183,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   }, [categoriesOpen, cartOpen]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex">
       {/* Header */}
       <header className="border-b bg-background/95 backdrop-blur-sm sticky top-0 z-40 border-primary/10 shadow-sm">
         <div className="container mx-auto px-4">
