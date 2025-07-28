@@ -416,13 +416,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 )}
               </Button>
 
-              {/* Admin Link */}
-              <Link
-                to="/admin"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                Admin
-              </Link>
+
             </div>
           </div>
         </div>
