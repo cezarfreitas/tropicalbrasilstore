@@ -503,7 +503,7 @@ export default function ProductDetail() {
 
   return (
     <StoreLayout>
-      <div className="container mx-auto px-2 py-2">
+      <div className="w-full px-4 lg:px-6 py-3 lg:py-4">
         {/* Breadcrumb */}
         <div className="mb-2">
           <Button
