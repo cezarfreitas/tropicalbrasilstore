@@ -680,46 +680,46 @@ export default function ProductDetail() {
                   )}
                 </div>
 
-                {/* Quantity & Add to Cart Section */}
+                {/* Add to Cart Section */}
                 {canAddToCart() && (
-                  <>
-                    <Separator />
-                    <div className="space-y-6">
-                      <div className="flex items-center justify-between">
-                        <span className="text-lg font-medium text-gray-700">Quantidade</span>
-                        <div className="flex items-center gap-4">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                            className="h-10 w-10 p-0"
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
-                          <span className="w-10 text-center text-lg font-medium">
-                            {quantity}
-                          </span>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setQuantity(quantity + 1)}
-                            className="h-10 w-10 p-0"
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
+                  <Card className="border border-primary/20 bg-primary/5 sticky bottom-4">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-gray-700">Qtd:</span>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Minus className="h-3 w-3" />
+                            </Button>
+                            <span className="w-8 text-center text-sm font-medium">
+                              {quantity}
+                            </span>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setQuantity(quantity + 1)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Plus className="h-3 w-3" />
+                            </Button>
+                          </div>
                         </div>
-                      </div>
 
-                      <Button
-                        onClick={addToCart}
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-14 text-lg font-medium"
-                        size="lg"
-                      >
-                        <ShoppingCart className="mr-3 h-5 w-5" />
-                        Adicionar ao Carrinho
-                      </Button>
-                    </div>
-                  </>
+                        <Button
+                          onClick={addToCart}
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground h-10 flex-1 max-w-48"
+                        >
+                          <ShoppingCart className="mr-2 h-4 w-4" />
+                          Adicionar
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
                 )}
               </>
             )}
