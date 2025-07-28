@@ -451,13 +451,66 @@ export default function Settings() {
                 />
               </div>
               <div>
-                <Label htmlFor="logo_url">URL do Logo</Label>
-                <Input
-                  id="logo_url"
-                  value={settings.logo_url || ""}
-                  onChange={(e) => updateSettings("logo_url", e.target.value)}
-                  placeholder="https://exemplo.com/logo.png"
-                />
+                <Label htmlFor="logo_url">Logo da Loja</Label>
+                <div className="space-y-3">
+                  {/* Current logo preview */}
+                  {settings.logo_url && (
+                    <div className="flex items-center space-x-3 p-3 border rounded-lg bg-muted/50">
+                      <img
+                        src={settings.logo_url}
+                        alt="Logo atual"
+                        className="h-12 w-12 object-contain rounded"
+                        onError={(e) => {
+                          e.currentTarget.src = "/placeholder.svg";
+                        }}
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">Logo atual</p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {settings.logo_url}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Logo upload */}
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleLogoUpload}
+                        style={{ display: "none" }}
+                        id="logo-upload"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => document.getElementById("logo-upload")?.click()}
+                        className="w-full"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload de Logo
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Formatos aceitos: JPG, PNG, GIF. Tamanho máximo: 5MB
+                    </p>
+                  </div>
+
+                  {/* Manual URL input */}
+                  <div className="space-y-2">
+                    <Label htmlFor="logo_url_manual" className="text-sm">
+                      Ou insira URL manualmente:
+                    </Label>
+                    <Input
+                      id="logo_url_manual"
+                      value={settings.logo_url || ""}
+                      onChange={(e) => updateSettings("logo_url", e.target.value)}
+                      placeholder="https://exemplo.com/logo.png"
+                    />
+                  </div>
+                </div>
               </div>
               <div>
                 <Label htmlFor="banner_url">URL do Banner</Label>
