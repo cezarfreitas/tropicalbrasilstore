@@ -144,10 +144,10 @@ router.get("/:id", async (req, res) => {
       [req.params.id],
     );
 
-    // Get size stocks for each variant
+    // Get size stocks and grades for each variant
     for (const variant of variantRows as any[]) {
       const [sizeStocks] = await db.execute(
-        `SELECT 
+        `SELECT
           pvs.*,
           s.size,
           s.display_order
@@ -158,6 +158,14 @@ router.get("/:id", async (req, res) => {
         [variant.id],
       );
       variant.size_stocks = sizeStocks;
+
+      // Get grades for this product-color combination
+      const [gradeRows] = await db.execute(
+        `SELECT grade_id FROM product_color_grades
+         WHERE product_id = ? AND color_id = ?`,
+        [req.params.id, variant.color_id],
+      );
+      variant.grade_ids = (gradeRows as any[]).map(row => row.grade_id);
     }
 
     product.color_variants = variantRows;
