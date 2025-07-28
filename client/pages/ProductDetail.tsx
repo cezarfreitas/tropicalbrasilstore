@@ -584,68 +584,27 @@ export default function ProductDetail() {
                                 : "border-gray-200 bg-white hover:border-gray-300"
                           }`}
                         >
-                          {/* Grade Header */}
                           <div
                             className="p-2 cursor-pointer"
                             onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
                           >
-                            <div className="flex justify-between items-center">
-                              <div>
-                                <h4 className="font-semibold text-gray-900">
-                                  {grade.name}
-                                </h4>
-                                <span className="text-sm text-primary font-medium">
-                                  {grade.total_quantity} peças total
-                                </span>
-                              </div>
-
+                            <div className="text-sm">
+                              <span className="font-medium text-gray-900">{grade.name}</span>
+                              <span className="text-gray-600 mx-1">•</span>
+                              <span className="text-gray-900">{grade.total_quantity} peças total</span>
                               {product.base_price && (
-                                <div className="text-right">
-                                  <PriceDisplay
-                                    price={product.base_price * grade.total_quantity}
-                                    variant="default"
-                                    className="text-primary font-bold"
-                                  />
-                                  <div className="text-xs text-gray-500">
-                                    R$ {formatPrice(product.base_price)} cada
-                                  </div>
-                                </div>
+                                <>
+                                  <span className="text-gray-600 mx-1">•</span>
+                                  <span className="text-primary font-medium">
+                                    R$ {formatPrice(product.base_price * grade.total_quantity)}
+                                  </span>
+                                  <span className="text-gray-600 mx-1">-</span>
+                                  <span className="text-gray-600">
+                                    {formatPrice(product.base_price)} cada
+                                  </span>
+                                </>
                               )}
                             </div>
-                          </div>
-
-                          {/* Table */}
-                          <div className="border-t border-gray-200">
-                            <table className="w-full text-sm">
-                              <tbody>
-                                <tr className="hover:bg-gray-50">
-                                  <td className="p-2 font-medium text-gray-700 bg-gray-50 w-20">
-                                    Tamanho
-                                  </td>
-                                  {sortedTemplates.map((template, index) => (
-                                    <td
-                                      key={`size-${template.size_id}-${index}`}
-                                      className="p-2 text-center text-gray-900 font-medium"
-                                    >
-                                      {template.size}
-                                    </td>
-                                  ))}
-                                </tr>
-                                <tr className="border-t border-gray-100 hover:bg-gray-50">
-                                  <td className="p-2 font-medium text-gray-700 bg-gray-50">
-                                    Quantidade
-                                  </td>
-                                  {sortedTemplates.map((template, index) => (
-                                    <td
-                                      key={`qty-${template.size_id}-${index}`}
-                                      className="p-2 text-center text-gray-900 font-medium"
-                                    >
-                                      {template.required_quantity}
-                                    </td>
-                                  ))}
-                                </tr>
-                              </tbody>
-                            </table>
                           </div>
                         </div>
                       );
