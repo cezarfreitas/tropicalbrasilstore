@@ -65,15 +65,15 @@ router.post("/", async (req, res) => {
 // Update category
 router.put("/:id", async (req, res) => {
   try {
-    const { name, description }: CreateCategoryRequest = req.body;
+    const { name, description, show_in_menu }: CreateCategoryRequest = req.body;
 
     if (!name) {
       return res.status(400).json({ error: "Name is required" });
     }
 
     await db.execute(
-      "UPDATE categories SET name = ?, description = ? WHERE id = ?",
-      [name, description || null, req.params.id],
+      "UPDATE categories SET name = ?, description = ?, show_in_menu = ? WHERE id = ?",
+      [name, description || null, show_in_menu ?? true, req.params.id],
     );
 
     const [rows] = await db.execute("SELECT * FROM categories WHERE id = ?", [
