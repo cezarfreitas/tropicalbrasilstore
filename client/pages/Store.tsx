@@ -202,7 +202,7 @@ function Store() {
                       <ProductImage
                         src={selectedVariantImages[product.id] || product.photo}
                         alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
                         priority={index < 8} // Priority loading for first 8 products
                         loading={index < 8 ? "eager" : "lazy"}
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
