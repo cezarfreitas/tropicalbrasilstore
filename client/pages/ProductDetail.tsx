@@ -157,8 +157,29 @@ export default function ProductDetail() {
   useEffect(() => {
     if (id) {
       fetchProduct();
+      fetchSuggestedProducts();
     }
   }, [id]);
+
+  const fetchSuggestedProducts = async () => {
+    if (!id) return;
+
+    setLoadingSuggestions(true);
+    try {
+      const response = await fetch('/api/store/products-paginated?page=1&limit=5');
+      if (response.ok) {
+        const data = await response.json();
+        // Filter out the current product and get random 5 products
+        const filtered = data.products.filter((p: any) => p.id !== parseInt(id));
+        const shuffled = filtered.sort(() => 0.5 - Math.random());
+        setSuggestedProducts(shuffled.slice(0, 5));
+      }
+    } catch (error) {
+      console.error("Error fetching suggested products:", error);
+    } finally {
+      setLoadingSuggestions(false);
+    }
+  };
 
   const fetchProduct = async (retryCount: number = 0) => {
     if (!id) return;
