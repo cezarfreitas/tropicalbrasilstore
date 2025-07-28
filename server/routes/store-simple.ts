@@ -241,15 +241,18 @@ router.get("/products-paginated", async (req, res) => {
         }
       }
 
-      // Get available colors from product_color_grades table
+      // Get available colors from product_color_grades table with variant images
       const [colorRows] = await db.execute(
         `SELECT DISTINCT
           co.id,
           co.name,
-          co.hex_code
+          co.hex_code,
+          pv.image_url
         FROM product_color_grades pcg
         LEFT JOIN colors co ON pcg.color_id = co.id
+        LEFT JOIN product_variants pv ON pv.product_id = pcg.product_id AND pv.color_id = co.id
         WHERE pcg.product_id = ? AND co.id IS NOT NULL
+        GROUP BY co.id, co.name, co.hex_code
         LIMIT 5`,
         [product.id],
       );
