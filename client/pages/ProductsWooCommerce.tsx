@@ -115,6 +115,15 @@ interface Size {
   display_order: number;
 }
 
+interface SizeGroup {
+  id: number;
+  name: string;
+  description: string;
+  icon: string;
+  sizes: string[];
+  active: number;
+}
+
 export default function ProductsWooCommerce() {
   const [products, setProducts] = useState<WooCommerceProduct[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
