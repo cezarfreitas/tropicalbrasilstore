@@ -35,15 +35,15 @@ router.get("/:id", async (req, res) => {
 // Create new category
 router.post("/", async (req, res) => {
   try {
-    const { name, description }: CreateCategoryRequest = req.body;
+    const { name, description, show_in_menu }: CreateCategoryRequest = req.body;
 
     if (!name) {
       return res.status(400).json({ error: "Name is required" });
     }
 
     const [result] = await db.execute(
-      "INSERT INTO categories (name, description) VALUES (?, ?)",
-      [name, description || null],
+      "INSERT INTO categories (name, description, show_in_menu) VALUES (?, ?, ?)",
+      [name, description || null, show_in_menu ?? true],
     );
 
     const insertResult = result as any;
