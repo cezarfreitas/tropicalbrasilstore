@@ -196,7 +196,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         </div>
 
         {/* User and Cart Actions */}
-        <div className="p-2 border-b border-primary/10 flex gap-1">
+        <div className="p-3 border-b border-primary/10 flex gap-4">
           {/* User Menu */}
           <div className="flex-1 flex flex-col items-center gap-1">
             {isAuthenticated ? (
