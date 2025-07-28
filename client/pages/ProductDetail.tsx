@@ -433,12 +433,12 @@ export default function ProductDetail() {
           {/* Product Image Section */}
           <div className="lg:col-span-2">
             <div className="sticky top-4">
-              <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-                <div className="aspect-square relative p-4">
+              <div className="relative bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+                <div className="aspect-square relative p-2">
                   <ProductImage
                     src={selectedVariantImage || product.photo}
                     alt={product.name}
-                    className="w-full h-full object-contain transition-all duration-300 drop-shadow-sm"
+                    className="w-full h-full object-contain"
                     priority={true}
                   />
 
@@ -446,7 +446,7 @@ export default function ProductDetail() {
                   {product.category_name && (
                     <Badge
                       variant="secondary"
-                      className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm border border-white/50 text-xs font-medium shadow-sm"
+                      className="absolute top-2 left-2 bg-white border border-gray-200 text-xs"
                     >
                       {product.category_name}
                     </Badge>
@@ -454,8 +454,7 @@ export default function ProductDetail() {
 
                   {/* Image indicator */}
                   {selectedVariantImage && (
-                    <div className="absolute bottom-4 right-4 bg-black/80 text-white px-3 py-1.5 rounded-full text-xs flex items-center gap-1.5 backdrop-blur-sm">
-                      <ImageIcon className="h-3 w-3" />
+                    <div className="absolute bottom-2 right-2 bg-black text-white px-2 py-1 rounded text-xs">
                       Variante
                     </div>
                   )}
