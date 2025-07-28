@@ -18,6 +18,9 @@ function Store() {
   // Authentication
   const { isAuthenticated, isApproved } = useCustomerAuth();
 
+  // Navigation
+  const navigate = useNavigate();
+
   // URL params for search
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get("busca") || "";
@@ -25,12 +28,6 @@ function Store() {
   // Products with optimized hook
   const productsPerPage = 20;
   const { products, pagination, loading, error, fetchProducts, currentPage } = useProducts(productsPerPage);
-
-  // Modal
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(
-    null,
-  );
-  const [showProductModal, setShowProductModal] = useState(false);
 
   // Login modal
   const [showLoginModal, setShowLoginModal] = useState(false);
