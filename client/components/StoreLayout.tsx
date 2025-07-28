@@ -73,11 +73,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   // Logo component that shows only custom logo with immediate global loading
   const LogoDisplay = ({
     size = "h-6 w-6",
-    maxHeight = "max-h-12",
     className = ""
   }: {
     size?: string;
-    maxHeight?: string;
     className?: string;
   }) => {
     // Try to get logo from current settings or global settings immediately
@@ -85,14 +83,15 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
     if (logoUrl) {
       return (
-        <div className={`${size} ${maxHeight} flex items-center justify-center ${className}`}>
+        <div className={`logo-container ${size} ${className}`}>
           <img
             src={logoUrl}
             alt="Logo da Loja"
-            className={`max-w-full max-h-full object-contain`}
+            className="transition-opacity duration-200 hover:opacity-90"
             onError={(e) => {
               e.currentTarget.style.display = 'none';
             }}
+            loading="eager"
           />
         </div>
       );
