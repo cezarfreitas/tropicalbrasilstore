@@ -163,7 +163,6 @@
     object-fit: contain;
     object-position: center;
     transition: transform 0.2s ease-in-out;
-    margin: 5px;
   }
 
   .logo-container:hover img {
