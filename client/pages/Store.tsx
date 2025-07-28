@@ -203,7 +203,7 @@ function Store() {
                     Nenhum produto encontrado
                   </h3>
                   <p className="text-yellow-700 text-sm mb-4">
-                    Não encontramos produtos com o termo "{searchTerm}".
+                    N��o encontramos produtos com o termo "{searchTerm}".
                   </p>
                   <p className="text-yellow-600 text-xs mb-4">
                     Tente buscar por outras palavras como "chinelo", "adidas", "nike", etc.
@@ -280,7 +280,7 @@ function Store() {
                                       />
                                     ) : (
                                       <div
-                                        className="w-full h-full flex items-center justify-center text-[8px] font-bold text-white rounded-lg"
+                                        className="w-full h-full flex items-center justify-center text-[6px] sm:text-[7px] lg:text-[8px] font-bold text-white rounded-lg"
                                         style={{
                                           backgroundColor: getColorValue(color)
                                         }}
