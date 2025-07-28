@@ -185,13 +185,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Desktop Sidebar */}
-      <aside className={`hidden lg:flex flex-col bg-card border-r border-primary/10 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'}`}>
+      <aside className="hidden lg:flex flex-col bg-card border-r border-primary/10 shadow-sm w-64 min-h-screen">
         {/* Sidebar Header */}
-        <div className="border-b border-primary/10">
-          <Link to="/loja" className="flex items-center justify-center" aria-label="Ir para página inicial">
+        <div className="border-b border-primary/10 bg-gradient-to-b from-primary/5 to-transparent">
+          <Link to="/loja" className="flex items-center justify-center py-6" aria-label="Ir para página inicial">
             <LogoDisplay
-              size="w-40 h-40"
-              className="flex-shrink-0"
+              size="w-24 h-24"
+              className="flex-shrink-0 transition-transform hover:scale-105"
             />
           </Link>
         </div>
