@@ -560,12 +560,12 @@ export default function ProductDetail() {
 
             {/* Grades or Sizes Section */}
             {selectedColor && (
-              <div className="space-y-4">
+              <div className="space-y-2">
                 <h3 className="text-lg font-semibold text-gray-900">
                   {hasGrades() ? "Selecione a Grade" : "Selecione o Tamanho"}
                 </h3>
 
-                <div className="space-y-3">
+                <div className="space-y-1.5">
                   {hasGrades() ? (
                     getAvailableGradesForColor().map((grade) => {
                       const canAdd = canAddGradeToCart(grade);
@@ -578,7 +578,7 @@ export default function ProductDetail() {
                           key={grade.id}
                           onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
                           disabled={!canAdd}
-                          className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
+                          className={`w-full p-2 rounded-lg border-2 text-left transition-all ${
                             !canAdd
                               ? "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed"
                               : selectedGrade === grade.id
@@ -586,9 +586,9 @@ export default function ProductDetail() {
                                 : "border-gray-200 bg-white hover:border-gray-300"
                           }`}
                         >
-                          <div className="flex justify-between items-start mb-3">
+                          <div className="flex justify-between items-start mb-1.5">
                             <div className="flex-1">
-                              <h4 className="font-semibold text-gray-900 mb-1">
+                              <h4 className="font-semibold text-gray-900 mb-0.5">
                                 {grade.name}
                               </h4>
                               <span className="text-sm text-primary font-medium">
@@ -610,11 +610,11 @@ export default function ProductDetail() {
                             )}
                           </div>
 
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-1">
                             {sortedTemplates.map((template, index) => (
                               <span
                                 key={`${template.size_id}-${index}`}
-                                className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm"
+                                className="inline-block bg-gray-100 text-gray-700 px-1 py-0.5 rounded text-sm"
                               >
                                 {template.size} ({template.required_quantity})
                               </span>
@@ -624,12 +624,12 @@ export default function ProductDetail() {
                       );
                     })
                   ) : (
-                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5">
                       {getAvailableSizes().map((size) => (
                         <button
                           key={size.id}
                           onClick={() => setSelectedSize(size.id)}
-                          className={`p-3 rounded-lg border-2 text-center transition-all ${
+                          className={`p-1.5 rounded-lg border-2 text-center transition-all ${
                             selectedSize === size.id
                               ? "border-primary bg-primary/5"
                               : "border-gray-200 bg-white hover:border-gray-300"
@@ -638,7 +638,7 @@ export default function ProductDetail() {
                           <div className="font-semibold text-gray-900">
                             {size.name}
                           </div>
-                          <div className="text-xs text-gray-500 mt-1">
+                          <div className="text-xs text-gray-500 mt-0.5">
                             {size.stock} disponível
                           </div>
                         </button>
