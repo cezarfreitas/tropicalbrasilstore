@@ -619,8 +619,8 @@ export default function ProductDetail() {
                             <table className="w-full text-sm">
                               <thead>
                                 <tr className="bg-gray-50">
-                                  <th className="text-left p-2 font-medium text-gray-700">Tamanho</th>
                                   <th className="text-center p-2 font-medium text-gray-700">Quantidade</th>
+                                  <th className="text-left p-2 font-medium text-gray-700">Tamanho</th>
                                   <th className="text-right p-2 font-medium text-gray-700">Subtotal</th>
                                 </tr>
                               </thead>
@@ -630,11 +630,11 @@ export default function ProductDetail() {
                                     key={`${template.size_id}-${index}`}
                                     className="border-t border-gray-100 hover:bg-gray-50"
                                   >
-                                    <td className="p-2 font-medium text-gray-900">
-                                      {template.size}
-                                    </td>
                                     <td className="p-2 text-center text-gray-700">
                                       {template.required_quantity}
+                                    </td>
+                                    <td className="p-2 font-medium text-gray-900">
+                                      {template.size}
                                     </td>
                                     <td className="p-2 text-right text-gray-700">
                                       {product.base_price && (
