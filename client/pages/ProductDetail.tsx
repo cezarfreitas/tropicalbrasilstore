@@ -900,14 +900,13 @@ export default function ProductDetail() {
                       {/* Pricing */}
                       {suggestedProduct.base_price && (
                         <div className="bg-gray-50 rounded-lg p-1.5">
-                          <div className="text-lg font-bold text-primary">
-                            R$ {Number(suggestedProduct.base_price).toFixed(2).replace('.', ',')}
-                          </div>
-                          {suggestedProduct.suggested_price && (
-                            <div className="text-xs text-gray-500">
-                              Sugerido: R$ {Number(suggestedProduct.suggested_price).toFixed(2).replace('.', ',')}
-                            </div>
-                          )}
+                          <PriceDisplay
+                            price={suggestedProduct.base_price}
+                            suggestedPrice={suggestedProduct.suggested_price}
+                            variant="default"
+                            className="[&>div:first-child]:text-lg"
+                            onLoginClick={() => setShowLoginModal(true)}
+                          />
                         </div>
                       )}
                     </div>
