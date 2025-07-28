@@ -315,23 +315,28 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           </div>
         </nav>
 
-        {/* Search and Theme */}
-        <div className="p-4 border-t border-primary/10 space-y-2">
+        {/* Footer Section */}
+        <div className="p-4 border-t border-primary/10 bg-gradient-to-t from-primary/5 to-transparent space-y-4">
           {/* Search */}
-          <form onSubmit={handleSearch} className="relative mb-4">
-            <Input
-              type="text"
-              placeholder="Buscar produtos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-10 pl-10 pr-4 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
-              aria-label="Campo de busca de produtos"
-            />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-          </form>
+          <div>
+            <h4 className="px-1 mb-3 text-xs font-semibold text-muted-foreground/80 uppercase tracking-wider">
+              Busca Rápida
+            </h4>
+            <form onSubmit={handleSearch} className="relative">
+              <Input
+                type="text"
+                placeholder="Digite aqui..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full h-11 pl-10 pr-4 rounded-xl border-primary/20 focus:border-primary/40 focus:ring-primary/20 bg-white/50 backdrop-blur-sm shadow-sm"
+                aria-label="Campo de busca de produtos"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary/60 pointer-events-none" />
+            </form>
+          </div>
 
-          {/* Theme Indicator - Desktop */}
-          <div className="pt-2">
+          {/* Theme Indicator */}
+          <div className="pt-2 border-t border-primary/10">
             <ThemeIndicator />
           </div>
         </div>
