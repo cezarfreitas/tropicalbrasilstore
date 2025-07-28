@@ -40,45 +40,67 @@ interface UseProductsResult {
 const globalCache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-// Custom fetch to avoid FullStory conflicts
+// Custom fetch using XMLHttpRequest to completely avoid FullStory conflicts
 const customFetch = async (url: string, options?: RequestInit): Promise<Response> => {
-  try {
-    // Use native fetch directly to bypass any interceptors
-    const nativeFetch = window.fetch.bind(window);
-    return await nativeFetch(url, options);
-  } catch (error) {
-    // If native fetch fails, try with XMLHttpRequest as fallback
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      const method = options?.method || 'GET';
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const method = options?.method || 'GET';
 
-      xhr.open(method, url);
+    xhr.open(method, url);
 
-      // Set headers
-      if (options?.headers) {
-        const headers = options.headers as Record<string, string>;
-        Object.entries(headers).forEach(([key, value]) => {
-          xhr.setRequestHeader(key, value);
+    // Set headers
+    if (options?.headers) {
+      const headers = options.headers as Record<string, string>;
+      Object.entries(headers).forEach(([key, value]) => {
+        xhr.setRequestHeader(key, value);
+      });
+    }
+
+    // Handle abort signal
+    if (options?.signal) {
+      options.signal.addEventListener('abort', () => {
+        xhr.abort();
+        reject(new Error('Request aborted'));
+      });
+    }
+
+    xhr.onload = () => {
+      // Parse response headers
+      const responseHeaders: Record<string, string> = {};
+      const headerText = xhr.getAllResponseHeaders();
+      if (headerText) {
+        headerText.split('\r\n').forEach((line) => {
+          const parts = line.split(': ');
+          if (parts.length === 2) {
+            responseHeaders[parts[0].toLowerCase()] = parts[1];
+          }
         });
       }
 
-      xhr.onload = () => {
-        const response = new Response(xhr.responseText, {
-          status: xhr.status,
-          statusText: xhr.statusText,
-          headers: new Headers(xhr.getAllResponseHeaders().split('\r\n').reduce((acc, line) => {
-            const [key, value] = line.split(': ');
-            if (key && value) acc[key] = value;
-            return acc;
-          }, {} as Record<string, string>))
-        });
-        resolve(response);
-      };
+      const response = new Response(xhr.responseText, {
+        status: xhr.status,
+        statusText: xhr.statusText,
+        headers: new Headers(responseHeaders)
+      });
 
-      xhr.onerror = () => reject(new Error('Network request failed'));
-      xhr.send(options?.body);
-    });
-  }
+      resolve(response);
+    };
+
+    xhr.onerror = () => {
+      reject(new Error('Network request failed'));
+    };
+
+    xhr.ontimeout = () => {
+      reject(new Error('Request timeout'));
+    };
+
+    // Set timeout if needed
+    if (options?.signal) {
+      xhr.timeout = 15000; // 15 second timeout
+    }
+
+    xhr.send(options?.body || null);
+  });
 };
 
 export function useProducts(productsPerPage: number = 20): UseProductsResult {
