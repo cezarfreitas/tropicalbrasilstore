@@ -80,6 +80,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: productsPerPage.toString(),
+        _t: Date.now().toString(), // Cache busting
       });
 
       if (searchTerm.trim()) {
