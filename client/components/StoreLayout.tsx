@@ -63,6 +63,14 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   useEffect(() => {
     const urlSearchTerm = searchParams.get("busca") || "";
     setSearchTerm(urlSearchTerm);
+
+    // Sync color filter with URL params
+    const colorParam = searchParams.get("cor");
+    if (colorParam) {
+      setSelectedColorFilter(parseInt(colorParam));
+    } else {
+      setSelectedColorFilter(null);
+    }
   }, [searchParams]);
 
   // Search functionality - memoized
