@@ -544,11 +544,7 @@ export default function ProductDetail() {
                           <button
                             key={color.id}
                             onClick={() => handleColorSelect(color.id, color.image_url)}
-                            className={`relative group p-2 border-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
-                              selectedColor === color.id
-                                ? "border-primary bg-primary/10"
-                                : "border-gray-200 hover:border-gray-300"
-                            }`}
+                            className="flex items-center gap-2 p-2 hover:opacity-75 transition-opacity"
                           >
                             {/* Variant Image or Color Circle */}
                             {color.image_url ? (
