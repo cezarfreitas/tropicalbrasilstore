@@ -243,11 +243,11 @@ function Store() {
                         <div className="bg-gray-50 rounded-lg p-4">
                           <div className="space-y-1">
                             <div className="text-2xl font-bold text-primary">
-                              R$ {product.base_price.toFixed(2).replace('.', ',')}
+                              R$ {Number(product.base_price).toFixed(2).replace('.', ',')}
                             </div>
                             {product.suggested_price && (
                               <div className="text-sm text-gray-500">
-                                Sugerido: R$ {product.suggested_price.toFixed(2).replace('.', ',')}
+                                Sugerido: R$ {Number(product.suggested_price).toFixed(2).replace('.', ',')}
                               </div>
                             )}
                           </div>
