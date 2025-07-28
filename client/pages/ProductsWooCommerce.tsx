@@ -1098,7 +1098,14 @@ export default function ProductsWooCommerce() {
             </TableHeader>
             <TableBody>
               {products.map((product) => (
-                <TableRow key={product.id}>
+                <TableRow key={product.id} className={selectedProducts.includes(product.id!) ? "bg-blue-50" : ""}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedProducts.includes(product.id!)}
+                      onCheckedChange={() => toggleProductSelection(product.id!)}
+                      aria-label={`Selecionar ${product.name}`}
+                    />
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded border overflow-hidden">
