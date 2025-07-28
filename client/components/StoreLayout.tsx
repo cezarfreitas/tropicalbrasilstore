@@ -41,8 +41,7 @@ interface StoreLayoutProps {
 }
 
 export function StoreLayout({ children }: StoreLayoutProps) {
-  const { items, totalItems, updateQuantity, removeItem, totalPrice } =
-    useCart();
+  const { items, totalItems, updateQuantity, removeItem, totalPrice } = useCart();
   const { isAuthenticated, isApproved, customer, logout } = useCustomerAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -73,15 +72,15 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   // Memoized navigation links
   const navigationLinks = useMemo(() => [
-    { to: "/loja", label: "Todos" },
-    { to: "/loja?categoria=havaianas", label: "Havaianas" },
-    { to: "/loja?categoria=adidas", label: "Adidas" },
-    { to: "/loja?categoria=nike", label: "Nike" },
-    { to: "/loja?categoria=feminino", label: "Feminino" }
+    { to: "/loja", label: "Todos", icon: Package },
+    { to: "/loja?categoria=havaianas", label: "Havaianas", icon: Package },
+    { to: "/loja?categoria=adidas", label: "Adidas", icon: Package },
+    { to: "/loja?categoria=nike", label: "Nike", icon: Package },
+    { to: "/loja?categoria=feminino", label: "Feminino", icon: Package }
   ], []);
 
   // Memoized cart aria label
-  const cartAriaLabel = useMemo(() =>
+  const cartAriaLabel = useMemo(() => 
     `Carrinho com ${totalItems} ${totalItems === 1 ? 'item' : 'itens'}`,
     [totalItems]
   );
@@ -184,263 +183,292 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Header */}
-      <header className="border-b bg-background/95 backdrop-blur-sm sticky top-0 z-40 border-primary/10 shadow-sm">
-        <div className="container mx-auto px-4">
-          {/* Mobile Layout */}
-          <div className="flex sm:hidden items-center justify-between py-2">
-            {/* Mobile Hamburger Menu */}
+      {/* Desktop Sidebar */}
+      <aside className={`hidden lg:flex flex-col bg-card border-r border-primary/10 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'}`}>
+        {/* Sidebar Header */}
+        <div className="p-4 border-b border-primary/10">
+          <div className="flex items-center justify-between">
+            <Link to="/loja" className="flex items-center" aria-label="Ir para página inicial">
+              <LogoDisplay
+                size={sidebarOpen ? "w-10 h-10" : "w-8 h-8"}
+                className="flex-shrink-0"
+              />
+              {sidebarOpen && (
+                <span className="ml-3 text-lg font-semibold text-primary">Loja</span>
+              )}
+            </Link>
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setCategoriesOpen(true)}
-              className="h-10 w-10 p-0 hover:bg-primary/5"
-              aria-label="Abrir menu de categorias"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="h-8 w-8 p-0"
+              aria-label={sidebarOpen ? "Recolher sidebar" : "Expandir sidebar"}
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-4 w-4" />
             </Button>
-
-            {/* Mobile Logo */}
-            <Link to="/loja" className="flex items-center" aria-label="Ir para página inicial">
-              <LogoDisplay
-                size="w-10 h-10"
-                className="flex-shrink-0"
-              />
-            </Link>
-
-            {/* Mobile Actions */}
-            <div className="flex items-center gap-1">
-              {/* Authentication Status */}
-              {isAuthenticated ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-10 w-10 p-0" aria-label="Menu do usuário">
-                      <User className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuLabel>
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          {customer?.name || "Cliente"}
-                        </p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                          {customer?.whatsapp}
-                        </p>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-xs">
-                      <div className="flex items-center gap-2">
-                        <div
-                          className={`w-2 h-2 rounded-full ${
-                            isApproved ? "bg-green-500" : "bg-yellow-500"
-                          }`}
-                        />
-                        {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={logout}>
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Sair
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-10 w-10 p-0"
-                  onClick={() => setLoginModalOpen(true)}
-                  aria-label="Fazer login"
-                >
-                  <LogIn className="h-4 w-4" />
-                </Button>
-              )}
-
-              {/* Cart */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCartOpen(true)}
-                className="relative h-10 w-10 p-0 border-primary/20 hover:bg-primary/5"
-                aria-label={cartAriaLabel}
-              >
-                <ShoppingCart className="h-4 w-4 text-primary" />
-                {totalItems > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center text-[10px] bg-secondary text-secondary-foreground animate-pulse">
-                    {totalItems}
-                  </Badge>
-                )}
-              </Button>
-            </div>
           </div>
+        </div>
 
-          {/* Mobile Search Bar */}
-          <div className="flex sm:hidden px-0 pb-3">
-            <form onSubmit={handleSearch} className="relative w-full">
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-2" role="navigation" aria-label="Categorias principais">
+          {navigationLinks.map((link) => {
+            const IconComponent = link.icon;
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`flex items-center gap-3 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg p-3 transition-all duration-200 ${
+                  !sidebarOpen ? 'justify-center' : ''
+                }`}
+                title={!sidebarOpen ? link.label : undefined}
+              >
+                <IconComponent className="h-4 w-4 flex-shrink-0" />
+                {sidebarOpen && <span>{link.label}</span>}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Sidebar Actions */}
+        <div className="p-4 border-t border-primary/10 space-y-2">
+          {/* Search */}
+          {sidebarOpen && (
+            <form onSubmit={handleSearch} className="relative mb-4">
               <Input
                 type="text"
                 placeholder="Buscar produtos..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-10 pl-10 pr-14 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
+                className="w-full h-10 pl-10 pr-4 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
                 aria-label="Campo de busca de produtos"
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-              <Button
-                type="submit"
-                size="sm"
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 px-2 text-xs"
-                aria-label="Buscar"
-              >
-                <Search className="h-3 w-3" />
-              </Button>
             </form>
-          </div>
+          )}
 
-          {/* Desktop Layout */}
-          <div className="hidden sm:flex items-center justify-between py-3">
-            <div className="flex items-center gap-8">
+          {/* User Menu */}
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={`w-full ${sidebarOpen ? 'justify-start' : 'justify-center'} h-12 p-3`}
+                  aria-label="Menu do usuário"
+                >
+                  <User className="h-4 w-4 flex-shrink-0" />
+                  {sidebarOpen && (
+                    <div className="ml-3 text-left flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">
+                        {customer?.name || "Cliente"}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {customer?.whatsapp}
+                      </p>
+                    </div>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {customer?.name || "Cliente"}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {customer?.whatsapp}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-xs">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        isApproved ? "bg-green-500" : "bg-yellow-500"
+                      }`}
+                    />
+                    {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sair
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button
+              variant="ghost"
+              className={`w-full ${sidebarOpen ? 'justify-start' : 'justify-center'} h-12 p-3`}
+              onClick={() => setLoginModalOpen(true)}
+              aria-label="Fazer login"
+            >
+              <LogIn className="h-4 w-4 flex-shrink-0" />
+              {sidebarOpen && <span className="ml-3">Entrar</span>}
+            </Button>
+          )}
+
+          {/* Cart */}
+          <Button
+            variant="outline"
+            className={`w-full ${sidebarOpen ? 'justify-start' : 'justify-center'} h-12 p-3 border-primary/20 hover:bg-primary/5 relative`}
+            onClick={() => setCartOpen(true)}
+            aria-label={cartAriaLabel}
+          >
+            <ShoppingCart className="h-4 w-4 text-primary flex-shrink-0" />
+            {sidebarOpen && <span className="ml-3">Carrinho</span>}
+            {totalItems > 0 && (
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse">
+                {totalItems}
+              </Badge>
+            )}
+          </Button>
+
+          {/* Theme Indicator - Desktop */}
+          <div className="pt-2">
+            <ThemeIndicator />
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Mobile Header */}
+        <header className="lg:hidden border-b bg-background/95 backdrop-blur-sm sticky top-0 z-40 border-primary/10 shadow-sm">
+          <div className="container mx-auto px-4">
+            {/* Mobile Layout */}
+            <div className="flex items-center justify-between py-2">
+              {/* Mobile Hamburger Menu */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCategoriesOpen(true)}
+                className="h-10 w-10 p-0 hover:bg-primary/5"
+                aria-label="Abrir menu de categorias"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+
+              {/* Mobile Logo */}
               <Link to="/loja" className="flex items-center" aria-label="Ir para página inicial">
                 <LogoDisplay
-                  size="w-14 h-14 lg:w-16 lg:h-16"
+                  size="w-10 h-10"
                   className="flex-shrink-0"
                 />
               </Link>
 
-              {/* Collections Navigation */}
-              <nav className="flex items-center gap-1" role="navigation" aria-label="Categorias principais">
-                {navigationLinks.map((link) => (
-                  <Link
-                    key={link.to}
-                    to={link.to}
-                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
+              {/* Mobile Actions */}
+              <div className="flex items-center gap-1">
+                {/* Authentication Status */}
+                {isAuthenticated ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="h-10 w-10 p-0" aria-label="Menu do usuário">
+                        <User className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuLabel>
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-medium leading-none">
+                            {customer?.name || "Cliente"}
+                          </p>
+                          <p className="text-xs leading-none text-muted-foreground">
+                            {customer?.whatsapp}
+                          </p>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="text-xs">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              isApproved ? "bg-green-500" : "bg-yellow-500"
+                            }`}
+                          />
+                          {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
+                        </div>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={logout}>
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Sair
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-10 w-10 p-0"
+                    onClick={() => setLoginModalOpen(true)}
+                    aria-label="Fazer login"
                   >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
+                    <LogIn className="h-4 w-4" />
+                  </Button>
+                )}
 
-              {/* Theme Indicator */}
-              <ThemeIndicator />
+                {/* Cart */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCartOpen(true)}
+                  className="relative h-10 w-10 p-0 border-primary/20 hover:bg-primary/5"
+                  aria-label={cartAriaLabel}
+                >
+                  <ShoppingCart className="h-4 w-4 text-primary" />
+                  {totalItems > 0 && (
+                    <Badge className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center text-[10px] bg-secondary text-secondary-foreground animate-pulse">
+                      {totalItems}
+                    </Badge>
+                  )}
+                </Button>
+              </div>
             </div>
 
-            {/* Search Bar - Desktop */}
-            <div className="flex-1 max-w-sm mx-8">
-              <form onSubmit={handleSearch} className="relative">
+            {/* Mobile Search Bar */}
+            <div className="flex pb-3">
+              <form onSubmit={handleSearch} className="relative w-full">
                 <Input
                   type="text"
                   placeholder="Buscar produtos..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full h-10 pl-10 pr-12 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
+                  className="w-full h-10 pl-10 pr-14 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
                   aria-label="Campo de busca de produtos"
                 />
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                 <Button
                   type="submit"
                   size="sm"
-                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 px-2"
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 px-2 text-xs"
                   aria-label="Buscar"
                 >
-                  <Search className="h-4 w-4" />
+                  <Search className="h-3 w-3" />
                 </Button>
               </form>
             </div>
+          </div>
+        </header>
 
-            <div className="flex items-center gap-2">
-              {/* Authentication Status */}
-              {isAuthenticated ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-10 px-3" aria-label="Menu do usuário">
-                      <User className="h-4 w-4 mr-2" />
-                      <span className="hidden lg:inline">{customer?.name || "Cliente"}</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuLabel>
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          {customer?.name || "Cliente"}
-                        </p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                          {customer?.whatsapp}
-                        </p>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-xs">
-                      <div className="flex items-center gap-2">
-                        <div
-                          className={`w-2 h-2 rounded-full ${
-                            isApproved ? "bg-green-500" : "bg-yellow-500"
-                          }`}
-                        />
-                        {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={logout}>
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Sair
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-10 px-3"
-                  onClick={() => setLoginModalOpen(true)}
-                  aria-label="Fazer login"
-                >
-                  <LogIn className="h-4 w-4 mr-2" />
-                  <span className="hidden lg:inline">Entrar</span>
-                </Button>
-              )}
+        {/* Main content */}
+        <main className="flex-1 lg:p-6">
+          {children}
+        </main>
 
-              {/* Cart */}
-              <Button
-                variant="outline"
-                size="sm"
-                className="relative h-10 px-3 border-primary/20 hover:bg-primary/5 hover:border-primary/40 transition-colors duration-200"
-                onClick={() => setCartOpen(true)}
-                aria-label={cartAriaLabel}
-              >
-                <ShoppingCart className="h-4 w-4 mr-2 text-primary" />
-                <span className="hidden lg:inline">Carrinho</span>
-                {totalItems > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse">
-                    {totalItems}
-                  </Badge>
-                )}
-              </Button>
-
-
+        {/* Footer */}
+        <footer className="border-t bg-card">
+          <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+            <div className="text-center text-xs sm:text-sm text-muted-foreground">
+              <p>&copy; 2024 Chinelos Store. Todos os direitos reservados.</p>
+              <p className="mt-1 sm:mt-2">
+                Sistema de vendas com grades obrigatórias
+              </p>
             </div>
           </div>
-        </div>
-      </header>
-
-      {/* Main content */}
-      <main className="min-h-[calc(100vh-140px)] sm:min-h-[calc(100vh-160px)]">
-        {children}
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t bg-card -mt-0.5">
-        <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
-          <div className="text-center text-xs sm:text-sm text-muted-foreground">
-            <p>&copy; 2024 Chinelos Store. Todos os direitos reservados.</p>
-            <p className="mt-1 sm:mt-2">
-              Sistema de vendas com grades obrigatórias
-            </p>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
 
       {/* Login Modal */}
       <LoginModal
@@ -451,7 +479,6 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           setRegisterModalOpen(true);
         }}
         onSuccess={() => {
-          // Optionally refresh the page or update state
           window.location.reload();
         }}
       />
@@ -471,12 +498,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 z-50 sm:hidden animate-in fade-in duration-300"
+            className="fixed inset-0 bg-black/50 z-50 lg:hidden animate-in fade-in duration-300"
             onClick={() => setCategoriesOpen(false)}
           />
 
           {/* Drawer */}
-          <div className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-left duration-300 sm:hidden">
+          <div className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-left duration-300 lg:hidden">
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/10 to-secondary/10">
               <h2 className="text-lg font-semibold text-primary">Categorias</h2>
