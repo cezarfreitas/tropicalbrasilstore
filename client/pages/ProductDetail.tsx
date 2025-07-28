@@ -458,49 +458,41 @@ export default function ProductDetail() {
 
           {/* Product Information */}
           <div className="space-y-4">
-            {/* Product Title & Price */}
-            <div className="space-y-4">
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
-                {product.name}
-              </h1>
-              
-              {product.base_price && (
-                <div className="flex items-center justify-between">
-                  <PriceDisplay
-                    price={product.base_price}
-                    suggestedPrice={product.suggested_price}
-                    variant="large"
-                    onLoginClick={() => setShowLoginModal(true)}
-                  />
-                  
-                  {/* Action buttons */}
-                  <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="sm" className="h-10 w-10 p-0">
-                      <Heart className="h-5 w-5" />
+            {/* Product Header - Compact */}
+            <div className="space-y-3">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <h1 className="text-xl lg:text-2xl font-bold text-gray-900 leading-tight">
+                    {product.name}
+                  </h1>
+                  {product.description && (
+                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                      {product.description}
+                    </p>
+                  )}
+                </div>
+
+                {/* Price & Actions */}
+                <div className="text-right flex-shrink-0">
+                  {product.base_price && (
+                    <PriceDisplay
+                      price={product.base_price}
+                      suggestedPrice={product.suggested_price}
+                      variant="default"
+                      onLoginClick={() => setShowLoginModal(true)}
+                    />
+                  )}
+                  <div className="flex items-center gap-1 mt-1">
+                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+                      <Heart className="h-3 w-3" />
                     </Button>
-                    <Button variant="ghost" size="sm" className="h-10 w-10 p-0">
-                      <Share2 className="h-5 w-5" />
+                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+                      <Share2 className="h-3 w-3" />
                     </Button>
                   </div>
                 </div>
-              )}
-
-              {/* Product Description */}
-              {product.description && (
-                <Card className="border-0 bg-gray-50">
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-3">
-                      <Info className="h-5 w-5 text-gray-500 mt-0.5 flex-shrink-0" />
-                      <p className="text-gray-700 leading-relaxed">
-                        {product.description}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+              </div>
             </div>
-
-            <Separator />
 
             {/* Authentication Check */}
             {!isAuthenticated || !isApproved ? (
