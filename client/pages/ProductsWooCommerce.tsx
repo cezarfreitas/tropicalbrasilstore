@@ -634,14 +634,13 @@ export default function ProductsWooCommerce() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="photo">URL da Foto Principal</Label>
-                    <Input
-                      id="photo"
-                      value={formData.photo}
-                      onChange={(e) =>
-                        setFormData({ ...formData, photo: e.target.value })
+                    <CompactImageUpload
+                      value={formData.photo || ""}
+                      onChange={(url) =>
+                        setFormData({ ...formData, photo: url })
                       }
-                      placeholder="https://exemplo.com/foto.jpg"
+                      label="Foto Principal"
+                      placeholder="URL da foto ou carregar arquivo"
                     />
                   </div>
                   <div className="flex items-center space-x-2">
