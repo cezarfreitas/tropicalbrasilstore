@@ -508,12 +508,7 @@ export default function ProductDetail() {
 
 
 
-                  {/* Image indicator */}
-                  {selectedVariantImage && (
-                    <div className="absolute bottom-2 right-2 bg-black/70 text-white px-1.5 py-0.5 rounded-full text-xs">
-                      Variante
-                    </div>
-                  )}
+
                 </div>
               </div>
             </div>
