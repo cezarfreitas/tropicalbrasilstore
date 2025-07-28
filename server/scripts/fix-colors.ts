@@ -82,21 +82,19 @@ async function fixColors() {
   }
 }
 
-// Run the fix if this script is executed directly
-if (require.main === module) {
-  fixColors()
-    .then(result => {
-      console.log("\n" + "=".repeat(50));
-      console.log(`✅ SUCCESS: Fixed ${result.updatedCount}/${result.totalColors} colors`);
-      console.log("=".repeat(50));
-      process.exit(0);
-    })
-    .catch(error => {
-      console.error("\n" + "=".repeat(50));
-      console.error("❌ FAILED:", error);
-      console.error("=".repeat(50));
-      process.exit(1);
-    });
-}
+// Run the fix automatically
+fixColors()
+  .then(result => {
+    console.log("\n" + "=".repeat(50));
+    console.log(`✅ SUCCESS: Fixed ${result.updatedCount}/${result.totalColors} colors`);
+    console.log("=".repeat(50));
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error("\n" + "=".repeat(50));
+    console.error("❌ FAILED:", error);
+    console.error("=".repeat(50));
+    process.exit(1);
+  });
 
 export { fixColors };
