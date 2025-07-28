@@ -264,7 +264,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 size="sm"
                 onClick={() => setCartOpen(true)}
                 className="relative h-10 w-10 p-0 border-primary/20 hover:bg-primary/5"
-                aria-label={`Carrinho com ${totalItems} ${totalItems === 1 ? 'item' : 'itens'}`}
+                aria-label={cartAriaLabel}
               >
                 <ShoppingCart className="h-4 w-4 text-primary" />
                 {totalItems > 0 && (
@@ -407,7 +407,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 size="sm"
                 className="relative h-10 px-3 border-primary/20 hover:bg-primary/5 hover:border-primary/40 transition-colors duration-200"
                 onClick={() => setCartOpen(true)}
-                aria-label={`Carrinho com ${totalItems} ${totalItems === 1 ? 'item' : 'itens'}`}
+                aria-label={cartAriaLabel}
               >
                 <ShoppingCart className="h-4 w-4 mr-2 text-primary" />
                 <span className="hidden lg:inline">Carrinho</span>
