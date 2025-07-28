@@ -130,7 +130,7 @@ export default function ProductsWooCommerce() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [colors, setColors] = useState<Color[]>([]);
   const [sizes, setSizes] = useState<Size[]>([]);
-  const [sizeGroups, setSizeGroups] = useState<SizeGroup[]>([]);
+  const [grades, setGrades] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -168,7 +168,7 @@ export default function ProductsWooCommerce() {
     fetchCategories();
     fetchColors();
     fetchSizes();
-    fetchSizeGroups();
+    fetchGrades();
   }, [currentPage, searchTerm, selectedCategory, selectedStatus]);
 
 
@@ -239,15 +239,15 @@ export default function ProductsWooCommerce() {
     }
   };
 
-  const fetchSizeGroups = async () => {
+  const fetchGrades = async () => {
     try {
-      const response = await fetch("/api/size-groups");
+      const response = await fetch("/api/grades");
       if (response.ok) {
         const data = await response.json();
-        setSizeGroups(data);
+        setGrades(data);
       }
     } catch (error) {
-      console.error("Error fetching size groups:", error);
+      console.error("Error fetching grades:", error);
     }
   };
 
