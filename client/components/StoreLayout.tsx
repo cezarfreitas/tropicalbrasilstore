@@ -351,8 +351,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           </div>
         </nav>
 
-        {/* Color Filter Section - At bottom */}
-        <div className="mt-auto px-4 py-6 border-t border-white/20">
+        {/* Color Filter Section */}
+        <div className="px-4 py-6 border-t border-white/20">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-semibold text-white/80 uppercase tracking-wider">
