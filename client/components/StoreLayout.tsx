@@ -1,4 +1,4 @@
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode, useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -169,36 +169,36 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-background/95 backdrop-blur-sm shadow-lg sticky top-0 z-40 border-primary/10">
-        <div className="container mx-auto" style={{ padding: '0px' }}>
-          {/* Mobile Layout - Centered Logo */}
-          <div className="flex sm:hidden items-center justify-center relative">
+      <header className="border-b bg-background/95 backdrop-blur-sm sticky top-0 z-40 border-primary/10 shadow-sm">
+        <div className="container mx-auto px-4">
+          {/* Mobile Layout */}
+          <div className="flex sm:hidden items-center justify-between py-2">
             {/* Mobile Hamburger Menu */}
-            <div className="absolute left-0">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setCategoriesOpen(true)}
-                className="h-9 w-9 p-0"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setCategoriesOpen(true)}
+              className="h-10 w-10 p-0 hover:bg-primary/5"
+              aria-label="Abrir menu de categorias"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
 
-            <Link to="/loja" className="flex items-center justify-center flex-1 min-w-0">
+            {/* Mobile Logo */}
+            <Link to="/loja" className="flex items-center" aria-label="Ir para página inicial">
               <LogoDisplay
-                size="w-12 h-12 sm:w-14 sm:h-14"
+                size="w-10 h-10"
                 className="flex-shrink-0"
               />
             </Link>
 
-            {/* Mobile Cart - Absolute positioned */}
-            <div className="absolute right-0 flex items-center gap-2">
+            {/* Mobile Actions */}
+            <div className="flex items-center gap-1">
               {/* Authentication Status */}
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-9">
+                    <Button variant="ghost" size="sm" className="h-10 w-10 p-0" aria-label="Menu do usuário">
                       <User className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -235,8 +235,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-9"
+                  className="h-10 w-10 p-0"
                   onClick={() => setLoginModalOpen(true)}
+                  aria-label="Fazer login"
                 >
                   <LogIn className="h-4 w-4" />
                 </Button>
@@ -247,11 +248,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 variant="outline"
                 size="sm"
                 onClick={() => setCartOpen(true)}
-                className="relative h-9 border-primary/20 hover:bg-primary/5"
+                className="relative h-10 w-10 p-0 border-primary/20 hover:bg-primary/5"
+                aria-label={`Carrinho com ${totalItems} ${totalItems === 1 ? 'item' : 'itens'}`}
               >
                 <ShoppingCart className="h-4 w-4 text-primary" />
                 {totalItems > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-3 w-3 rounded-full p-0 flex items-center justify-center text-[10px] bg-secondary text-secondary-foreground animate-pulse">
+                  <Badge className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center text-[10px] bg-secondary text-secondary-foreground animate-pulse">
                     {totalItems}
                   </Badge>
                 )}
@@ -260,65 +262,67 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           </div>
 
           {/* Mobile Search Bar */}
-          <div className="flex sm:hidden mt-3">
+          <div className="flex sm:hidden px-0 pb-3">
             <form onSubmit={handleSearch} className="relative w-full">
               <Input
                 type="text"
                 placeholder="Buscar produtos..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-9 pl-10 pr-16 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
+                className="w-full h-10 pl-10 pr-14 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
+                aria-label="Campo de busca de produtos"
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
               <Button
                 type="submit"
                 size="sm"
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 px-2 text-xs"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 px-2 text-xs"
+                aria-label="Buscar"
               >
                 <Search className="h-3 w-3" />
               </Button>
             </form>
           </div>
 
-          {/* Desktop Layout - Logo left, Collections center, Actions right */}
-          <div className="hidden sm:flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <Link to="/loja" className="flex items-center">
+          {/* Desktop Layout */}
+          <div className="hidden sm:flex items-center justify-between py-3">
+            <div className="flex items-center gap-8">
+              <Link to="/loja" className="flex items-center" aria-label="Ir para página inicial">
                 <LogoDisplay
-                  size="w-16 h-16 lg:w-20 lg:h-20"
+                  size="w-14 h-14 lg:w-16 lg:h-16"
                   className="flex-shrink-0"
                 />
               </Link>
 
               {/* Collections Navigation */}
-              <nav className="flex items-center gap-4 ml-8">
+              <nav className="flex items-center gap-1" role="navigation" aria-label="Categorias principais">
                 <Link
                   to="/loja"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-105 px-3 py-1 rounded-md hover:bg-accent/20"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
                 >
                   Todos
                 </Link>
                 <Link
                   to="/loja?categoria=havaianas"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-105 px-3 py-1 rounded-md hover:bg-accent/20"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
                 >
                   Havaianas
                 </Link>
                 <Link
                   to="/loja?categoria=adidas"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-105 px-3 py-1 rounded-md hover:bg-accent/20"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
                 >
                   Adidas
                 </Link>
                 <Link
                   to="/loja?categoria=nike"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-105 px-3 py-1 rounded-md hover:bg-accent/20"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
                 >
                   Nike
                 </Link>
                 <Link
                   to="/loja?categoria=feminino"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-105 px-3 py-1 rounded-md hover:bg-accent/20"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
                 >
                   Feminino
                 </Link>
@@ -329,34 +333,36 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             </div>
 
             {/* Search Bar - Desktop */}
-            <div className="flex-1 max-w-md mx-6">
+            <div className="flex-1 max-w-sm mx-8">
               <form onSubmit={handleSearch} className="relative">
                 <Input
                   type="text"
                   placeholder="Buscar produtos..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full h-10 pl-10 pr-4 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
+                  className="w-full h-10 pl-10 pr-12 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
+                  aria-label="Campo de busca de produtos"
                 />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                 <Button
                   type="submit"
                   size="sm"
-                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 px-3"
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 px-2"
+                  aria-label="Buscar"
                 >
-                  <Search className="h-3 w-3" />
+                  <Search className="h-4 w-4" />
                 </Button>
               </form>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {/* Authentication Status */}
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-10">
+                    <Button variant="ghost" size="sm" className="h-10 px-3" aria-label="Menu do usuário">
                       <User className="h-4 w-4 mr-2" />
-                      <span>{customer?.name || "Cliente"}</span>
+                      <span className="hidden lg:inline">{customer?.name || "Cliente"}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
@@ -392,11 +398,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-10"
+                  className="h-10 px-3"
                   onClick={() => setLoginModalOpen(true)}
+                  aria-label="Fazer login"
                 >
                   <LogIn className="h-4 w-4 mr-2" />
-                  <span>Entrar</span>
+                  <span className="hidden lg:inline">Entrar</span>
                 </Button>
               )}
 
@@ -404,13 +411,14 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="relative h-10 border-primary/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-200"
+                className="relative h-10 px-3 border-primary/20 hover:bg-primary/5 hover:border-primary/40 transition-colors duration-200"
                 onClick={() => setCartOpen(true)}
+                aria-label={`Carrinho com ${totalItems} ${totalItems === 1 ? 'item' : 'itens'}`}
               >
                 <ShoppingCart className="h-4 w-4 mr-2 text-primary" />
-                <span>Carrinho</span>
+                <span className="hidden lg:inline">Carrinho</span>
                 {totalItems > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse">
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse">
                     {totalItems}
                   </Badge>
                 )}
