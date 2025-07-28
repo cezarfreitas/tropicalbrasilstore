@@ -241,15 +241,15 @@ router.get("/products-paginated", async (req, res) => {
         }
       }
 
-      // Get available colors (only those with stock)
+      // Get available colors from product_color_grades table
       const [colorRows] = await db.execute(
         `SELECT DISTINCT
           co.id,
           co.name,
           co.hex_code
-        FROM product_variants pv
-        LEFT JOIN colors co ON pv.color_id = co.id
-        WHERE pv.product_id = ? AND co.id IS NOT NULL AND pv.stock > 0
+        FROM product_color_grades pcg
+        LEFT JOIN colors co ON pcg.color_id = co.id
+        WHERE pcg.product_id = ? AND co.id IS NOT NULL
         LIMIT 5`,
         [product.id],
       );
