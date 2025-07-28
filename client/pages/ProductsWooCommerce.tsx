@@ -599,6 +599,26 @@ export default function ProductsWooCommerce() {
                         placeholder="0.00"
                       />
                     </div>
+
+                    <div>
+                      <Label htmlFor="suggested_price">Preço Sugerido</Label>
+                      <Input
+                        id="suggested_price"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={formData.suggested_price || ""}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            suggested_price: e.target.value
+                              ? parseFloat(e.target.value)
+                              : undefined,
+                          })
+                        }
+                        placeholder="0.00"
+                      />
+                    </div>
                   </div>
                   <div>
                     <Label htmlFor="description">Descrição</Label>
