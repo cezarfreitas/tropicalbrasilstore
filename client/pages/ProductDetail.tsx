@@ -130,9 +130,9 @@ export default function ProductDetail() {
       if (response.ok) {
         const data = await response.json();
         setProduct(data);
-        // Auto-select first color if only one available
+        // Auto-select first available color variant with stock
         const colors = getAvailableColors(data);
-        if (colors.length === 1) {
+        if (colors.length > 0) {
           setSelectedColor(colors[0].id);
           // Set the initial variant image
           const firstVariant = data.variants?.find((v: ProductVariant) => v.color_id === colors[0].id);
