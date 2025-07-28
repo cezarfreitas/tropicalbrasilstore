@@ -85,19 +85,39 @@ router.get("/products", async (req, res) => {
     // For each product, get available colors
     const productsWithColors = [];
     for (const product of products as any[]) {
-      const [colorRows] = await db.execute(
+      // Check if product has WooCommerce-style color variants first
+      const [wooColorRows] = await db.execute(
         `
         SELECT DISTINCT
           co.id,
           co.name,
           co.hex_code
-        FROM product_variants pv
-        LEFT JOIN colors co ON pv.color_id = co.id
-        WHERE pv.product_id = ? AND pv.stock > 0 AND co.id IS NOT NULL
+        FROM product_color_variants pcv
+        LEFT JOIN colors co ON pcv.color_id = co.id
+        WHERE pcv.product_id = ? AND pcv.active = true AND co.id IS NOT NULL
         ORDER BY co.name
       `,
         [product.id],
       );
+
+      // Fallback to old system if no WooCommerce variants found
+      let colorRows = wooColorRows;
+      if ((wooColorRows as any[]).length === 0) {
+        const [oldColorRows] = await db.execute(
+          `
+          SELECT DISTINCT
+            co.id,
+            co.name,
+            co.hex_code
+          FROM product_variants pv
+          LEFT JOIN colors co ON pv.color_id = co.id
+          WHERE pv.product_id = ? AND pv.stock > 0 AND co.id IS NOT NULL
+          ORDER BY co.name
+        `,
+          [product.id],
+        );
+        colorRows = oldColorRows;
+      }
 
       productsWithColors.push({
         ...product,
