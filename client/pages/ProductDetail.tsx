@@ -432,8 +432,8 @@ export default function ProductDetail() {
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Product Image Section */}
           <div>
-            <div className="sticky top-4">
-              <div className="bg-gray-50 rounded-2xl p-8">
+            <div className="sticky top-2">
+              <div className="bg-gray-50 rounded-2xl p-4">
                 <div className="aspect-square relative">
                   <ProductImage
                     src={selectedVariantImage || product.photo}
@@ -444,14 +444,14 @@ export default function ProductDetail() {
 
                   {/* Category Badge */}
                   {product.category_name && (
-                    <div className="absolute top-4 left-4 bg-white px-3 py-1 rounded-full text-xs font-medium text-gray-700 shadow-sm">
+                    <div className="absolute top-2 left-2 bg-white px-1.5 py-0.5 rounded-full text-xs font-medium text-gray-700 shadow-sm">
                       {product.category_name}
                     </div>
                   )}
 
                   {/* Image indicator */}
                   {selectedVariantImage && (
-                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-xs">
+                    <div className="absolute bottom-2 right-2 bg-black/70 text-white px-1.5 py-0.5 rounded-full text-xs">
                       Variante
                     </div>
                   )}
