@@ -14,6 +14,7 @@ interface ProductVariant {
   color_id: number;
   stock: number;
   price_override?: number;
+  image_url?: string;
   size?: string;
   color_name?: string;
   hex_code?: string;
