@@ -146,4 +146,33 @@
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
   }
+
+  /* Logo optimization styles */
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  /* Ensure logo maintains aspect ratio in different layouts */
+  @media (max-width: 640px) {
+    .logo-container {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .logo-container {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
 }
