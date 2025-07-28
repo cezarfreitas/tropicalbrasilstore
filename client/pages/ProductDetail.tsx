@@ -711,7 +711,7 @@ export default function ProductDetail() {
                               <span className="font-medium text-gray-900">{grade.name}</span>
                               <span className="text-gray-600 mx-1">•</span>
                               <span className="text-gray-900">{grade.total_quantity} peças total</span>
-                              {product.base_price && (
+                              {product.base_price && isAuthenticated && isApproved && (
                                 <>
                                   <span className="text-gray-600 mx-1">•</span>
                                   <span className="text-primary font-medium">
