@@ -516,7 +516,7 @@ export default function ProductDetail() {
           </Button>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-12">
           {/* Product Image Section */}
           <div>
             <div className="sticky top-2">
