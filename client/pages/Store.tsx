@@ -288,8 +288,9 @@ function Store() {
                                       .map((color) => (
                                         <div
                                           key={color.id}
-                                          className="w-7 h-7 rounded border border-slate-300 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                          className="w-7 h-7 rounded border border-slate-300 overflow-hidden bg-white shadow-sm hover:shadow-md transition-all cursor-pointer hover:scale-110"
                                           title={`${color.name}`}
+                                          onClick={(e) => color.image_url && handleColorVariantClick(product.id, color.image_url, e)}
                                         >
                                           {color.image_url ? (
                                             <ProductImage
