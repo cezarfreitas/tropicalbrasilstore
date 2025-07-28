@@ -241,22 +241,22 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           ) : (
             <Button
               variant="ghost"
-              className="w-full justify-center h-12 p-3"
+              className="w-full justify-center h-16 p-2"
               onClick={() => setLoginModalOpen(true)}
               aria-label="Fazer login"
             >
-              <LogIn className="h-6 w-6 flex-shrink-0" />
+              <LogIn className="h-10 w-10 flex-shrink-0" />
             </Button>
           )}
 
           {/* Cart */}
           <Button
             variant="outline"
-            className="w-full justify-center h-12 p-3 border-primary/20 hover:bg-primary/5 relative"
+            className="w-full justify-center h-16 p-2 border-primary/20 hover:bg-primary/5 relative"
             onClick={() => setCartOpen(true)}
             aria-label={cartAriaLabel}
           >
-            <ShoppingCart className="h-6 w-6 text-primary flex-shrink-0" />
+            <ShoppingCart className="h-10 w-10 text-primary flex-shrink-0" />
             {totalItems > 0 && (
               <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse">
                 {totalItems}
