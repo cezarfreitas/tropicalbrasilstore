@@ -48,6 +48,7 @@ import { createStoreSettingsTable } from "./lib/create-settings-table";
 import { addDesignColumns } from "./lib/add-design-columns";
 import { addMinimumOrderColumn } from "./lib/add-minimum-order-column";
 import { addSalePriceColumn } from "./lib/add-sale-price-column";
+import { addVariantImageColumn } from "./lib/add-variant-image-column";
 import { injectStoreSettings } from "./lib/inject-store-settings";
 
 export function createServer() {
