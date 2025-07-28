@@ -548,7 +548,7 @@ export default function ProductDetail() {
                           >
                             {/* Variant Image or Color Circle */}
                             {color.image_url ? (
-                              <div className="w-8 h-8 rounded overflow-hidden border border-gray-200 bg-white">
+                              <div className="w-6 h-6 rounded overflow-hidden">
                                 <ProductImage
                                   src={color.image_url}
                                   alt={`${product.name} - ${color.name}`}
@@ -557,7 +557,7 @@ export default function ProductDetail() {
                               </div>
                             ) : (
                               <div
-                                className="w-8 h-8 rounded border border-gray-200 flex items-center justify-center text-xs font-medium text-white"
+                                className="w-6 h-6 rounded flex items-center justify-center text-xs font-medium text-white"
                                 style={{ backgroundColor: color.hex_code || "#999" }}
                               >
                                 {color.name?.charAt(0).toUpperCase()}
@@ -565,14 +565,9 @@ export default function ProductDetail() {
                             )}
 
                             {/* Color Name */}
-                            <span className="text-sm font-medium text-gray-900">
+                            <span className={`text-sm ${selectedColor === color.id ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
                               {color.name}
                             </span>
-
-                            {/* Selection indicator */}
-                            {selectedColor === color.id && (
-                              <div className="w-2 h-2 bg-primary rounded-full ml-auto" />
-                            )}
                           </button>
                         ))}
                       </div>
