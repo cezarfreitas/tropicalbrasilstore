@@ -196,7 +196,6 @@ export default function ProductsWooCommerce() {
       const response = await fetch(`/api/products-woocommerce?${params}`);
       if (response.ok) {
         const data = await response.json();
-        console.log('📦 Products fetched:', data.data); // Debug log
         setProducts(data.data);
         setTotalPages(data.pagination.totalPages);
         setTotalProducts(data.pagination.total);
