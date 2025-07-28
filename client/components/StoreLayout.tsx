@@ -187,8 +187,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col bg-gradient-to-b from-white to-primary/5 border-r border-primary/10 shadow-lg w-64 min-h-screen backdrop-blur-sm">
         {/* Sidebar Header */}
-        <div className="border-b border-primary/10 bg-gradient-to-b from-primary/5 to-transparent">
-          <Link to="/loja" className="flex items-center justify-center py-6" aria-label="Ir para página inicial">
+        <div className="border-b border-primary/10 bg-primary">
+          <Link to="/loja" className="flex items-center justify-center" aria-label="Ir para página inicial">
             <LogoDisplay
               size="w-48 h-48"
               className="flex-shrink-0 transition-transform hover:scale-105"
@@ -361,7 +361,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               </Button>
 
               {/* Mobile Logo */}
-              <Link to="/loja" className="flex items-center" aria-label="Ir para página inicial">
+              <Link to="/loja" className="flex items-center bg-primary rounded-lg" aria-label="Ir para página inicial">
                 <LogoDisplay
                   size="w-32 h-32"
                   className="flex-shrink-0"
