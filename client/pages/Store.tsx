@@ -188,7 +188,7 @@ function Store() {
                 >
                   <CardContent className="p-0 relative">
                     {/* Product Image */}
-                    <div className="aspect-square relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+                    <div className="aspect-square relative overflow-hidden bg-white">
                       <ProductImage
                         src={selectedVariantImages[product.id] || product.photo}
                         alt={product.name}
