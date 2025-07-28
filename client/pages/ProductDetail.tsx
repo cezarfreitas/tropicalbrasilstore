@@ -651,27 +651,27 @@ export default function ProductDetail() {
 
             {/* Add to Cart Section */}
             {canAddToCart() && (
-              <div className="border-t pt-6">
-                <div className="flex items-center gap-6 mb-4">
-                  <div className="flex items-center gap-3">
+              <div className="border-t pt-3">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="flex items-center gap-1.5">
                     <label className="text-sm font-medium text-gray-700">Quantidade:</label>
                     <div className="flex items-center border border-gray-300 rounded-lg">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="h-10 w-10 p-0 rounded-l-lg"
+                        className="h-8 w-8 p-0 rounded-l-lg"
                       >
                         <Minus className="h-4 w-4" />
                       </Button>
-                      <span className="w-12 text-center text-sm font-semibold border-x">
+                      <span className="w-10 text-center text-sm font-semibold border-x">
                         {quantity}
                       </span>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setQuantity(quantity + 1)}
-                        className="h-10 w-10 p-0 rounded-r-lg"
+                        className="h-8 w-8 p-0 rounded-r-lg"
                       >
                         <Plus className="h-4 w-4" />
                       </Button>
@@ -681,7 +681,7 @@ export default function ProductDetail() {
 
                 <Button
                   onClick={addToCart}
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base font-semibold"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-10 text-base font-semibold"
                   size="lg"
                 >
                   <ShoppingCart className="mr-2 h-5 w-5" />
@@ -692,8 +692,8 @@ export default function ProductDetail() {
 
             {/* Product Description at bottom */}
             {product.description && (
-              <div className="border-t pt-8 mt-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="border-t pt-4 mt-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   Descrição do Produto
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
