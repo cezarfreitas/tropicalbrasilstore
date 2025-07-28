@@ -69,6 +69,12 @@ interface ProductDetail {
   available_grades?: AvailableGrade[];
 }
 
+// Helper function to safely format prices
+const formatPrice = (price: any): string => {
+  const numPrice = typeof price === 'number' ? price : parseFloat(price) || 0;
+  return numPrice.toFixed(2);
+};
+
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
