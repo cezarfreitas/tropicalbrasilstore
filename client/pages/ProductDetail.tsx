@@ -423,10 +423,10 @@ export default function ProductDetail() {
           </Button>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid lg:grid-cols-2 gap-6">
           {/* Product Image Section */}
-          <div className="space-y-4">
-            <div className="relative bg-gray-50 rounded-2xl overflow-hidden">
+          <div>
+            <div className="relative bg-gray-50 rounded-xl overflow-hidden">
               <div className="aspect-square relative">
                 <ProductImage
                   src={selectedVariantImage || product.photo}
@@ -434,12 +434,12 @@ export default function ProductDetail() {
                   className="w-full h-full object-contain transition-all duration-300"
                   priority={true}
                 />
-                
+
                 {/* Category Badge */}
                 {product.category_name && (
                   <Badge
                     variant="secondary"
-                    className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm border border-gray-200"
+                    className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm border border-gray-200 text-xs"
                   >
                     {product.category_name}
                   </Badge>
@@ -447,8 +447,8 @@ export default function ProductDetail() {
 
                 {/* Image indicator */}
                 {selectedVariantImage && (
-                  <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1.5 rounded-full text-sm flex items-center gap-2">
-                    <ImageIcon className="h-4 w-4" />
+                  <div className="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-1 rounded-full text-xs flex items-center gap-1">
+                    <ImageIcon className="h-3 w-3" />
                     Variante
                   </div>
                 )}
@@ -457,7 +457,7 @@ export default function ProductDetail() {
           </div>
 
           {/* Product Information */}
-          <div className="space-y-8">
+          <div className="space-y-4">
             {/* Product Title & Price */}
             <div className="space-y-4">
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
