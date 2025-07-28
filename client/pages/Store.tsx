@@ -203,7 +203,7 @@ function Store() {
                     Nenhum produto encontrado
                   </h3>
                   <p className="text-yellow-700 text-sm mb-4">
-                    N��o encontramos produtos com o termo "{searchTerm}".
+                    Não encontramos produtos com o termo "{searchTerm}".
                   </p>
                   <p className="text-yellow-600 text-xs mb-4">
                     Tente buscar por outras palavras como "chinelo", "adidas", "nike", etc.
@@ -227,7 +227,7 @@ function Store() {
         {/* Products Grid */}
         {!loading && filteredProducts.length > 0 && (
           <>
-            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
               {filteredProducts.map((product, index) => (
                 <Card
                   key={product.id}
