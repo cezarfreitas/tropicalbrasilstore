@@ -605,6 +605,14 @@ export default function ProductDetail() {
                                 </>
                               )}
                             </div>
+                            <div className="text-xs text-gray-600 mt-1">
+                              {sortedTemplates.map((template, index) => (
+                                <span key={`size-qty-${template.size_id}-${index}`}>
+                                  {template.size}({template.required_quantity})
+                                  {index < sortedTemplates.length - 1 && " "}
+                                </span>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       );
