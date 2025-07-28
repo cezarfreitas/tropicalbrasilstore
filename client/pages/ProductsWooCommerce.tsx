@@ -134,6 +134,10 @@ export default function ProductsWooCommerce() {
   const [grades, setGrades] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  // Multi-selection state
+  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+  const [bulkActionsOpen, setBulkActionsOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<WooCommerceProduct | null>(null);
   
