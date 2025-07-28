@@ -241,7 +241,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           ) : (
             <Button
               variant="ghost"
-              className="w-full justify-center h-16 p-2"
+              className="w-full justify-center h-16 p-0"
               onClick={() => setLoginModalOpen(true)}
               aria-label="Fazer login"
             >
@@ -252,7 +252,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           {/* Cart */}
           <Button
             variant="outline"
-            className="w-full justify-center h-16 p-2 border-primary/20 hover:bg-primary/5 relative"
+            className="w-full justify-center h-16 p-0 border-primary/20 hover:bg-primary/5 relative"
             onClick={() => setCartOpen(true)}
             aria-label={cartAriaLabel}
           >
