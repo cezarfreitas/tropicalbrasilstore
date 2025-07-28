@@ -251,7 +251,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   </Button>
                 )}
               </div>
-              <span className="text-xs text-muted-foreground font-medium">
+              <span className="text-xs text-white font-medium">
                 {isAuthenticated ? "Perfil" : "Entrar"}
               </span>
             </div>
@@ -272,7 +272,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   </Badge>
                 )}
               </div>
-              <span className="text-xs text-muted-foreground font-medium">Carrinho</span>
+              <span className="text-xs text-white font-medium">Carrinho</span>
             </div>
 
             {/* Search */}
@@ -286,7 +286,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <Search className="h-6 w-6 text-white" />
                 </Button>
               </div>
-              <span className="text-xs text-muted-foreground font-medium">Buscar</span>
+              <span className="text-xs text-white font-medium">Buscar</span>
             </div>
           </div>
         </div>
