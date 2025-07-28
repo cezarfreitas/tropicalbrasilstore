@@ -63,7 +63,7 @@ function Store() {
 
   return (
     <StoreLayout>
-      <div className="container mx-auto lg:px-0 px-4 py-6 lg:py-8 space-y-6 lg:space-y-8">
+      <div className="container mx-auto lg:px-0 px-2 py-3 lg:py-4 space-y-3 lg:space-y-4">
 
         {/* Search Results Indicator */}
         {searchTerm && (
@@ -192,7 +192,7 @@ function Store() {
                       <ProductImage
                         src={selectedVariantImages[product.id] || product.photo}
                         alt={product.name}
-                        className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-6"
+                        className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-3"
                         priority={index < 8}
                         loading={index < 8 ? "eager" : "lazy"}
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
@@ -202,7 +202,7 @@ function Store() {
                       {product.category_name && (
                         <Badge
                           variant="secondary"
-                          className="absolute top-3 left-3 text-[10px] sm:text-xs bg-primary text-white px-2 sm:px-3 py-1 rounded-full shadow-md font-medium"
+                          className="absolute top-1.5 left-1.5 text-[10px] sm:text-xs bg-primary text-white px-1 sm:px-1.5 py-0.5 rounded-full shadow-md font-medium"
                         >
                           {product.category_name}
                         </Badge>
@@ -211,8 +211,8 @@ function Store() {
                       {/* Colors - Simple circles like in reference */}
                       {product.available_colors &&
                         product.available_colors.length > 0 && (
-                          <div className="absolute bottom-3 right-3">
-                            <div className="flex gap-2">
+                          <div className="absolute bottom-1.5 right-1.5">
+                            <div className="flex gap-1">
                               {product.available_colors
                                 .slice(0, 2)
                                 .map((color) => (
@@ -231,7 +231,7 @@ function Store() {
                     </div>
 
                     {/* Product Info */}
-                    <div className="p-5 space-y-4">
+                    <div className="p-2.5 space-y-2">
                       <div>
                         <h3 className="font-medium text-base text-gray-900 line-clamp-2 leading-relaxed">
                           {product.name}
@@ -240,8 +240,8 @@ function Store() {
 
                       {/* Pricing */}
                       {product.base_price && (
-                        <div className="bg-gray-50 rounded-lg p-4">
-                          <div className="space-y-1">
+                        <div className="bg-gray-50 rounded-lg p-2">
+                          <div className="space-y-0.5">
                             <div className="text-2xl font-bold text-primary">
                               R$ {Number(product.base_price).toFixed(2).replace('.', ',')}
                             </div>
@@ -271,7 +271,7 @@ function Store() {
                     {/* Add to Cart Icon - Mobile */}
                     {isAuthenticated && isApproved && (
                       <div
-                        className="sm:hidden absolute bottom-4 right-4 bg-primary hover:bg-primary/90 rounded-full p-3 shadow-lg transition-all duration-200 active:scale-95"
+                        className="sm:hidden absolute bottom-2 right-2 bg-primary hover:bg-primary/90 rounded-full p-1.5 shadow-lg transition-all duration-200 active:scale-95"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleProductClick(product.id);
