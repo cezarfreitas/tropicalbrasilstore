@@ -84,7 +84,8 @@ router.get("/", async (req, res) => {
         COUNT(DISTINCT pcv.id) as variant_count,
         SUM(pcv.stock_total) as total_stock,
         COUNT(DISTINCT pcg.grade_id) as grade_count,
-        GROUP_CONCAT(DISTINCT co.name ORDER BY co.name) as available_colors
+        GROUP_CONCAT(DISTINCT co.name ORDER BY co.name) as available_colors,
+        GROUP_CONCAT(DISTINCT CONCAT(co.name, ':', co.hex_code) ORDER BY co.name) as color_data
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
       LEFT JOIN product_color_variants pcv ON p.id = pcv.product_id
