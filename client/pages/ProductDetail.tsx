@@ -513,70 +513,52 @@ export default function ProductDetail() {
             ) : (
               <>
                 {/* Color Variants Section */}
-                <div className="space-y-6">
+                <div className="space-y-3">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Cores Disponíveis
+                    <h3 className="text-base font-semibold text-gray-900">
+                      Cores ({getAvailableColors().length})
                     </h3>
                     {getAvailableColors().length === 0 ? (
-                      <Card className="border-0 bg-gray-50">
-                        <CardContent className="text-center py-8">
-                          <Package className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-                          <p className="text-sm text-muted-foreground">
-                            Nenhuma variação disponível para este produto
-                          </p>
-                        </CardContent>
-                      </Card>
+                      <p className="text-sm text-gray-500 py-2">Nenhuma cor disponível</p>
                     ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="flex flex-wrap gap-2">
                         {getAvailableColors().map((color) => (
                           <button
                             key={color.id}
                             onClick={() => handleColorSelect(color.id, color.image_url)}
-                            className={`relative group p-4 border-2 rounded-xl transition-all duration-200 ${
+                            className={`relative group p-2 border-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
                               selectedColor === color.id
-                                ? "border-primary bg-primary/5 shadow-lg"
-                                : "border-gray-200 hover:border-gray-300 hover:shadow-md"
+                                ? "border-primary bg-primary/10"
+                                : "border-gray-200 hover:border-gray-300"
                             }`}
                           >
-                            <div className="flex items-center gap-4">
-                              {/* Variant Image or Color Circle */}
-                              <div className="relative">
-                                {color.image_url ? (
-                                  <div className="w-16 h-16 rounded-xl overflow-hidden border border-gray-200 bg-white">
-                                    <ProductImage
-                                      src={color.image_url}
-                                      alt={`${product.name} - ${color.name}`}
-                                      className="w-full h-full object-cover"
-                                    />
-                                  </div>
-                                ) : (
-                                  <div
-                                    className="w-16 h-16 rounded-xl border border-gray-200 flex items-center justify-center text-sm font-medium text-white shadow-sm"
-                                    style={{ backgroundColor: color.hex_code || "#999" }}
-                                  >
-                                    {color.name?.charAt(0).toUpperCase()}
-                                  </div>
-                                )}
-                                
-                                {/* Selection indicator */}
-                                {selectedColor === color.id && (
-                                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary rounded-full border-2 border-white flex items-center justify-center">
-                                    <div className="w-2 h-2 bg-white rounded-full" />
-                                  </div>
-                                )}
+                            {/* Variant Image or Color Circle */}
+                            {color.image_url ? (
+                              <div className="w-8 h-8 rounded overflow-hidden border border-gray-200 bg-white">
+                                <ProductImage
+                                  src={color.image_url}
+                                  alt={`${product.name} - ${color.name}`}
+                                  className="w-full h-full object-cover"
+                                />
                               </div>
+                            ) : (
+                              <div
+                                className="w-8 h-8 rounded border border-gray-200 flex items-center justify-center text-xs font-medium text-white"
+                                style={{ backgroundColor: color.hex_code || "#999" }}
+                              >
+                                {color.name?.charAt(0).toUpperCase()}
+                              </div>
+                            )}
 
-                              {/* Color Name */}
-                              <div className="flex-1 text-left">
-                                <p className="font-medium text-gray-900">
-                                  {color.name}
-                                </p>
-                                <p className="text-sm text-gray-500">
-                                  {color.image_url ? "Com imagem" : "Cor padrão"}
-                                </p>
-                              </div>
-                            </div>
+                            {/* Color Name */}
+                            <span className="text-sm font-medium text-gray-900 pr-1">
+                              {color.name}
+                            </span>
+
+                            {/* Selection indicator */}
+                            {selectedColor === color.id && (
+                              <div className="w-2 h-2 bg-primary rounded-full" />
+                            )}
                           </button>
                         ))}
                       </div>
@@ -585,9 +567,9 @@ export default function ProductDetail() {
 
                   {/* Grades or Sizes Section */}
                   {selectedColor && (
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {hasGrades() ? "Grades Disponíveis" : "Tamanhos Disponíveis"}
+                    <div className="space-y-3">
+                      <h3 className="text-base font-semibold text-gray-900">
+                        {hasGrades() ? "Grades" : "Tamanhos"}
                       </h3>
                       
                       <div className="space-y-4">
@@ -657,20 +639,20 @@ export default function ProductDetail() {
                             );
                           })
                         ) : (
-                          <div className="grid grid-cols-2 gap-4">
+                          <div className="grid grid-cols-3 gap-2">
                             {getAvailableSizes().map((size) => (
                               <button
                                 key={size.id}
                                 onClick={() => setSelectedSize(size.id)}
-                                className={`p-4 border-2 rounded-xl text-left transition-all duration-200 ${
+                                className={`p-2 border-2 rounded-lg text-left transition-all duration-200 ${
                                   selectedSize === size.id
                                     ? "border-primary bg-primary/5 shadow-lg"
                                     : "border-gray-200 hover:border-gray-300 hover:shadow-md"
                                 }`}
                               >
-                                <div className="space-y-2">
+                                <div className="space-y-1">
                                   <div className="flex justify-between items-center">
-                                    <div className="font-medium text-gray-900">
+                                    <div className="font-medium text-sm text-gray-900">
                                       {size.name}
                                     </div>
                                     {product.base_price && (
@@ -682,8 +664,8 @@ export default function ProductDetail() {
                                       />
                                     )}
                                   </div>
-                                  <div className="flex items-center justify-between text-sm">
-                                    <span className="font-medium text-primary">1 peça</span>
+                                  <div className="flex items-center justify-between text-xs">
+                                    <span className="font-medium text-primary text-xs">1 peça</span>
                                     <span className="text-gray-500">
                                       {size.stock} disponível
                                     </span>
