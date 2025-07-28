@@ -772,6 +772,45 @@ export default function ProductsWooCommerce() {
                               </div>
 
                               <div>
+                                <Label className="text-sm font-medium">
+                                  Grades de Tamanhos* (selecione uma ou mais)
+                                </Label>
+                                <div className="mt-2 space-y-2">
+                                  {sizeGroups.map((group) => (
+                                    <div key={group.id} className="flex items-center space-x-2">
+                                      <input
+                                        type="checkbox"
+                                        id={`group-${variantIndex}-${group.id}`}
+                                        checked={variant.size_group_ids.includes(group.id)}
+                                        onChange={(e) => {
+                                          const newGroupIds = e.target.checked
+                                            ? [...variant.size_group_ids, group.id]
+                                            : variant.size_group_ids.filter(id => id !== group.id);
+                                          updateVariantSizeGroups(variantIndex, newGroupIds);
+                                        }}
+                                        className="rounded border-gray-300"
+                                      />
+                                      <label
+                                        htmlFor={`group-${variantIndex}-${group.id}`}
+                                        className="text-sm flex items-center gap-2 cursor-pointer"
+                                      >
+                                        <span>{group.icon}</span>
+                                        <span>{group.name}</span>
+                                        <span className="text-xs text-muted-foreground">
+                                          ({group.sizes.join(", ")})
+                                        </span>
+                                      </label>
+                                    </div>
+                                  ))}
+                                  {variant.size_group_ids.length === 0 && (
+                                    <div className="text-xs text-muted-foreground">
+                                      Selecione pelo menos uma grade de tamanhos
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div>
                                 <Label>URL da Imagem</Label>
                                 <Input
                                   value={variant.image_url || ""}
