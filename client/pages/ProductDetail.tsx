@@ -633,12 +633,18 @@ export default function ProductDetail() {
                                       </div>
                                     </div>
                                     {product.base_price && (
-                                      <PriceDisplay
-                                        price={product.base_price * grade.total_quantity}
-                                        variant="small"
-                                        className="text-primary"
-                                        onLoginClick={() => setShowLoginModal(true)}
-                                      />
+                                      <div className="text-right">
+                                        <div className="text-xs text-gray-500 mb-0.5">Total da Grade</div>
+                                        <PriceDisplay
+                                          price={product.base_price * grade.total_quantity}
+                                          variant="default"
+                                          className="text-primary font-bold"
+                                          onLoginClick={() => setShowLoginModal(true)}
+                                        />
+                                        <div className="text-xs text-gray-600 mt-0.5">
+                                          R$ {product.base_price.toFixed(2)} cada
+                                        </div>
+                                      </div>
                                     )}
                                   </div>
 
