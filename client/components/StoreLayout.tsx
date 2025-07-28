@@ -168,9 +168,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     fetchCategories();
   }, []);
 
-  // Lock body scroll when any drawer is open
+  // Lock body scroll when any drawer or modal is open
   useEffect(() => {
-    if (categoriesOpen || cartOpen) {
+    if (categoriesOpen || cartOpen || searchModalOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
@@ -180,7 +180,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [categoriesOpen, cartOpen]);
+  }, [categoriesOpen, cartOpen, searchModalOpen]);
 
   return (
     <div className="min-h-screen bg-background flex">
