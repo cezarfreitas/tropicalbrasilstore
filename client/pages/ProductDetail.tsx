@@ -617,20 +617,20 @@ export default function ProductDetail() {
                           {/* Table */}
                           <div className="border-t border-gray-200">
                             <table className="w-full text-sm">
-                              <thead>
-                                <tr className="bg-gray-50">
-                                  <th className="text-left p-2 font-medium text-gray-700 w-20"></th>
+                              <tbody>
+                                <tr className="hover:bg-gray-50">
+                                  <td className="p-2 font-medium text-gray-700 bg-gray-50 w-20">
+                                    Tamanho
+                                  </td>
                                   {sortedTemplates.map((template, index) => (
-                                    <th
-                                      key={`header-${template.size_id}-${index}`}
-                                      className="text-center p-2 font-medium text-gray-700"
+                                    <td
+                                      key={`size-${template.size_id}-${index}`}
+                                      className="p-2 text-center text-gray-900 font-medium"
                                     >
                                       {template.size}
-                                    </th>
+                                    </td>
                                   ))}
                                 </tr>
-                              </thead>
-                              <tbody>
                                 <tr className="border-t border-gray-100 hover:bg-gray-50">
                                   <td className="p-2 font-medium text-gray-700 bg-gray-50">
                                     Quantidade
