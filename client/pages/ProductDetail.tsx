@@ -645,40 +645,39 @@ export default function ProductDetail() {
             {/* Add to Cart Section */}
             {canAddToCart() && (
               <div className="border-t pt-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1.5">
-                    <label className="text-sm font-medium text-gray-700">Quantidade:</label>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Quantidade:</label>
+                  <div className="flex items-center gap-3">
                     <div className="flex items-center border border-gray-300 rounded-lg">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="h-8 w-8 p-0 rounded-l-lg"
+                        className="h-9 w-9 p-0 rounded-l-lg"
                       >
                         <Minus className="h-4 w-4" />
                       </Button>
-                      <span className="w-10 text-center text-sm font-semibold border-x">
+                      <span className="w-12 text-center text-sm font-semibold border-x">
                         {quantity}
                       </span>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setQuantity(quantity + 1)}
-                        className="h-8 w-8 p-0 rounded-r-lg"
+                        className="h-9 w-9 p-0 rounded-r-lg"
                       >
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                  </div>
 
-                  <Button
-                    onClick={addToCart}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground h-8 text-sm font-semibold"
-                    size="sm"
-                  >
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    Adicionar ao Carrinho
-                  </Button>
+                    <Button
+                      onClick={addToCart}
+                      className="bg-primary hover:bg-primary/90 text-white h-9 px-4 text-sm font-semibold rounded-lg shadow-sm hover:shadow-md transition-all"
+                    >
+                      <ShoppingCart className="mr-2 h-4 w-4" />
+                      Adicionar ao Carrinho
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}
