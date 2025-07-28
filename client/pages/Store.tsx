@@ -4,7 +4,6 @@ import { StoreLayout } from "@/components/StoreLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ProductModal } from "@/components/ProductModal";
 import { ProductImage } from "@/components/ProductImage";
 import { ColorThemeShowcase } from "@/components/ColorThemeShowcase";
 import { PriceDisplay } from "@/components/PriceDisplay";
