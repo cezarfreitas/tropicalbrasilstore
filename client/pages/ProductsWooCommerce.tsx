@@ -330,6 +330,46 @@ export default function ProductsWooCommerce() {
     });
   };
 
+  const updateVariantSizeGroups = (variantIndex: number, sizeGroupIds: number[]) => {
+    const updatedVariants = [...formData.color_variants];
+    updatedVariants[variantIndex].size_group_ids = sizeGroupIds;
+
+    // Get all available sizes from selected groups
+    const allAvailableSizes: Size[] = [];
+    sizeGroupIds.forEach(groupId => {
+      const group = sizeGroups.find(g => g.id === groupId);
+      if (group) {
+        const groupSizes = sizes.filter(size => group.sizes.includes(size.size));
+        groupSizes.forEach(size => {
+          if (!allAvailableSizes.find(s => s.id === size.id)) {
+            allAvailableSizes.push(size);
+          }
+        });
+      }
+    });
+
+    // Update size_stocks to match available sizes
+    const existingSizeStocks = updatedVariants[variantIndex].size_stocks;
+    updatedVariants[variantIndex].size_stocks = allAvailableSizes.map(size => {
+      const existing = existingSizeStocks.find(ss => ss.size_id === size.id);
+      return {
+        size_id: size.id,
+        stock: existing?.stock || 0,
+      };
+    });
+
+    // Update total stock
+    updatedVariants[variantIndex].stock_total = updatedVariants[variantIndex].size_stocks.reduce(
+      (sum, ss) => sum + ss.stock,
+      0
+    );
+
+    setFormData({
+      ...formData,
+      color_variants: updatedVariants,
+    });
+  };
+
   const updateSizeStock = (variantIndex: number, sizeId: number, stock: number) => {
     const updatedVariants = [...formData.color_variants];
     const sizeStockIndex = updatedVariants[variantIndex].size_stocks.findIndex(
