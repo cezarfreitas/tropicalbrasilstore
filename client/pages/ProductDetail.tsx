@@ -426,7 +426,7 @@ export default function ProductDetail() {
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Product Image Section */}
           <div>
-            <div className="relative bg-gray-50 rounded-xl overflow-hidden">
+            <div className="relative bg-gray-50 rounded-xl overflow-hidden max-w-md mx-auto">
               <div className="aspect-square relative">
                 <ProductImage
                   src={selectedVariantImage || product.photo}
