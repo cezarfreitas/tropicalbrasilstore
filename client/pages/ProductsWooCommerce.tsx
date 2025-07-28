@@ -338,9 +338,9 @@ export default function ProductsWooCommerce() {
     const allAvailableSizes: Size[] = [];
     gradeIds.forEach(gradeId => {
       const grade = grades.find(g => g.id === gradeId);
-      if (grade && grade.items) {
-        grade.items.forEach((item: any) => {
-          const size = sizes.find(s => s.id === item.size_id);
+      if (grade && grade.templates) {
+        grade.templates.forEach((template: any) => {
+          const size = sizes.find(s => s.id === template.size_id);
           if (size && !allAvailableSizes.find(s => s.id === size.id)) {
             allAvailableSizes.push(size);
           }
