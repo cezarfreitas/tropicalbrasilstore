@@ -150,6 +150,40 @@ export default function Categories() {
     setDialogOpen(true);
   };
 
+  const toggleShowInMenu = async (category: Category) => {
+    try {
+      const newStatus = !category.show_in_menu;
+
+      const response = await fetch(`/api/categories/${category.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: category.name,
+          description: category.description,
+          show_in_menu: newStatus,
+        }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Sucesso",
+          description: `Categoria ${newStatus ? 'adicionada ao' : 'removida do'} menu`,
+        });
+        fetchCategories();
+      } else {
+        throw new Error("Erro ao atualizar categoria");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
