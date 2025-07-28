@@ -433,32 +433,27 @@ export default function ProductDetail() {
           {/* Product Image Section */}
           <div className="lg:col-span-2">
             <div className="sticky top-4">
-              <div className="relative bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
-                <div className="aspect-square relative p-2">
-                  <ProductImage
-                    src={selectedVariantImage || product.photo}
-                    alt={product.name}
-                    className="w-full h-full object-contain"
-                    priority={true}
-                  />
+              <div className="aspect-square relative">
+                <ProductImage
+                  src={selectedVariantImage || product.photo}
+                  alt={product.name}
+                  className="w-full h-full object-contain"
+                  priority={true}
+                />
 
-                  {/* Category Badge */}
-                  {product.category_name && (
-                    <Badge
-                      variant="secondary"
-                      className="absolute top-2 left-2 bg-white border border-gray-200 text-xs"
-                    >
-                      {product.category_name}
-                    </Badge>
-                  )}
+                {/* Category Badge */}
+                {product.category_name && (
+                  <span className="absolute top-0 left-0 text-xs text-gray-500">
+                    {product.category_name}
+                  </span>
+                )}
 
-                  {/* Image indicator */}
-                  {selectedVariantImage && (
-                    <div className="absolute bottom-2 right-2 bg-black text-white px-2 py-1 rounded text-xs">
-                      Variante
-                    </div>
-                  )}
-                </div>
+                {/* Image indicator */}
+                {selectedVariantImage && (
+                  <span className="absolute bottom-0 right-0 text-xs text-gray-500">
+                    Variante
+                  </span>
+                )}
               </div>
             </div>
           </div>
