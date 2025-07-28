@@ -63,7 +63,7 @@ function Store() {
 
   return (
     <StoreLayout>
-      <div className="container mx-auto px-4 py-6 space-y-6">
+      <div className="container mx-auto lg:px-0 px-4 py-6 space-y-6">
 
         {/* Search Results Indicator */}
         {searchTerm && (
