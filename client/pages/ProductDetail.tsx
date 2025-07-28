@@ -660,11 +660,11 @@ export default function ProductDetail() {
 
                 {/* Add to Cart Section */}
                 {canAddToCart() && (
-                  <div className="border border-gray-200 rounded-lg p-4 sticky bottom-4 bg-white">
+                  <div className="py-4 sticky bottom-4 bg-white">
                     <div className="flex items-center justify-between gap-4">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <span className="text-sm text-gray-700">Qtd:</span>
-                        <div className="flex items-center gap-1 border border-gray-200 rounded">
+                        <div className="flex items-center gap-1">
                           <Button
                             variant="ghost"
                             size="sm"
