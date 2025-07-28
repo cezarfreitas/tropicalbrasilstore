@@ -267,18 +267,22 @@ function Store() {
                                       .map((color) => (
                                         <div
                                           key={color.id}
-                                          className="w-4 h-4 rounded-full border border-slate-300"
-                                          style={{
-                                            backgroundColor:
-                                              color.hex_code || "#999",
-                                          }}
-                                          title={color.name}
-                                        />
+                                          className="w-7 h-7 rounded border border-slate-300 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                          title={`${color.name}`}
+                                        >
+                                          <ProductImage
+                                            src={color.image_url || product.photo || ""}
+                                            alt={`${product.name} - ${color.name}`}
+                                            className="w-full h-full object-cover hover:scale-105 transition-transform"
+                                          />
+                                        </div>
                                       ))}
                                     {product.available_colors.length > 5 && (
-                                      <span className="text-xs text-slate-500">
-                                        +{product.available_colors.length - 5}
-                                      </span>
+                                      <div className="w-7 h-7 rounded border border-slate-300 bg-gray-100 flex items-center justify-center shadow-sm">
+                                        <span className="text-xs text-slate-600 font-medium">
+                                          +{product.available_colors.length - 5}
+                                        </span>
+                                      </div>
                                     )}
                                   </div>
                                 </div>
@@ -358,7 +362,7 @@ function Store() {
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={!pagination.hasNextPage}
                 >
-                  Pr��xima
+                  Próxima
                 </Button>
               </div>
             )}
