@@ -330,7 +330,12 @@ export default function Categories() {
                       {category.description || "—"}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={category.show_in_menu ? "default" : "secondary"}>
+                      <Badge
+                        variant={category.show_in_menu ? "default" : "secondary"}
+                        className="cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => toggleShowInMenu(category)}
+                        title={`Clique para ${category.show_in_menu ? 'remover do' : 'adicionar ao'} menu`}
+                      >
                         {category.show_in_menu ? "Sim" : "Não"}
                       </Badge>
                     </TableCell>
