@@ -296,22 +296,22 @@ function Store() {
                     </div>
 
                     {/* Product Info */}
-                    <div className="p-2.5 space-y-2">
+                    <div className="p-2 sm:p-2.5 space-y-1.5 sm:space-y-2">
                       <div>
-                        <h3 className="font-medium text-base text-gray-900 line-clamp-2 leading-relaxed">
+                        <h3 className="font-medium text-sm sm:text-base text-gray-900 line-clamp-2 leading-tight sm:leading-relaxed">
                           {product.name}
                         </h3>
                       </div>
 
                       {/* Pricing */}
                       {product.base_price && (
-                        <div className="bg-gray-50 rounded-lg p-2">
+                        <div className="bg-gray-50 rounded-lg p-1.5 sm:p-2">
                           <div className="space-y-0.5">
-                            <div className="text-2xl font-bold text-primary">
+                            <div className="text-lg sm:text-xl lg:text-2xl font-bold text-primary">
                               R$ {Number(product.base_price).toFixed(2).replace('.', ',')}
                             </div>
                             {product.suggested_price && (
-                              <div className="text-sm text-gray-500">
+                              <div className="text-xs sm:text-sm text-gray-500">
                                 Sugerido: R$ {Number(product.suggested_price).toFixed(2).replace('.', ',')}
                               </div>
                             )}
