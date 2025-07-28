@@ -2,6 +2,7 @@ export interface Category {
   id: number;
   name: string;
   description?: string;
+  show_in_menu?: boolean;
   created_at: string;
   updated_at: string;
 }
