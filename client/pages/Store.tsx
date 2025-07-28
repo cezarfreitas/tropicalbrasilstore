@@ -270,8 +270,6 @@ function Store() {
                             {product.available_colors &&
                               product.available_colors.length > 0 && (
                                 <div className="hidden sm:flex items-center gap-1">
-                                  {/* Debug: log color data */}
-                                  {console.log('🎨 Colors for product:', product.name, product.available_colors)}
                                   <div className="flex gap-1">
                                     {product.available_colors
                                       .slice(0, 5)
