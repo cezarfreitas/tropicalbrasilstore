@@ -21,6 +21,7 @@ interface CartItem {
   unitPrice: number;
   totalPrice: number;
   photo?: string;
+  piecesPerGrade?: number; // Para grades: quantas peças tem cada grade
 }
 
 interface CartState {
