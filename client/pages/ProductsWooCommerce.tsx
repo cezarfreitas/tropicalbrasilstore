@@ -420,10 +420,15 @@ export default function ProductsWooCommerce() {
   const renderColorCircles = (colorData?: string) => {
     if (!colorData) return null;
 
+    // Debug logging to see what data we're receiving
+    console.log('🎨 Color data received:', colorData);
+
     const colors = colorData.split(',').map(item => {
       const [name, hexCode] = item.split(':');
       return { name: name?.trim(), hexCode: hexCode?.trim() };
     }).filter(color => color.name && color.hexCode);
+
+    console.log('🎨 Parsed colors:', colors);
 
     if (colors.length === 0) return null;
 
