@@ -170,6 +170,26 @@
   }
 
   /* Ensure logo adapts to container size properly */
+  .logo-container.w-4 {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .logo-container.w-5 {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .logo-container.w-6 {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .logo-container.w-8 {
+    width: 2rem;
+    height: 2rem;
+  }
+
   .logo-container.w-9 {
     width: 2.25rem;
     height: 2.25rem;
