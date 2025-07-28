@@ -574,53 +574,81 @@ export default function ProductDetail() {
                       );
 
                       return (
-                        <button
+                        <div
                           key={grade.id}
-                          onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
-                          disabled={!canAdd}
-                          className={`w-full p-2 rounded-lg border-2 text-left transition-all ${
+                          className={`rounded-lg border-2 transition-all ${
                             !canAdd
-                              ? "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed"
+                              ? "border-gray-200 bg-gray-50 opacity-50"
                               : selectedGrade === grade.id
                                 ? "border-primary bg-primary/5"
                                 : "border-gray-200 bg-white hover:border-gray-300"
                           }`}
                         >
-                          <div className="flex justify-between items-start mb-1.5">
-                            <div className="flex-1">
-                              <h4 className="font-semibold text-gray-900 mb-0.5">
-                                {grade.name}
-                              </h4>
-                              <span className="text-sm text-primary font-medium">
-                                {grade.total_quantity} peças total
-                              </span>
-                            </div>
-
-                            {product.base_price && (
-                              <div className="text-right">
-                                <PriceDisplay
-                                  price={product.base_price * grade.total_quantity}
-                                  variant="default"
-                                  className="text-primary font-bold"
-                                />
-                                <div className="text-xs text-gray-500">
-                                  R$ {formatPrice(product.base_price)} cada
-                                </div>
+                          {/* Grade Header */}
+                          <div
+                            className="p-2 cursor-pointer"
+                            onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
+                          >
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <h4 className="font-semibold text-gray-900">
+                                  {grade.name}
+                                </h4>
+                                <span className="text-sm text-primary font-medium">
+                                  {grade.total_quantity} peças total
+                                </span>
                               </div>
-                            )}
+
+                              {product.base_price && (
+                                <div className="text-right">
+                                  <PriceDisplay
+                                    price={product.base_price * grade.total_quantity}
+                                    variant="default"
+                                    className="text-primary font-bold"
+                                  />
+                                  <div className="text-xs text-gray-500">
+                                    R$ {formatPrice(product.base_price)} cada
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </div>
 
-                          <div className="flex flex-wrap gap-1">
-                            {sortedTemplates.map((template, index) => (
-                              <span
-                                key={`${template.size_id}-${index}`}
-                                className="inline-block bg-gray-100 text-gray-700 px-1 py-0.5 rounded text-sm"
-                              >
-                                {template.size} ({template.required_quantity})
-                              </span>
-                            ))}
+                          {/* Table */}
+                          <div className="border-t border-gray-200">
+                            <table className="w-full text-sm">
+                              <thead>
+                                <tr className="bg-gray-50">
+                                  <th className="text-left p-2 font-medium text-gray-700">Tamanho</th>
+                                  <th className="text-center p-2 font-medium text-gray-700">Quantidade</th>
+                                  <th className="text-right p-2 font-medium text-gray-700">Subtotal</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {sortedTemplates.map((template, index) => (
+                                  <tr
+                                    key={`${template.size_id}-${index}`}
+                                    className="border-t border-gray-100 hover:bg-gray-50"
+                                  >
+                                    <td className="p-2 font-medium text-gray-900">
+                                      {template.size}
+                                    </td>
+                                    <td className="p-2 text-center text-gray-700">
+                                      {template.required_quantity}
+                                    </td>
+                                    <td className="p-2 text-right text-gray-700">
+                                      {product.base_price && (
+                                        <span className="font-medium">
+                                          R$ {formatPrice(product.base_price * template.required_quantity)}
+                                        </span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
-                        </button>
+                        </div>
                       );
                     })
                   ) : (
