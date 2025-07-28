@@ -319,16 +319,17 @@ function Store() {
                         </div>
                       )}
 
-                      {/* Add to Cart Button - Desktop only */}
+                      {/* Add to Cart Button - Responsive */}
                       {isAuthenticated && isApproved && (
                         <Button
-                          className="w-full bg-primary hover:bg-primary/90 text-white text-base font-medium h-12 rounded-lg transition-all duration-200 hover:shadow-lg"
+                          className="w-full bg-primary hover:bg-primary/90 text-white text-xs sm:text-sm lg:text-base font-medium h-10 sm:h-12 rounded-lg transition-all duration-200 hover:shadow-lg"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleProductClick(product.id);
                           }}
                         >
-                          Adicionar ao Carrinho
+                          <span className="hidden sm:inline">Adicionar ao Carrinho</span>
+                          <span className="sm:hidden">Adicionar</span>
                         </Button>
                       )}
                     </div>
