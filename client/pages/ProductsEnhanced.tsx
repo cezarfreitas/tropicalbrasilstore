@@ -72,6 +72,7 @@ interface ProductVariant {
   color_id: number;
   stock: number;
   price_override?: number;
+  image_url?: string;
   sku_variant?: string;
   size?: string;
   color_name?: string;
