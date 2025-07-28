@@ -174,7 +174,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
           console.log(`🔧 Basic fetch URL: ${basicUrl}`);
 
           // Use a simpler fetch without timeout for last resort
-          const basicResponse = await fetch(basicUrl, {
+          const basicResponse = await customFetch(basicUrl, {
             method: 'GET',
             cache: 'no-cache'
           });
