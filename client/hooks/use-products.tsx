@@ -40,6 +40,47 @@ interface UseProductsResult {
 const globalCache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
+// Custom fetch to avoid FullStory conflicts
+const customFetch = async (url: string, options?: RequestInit): Promise<Response> => {
+  try {
+    // Use native fetch directly to bypass any interceptors
+    const nativeFetch = window.fetch.bind(window);
+    return await nativeFetch(url, options);
+  } catch (error) {
+    // If native fetch fails, try with XMLHttpRequest as fallback
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      const method = options?.method || 'GET';
+
+      xhr.open(method, url);
+
+      // Set headers
+      if (options?.headers) {
+        const headers = options.headers as Record<string, string>;
+        Object.entries(headers).forEach(([key, value]) => {
+          xhr.setRequestHeader(key, value);
+        });
+      }
+
+      xhr.onload = () => {
+        const response = new Response(xhr.responseText, {
+          status: xhr.status,
+          statusText: xhr.statusText,
+          headers: new Headers(xhr.getAllResponseHeaders().split('\r\n').reduce((acc, line) => {
+            const [key, value] = line.split(': ');
+            if (key && value) acc[key] = value;
+            return acc;
+          }, {} as Record<string, string>))
+        });
+        resolve(response);
+      };
+
+      xhr.onerror = () => reject(new Error('Network request failed'));
+      xhr.send(options?.body);
+    });
+  }
+};
+
 export function useProducts(productsPerPage: number = 20): UseProductsResult {
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
