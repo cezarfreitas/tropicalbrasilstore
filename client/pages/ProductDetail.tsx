@@ -531,23 +531,16 @@ export default function ProductDetail() {
                           : "bg-gray-50 border border-gray-200 hover:bg-gray-100"
                       }`}
                     >
-                      {/* Variant Image or Color Circle */}
-                      {color.image_url ? (
-                        <div className="w-8 h-8 rounded-lg overflow-hidden border border-gray-200">
-                          <ProductImage
-                            src={color.image_url}
-                            alt={`${product.name} - ${color.name}`}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div
-                          className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-sm font-medium text-white"
-                          style={{ backgroundColor: color.hex_code || "#999" }}
-                        >
-                          {color.name?.charAt(0).toUpperCase()}
-                        </div>
-                      )}
+                      {/* Color Circle */}
+                      <div
+                        className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-sm font-medium"
+                        style={{
+                          backgroundColor: getColorValue(color),
+                          color: getTextColor(getColorValue(color))
+                        }}
+                      >
+                        {!color.hex_code && color.name?.charAt(0).toUpperCase()}
+                      </div>
 
                       {/* Color Name */}
                       <span className="font-medium text-gray-900">
