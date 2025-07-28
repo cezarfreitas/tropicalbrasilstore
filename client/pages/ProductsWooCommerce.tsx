@@ -428,19 +428,21 @@ export default function ProductsWooCommerce() {
     if (colors.length === 0) return null;
 
     return (
-      <div className="flex items-center gap-1 flex-wrap">
-        {colors.slice(0, 4).map((color, index) => (
+      <div className="flex items-center justify-center gap-1 flex-wrap">
+        {colors.slice(0, 5).map((color, index) => (
           <div
             key={index}
-            className="w-4 h-4 rounded-full border border-gray-300 shadow-sm"
+            className="w-5 h-5 rounded-full border-2 border-white shadow-md ring-1 ring-gray-200 hover:scale-110 transition-transform cursor-pointer"
             style={{ backgroundColor: color.hexCode }}
-            title={color.name}
+            title={`${color.name} (${color.hexCode})`}
           />
         ))}
-        {colors.length > 4 && (
-          <span className="text-xs text-muted-foreground ml-1">
-            +{colors.length - 4}
-          </span>
+        {colors.length > 5 && (
+          <div className="w-5 h-5 rounded-full bg-gray-100 border-2 border-white shadow-md ring-1 ring-gray-200 flex items-center justify-center">
+            <span className="text-xs font-medium text-gray-600">
+              +{colors.length - 5}
+            </span>
+          </div>
         )}
       </div>
     );
