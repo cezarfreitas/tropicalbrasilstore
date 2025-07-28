@@ -17,6 +17,7 @@ import { productsByNamesRouter } from "./routes/products-by-names";
 import { redesignRouter } from "./routes/redesign";
 import { gradesRedesignedRouter } from "./routes/grades-redesigned";
 import { storeRouter } from "./routes/store";
+import { uploadRouter } from "./routes/upload";
 import { storeSimpleRouter } from "./routes/store-simple";
 import { adminOrdersRouter } from "./routes/admin-orders";
 import { adminCustomersRouter } from "./routes/admin-customers";
