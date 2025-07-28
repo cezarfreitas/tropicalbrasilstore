@@ -62,13 +62,28 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     setSearchTerm(urlSearchTerm);
   }, [searchParams]);
 
-  // Search functionality
-  const handleSearch = (e: React.FormEvent) => {
+  // Search functionality - memoized
+  const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/loja?busca=${encodeURIComponent(searchTerm.trim())}`);
     }
-  };
+  }, [searchTerm, navigate]);
+
+  // Memoized navigation links
+  const navigationLinks = useMemo(() => [
+    { to: "/loja", label: "Todos" },
+    { to: "/loja?categoria=havaianas", label: "Havaianas" },
+    { to: "/loja?categoria=adidas", label: "Adidas" },
+    { to: "/loja?categoria=nike", label: "Nike" },
+    { to: "/loja?categoria=feminino", label: "Feminino" }
+  ], []);
+
+  // Memoized cart aria label
+  const cartAriaLabel = useMemo(() =>
+    `Carrinho com ${totalItems} ${totalItems === 1 ? 'item' : 'itens'}`,
+    [totalItems]
+  );
 
   // Logo component that shows only custom logo with immediate global loading
   const LogoDisplay = ({
