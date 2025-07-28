@@ -253,20 +253,22 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           </div>
 
           {/* Cart */}
-          <div className="flex-1 flex flex-col items-center gap-1">
-            <Button
-              variant="ghost"
-              className="justify-center h-5 p-0 hover:bg-transparent relative"
-              onClick={() => setCartOpen(true)}
-            >
-              <ShoppingCart className="h-10 w-10 text-primary flex-shrink-0" />
+          <div className="flex-1 flex flex-col items-center gap-2">
+            <div className="relative">
+              <Button
+                variant="ghost"
+                className="justify-center h-auto p-2 hover:bg-primary/5 rounded-lg"
+                onClick={() => setCartOpen(true)}
+              >
+                <ShoppingCart className="h-8 w-8 text-primary flex-shrink-0" />
+              </Button>
               {totalItems > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse">
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 text-white animate-pulse border-2 border-white">
                   {totalItems}
                 </Badge>
               )}
-            </Button>
-            <span className="text-xs text-muted-foreground">Carrinho</span>
+            </div>
+            <span className="text-xs text-muted-foreground font-medium">Carrinho</span>
           </div>
         </div>
 
