@@ -174,7 +174,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
         if (response.ok) {
           const data = await response.json();
-          setCategories([{ id: "all", name: "Todas as Categorias" }, ...data]);
+          // Filter categories to only show those with show_in_menu = true
+          const visibleCategories = data.filter((cat: any) => cat.show_in_menu !== false);
+          setCategories([{ id: "all", name: "Todas as Categorias" }, ...visibleCategories]);
         }
       } catch (error) {
         console.warn("Failed to fetch categories:", error);
