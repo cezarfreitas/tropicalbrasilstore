@@ -168,7 +168,20 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     };
 
     fetchCategories();
+    fetchAvailableColors();
   }, []);
+
+  const fetchAvailableColors = async () => {
+    try {
+      const response = await fetch('/api/colors');
+      if (response.ok) {
+        const colors = await response.json();
+        setAvailableColors(colors);
+      }
+    } catch (error) {
+      console.error("Error fetching colors:", error);
+    }
+  };
 
   // Lock body scroll when any drawer or modal is open
   useEffect(() => {
