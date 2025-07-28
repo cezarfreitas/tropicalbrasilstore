@@ -487,7 +487,7 @@ export default function ProductsWooCommerce() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Produtos WooCommerce
+            Produtos V2
           </h1>
           <p className="text-muted-foreground">
             Sistema de produtos com variantes apenas por cor (estilo WooCommerce)
