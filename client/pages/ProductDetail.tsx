@@ -293,6 +293,7 @@ export default function ProductDetail() {
         quantity,
         unitPrice: gradePrice,
         photo: selectedVariantImage || product.photo,
+        piecesPerGrade: grade.total_quantity,
       });
 
       toast({
