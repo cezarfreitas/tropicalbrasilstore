@@ -298,8 +298,8 @@ export default function ProductsWooCommerce() {
       image_url: "",
       stock_total: 0,
       active: true,
-      size_group_ids: [], // Start with no size groups selected
-      size_stocks: [], // Will be populated when size groups are selected
+      grade_ids: [], // Start with no grades selected
+      size_stocks: [], // Will be populated when grades are selected
     };
 
     setFormData({
