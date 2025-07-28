@@ -678,7 +678,7 @@ export default function ProductDetail() {
 
                 <Button
                   onClick={addToCart}
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-10 text-base font-semibold"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground h-10 text-base font-semibold"
                   size="lg"
                 >
                   <ShoppingCart className="mr-2 h-5 w-5" />
