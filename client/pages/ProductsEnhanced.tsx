@@ -1452,6 +1452,37 @@ export default function ProductsEnhanced() {
                                             />
                                           </div>
                                         </div>
+
+                                        <div>
+                                          <Label className="text-xs">
+                                            URL da Imagem
+                                          </Label>
+                                          <Input
+                                            type="url"
+                                            className="h-8"
+                                            value={variant.image_url || ""}
+                                            onChange={(e) =>
+                                              updateVariant(
+                                                variantIndex,
+                                                "image_url",
+                                                e.target.value || undefined,
+                                              )
+                                            }
+                                            placeholder="https://exemplo.com/imagem.jpg"
+                                          />
+                                          {variant.image_url && (
+                                            <div className="mt-2">
+                                              <img
+                                                src={variant.image_url}
+                                                alt={`Variante ${getSizeFromVariant(variant)}`}
+                                                className="w-full h-16 object-cover rounded border"
+                                                onError={(e) => {
+                                                  e.currentTarget.src = "/placeholder.svg";
+                                                }}
+                                              />
+                                            </div>
+                                          )}
+                                        </div>
                                       </div>
                                     </CardContent>
                                   </Card>
