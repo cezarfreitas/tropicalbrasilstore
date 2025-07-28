@@ -12,6 +12,7 @@ interface StoreProduct {
     id: number;
     name: string;
     hex_code?: string;
+    image_url?: string;
   }>;
   variant_count?: number;
   total_stock?: number;
