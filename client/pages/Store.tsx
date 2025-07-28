@@ -219,14 +219,14 @@ function Store() {
                                   <div
                                     key={color.id}
                                     className="w-6 h-6 rounded-full border-2 border-white cursor-pointer hover:scale-110 transition-all duration-200 shadow-lg"
-                                    title={`${color.name}${color.hex_code ? ` (${color.hex_code})` : ''}`}
+                                    title={`${color.name}${color.hex_code ? ` (${color.hex_code})` : ' - Cor sem código'}`}
                                     onClick={(e) => color.image_url && handleColorVariantClick(product.id, color.image_url, e)}
                                     style={{
-                                      backgroundColor: color.hex_code || '#E5E7EB'
+                                      backgroundColor: getColorValue(color)
                                     }}
                                   >
                                     {!color.hex_code && (
-                                      <div className="w-full h-full flex items-center justify-center text-[8px] font-bold text-gray-600 rounded-full">
+                                      <div className="w-full h-full flex items-center justify-center text-[8px] font-bold text-white rounded-full bg-gray-500">
                                         {color.name?.charAt(0)?.toUpperCase()}
                                       </div>
                                     )}
