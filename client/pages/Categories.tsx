@@ -40,6 +40,7 @@ export default function Categories() {
   const [formData, setFormData] = useState<CreateCategoryRequest>({
     name: "",
     description: "",
+    show_in_menu: true,
   });
   const { toast } = useToast();
 
