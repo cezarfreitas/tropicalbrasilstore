@@ -712,44 +712,42 @@ export default function ProductDetail() {
 
                 {/* Add to Cart Section */}
                 {canAddToCart() && (
-                  <Card className="border border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5 sticky bottom-4 shadow-lg backdrop-blur-sm">
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between gap-6">
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-semibold text-gray-700">Quantidade:</span>
-                          <div className="flex items-center gap-2 bg-white rounded-lg p-1 border border-gray-200">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                              className="h-7 w-7 p-0 hover:bg-gray-100"
-                            >
-                              <Minus className="h-3 w-3" />
-                            </Button>
-                            <span className="w-10 text-center text-sm font-semibold text-gray-900">
-                              {quantity}
-                            </span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setQuantity(quantity + 1)}
-                              className="h-7 w-7 p-0 hover:bg-gray-100"
-                            >
-                              <Plus className="h-3 w-3" />
-                            </Button>
-                          </div>
+                  <div className="border border-gray-200 rounded-lg p-4 sticky bottom-4 bg-white">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-700">Qtd:</span>
+                        <div className="flex items-center gap-1 border border-gray-200 rounded">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <span className="w-8 text-center text-sm font-medium">
+                            {quantity}
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setQuantity(quantity + 1)}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
                         </div>
-
-                        <Button
-                          onClick={addToCart}
-                          className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 flex-1 max-w-52 font-semibold shadow-sm"
-                        >
-                          <ShoppingCart className="mr-2 h-4 w-4" />
-                          Adicionar ao Carrinho
-                        </Button>
                       </div>
-                    </CardContent>
-                  </Card>
+
+                      <Button
+                        onClick={addToCart}
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground h-10 flex-1 max-w-48"
+                      >
+                        <ShoppingCart className="mr-2 h-4 w-4" />
+                        Adicionar
+                      </Button>
+                    </div>
+                  </div>
                 )}
               </>
             )}
