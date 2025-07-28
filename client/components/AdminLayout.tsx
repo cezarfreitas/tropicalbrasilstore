@@ -37,14 +37,9 @@ const navigation = [
     icon: Users,
   },
   {
-    name: "Produtos",
-    href: "/admin/products",
-    icon: Package,
-  },
-  {
-    name: "Produtos WooCommerce",
+    name: "Produtos V2",
     href: "/admin/products-woocommerce",
-    icon: ShoppingCart,
+    icon: Package,
   },
   {
     name: "Importar Produtos",
