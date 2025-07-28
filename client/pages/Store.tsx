@@ -101,10 +101,10 @@ function Store() {
     }));
   };
 
-  // Effect to handle search term changes
+  // Effect to handle search term and color filter changes
   useEffect(() => {
-    fetchProducts(1, searchTerm);
-  }, [searchTerm, fetchProducts]);
+    fetchProducts(1, searchTerm, colorFilter);
+  }, [searchTerm, colorFilter, fetchProducts]);
 
   // Use all products since we removed filtering
   const filteredProducts = products;
