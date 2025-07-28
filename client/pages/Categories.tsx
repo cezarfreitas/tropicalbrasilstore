@@ -145,7 +145,7 @@ export default function Categories() {
 
   const handleNewCategory = () => {
     setEditingCategory(null);
-    setFormData({ name: "", description: "" });
+    setFormData({ name: "", description: "", show_in_menu: true });
     setDialogOpen(true);
   };
 
