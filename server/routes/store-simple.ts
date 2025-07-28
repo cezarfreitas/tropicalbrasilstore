@@ -241,7 +241,7 @@ router.get("/products-paginated", async (req, res) => {
         }
       }
 
-      // Get available colors (simplified)
+      // Get available colors (only those with stock)
       const [colorRows] = await db.execute(
         `SELECT DISTINCT
           co.id,
@@ -249,7 +249,7 @@ router.get("/products-paginated", async (req, res) => {
           co.hex_code
         FROM product_variants pv
         LEFT JOIN colors co ON pv.color_id = co.id
-        WHERE pv.product_id = ? AND co.id IS NOT NULL
+        WHERE pv.product_id = ? AND co.id IS NOT NULL AND pv.stock > 0
         LIMIT 5`,
         [product.id],
       );
