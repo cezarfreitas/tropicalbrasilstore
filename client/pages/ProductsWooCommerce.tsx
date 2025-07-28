@@ -416,6 +416,36 @@ export default function ProductsWooCommerce() {
     });
   };
 
+  // Helper function to parse and display color circles
+  const renderColorCircles = (colorData?: string) => {
+    if (!colorData) return null;
+
+    const colors = colorData.split(',').map(item => {
+      const [name, hexCode] = item.split(':');
+      return { name: name?.trim(), hexCode: hexCode?.trim() };
+    }).filter(color => color.name && color.hexCode);
+
+    if (colors.length === 0) return null;
+
+    return (
+      <div className="flex items-center gap-1 flex-wrap">
+        {colors.slice(0, 4).map((color, index) => (
+          <div
+            key={index}
+            className="w-4 h-4 rounded-full border border-gray-300 shadow-sm"
+            style={{ backgroundColor: color.hexCode }}
+            title={color.name}
+          />
+        ))}
+        {colors.length > 4 && (
+          <span className="text-xs text-muted-foreground ml-1">
+            +{colors.length - 4}
+          </span>
+        )}
+      </div>
+    );
+  };
+
   // Multi-selection functions
   const toggleProductSelection = (productId: number) => {
     setSelectedProducts(prev =>
