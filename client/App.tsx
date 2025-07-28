@@ -108,6 +108,16 @@ const App = () => (
                   }
                 />
                 <Route
+                  path="/admin/products-woocommerce"
+                  element={
+                    <ProtectedRoute>
+                      <AdminLayout>
+                        <ProductsWooCommerce />
+                      </AdminLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/admin/products/import"
                   element={
                     <ProtectedRoute>
