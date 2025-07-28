@@ -636,37 +636,18 @@ export default function ProductDetail() {
                             );
                           })
                         ) : (
-                          <div className="grid grid-cols-3 gap-2">
+                          <div className="grid grid-cols-4 gap-3">
                             {getAvailableSizes().map((size) => (
                               <button
                                 key={size.id}
                                 onClick={() => setSelectedSize(size.id)}
-                                className={`p-2 border-2 rounded-lg text-left transition-all duration-200 ${
-                                  selectedSize === size.id
-                                    ? "border-primary bg-primary/5 shadow-lg"
-                                    : "border-gray-200 hover:border-gray-300 hover:shadow-md"
-                                }`}
+                                className="p-2 text-center hover:opacity-75 transition-opacity"
                               >
-                                <div className="space-y-1">
-                                  <div className="flex justify-between items-center">
-                                    <div className="font-medium text-sm text-gray-900">
-                                      {size.name}
-                                    </div>
-                                    {product.base_price && (
-                                      <PriceDisplay
-                                        price={product.base_price}
-                                        variant="small"
-                                        className="text-primary"
-                                        onLoginClick={() => setShowLoginModal(true)}
-                                      />
-                                    )}
-                                  </div>
-                                  <div className="flex items-center justify-between text-xs">
-                                    <span className="font-medium text-primary text-xs">1 peça</span>
-                                    <span className="text-gray-500">
-                                      {size.stock} disponível
-                                    </span>
-                                  </div>
+                                <div className={`text-sm ${selectedSize === size.id ? 'font-semibold text-gray-900' : 'font-medium text-gray-600'}`}>
+                                  {size.name}
+                                </div>
+                                <div className="text-xs text-gray-500 mt-1">
+                                  {size.stock} disponível
                                 </div>
                               </button>
                             ))}
