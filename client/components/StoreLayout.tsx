@@ -311,36 +311,15 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
               {/* Collections Navigation */}
               <nav className="flex items-center gap-1" role="navigation" aria-label="Categorias principais">
-                <Link
-                  to="/loja"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
-                >
-                  Todos
-                </Link>
-                <Link
-                  to="/loja?categoria=havaianas"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
-                >
-                  Havaianas
-                </Link>
-                <Link
-                  to="/loja?categoria=adidas"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
-                >
-                  Adidas
-                </Link>
-                <Link
-                  to="/loja?categoria=nike"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
-                >
-                  Nike
-                </Link>
-                <Link
-                  to="/loja?categoria=feminino"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
-                >
-                  Feminino
-                </Link>
+                {navigationLinks.map((link) => (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md hover:bg-primary/5"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
               </nav>
 
               {/* Theme Indicator */}
