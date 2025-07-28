@@ -512,19 +512,19 @@ export default function ProductDetail() {
             </div>
 
             {/* Color Variants Section */}
-            <div className="space-y-4">
+            <div className="space-y-2">
               <h3 className="text-lg font-semibold text-gray-900">
                 Cores Disponíveis
               </h3>
               {getAvailableColors().length === 0 ? (
                 <p className="text-gray-500">Nenhuma cor disponível</p>
               ) : (
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-1.5">
                   {getAvailableColors().map((color) => (
                     <button
                       key={color.id}
                       onClick={() => handleColorSelect(color.id, color.image_url)}
-                      className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
+                      className={`flex items-center gap-1.5 p-1.5 rounded-lg transition-all ${
                         selectedColor === color.id
                           ? "bg-primary/10 border-2 border-primary"
                           : "bg-gray-50 border border-gray-200 hover:bg-gray-100"
@@ -532,7 +532,7 @@ export default function ProductDetail() {
                     >
                       {/* Variant Image or Color Circle */}
                       {color.image_url ? (
-                        <div className="w-10 h-10 rounded-lg overflow-hidden border border-gray-200">
+                        <div className="w-8 h-8 rounded-lg overflow-hidden border border-gray-200">
                           <ProductImage
                             src={color.image_url}
                             alt={`${product.name} - ${color.name}`}
@@ -541,7 +541,7 @@ export default function ProductDetail() {
                         </div>
                       ) : (
                         <div
-                          className="w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center text-sm font-medium text-white"
+                          className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-sm font-medium text-white"
                           style={{ backgroundColor: color.hex_code || "#999" }}
                         >
                           {color.name?.charAt(0).toUpperCase()}
