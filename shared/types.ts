@@ -62,6 +62,7 @@ export interface GradeItem {
 export interface CreateCategoryRequest {
   name: string;
   description?: string;
+  show_in_menu?: boolean;
 }
 
 export interface CreateSizeRequest {
