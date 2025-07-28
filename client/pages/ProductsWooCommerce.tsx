@@ -530,38 +530,7 @@ export default function ProductsWooCommerce() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div>
-                      <Label htmlFor="size_group">Grupo de Tamanhos*</Label>
-                      <Select
-                        value={formData.size_group_id?.toString() || ""}
-                        onValueChange={(value) =>
-                          setFormData({
-                            ...formData,
-                            size_group_id: value ? parseInt(value) : undefined,
-                          })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecionar grupo de tamanhos" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {sizeGroups.map((group) => (
-                            <SelectItem
-                              key={group.id}
-                              value={group.id.toString()}
-                            >
-                              <div className="flex items-center gap-2">
-                                <span>{group.icon}</span>
-                                <span>{group.name}</span>
-                                <span className="text-xs text-muted-foreground">
-                                  ({group.sizes.join(", ")})
-                                </span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+
                     <div>
                       <Label htmlFor="base_price">Preço Base</Label>
                       <Input
