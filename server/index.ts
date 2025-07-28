@@ -82,6 +82,7 @@ export function createServer() {
       await addPhotoColumn(); // Add photo column to products
       await addMinimumOrderColumn(); // Add minimum_order column to customers
       await addSalePriceColumn(); // Add sale_price column to products
+      await addVariantImageColumn(); // Add image_url column to product_variants
       await redesignGradeSystem(); // Create grade templates and product color grades tables
       await createStoreSettingsTable(); // Create store settings table
       await addDesignColumns(); // Add design customization columns
