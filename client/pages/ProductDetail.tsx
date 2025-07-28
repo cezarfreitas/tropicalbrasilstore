@@ -516,20 +516,18 @@ export default function ProductDetail() {
 
             {/* Authentication Check */}
             {!isAuthenticated || !isApproved ? (
-              <Card className="border border-primary/20 bg-primary/5">
-                <CardContent className="text-center py-4 space-y-3">
-                  <div className="flex items-center justify-center gap-2">
-                    <Lock className="h-5 w-5 text-primary" />
-                    <span className="font-medium text-gray-900">Login necessário</span>
-                  </div>
-                  <Button
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                    onClick={() => setShowLoginModal(true)}
-                  >
-                    Fazer Login
-                  </Button>
-                </CardContent>
-              </Card>
+              <div className="text-center py-6 space-y-3">
+                <div className="flex items-center justify-center gap-2">
+                  <Lock className="h-5 w-5 text-primary" />
+                  <span className="font-medium text-gray-900">Login necessário</span>
+                </div>
+                <Button
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                  onClick={() => setShowLoginModal(true)}
+                >
+                  Fazer Login
+                </Button>
+              </div>
             ) : (
               <>
                 {/* Color Variants Section */}
