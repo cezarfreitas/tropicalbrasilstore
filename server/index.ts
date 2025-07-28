@@ -23,6 +23,7 @@ import { adminOrdersRouter } from "./routes/admin-orders";
 import { adminCustomersRouter } from "./routes/admin-customers";
 import { expandedSeedRouter } from "./routes/expanded-seed";
 import { settingsRouter } from "./routes/settings";
+import { fixColorsRouter } from "./routes/fix-colors";
 import { notificationsRouter } from "./routes/notifications";
 import { customerAuthRouter } from "./routes/customer-auth";
 import { mockupDataRouter } from "./routes/mockup-data";
