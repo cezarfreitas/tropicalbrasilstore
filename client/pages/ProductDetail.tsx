@@ -785,6 +785,107 @@ export default function ProductDetail() {
             )}
           </div>
         </div>
+
+        {/* Suggested Products Section */}
+        <div className="border-t mt-8 pt-8">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Produtos Sugeridos
+            </h2>
+            <p className="text-gray-600">
+              Outros produtos que podem interessar você
+            </p>
+          </div>
+
+          {loadingSuggestions ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-gray-200 aspect-square rounded-lg mb-3"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {suggestedProducts.map((suggestedProduct) => (
+                <Card
+                  key={suggestedProduct.id}
+                  className="group cursor-pointer hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-primary/40 rounded-xl overflow-hidden bg-white hover:-translate-y-1"
+                >
+                  <Link to={`/loja/produto/${suggestedProduct.id}`}>
+                    <CardContent className="p-0">
+                      {/* Product Image */}
+                      <div className="aspect-square relative overflow-hidden bg-white">
+                        <ProductImage
+                          src={suggestedProduct.photo}
+                          alt={suggestedProduct.name}
+                          className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-3"
+                          loading="lazy"
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                        />
+
+                        {/* Category Badge */}
+                        {suggestedProduct.category_name && (
+                          <Badge
+                            variant="secondary"
+                            className="absolute top-1.5 left-1.5 text-[10px] bg-primary text-white px-1 py-0.5 rounded-full shadow-md font-medium"
+                          >
+                            {suggestedProduct.category_name}
+                          </Badge>
+                        )}
+
+                        {/* Colors */}
+                        {suggestedProduct.available_colors &&
+                          suggestedProduct.available_colors.length > 0 && (
+                            <div className="absolute bottom-1.5 right-1.5">
+                              <div className="flex gap-1">
+                                {suggestedProduct.available_colors
+                                  .slice(0, 2)
+                                  .map((color: any) => (
+                                    <div
+                                      key={color.id}
+                                      className="w-4 h-4 rounded-full border border-white shadow-sm"
+                                      title={color.name}
+                                      style={{
+                                        backgroundColor: color.hex_code || '#E5E7EB'
+                                      }}
+                                    >
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          )}
+                      </div>
+
+                      {/* Product Info */}
+                      <div className="p-2 space-y-1">
+                        <h3 className="font-medium text-sm text-gray-900 line-clamp-2 leading-tight">
+                          {suggestedProduct.name}
+                        </h3>
+
+                        {/* Pricing */}
+                        {suggestedProduct.base_price && (
+                          <div className="bg-gray-50 rounded-lg p-1.5">
+                            <div className="text-lg font-bold text-primary">
+                              R$ {Number(suggestedProduct.base_price).toFixed(2).replace('.', ',')}
+                            </div>
+                            {suggestedProduct.suggested_price && (
+                              <div className="text-xs text-gray-500">
+                                Sugerido: R$ {Number(suggestedProduct.suggested_price).toFixed(2).replace('.', ',')}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Link>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Login Modal */}
