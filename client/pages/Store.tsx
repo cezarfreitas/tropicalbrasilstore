@@ -183,17 +183,16 @@ function Store() {
               {filteredProducts.map((product, index) => (
                 <Card
                   key={product.id}
-                  className="group cursor-pointer hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 relative border-2 border-transparent hover:border-primary/30 rounded-2xl overflow-hidden bg-gradient-to-b from-white to-primary/5 hover:to-primary/10 hover:-translate-y-1"
+                  className="group cursor-pointer hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 relative border border-gray-200 hover:border-primary/40 rounded-xl overflow-hidden bg-white hover:-translate-y-1"
                   onClick={() => handleProductClick(product.id)}
                 >
                   <CardContent className="p-0 relative">
                     {/* Product Image */}
-                    <div className="aspect-square relative overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10">
-                      <div className="absolute inset-0 bg-white/50 group-hover:bg-white/30 transition-colors duration-300"></div>
+                    <div className="aspect-square relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
                       <ProductImage
                         src={selectedVariantImages[product.id] || product.photo}
                         alt={product.name}
-                        className="w-full h-full object-contain group-hover:scale-110 transition-all duration-500 relative z-10 p-4"
+                        className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-6"
                         priority={index < 8}
                         loading={index < 8 ? "eager" : "lazy"}
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
@@ -203,72 +202,54 @@ function Store() {
                       {product.category_name && (
                         <Badge
                           variant="secondary"
-                          className="absolute top-3 left-3 text-[10px] sm:text-xs bg-primary/90 text-white backdrop-blur-sm px-2 sm:px-3 py-1 sm:py-1.5 border border-primary/20 rounded-full shadow-lg font-medium"
+                          className="absolute top-3 left-3 text-[10px] sm:text-xs bg-primary text-white px-2 sm:px-3 py-1 rounded-full shadow-md font-medium"
                         >
                           {product.category_name}
                         </Badge>
                       )}
 
-                      {/* Colors - Available on all devices */}
+                      {/* Colors - Simple circles like in reference */}
                       {product.available_colors &&
                         product.available_colors.length > 0 && (
                           <div className="absolute bottom-3 right-3">
-                            <div className="flex gap-1.5 bg-white/95 backdrop-blur-sm rounded-xl p-2 shadow-lg border border-white/50">
+                            <div className="flex gap-2">
                               {product.available_colors
-                                .slice(0, 3)
+                                .slice(0, 2)
                                 .map((color) => (
                                   <div
                                     key={color.id}
-                                    className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white overflow-hidden bg-white cursor-pointer hover:scale-125 transition-all duration-200 shadow-md"
+                                    className="w-6 h-6 rounded-full border-2 border-white cursor-pointer hover:scale-110 transition-all duration-200 shadow-lg"
                                     title={color.name}
                                     onClick={(e) => color.image_url && handleColorVariantClick(product.id, color.image_url, e)}
+                                    style={{ backgroundColor: color.hex_code || '#FFC107' }}
                                   >
-                                    {color.image_url ? (
-                                      <ProductImage
-                                        src={color.image_url}
-                                        alt={`${product.name} - ${color.name}`}
-                                        className="w-full h-full object-cover"
-                                      />
-                                    ) : (
-                                      <div
-                                        className="w-full h-full flex items-center justify-center text-[8px] sm:text-[10px] font-bold text-white"
-                                        style={{ backgroundColor: color.hex_code }}
-                                      >
-                                        {color.name?.charAt(0)}
-                                      </div>
-                                    )}
                                   </div>
                                 ))}
-                              {product.available_colors.length > 3 && (
-                                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center shadow-md">
-                                  <span className="text-[8px] sm:text-[10px] text-gray-600 font-bold">
-                                    +{product.available_colors.length - 3}
-                                  </span>
-                                </div>
-                              )}
                             </div>
                           </div>
                         )}
                     </div>
 
                     {/* Product Info */}
-                    <div className="p-4 sm:p-5 space-y-3 bg-white/50 backdrop-blur-sm">
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-sm sm:text-base text-foreground line-clamp-2 group-hover:text-primary transition-colors duration-200 leading-tight">
+                    <div className="p-5 space-y-4">
+                      <div>
+                        <h3 className="font-medium text-base text-gray-900 line-clamp-2 leading-relaxed">
                           {product.name}
                         </h3>
                       </div>
 
                       {/* Pricing */}
                       {product.base_price && (
-                        <div className="space-y-2">
-                          <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg p-3 border border-primary/20">
-                            <PriceDisplay
-                              price={product.base_price}
-                              suggestedPrice={product.suggested_price}
-                              variant="default"
-                              onLoginClick={() => setShowLoginModal(true)}
-                            />
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <div className="space-y-1">
+                            <div className="text-2xl font-bold text-primary">
+                              R$ {product.base_price.toFixed(2).replace('.', ',')}
+                            </div>
+                            {product.suggested_price && (
+                              <div className="text-sm text-gray-500">
+                                Sugerido: R$ {product.suggested_price.toFixed(2).replace('.', ',')}
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}
@@ -276,7 +257,7 @@ function Store() {
                       {/* Add to Cart Button - Desktop only */}
                       {isAuthenticated && isApproved && (
                         <Button
-                          className="hidden sm:flex w-full mt-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground text-sm h-10 transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 rounded-xl font-medium"
+                          className="w-full bg-primary hover:bg-primary/90 text-white text-base font-medium h-12 rounded-lg transition-all duration-200 hover:shadow-lg"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleProductClick(product.id);
@@ -290,7 +271,7 @@ function Store() {
                     {/* Add to Cart Icon - Mobile */}
                     {isAuthenticated && isApproved && (
                       <div
-                        className="sm:hidden absolute bottom-4 right-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 rounded-full p-3 shadow-xl transition-all duration-300 active:scale-95 border-2 border-white hover:shadow-primary/30"
+                        className="sm:hidden absolute bottom-4 right-4 bg-primary hover:bg-primary/90 rounded-full p-3 shadow-lg transition-all duration-200 active:scale-95"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleProductClick(product.id);
