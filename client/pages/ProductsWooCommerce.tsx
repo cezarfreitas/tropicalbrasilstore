@@ -1146,78 +1146,124 @@ export default function ProductsWooCommerce() {
             </TableHeader>
             <TableBody>
               {products.map((product) => (
-                <TableRow key={product.id} className={selectedProducts.includes(product.id!) ? "bg-blue-50" : ""}>
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedProducts.includes(product.id!)}
-                      onCheckedChange={() => toggleProductSelection(product.id!)}
-                      aria-label={`Selecionar ${product.name}`}
-                    />
+                <TableRow
+                  key={product.id}
+                  className={`transition-colors hover:bg-muted/50 ${
+                    selectedProducts.includes(product.id!) ? "bg-blue-50 hover:bg-blue-100" : ""
+                  }`}
+                >
+                  <TableCell className="p-3">
+                    <div className="flex items-center justify-center">
+                      <Checkbox
+                        checked={selectedProducts.includes(product.id!)}
+                        onCheckedChange={() => toggleProductSelection(product.id!)}
+                        aria-label={`Selecionar ${product.name}`}
+                      />
+                    </div>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded border overflow-hidden">
+                  <TableCell className="p-3">
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 rounded-lg border overflow-hidden flex-shrink-0 shadow-sm">
                         <ProductImage
                           src={product.photo || ""}
                           alt={product.name}
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <div>
-                        <div className="font-medium">{product.name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          SKU: {product.sku || "N/A"}
+                      <div className="min-w-0 flex-1">
+                        <div className="font-semibold text-sm leading-tight mb-1 truncate">
+                          {product.name}
                         </div>
+                        <div className="text-xs text-muted-foreground">
+                          <span className="inline-block">SKU: {product.sku || "N/A"}</span>
+                        </div>
+                        {product.suggested_price && (
+                          <div className="text-xs text-green-600 font-medium mt-1">
+                            R$ {product.suggested_price.toFixed(2)}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{product.category_name || "N/A"}</TableCell>
-                  <TableCell>
-                    <div>
-                      <Badge variant="outline">
+                  <TableCell className="p-3 text-center">
+                    <div className="text-sm font-medium">
+                      {product.category_name ? (
+                        <span className="inline-block px-2 py-1 bg-gray-100 rounded-md text-xs">
+                          {product.category_name}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground text-xs">N/A</span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="p-3 text-center">
+                    <div className="space-y-1">
+                      <Badge variant="outline" className="text-xs font-medium">
                         {product.variant_count || 0} cores
                       </Badge>
                       {product.available_colors && (
-                        <div className="text-xs text-muted-foreground mt-1">
+                        <div className="text-xs text-muted-foreground max-w-[120px] truncate">
                           {product.available_colors}
                         </div>
                       )}
                     </div>
                   </TableCell>
-                  <TableCell>
-                    {product.grade_count ? (
-                      <Badge variant="outline" className="text-blue-600">
-                        {product.grade_count} grades
+                  <TableCell className="p-3 text-center">
+                    <div className="flex justify-center">
+                      {product.grade_count ? (
+                        <Badge variant="outline" className="text-blue-600 bg-blue-50 border-blue-200 text-xs">
+                          {product.grade_count}
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="text-xs">
+                          0
+                        </Badge>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="p-3 text-center">
+                    <div className="flex justify-center">
+                      <Badge
+                        variant={product.total_stock ? "default" : "secondary"}
+                        className={`text-xs font-medium ${
+                          product.total_stock
+                            ? "bg-green-100 text-green-700 border-green-200"
+                            : "bg-gray-100 text-gray-600"
+                        }`}
+                      >
+                        {product.total_stock || 0}
                       </Badge>
-                    ) : (
-                      <Badge variant="secondary">
-                        Sem grades
+                    </div>
+                  </TableCell>
+                  <TableCell className="p-3 text-center">
+                    <div className="flex justify-center">
+                      <Badge
+                        variant={product.active ? "default" : "secondary"}
+                        className={`text-xs font-medium ${
+                          product.active
+                            ? "bg-green-100 text-green-700 border-green-200"
+                            : "bg-red-100 text-red-700 border-red-200"
+                        }`}
+                      >
+                        {product.active ? "Ativo" : "Inativo"}
                       </Badge>
-                    )}
+                    </div>
                   </TableCell>
-                  <TableCell>
-                    <Badge variant={product.total_stock ? "default" : "secondary"}>
-                      {product.total_stock || 0}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={product.active ? "default" : "secondary"}>
-                      {product.active ? "Ativo" : "Inativo"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
+                  <TableCell className="p-3">
+                    <div className="flex items-center justify-end gap-1">
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         onClick={() => handleEditProduct(product)}
+                        className="h-8 w-8 p-0 hover:bg-blue-100 hover:text-blue-600"
                       >
                         <Edit2 className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         onClick={() => handleDeleteProduct(product.id!)}
+                        className="h-8 w-8 p-0 hover:bg-red-100 hover:text-red-600"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
