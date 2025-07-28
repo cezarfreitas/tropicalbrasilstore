@@ -1220,7 +1220,10 @@ export default function ProductsWooCommerce() {
                         </div>
                         {product.suggested_price && (
                           <div className="text-xs text-green-600 font-medium mt-1">
-                            R$ {product.suggested_price.toFixed(2)}
+                            R$ {typeof product.suggested_price === 'number'
+                              ? product.suggested_price.toFixed(2)
+                              : parseFloat(product.suggested_price).toFixed(2)
+                            }
                           </div>
                         )}
                       </div>
