@@ -418,15 +418,6 @@ function Store() {
         )}
       </div>
 
-      {/* Product Modal */}
-      <ProductModal
-        productId={selectedProductId}
-        isOpen={showProductModal}
-        onClose={handleCloseModal}
-        onLoginClick={() => setShowLoginModal(true)}
-      />
-
-      
       {/* Login Modal */}
       <LoginModal
         isOpen={showLoginModal}
