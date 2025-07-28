@@ -91,7 +91,8 @@ router.get("/products", async (req, res) => {
         SELECT DISTINCT
           co.id,
           co.name,
-          co.hex_code
+          co.hex_code,
+          pcv.image_url
         FROM product_color_variants pcv
         LEFT JOIN colors co ON pcv.color_id = co.id
         WHERE pcv.product_id = ? AND pcv.active = true AND co.id IS NOT NULL
