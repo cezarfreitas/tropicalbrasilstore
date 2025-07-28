@@ -328,10 +328,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 placeholder="Digite aqui..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-11 pl-10 pr-4 rounded-xl border-primary/20 focus:border-primary/40 focus:ring-primary/20 bg-white/50 backdrop-blur-sm shadow-sm"
+                className="w-full h-11 pl-10 pr-4 rounded-xl border-white/30 focus:border-white/60 focus:ring-white/20 bg-white/10 backdrop-blur-sm shadow-sm text-white placeholder-white/60"
                 aria-label="Campo de busca de produtos"
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary/60 pointer-events-none" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60 pointer-events-none" />
             </form>
           </div>
 
