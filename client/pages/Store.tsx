@@ -37,13 +37,7 @@ function Store() {
 
   // Handlers
   const handleProductClick = (productId: number) => {
-    setSelectedProductId(productId);
-    setShowProductModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowProductModal(false);
-    setSelectedProductId(null);
+    navigate(`/loja/produto/${productId}`);
   };
 
   const handlePageChange = (newPage: number) => {
