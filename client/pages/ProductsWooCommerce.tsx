@@ -841,27 +841,18 @@ export default function ProductsWooCommerce() {
                               </div>
 
                               <div>
-                                <Label>URL da Imagem</Label>
-                                <Input
+                                <CompactImageUpload
                                   value={variant.image_url || ""}
-                                  onChange={(e) =>
+                                  onChange={(url) =>
                                     updateColorVariant(
                                       variantIndex,
                                       "image_url",
-                                      e.target.value
+                                      url
                                     )
                                   }
-                                  placeholder="https://exemplo.com/imagem-cor.jpg"
+                                  label="Imagem da Variante"
+                                  placeholder="URL da imagem ou carregar arquivo"
                                 />
-                                {variant.image_url && (
-                                  <div className="mt-2">
-                                    <ProductImage
-                                      src={variant.image_url}
-                                      alt={`${selectedColor?.name || "Variante"}`}
-                                      className="w-20 h-20 object-cover rounded border"
-                                    />
-                                  </div>
-                                )}
                               </div>
 
                               <div>
