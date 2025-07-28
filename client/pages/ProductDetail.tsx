@@ -506,12 +506,7 @@ export default function ProductDetail() {
                     priority={true}
                   />
 
-                  {/* Category Badge */}
-                  {product.category_name && (
-                    <div className="absolute top-2 left-2 bg-white px-1.5 py-0.5 rounded-full text-xs font-medium text-gray-700 shadow-sm">
-                      {product.category_name}
-                    </div>
-                  )}
+
 
                   {/* Image indicator */}
                   {selectedVariantImage && (
@@ -531,6 +526,12 @@ export default function ProductDetail() {
               {/* Title and Actions */}
               <div className="flex items-start justify-between">
                 <div className="flex-1">
+                  {/* Category Badge */}
+                  {product.category_name && (
+                    <div className="inline-block bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium mb-2">
+                      {product.category_name}
+                    </div>
+                  )}
                   <h1 className="text-3xl font-bold text-gray-900 mb-1.5 leading-tight">
                     {product.name}
                   </h1>
