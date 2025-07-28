@@ -490,6 +490,69 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         }}
       />
 
+      {/* Search Modal */}
+      {searchModalOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50 z-50 animate-in fade-in duration-300"
+            onClick={() => setSearchModalOpen(false)}
+          />
+
+          {/* Modal */}
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-lg shadow-xl z-50 animate-in zoom-in-95 duration-300">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-foreground">Buscar Produtos</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSearchModalOpen(false)}
+                  className="h-8 w-8 p-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <form onSubmit={(e) => {
+                handleSearch(e);
+                setSearchModalOpen(false);
+              }} className="space-y-4">
+                <div className="relative">
+                  <Input
+                    type="text"
+                    placeholder="Digite o que você procura..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full h-12 pl-12 pr-4 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
+                    autoFocus
+                  />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    type="submit"
+                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                    disabled={!searchTerm.trim()}
+                  >
+                    <Search className="h-4 w-4 mr-2" />
+                    Buscar
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setSearchModalOpen(false)}
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Mobile Categories Drawer */}
       {categoriesOpen && (
         <>
