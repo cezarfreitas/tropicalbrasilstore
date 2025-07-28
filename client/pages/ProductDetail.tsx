@@ -689,6 +689,18 @@ export default function ProductDetail() {
                 </Button>
               </div>
             )}
+
+            {/* Product Description at bottom */}
+            {product.description && (
+              <div className="border-t pt-8 mt-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Descrição do Produto
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {product.description}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
