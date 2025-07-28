@@ -633,7 +633,7 @@ export default function ProductsWooCommerce() {
                         Variantes de Cor ({formData.color_variants.length})
                       </Label>
                       <div className="text-sm text-muted-foreground mt-1">
-                        Cada variante pode ter múltiplas grades de tamanhos
+                        Cada variante pode ter múltiplas grades vendidas
                       </div>
                     </div>
                     <Button
