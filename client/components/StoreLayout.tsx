@@ -351,9 +351,6 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           </div>
         </nav>
 
-        {/* Spacer to push color filter to bottom */}
-        <div className="flex-grow"></div>
-
         {/* Color Filter Section - At bottom */}
         <div className="mt-auto px-4 py-6 border-t border-white/20">
           <div className="space-y-4">
