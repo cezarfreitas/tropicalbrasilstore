@@ -488,10 +488,10 @@ export default function ProductDetail() {
 
               {/* Price Section - Prominent */}
               {product.base_price && (
-                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                <div className="py-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-xs text-gray-600 uppercase tracking-wide font-medium mb-1">
+                      <div className="text-xs text-gray-500 mb-1">
                         Preço Unitário
                       </div>
                       <PriceDisplay
@@ -503,14 +503,9 @@ export default function ProductDetail() {
                     </div>
                     {isAuthenticated && isApproved && product.suggested_price && typeof product.suggested_price === 'number' && product.suggested_price > product.base_price && (
                       <div className="text-right">
-                        <div className="text-xs text-gray-600 mb-1">Por peça</div>
-                        <div className="text-sm font-medium text-gray-900">
-                          <span className="text-xs text-gray-500 line-through mr-2">
-                            R$ {formatPrice(product.suggested_price)}
-                          </span>
-                          <span className="text-green-600">
-                            Economia: R$ {formatPrice(product.suggested_price - product.base_price)}
-                          </span>
+                        <div className="text-xs text-gray-500 mb-1">Economia</div>
+                        <div className="text-sm text-green-600 font-semibold">
+                          R$ {formatPrice(product.suggested_price - product.base_price)}
                         </div>
                       </div>
                     )}
