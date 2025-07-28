@@ -999,6 +999,7 @@ export default function ProductsWooCommerce() {
                 <TableHead>Produto</TableHead>
                 <TableHead>Categoria</TableHead>
                 <TableHead>Variantes</TableHead>
+                <TableHead>Grades</TableHead>
                 <TableHead>Estoque Total</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
