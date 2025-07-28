@@ -644,23 +644,6 @@ export default function ProductDetail() {
                                     </td>
                                   ))}
                                 </tr>
-                                <tr className="border-t border-gray-100 hover:bg-gray-50">
-                                  <td className="p-2 font-medium text-gray-700 bg-gray-50">
-                                    Subtotal
-                                  </td>
-                                  {sortedTemplates.map((template, index) => (
-                                    <td
-                                      key={`subtotal-${template.size_id}-${index}`}
-                                      className="p-2 text-center text-gray-900"
-                                    >
-                                      {product.base_price && (
-                                        <span className="font-medium">
-                                          R$ {formatPrice(product.base_price * template.required_quantity)}
-                                        </span>
-                                      )}
-                                    </td>
-                                  ))}
-                                </tr>
                               </tbody>
                             </table>
                           </div>
