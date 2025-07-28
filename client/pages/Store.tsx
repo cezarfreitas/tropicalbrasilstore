@@ -111,7 +111,7 @@ function Store() {
 
   return (
     <StoreLayout>
-      <div className="container mx-auto lg:px-0 px-2 py-3 lg:py-4 space-y-3 lg:space-y-4">
+      <div className="container mx-auto px-2 sm:px-4 lg:px-0 py-3 lg:py-4 space-y-3 lg:space-y-4 max-w-7xl">
 
         {/* Search Results Indicator */}
         {searchTerm && (
