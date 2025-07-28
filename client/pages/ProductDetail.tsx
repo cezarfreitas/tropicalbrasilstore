@@ -616,56 +616,95 @@ export default function ProductDetail() {
                             );
 
                             return (
-                              <button
+                              <div
                                 key={grade.id}
-                                onClick={() =>
-                                  canAdd ? setSelectedGrade(grade.id) : null
-                                }
-                                disabled={!canAdd}
-                                className={`w-full p-3 border-2 rounded-lg text-left transition-all duration-200 ${
+                                className={`relative overflow-hidden rounded-xl border-2 transition-all duration-300 ${
                                   !canAdd
-                                    ? "border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
+                                    ? "border-gray-200 bg-gray-50 opacity-60"
                                     : selectedGrade === grade.id
-                                      ? "border-primary bg-primary/10"
-                                      : "border-gray-200 hover:border-gray-300"
+                                      ? "border-primary bg-gradient-to-r from-primary/10 to-primary/5 shadow-lg ring-2 ring-primary/20"
+                                      : "border-gray-200 hover:border-primary/50 hover:shadow-md bg-white"
                                 }`}
                               >
-                                <div className="space-y-2">
-                                  <div className="flex justify-between items-start">
-                                    <div className="flex-1">
-                                      <div className="font-semibold text-sm text-gray-900">
-                                        {grade.name}
-                                      </div>
-                                      <div className="text-xs text-primary font-medium">
-                                        {grade.total_quantity} peças
-                                      </div>
-                                    </div>
-                                    {product.base_price && (
-                                      <div className="text-right">
-                                        <div className="text-xs text-gray-500 mb-0.5">Total da Grade</div>
-                                        <PriceDisplay
-                                          price={product.base_price * grade.total_quantity}
-                                          variant="default"
-                                          className="text-primary font-bold"
-                                          onLoginClick={() => setShowLoginModal(true)}
-                                        />
-                                        <div className="text-xs text-gray-600 mt-0.5">
-                                          R$ {formatPrice(product.base_price)} cada
+                                <button
+                                  onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
+                                  disabled={!canAdd}
+                                  className="w-full p-0 text-left cursor-pointer disabled:cursor-not-allowed"
+                                >
+                                  {/* Header with gradient background */}
+                                  <div className={`p-4 ${selectedGrade === grade.id ? 'bg-gradient-to-r from-primary/20 to-primary/10' : 'bg-gray-50/50'} border-b border-gray-100`}>
+                                    <div className="flex justify-between items-start">
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                          <div className={`w-2 h-2 rounded-full ${selectedGrade === grade.id ? 'bg-primary' : 'bg-gray-400'}`}></div>
+                                          <h4 className="font-bold text-base text-gray-900">{grade.name}</h4>
+                                        </div>
+                                        {grade.description && (
+                                          <p className="text-xs text-gray-600 mb-2">{grade.description}</p>
+                                        )}
+                                        <div className="flex items-center gap-2">
+                                          <span className="inline-flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-semibold">
+                                            📦 {grade.total_quantity} peças
+                                          </span>
                                         </div>
                                       </div>
-                                    )}
+
+                                      {product.base_price && (
+                                        <div className="text-right bg-white/80 rounded-lg p-3 min-w-[100px]">
+                                          <div className="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Total</div>
+                                          <PriceDisplay
+                                            price={product.base_price * grade.total_quantity}
+                                            variant="default"
+                                            className="text-primary font-bold text-lg"
+                                            onLoginClick={() => setShowLoginModal(true)}
+                                          />
+                                          <div className="text-xs text-gray-600 mt-1 font-medium">
+                                            R$ {formatPrice(product.base_price)} cada
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
 
-                                  <div className="flex flex-wrap gap-1">
-                                    {sortedTemplates.map((template, index) => (
-                                      <span key={`${template.size_id}-${index}`} className="inline-flex items-center gap-1 bg-gray-100 px-1.5 py-0.5 rounded text-xs">
-                                        <span className="font-medium">{template.size}</span>
-                                        <span className="text-gray-500">({template.required_quantity})</span>
+                                  {/* Size breakdown section */}
+                                  <div className="p-4">
+                                    <div className="mb-2">
+                                      <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                                        Distribuição por Tamanho
                                       </span>
-                                    ))}
+                                    </div>
+                                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                                      {sortedTemplates.map((template, index) => (
+                                        <div
+                                          key={`${template.size_id}-${index}`}
+                                          className="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-lg p-2 text-center hover:from-primary/5 hover:to-primary/10 hover:border-primary/30 transition-all duration-200"
+                                        >
+                                          <div className="font-bold text-sm text-gray-900">{template.size}</div>
+                                          <div className="text-xs text-gray-600 font-medium">{template.required_quantity}x</div>
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
-                                </div>
-                              </button>
+
+                                  {/* Selection indicator */}
+                                  {selectedGrade === grade.id && (
+                                    <div className="absolute top-3 right-3">
+                                      <div className="w-6 h-6 bg-primary rounded-full border-2 border-white shadow-md flex items-center justify-center">
+                                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Availability indicator */}
+                                  {!canAdd && (
+                                    <div className="absolute inset-0 bg-gray-900/20 flex items-center justify-center">
+                                      <span className="bg-gray-800 text-white px-3 py-1 rounded-full text-xs font-medium">
+                                        Indisponível
+                                      </span>
+                                    </div>
+                                  )}
+                                </button>
+                              </div>
                             );
                           })
                         ) : (
