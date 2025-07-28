@@ -55,6 +55,14 @@ function Store() {
     }
   };
 
+  const handleColorVariantClick = (productId: number, variantImageUrl: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent opening the product modal
+    setSelectedVariantImages(prev => ({
+      ...prev,
+      [productId]: variantImageUrl
+    }));
+  };
+
   // Effect to handle search term changes
   useEffect(() => {
     fetchProducts(1, searchTerm);
