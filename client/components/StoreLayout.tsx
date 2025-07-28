@@ -292,23 +292,27 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2" role="navigation" aria-label="Categorias principais">
-          {navigationLinks.map((link) => {
-            const IconComponent = link.icon;
-            return (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`flex items-center gap-3 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg p-3 transition-all duration-200 ${
-                  !sidebarOpen ? 'justify-center' : ''
-                }`}
-                title={!sidebarOpen ? link.label : undefined}
-              >
-                <IconComponent className="h-4 w-4 flex-shrink-0" />
-                {sidebarOpen && <span>{link.label}</span>}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 px-4 py-6" role="navigation" aria-label="Categorias principais">
+          <div className="space-y-1">
+            <h3 className="px-3 mb-4 text-xs font-semibold text-muted-foreground/80 uppercase tracking-wider">
+              Categorias
+            </h3>
+            {navigationLinks.map((link, index) => {
+              const IconComponent = link.icon;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="group flex items-center gap-3 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-gradient-to-r hover:from-primary/10 hover:to-primary/5 rounded-xl px-3 py-3 transition-all duration-200 hover:shadow-sm border border-transparent hover:border-primary/20"
+                >
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/5 group-hover:bg-primary/20 transition-colors duration-200">
+                    <IconComponent className="h-4 w-4 flex-shrink-0 text-primary" />
+                  </div>
+                  <span className="group-hover:translate-x-1 transition-transform duration-200">{link.label}</span>
+                </Link>
+              );
+            })}
+          </div>
         </nav>
 
         {/* Search and Theme */}
