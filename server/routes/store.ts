@@ -83,7 +83,7 @@ router.get("/products-paginated", async (req, res) => {
           SUM(pv.stock) as total_stock
         FROM product_variants pv
         LEFT JOIN colors co ON pv.color_id = co.id
-        WHERE pv.product_id = ? AND co.id IS NOT NULL
+        WHERE pv.product_id = ? AND co.id IS NOT NULL AND pv.stock > 0
         GROUP BY co.id, co.name, co.hex_code
         ORDER BY co.name
       `,
