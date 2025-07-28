@@ -73,6 +73,19 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     }
   }, [searchTerm, navigate]);
 
+  const handleColorFilter = (colorId: number | null) => {
+    setSelectedColorFilter(colorId);
+    const currentParams = new URLSearchParams(searchParams);
+
+    if (colorId === null) {
+      currentParams.delete('cor');
+    } else {
+      currentParams.set('cor', colorId.toString());
+    }
+
+    navigate(`/loja?${currentParams.toString()}`);
+  };
+
   // Memoized navigation links
   const navigationLinks = useMemo(() => [
     { to: "/loja", label: "Todos", icon: Package },
