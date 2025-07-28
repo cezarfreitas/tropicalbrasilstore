@@ -848,10 +848,10 @@ export default function ProductsWooCommerce() {
                                     {(() => {
                                       const selectedGrades = grades.filter(g => variant.grade_ids.includes(g.id));
                                       const allSizeIds = selectedGrades.reduce((acc, grade) => {
-                                        if (grade.items) {
-                                          grade.items.forEach((item: any) => {
-                                            if (item.size_id && !acc.includes(item.size_id)) {
-                                              acc.push(item.size_id);
+                                        if (grade.templates) {
+                                          grade.templates.forEach((template: any) => {
+                                            if (template.size_id && !acc.includes(template.size_id)) {
+                                              acc.push(template.size_id);
                                             }
                                           });
                                         }
