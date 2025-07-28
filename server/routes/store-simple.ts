@@ -435,7 +435,23 @@ router.get("/products/:id", async (req, res) => {
       }
     }
 
+    // Extract unique colors for the available_colors field
+    const uniqueColors = [];
+    const seenColorIds = new Set();
+
+    for (const variant of variantRows as any[]) {
+      if (variant.color_id && !seenColorIds.has(variant.color_id)) {
+        seenColorIds.add(variant.color_id);
+        uniqueColors.push({
+          id: variant.color_id,
+          name: variant.color_name,
+          hex_code: variant.hex_code
+        });
+      }
+    }
+
     product.variants = variantRows;
+    product.available_colors = uniqueColors;
     product.available_grades = gradesWithTemplates;
 
     res.json(product);
