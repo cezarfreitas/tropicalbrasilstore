@@ -514,190 +514,183 @@ export default function ProductDetail() {
               )}
             </div>
 
-            {/* Authentication Check */}
-            {!isAuthenticated || !isApproved ? (
-              <div className="text-center py-6 space-y-3">
-                <div className="flex items-center justify-center gap-2">
-                  <Lock className="h-5 w-5 text-primary" />
-                  <span className="font-medium text-gray-900">Login necessário</span>
+            {/* Color Variants Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Cores Disponíveis
+              </h3>
+              {getAvailableColors().length === 0 ? (
+                <p className="text-gray-500">Nenhuma cor disponível</p>
+              ) : (
+                <div className="flex flex-wrap gap-3">
+                  {getAvailableColors().map((color) => (
+                    <button
+                      key={color.id}
+                      onClick={() => handleColorSelect(color.id, color.image_url)}
+                      className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
+                        selectedColor === color.id
+                          ? "bg-primary/10 border-2 border-primary"
+                          : "bg-gray-50 border border-gray-200 hover:bg-gray-100"
+                      }`}
+                    >
+                      {/* Variant Image or Color Circle */}
+                      {color.image_url ? (
+                        <div className="w-10 h-10 rounded-lg overflow-hidden border border-gray-200">
+                          <ProductImage
+                            src={color.image_url}
+                            alt={`${product.name} - ${color.name}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div
+                          className="w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center text-sm font-medium text-white"
+                          style={{ backgroundColor: color.hex_code || "#999" }}
+                        >
+                          {color.name?.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+
+                      {/* Color Name */}
+                      <span className="font-medium text-gray-900">
+                        {color.name}
+                      </span>
+                    </button>
+                  ))}
                 </div>
-                <Button
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                  onClick={() => setShowLoginModal(true)}
-                >
-                  Fazer Login
-                </Button>
-              </div>
-            ) : (
-              <>
-                {/* Color Variants Section */}
+              )}
+            </div>
+
+            {/* Grades or Sizes Section */}
+            {selectedColor && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {hasGrades() ? "Selecione a Grade" : "Selecione o Tamanho"}
+                </h3>
+
                 <div className="space-y-3">
-                  <div>
-                    <h3 className="text-base font-semibold text-gray-900">
-                      Cores ({getAvailableColors().length})
-                    </h3>
-                    {getAvailableColors().length === 0 ? (
-                      <p className="text-sm text-gray-500 py-2">Nenhuma cor disponível</p>
-                    ) : (
-                      <div className="flex flex-wrap gap-2">
-                        {getAvailableColors().map((color) => (
-                          <button
-                            key={color.id}
-                            onClick={() => handleColorSelect(color.id, color.image_url)}
-                            className="flex items-center gap-2 p-2 hover:opacity-75 transition-opacity"
-                          >
-                            {/* Variant Image or Color Circle */}
-                            {color.image_url ? (
-                              <div className="w-6 h-6 rounded overflow-hidden">
-                                <ProductImage
-                                  src={color.image_url}
-                                  alt={`${product.name} - ${color.name}`}
-                                  className="w-full h-full object-cover"
+                  {hasGrades() ? (
+                    getAvailableGradesForColor().map((grade) => {
+                      const canAdd = canAddGradeToCart(grade);
+                      const sortedTemplates = [...grade.templates].sort(
+                        (a, b) => a.display_order - b.display_order,
+                      );
+
+                      return (
+                        <button
+                          key={grade.id}
+                          onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
+                          disabled={!canAdd}
+                          className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
+                            !canAdd
+                              ? "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed"
+                              : selectedGrade === grade.id
+                                ? "border-primary bg-primary/5"
+                                : "border-gray-200 bg-white hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="flex justify-between items-start mb-3">
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-gray-900 mb-1">
+                                {grade.name}
+                              </h4>
+                              <span className="text-sm text-primary font-medium">
+                                {grade.total_quantity} peças total
+                              </span>
+                            </div>
+
+                            {product.base_price && (
+                              <div className="text-right">
+                                <PriceDisplay
+                                  price={product.base_price * grade.total_quantity}
+                                  variant="default"
+                                  className="text-primary font-bold"
                                 />
-                              </div>
-                            ) : (
-                              <div
-                                className="w-6 h-6 rounded flex items-center justify-center text-xs font-medium text-white"
-                                style={{ backgroundColor: color.hex_code || "#999" }}
-                              >
-                                {color.name?.charAt(0).toUpperCase()}
+                                <div className="text-xs text-gray-500">
+                                  R$ {formatPrice(product.base_price)} cada
+                                </div>
                               </div>
                             )}
+                          </div>
 
-                            {/* Color Name */}
-                            <span className={`text-sm ${selectedColor === color.id ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
-                              {color.name}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Grades or Sizes Section */}
-                  {selectedColor && (
-                    <div className="space-y-3">
-                      <h3 className="text-base font-semibold text-gray-900">
-                        {hasGrades() ? "Grades" : "Tamanhos"}
-                      </h3>
-                      
-                      <div className="space-y-4">
-                        {hasGrades() ? (
-                          getAvailableGradesForColor().map((grade) => {
-                            const canAdd = canAddGradeToCart(grade);
-                            const sortedTemplates = [...grade.templates].sort(
-                              (a, b) => a.display_order - b.display_order,
-                            );
-
-                            return (
-                              <button
-                                key={grade.id}
-                                onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
-                                disabled={!canAdd}
-                                className={`w-full p-3 text-left transition-opacity ${
-                                  !canAdd
-                                    ? "opacity-40 cursor-not-allowed"
-                                    : "hover:opacity-75"
-                                }`}
+                          <div className="flex flex-wrap gap-2">
+                            {sortedTemplates.map((template, index) => (
+                              <span
+                                key={`${template.size_id}-${index}`}
+                                className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm"
                               >
-                                <div className="flex justify-between items-start mb-2">
-                                  <div className="flex-1">
-                                    <h4 className={`text-sm mb-1 ${selectedGrade === grade.id ? 'font-semibold text-gray-900' : 'font-medium text-gray-700'}`}>
-                                      {grade.name}
-                                    </h4>
-                                    <span className="text-xs text-gray-500">
-                                      {grade.total_quantity} peças
-                                    </span>
-                                  </div>
-
-                                  {product.base_price && (
-                                    <div className="text-right">
-                                      <PriceDisplay
-                                        price={product.base_price * grade.total_quantity}
-                                        variant="small"
-                                        className="text-gray-900 font-semibold"
-                                        onLoginClick={() => setShowLoginModal(true)}
-                                      />
-                                      <div className="text-xs text-gray-500">
-                                        R$ {formatPrice(product.base_price)} cada
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-
-                                <div className="flex flex-wrap gap-2 text-xs text-gray-600">
-                                  {sortedTemplates.map((template, index) => (
-                                    <span key={`${template.size_id}-${index}`}>
-                                      {template.size}({template.required_quantity})
-                                    </span>
-                                  ))}
-                                </div>
-                              </button>
-                            );
-                          })
-                        ) : (
-                          <div className="grid grid-cols-4 gap-3">
-                            {getAvailableSizes().map((size) => (
-                              <button
-                                key={size.id}
-                                onClick={() => setSelectedSize(size.id)}
-                                className="p-2 text-center hover:opacity-75 transition-opacity"
-                              >
-                                <div className={`text-sm ${selectedSize === size.id ? 'font-semibold text-gray-900' : 'font-medium text-gray-600'}`}>
-                                  {size.name}
-                                </div>
-                                <div className="text-xs text-gray-500 mt-1">
-                                  {size.stock} disponível
-                                </div>
-                              </button>
+                                {template.size} ({template.required_quantity})
+                              </span>
                             ))}
                           </div>
-                        )}
-                      </div>
+                        </button>
+                      );
+                    })
+                  ) : (
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                      {getAvailableSizes().map((size) => (
+                        <button
+                          key={size.id}
+                          onClick={() => setSelectedSize(size.id)}
+                          className={`p-3 rounded-lg border-2 text-center transition-all ${
+                            selectedSize === size.id
+                              ? "border-primary bg-primary/5"
+                              : "border-gray-200 bg-white hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="font-semibold text-gray-900">
+                            {size.name}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            {size.stock} disponível
+                          </div>
+                        </button>
+                      ))}
                     </div>
                   )}
                 </div>
+              </div>
+            )}
 
-                {/* Add to Cart Section */}
-                {canAddToCart() && (
-                  <div className="py-4 sticky bottom-4 bg-white">
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm text-gray-700">Qtd:</span>
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                            className="h-8 w-8 p-0"
-                          >
-                            <Minus className="h-3 w-3" />
-                          </Button>
-                          <span className="w-8 text-center text-sm font-medium">
-                            {quantity}
-                          </span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setQuantity(quantity + 1)}
-                            className="h-8 w-8 p-0"
-                          >
-                            <Plus className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-
+            {/* Add to Cart Section */}
+            {canAddToCart() && (
+              <div className="border-t pt-6">
+                <div className="flex items-center gap-6 mb-4">
+                  <div className="flex items-center gap-3">
+                    <label className="text-sm font-medium text-gray-700">Quantidade:</label>
+                    <div className="flex items-center border border-gray-300 rounded-lg">
                       <Button
-                        onClick={addToCart}
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground h-10 flex-1 max-w-48"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                        className="h-10 w-10 p-0 rounded-l-lg"
                       >
-                        <ShoppingCart className="mr-2 h-4 w-4" />
-                        Adicionar
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      <span className="w-12 text-center text-sm font-semibold border-x">
+                        {quantity}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setQuantity(quantity + 1)}
+                        className="h-10 w-10 p-0 rounded-r-lg"
+                      >
+                        <Plus className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
-                )}
-              </>
+                </div>
+
+                <Button
+                  onClick={addToCart}
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base font-semibold"
+                  size="lg"
+                >
+                  <ShoppingCart className="mr-2 h-5 w-5" />
+                  Adicionar ao Carrinho
+                </Button>
+              </div>
             )}
           </div>
         </div>
