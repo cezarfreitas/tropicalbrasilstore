@@ -838,17 +838,20 @@ export default function ProductsWooCommerce() {
                                 <Label className="text-sm font-medium mb-3 block">
                                   Estoque por Tamanho
                                 </Label>
-                                {!formData.size_group_id ? (
+                                {variant.size_group_ids.length === 0 ? (
                                   <div className="text-center py-4 text-muted-foreground text-sm">
-                                    Selecione um grupo de tamanhos primeiro
+                                    Selecione pelo menos uma grade de tamanhos primeiro
                                   </div>
                                 ) : (
                                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
                                     {(() => {
-                                      const selectedGroup = sizeGroups.find(g => g.id === formData.size_group_id);
-                                      const availableSizes = selectedGroup
-                                        ? sizes.filter(size => selectedGroup.sizes.includes(size.size))
-                                        : [];
+                                      const selectedGroups = sizeGroups.filter(g => variant.size_group_ids.includes(g.id));
+                                      const allSizesFromGroups = selectedGroups.reduce((acc, group) => {
+                                        return [...acc, ...group.sizes];
+                                      }, [] as string[]);
+
+                                      const uniqueSizes = [...new Set(allSizesFromGroups)];
+                                      const availableSizes = sizes.filter(size => uniqueSizes.includes(size.size));
 
                                       return availableSizes
                                         .sort((a, b) => a.display_order - b.display_order)
