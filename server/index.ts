@@ -8,7 +8,6 @@ import { sizesRouter } from "./routes/sizes";
 import { sizeGroupsRouter } from "./routes/size-groups";
 import { colorsRouter } from "./routes/colors";
 import { productsRouter } from "./routes/products";
-import { gradesRouter } from "./routes/grades";
 import { seedRouter } from "./routes/seed";
 import { statsRouter } from "./routes/stats";
 import { enhanceRouter } from "./routes/enhance";
@@ -123,7 +122,7 @@ export function createServer() {
   app.use("/api/products-enhanced", productsEnhancedRouter);
   app.use("/api/products-woocommerce", productsWooCommerceRouter);
   app.use("/api/products-by-names", productsByNamesRouter);
-  app.use("/api/grades", gradesRouter);
+  app.use("/api/grades", gradesRedesignedRouter);
   app.use("/api/seed", seedRouter);
   app.use("/api/stats", statsRouter);
   app.use("/api/enhance", enhanceRouter);
