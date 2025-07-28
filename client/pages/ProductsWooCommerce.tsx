@@ -74,6 +74,7 @@ interface ColorVariant {
   image_url?: string;
   stock_total: number;
   active: boolean;
+  size_group_ids: number[]; // Multiple size groups per variant
   size_stocks: SizeStock[];
   color_name?: string;
   hex_code?: string;
