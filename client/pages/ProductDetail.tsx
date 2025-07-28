@@ -147,6 +147,8 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedVariantImage, setSelectedVariantImage] = useState<string | null>(null);
+  const [suggestedProducts, setSuggestedProducts] = useState<any[]>([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const { addItem } = useCart();
   const { toast } = useToast();
   const { isAuthenticated, isApproved } = useCustomerAuth();
