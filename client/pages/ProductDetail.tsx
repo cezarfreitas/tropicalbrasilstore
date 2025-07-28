@@ -594,15 +594,27 @@ export default function ProductDetail() {
                           : "bg-gray-50 border border-gray-200 hover:bg-gray-100"
                       }`}
                     >
-                      {/* Color Circle */}
-                      <div
-                        className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-sm font-medium"
-                        style={{
-                          backgroundColor: getColorValue(color),
-                          color: getTextColor(getColorValue(color))
-                        }}
-                      >
-                        {!color.hex_code && color.name?.charAt(0).toUpperCase()}
+                      {/* Color Thumbnail */}
+                      <div className="w-8 h-8 rounded-lg border border-gray-200 overflow-hidden bg-gray-100">
+                        {color.image_url ? (
+                          <ProductImage
+                            src={color.image_url}
+                            alt={color.name}
+                            className="w-full h-full object-contain"
+                            loading="lazy"
+                            sizes="32px"
+                          />
+                        ) : (
+                          <div
+                            className="w-full h-full flex items-center justify-center text-sm font-medium"
+                            style={{
+                              backgroundColor: getColorValue(color),
+                              color: getTextColor(getColorValue(color))
+                            }}
+                          >
+                            {color.name?.charAt(0).toUpperCase()}
+                          </div>
+                        )}
                       </div>
 
                       {/* Color Name */}
