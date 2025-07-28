@@ -171,37 +171,7 @@ export default function ProductsWooCommerce() {
     fetchSizeGroups();
   }, [currentPage, searchTerm, selectedCategory, selectedStatus]);
 
-  // Update size_stocks when size_group_id changes
-  useEffect(() => {
-    if (formData.size_group_id && sizeGroups.length > 0 && sizes.length > 0) {
-      const selectedGroup = sizeGroups.find(g => g.id === formData.size_group_id);
-      const availableSizes = selectedGroup
-        ? sizes.filter(size => selectedGroup.sizes.includes(size.size))
-        : [];
 
-      // Update existing variants to have the correct size_stocks
-      const updatedVariants = formData.color_variants.map(variant => ({
-        ...variant,
-        size_stocks: availableSizes.map(size => {
-          // Keep existing stock if it exists, otherwise default to 0
-          const existingStock = variant.size_stocks.find(ss => ss.size_id === size.id);
-          return {
-            size_id: size.id,
-            stock: existingStock?.stock || 0,
-          };
-        }),
-        stock_total: variant.size_stocks.reduce((sum, ss) => {
-          const shouldInclude = availableSizes.some(size => size.id === ss.size_id);
-          return shouldInclude ? sum + ss.stock : sum;
-        }, 0),
-      }));
-
-      setFormData(prev => ({
-        ...prev,
-        color_variants: updatedVariants,
-      }));
-    }
-  }, [formData.size_group_id, sizeGroups, sizes]);
 
   const fetchProducts = async () => {
     try {
