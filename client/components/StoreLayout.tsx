@@ -198,71 +198,76 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         {/* User and Cart Actions */}
         <div className="p-2 border-b border-primary/10 flex gap-1">
           {/* User Menu */}
-          {isAuthenticated ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-center h-5 p-0 hover:bg-transparent"
-                  aria-label="Menu do usuário"
-                >
-                  <User className="h-10 w-10 flex-shrink-0" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuLabel>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {customer?.name || "Cliente"}
-                    </p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {customer?.whatsapp}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-xs">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`w-2 h-2 rounded-full ${
-                        isApproved ? "bg-green-500" : "bg-yellow-500"
-                      }`}
-                    />
-                    {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sair
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Button
-              variant="ghost"
-              className="w-full justify-center h-5 p-0 hover:bg-transparent"
-              onClick={() => setLoginModalOpen(true)}
-              aria-label="Fazer login"
-            >
-              <LogIn className="h-10 w-10 flex-shrink-0" />
-            </Button>
-          )}
+          <div className="flex-1 flex flex-col items-center gap-1">
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="justify-center h-5 p-0 hover:bg-transparent"
+                  >
+                    <User className="h-10 w-10 flex-shrink-0" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {customer?.name || "Cliente"}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {customer?.whatsapp}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="text-xs">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          isApproved ? "bg-green-500" : "bg-yellow-500"
+                        }`}
+                      />
+                      {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                variant="ghost"
+                className="justify-center h-5 p-0 hover:bg-transparent"
+                onClick={() => setLoginModalOpen(true)}
+              >
+                <LogIn className="h-10 w-10 flex-shrink-0" />
+              </Button>
+            )}
+            <span className="text-xs text-muted-foreground">
+              {isAuthenticated ? "Perfil" : "Entrar"}
+            </span>
+          </div>
 
           {/* Cart */}
-          <Button
-            variant="ghost"
-            className="w-full justify-center h-5 p-0 hover:bg-transparent relative"
-            onClick={() => setCartOpen(true)}
-            aria-label={cartAriaLabel}
-          >
-            <ShoppingCart className="h-10 w-10 text-primary flex-shrink-0" />
-            {totalItems > 0 && (
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse">
-                {totalItems}
-              </Badge>
-            )}
-          </Button>
+          <div className="flex-1 flex flex-col items-center gap-1">
+            <Button
+              variant="ghost"
+              className="justify-center h-5 p-0 hover:bg-transparent relative"
+              onClick={() => setCartOpen(true)}
+            >
+              <ShoppingCart className="h-10 w-10 text-primary flex-shrink-0" />
+              {totalItems > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse">
+                  {totalItems}
+                </Badge>
+              )}
+            </Button>
+            <span className="text-xs text-muted-foreground">Carrinho</span>
+          </div>
         </div>
 
         {/* Navigation */}
