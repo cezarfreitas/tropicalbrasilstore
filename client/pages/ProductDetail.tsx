@@ -679,8 +679,8 @@ export default function ProductDetail() {
               )}
             </div>
 
-            {/* Grades or Sizes Section */}
-            {selectedColor && (
+            {/* Grades or Sizes Section - Only for authenticated users */}
+            {selectedColor && isAuthenticated && isApproved && (
               <div className="space-y-2">
                 <h3 className="text-lg font-semibold text-gray-900">
                   {hasGrades() ? "Selecione a Grade" : "Selecione o Tamanho"}
@@ -713,7 +713,7 @@ export default function ProductDetail() {
                               <span className="font-medium text-gray-900">{grade.name}</span>
                               <span className="text-gray-600 mx-1">•</span>
                               <span className="text-gray-900">{grade.total_quantity} peças total</span>
-                              {product.base_price && isAuthenticated && isApproved && (
+                              {product.base_price && (
                                 <>
                                   <span className="text-gray-600 mx-1">•</span>
                                   <span className="text-primary font-medium">
@@ -759,6 +759,28 @@ export default function ProductDetail() {
                       ))}
                     </div>
                   )}
+                </div>
+              </div>
+            )}
+
+            {/* Login prompt for unauthenticated users when color is selected */}
+            {selectedColor && (!isAuthenticated || !isApproved) && (
+              <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center space-y-3">
+                <Lock className="h-8 w-8 text-gray-400 mx-auto" />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {hasGrades() ? "Grades Disponíveis" : "Tamanhos Disponíveis"}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Para ver {hasGrades() ? "as grades" : "os tamanhos"} disponíveis e adicionar ao carrinho, você precisa estar logado.
+                  </p>
+                  <Button
+                    onClick={() => setShowLoginModal(true)}
+                    className="bg-primary hover:bg-primary/90 text-white"
+                  >
+                    <Lock className="mr-2 h-4 w-4" />
+                    Fazer Login
+                  </Button>
                 </div>
               </div>
             )}
