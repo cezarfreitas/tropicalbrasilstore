@@ -463,26 +463,26 @@ export default function ProductDetail() {
           {/* Product Information */}
           <div className="space-y-8">
             {/* Product Header */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               {/* Title and Actions */}
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h1 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2">
+                  <h1 className="text-3xl font-bold text-gray-900 mb-3 leading-tight">
                     {product.name}
                   </h1>
                   {product.description && (
-                    <p className="text-sm text-gray-600">
+                    <p className="text-gray-600 leading-relaxed">
                       {product.description}
                     </p>
                   )}
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" className="h-10 w-10 p-0">
                     <Heart className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Button variant="outline" size="sm" className="h-10 w-10 p-0">
                     <Share2 className="h-4 w-4" />
                   </Button>
                 </div>
