@@ -510,10 +510,10 @@ export default function ProductDetail() {
                         <div className="text-xs text-gray-600 mb-1">Por peça</div>
                         <div className="text-sm font-medium text-gray-900">
                           <span className="text-xs text-gray-500 line-through mr-2">
-                            R$ {product.suggested_price.toFixed(2)}
+                            R$ {formatPrice(product.suggested_price)}
                           </span>
                           <span className="text-green-600">
-                            Economia: R$ {(product.suggested_price - product.base_price).toFixed(2)}
+                            Economia: R$ {formatPrice(product.suggested_price - product.base_price)}
                           </span>
                         </div>
                       </div>
