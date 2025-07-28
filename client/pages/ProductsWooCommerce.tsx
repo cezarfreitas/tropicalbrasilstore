@@ -54,6 +54,7 @@ import {
   Loader2,
   Image as ImageIcon,
   ShoppingCart,
+  RefreshCw,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ProductImage } from "@/components/ProductImage";
