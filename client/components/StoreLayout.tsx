@@ -185,7 +185,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col bg-gradient-to-b from-white to-primary/5 border-r border-primary/10 shadow-lg w-64 min-h-screen backdrop-blur-sm">
+      <aside className="hidden lg:flex flex-col bg-primary border-r border-primary/20 shadow-lg w-64 min-h-screen">
         {/* Sidebar Header */}
         <div className="border-b border-primary/10 bg-primary">
           <Link to="/loja" className="flex items-center justify-center" aria-label="Ir para página inicial">
@@ -197,7 +197,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         </div>
 
         {/* Quick Actions */}
-        <div className="px-4 py-6 border-b border-primary/10 bg-gradient-to-b from-transparent to-primary/5">
+        <div className="px-4 py-6 border-b border-primary/20 bg-primary">
           <div className="grid grid-cols-3 gap-4">
             {/* User Menu */}
             <div className="flex flex-col items-center gap-3">
