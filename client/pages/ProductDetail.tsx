@@ -496,18 +496,11 @@ export default function ProductDetail() {
 
             {/* Authentication Check */}
             {!isAuthenticated || !isApproved ? (
-              <Card className="border-0 bg-gray-50">
-                <CardContent className="text-center py-8 space-y-4">
-                  <div className="flex justify-center">
-                    <Lock className="h-12 w-12 text-muted-foreground" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Login necessário
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Faça login para ver preços e adicionar produtos ao carrinho
-                    </p>
+              <Card className="border border-primary/20 bg-primary/5">
+                <CardContent className="text-center py-4 space-y-3">
+                  <div className="flex items-center justify-center gap-2">
+                    <Lock className="h-5 w-5 text-primary" />
+                    <span className="font-medium text-gray-900">Login necessário</span>
                   </div>
                   <Button
                     className="bg-primary hover:bg-primary/90 text-primary-foreground"
