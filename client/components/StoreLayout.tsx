@@ -188,7 +188,6 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             <Link to="/loja" className="flex items-center gap-3 flex-1 min-w-0">
               <LogoDisplay
                 size="w-10 h-10"
-                maxHeight="max-h-10"
                 className="flex-shrink-0"
               />
               <div className="flex flex-col min-w-0">
@@ -295,7 +294,6 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <Link to="/loja" className="flex items-center gap-4">
                 <LogoDisplay
                   size="w-12 h-12"
-                  maxHeight="max-h-12"
                   className="flex-shrink-0"
                 />
                 <div className="flex flex-col">
