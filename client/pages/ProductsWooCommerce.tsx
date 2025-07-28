@@ -1270,15 +1270,13 @@ export default function ProductsWooCommerce() {
                     </div>
                   </TableCell>
                   <TableCell className="p-3 text-center">
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                       <Badge variant="outline" className="text-xs font-medium">
                         {product.variant_count || 0} cores
                       </Badge>
-                      {product.available_colors && (
-                        <div className="text-xs text-muted-foreground max-w-[120px] truncate">
-                          {product.available_colors}
-                        </div>
-                      )}
+                      <div className="flex justify-center">
+                        {renderColorCircles(product.color_data)}
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell className="p-3 text-center">
