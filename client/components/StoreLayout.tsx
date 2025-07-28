@@ -583,9 +583,16 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <div>
                 <h2 className="text-lg font-semibold text-primary">Carrinho</h2>
                 {totalItems > 0 && (
-                  <p className="text-xs text-gray-600 mt-1">
-                    {totalItems} {totalItems === 1 ? 'peça' : 'peças'} • {items.length} {items.length === 1 ? 'item' : 'itens'}
-                  </p>
+                  <div className="text-xs text-gray-600 mt-1 space-y-1">
+                    <p>Total: {totalItems} {totalItems === 1 ? 'peça' : 'peças'}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {items.map((item) => (
+                        <span key={item.id} className="bg-gray-100 px-2 py-0.5 rounded text-[10px]">
+                          {item.gradeName || item.sizeName || 'Individual'}: {item.quantity} {item.quantity === 1 ? 'peça' : 'peças'}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
               <Button
@@ -727,7 +734,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   </div>
 
                   <div className="text-[10px] sm:text-xs text-gray-500 text-center">
-                    <p>��� Compras por grades (kits)</p>
+                    <p>• Compras por grades (kits)</p>
                     <p>• Confirmação via WhatsApp</p>
                   </div>
                 </div>
