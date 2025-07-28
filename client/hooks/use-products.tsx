@@ -159,6 +159,10 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
         params.append("busca", searchTerm.trim());
       }
 
+      if (colorFilter !== null) {
+        params.append("cor", colorFilter.toString());
+      }
+
       const endpoint = `/api/store/products-paginated?${params}`;
 
       // Debug log
