@@ -619,32 +619,48 @@ export default function ProductDetail() {
                             <table className="w-full text-sm">
                               <thead>
                                 <tr className="bg-gray-50">
-                                  <th className="text-center p-2 font-medium text-gray-700">Quantidade</th>
-                                  <th className="text-left p-2 font-medium text-gray-700">Tamanho</th>
-                                  <th className="text-right p-2 font-medium text-gray-700">Subtotal</th>
+                                  <th className="text-left p-2 font-medium text-gray-700 w-20"></th>
+                                  {sortedTemplates.map((template, index) => (
+                                    <th
+                                      key={`header-${template.size_id}-${index}`}
+                                      className="text-center p-2 font-medium text-gray-700"
+                                    >
+                                      {template.size}
+                                    </th>
+                                  ))}
                                 </tr>
                               </thead>
                               <tbody>
-                                {sortedTemplates.map((template, index) => (
-                                  <tr
-                                    key={`${template.size_id}-${index}`}
-                                    className="border-t border-gray-100 hover:bg-gray-50"
-                                  >
-                                    <td className="p-2 text-center text-gray-700">
+                                <tr className="border-t border-gray-100 hover:bg-gray-50">
+                                  <td className="p-2 font-medium text-gray-700 bg-gray-50">
+                                    Quantidade
+                                  </td>
+                                  {sortedTemplates.map((template, index) => (
+                                    <td
+                                      key={`qty-${template.size_id}-${index}`}
+                                      className="p-2 text-center text-gray-900 font-medium"
+                                    >
                                       {template.required_quantity}
                                     </td>
-                                    <td className="p-2 font-medium text-gray-900">
-                                      {template.size}
-                                    </td>
-                                    <td className="p-2 text-right text-gray-700">
+                                  ))}
+                                </tr>
+                                <tr className="border-t border-gray-100 hover:bg-gray-50">
+                                  <td className="p-2 font-medium text-gray-700 bg-gray-50">
+                                    Subtotal
+                                  </td>
+                                  {sortedTemplates.map((template, index) => (
+                                    <td
+                                      key={`subtotal-${template.size_id}-${index}`}
+                                      className="p-2 text-center text-gray-900"
+                                    >
                                       {product.base_price && (
                                         <span className="font-medium">
                                           R$ {formatPrice(product.base_price * template.required_quantity)}
                                         </span>
                                       )}
                                     </td>
-                                  </tr>
-                                ))}
+                                  ))}
+                                </tr>
                               </tbody>
                             </table>
                           </div>
