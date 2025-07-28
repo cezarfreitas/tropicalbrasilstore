@@ -339,7 +339,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               {/* Mobile Logo */}
               <Link to="/loja" className="flex items-center" aria-label="Ir para página inicial">
                 <LogoDisplay
-                  size="w-10 h-10"
+                  size="w-40 h-40"
                   className="flex-shrink-0"
                 />
               </Link>
