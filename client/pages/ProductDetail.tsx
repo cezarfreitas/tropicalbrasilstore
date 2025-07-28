@@ -466,6 +466,8 @@ export default function ProductDetail() {
   };
 
   const canAddToCart = () => {
+    // Require authentication and approval to add to cart
+    if (!isAuthenticated || !isApproved) return false;
     if (!selectedColor) return false;
     if (hasGrades()) {
       return selectedGrade !== null;
