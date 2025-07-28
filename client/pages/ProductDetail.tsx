@@ -798,7 +798,7 @@ export default function ProductDetail() {
           </div>
 
           {loadingSuggestions ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="animate-pulse">
                   <div className="bg-gray-200 aspect-square rounded-lg mb-3"></div>
@@ -808,7 +808,7 @@ export default function ProductDetail() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
               {suggestedProducts.map((suggestedProduct) => (
                 <Card
                   key={suggestedProduct.id}
