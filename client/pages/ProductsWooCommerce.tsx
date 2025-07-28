@@ -286,6 +286,12 @@ export default function ProductsWooCommerce() {
   };
 
   const addColorVariant = () => {
+    // Get sizes for the selected size group
+    const selectedGroup = sizeGroups.find(g => g.id === formData.size_group_id);
+    const availableSizes = selectedGroup
+      ? sizes.filter(size => selectedGroup.sizes.includes(size.size))
+      : [];
+
     const newVariant: ColorVariant = {
       color_id: 0,
       variant_name: "",
@@ -295,7 +301,7 @@ export default function ProductsWooCommerce() {
       image_url: "",
       stock_total: 0,
       active: true,
-      size_stocks: sizes.map((size) => ({
+      size_stocks: availableSizes.map((size) => ({
         size_id: size.id,
         stock: 0,
       })),
