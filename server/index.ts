@@ -13,6 +13,7 @@ import { seedRouter } from "./routes/seed";
 import { statsRouter } from "./routes/stats";
 import { enhanceRouter } from "./routes/enhance";
 import { productsEnhancedRouter } from "./routes/products-enhanced";
+import { productsWooCommerceRouter } from "./routes/products-woocommerce";
 import { productsByNamesRouter } from "./routes/products-by-names";
 import { redesignRouter } from "./routes/redesign";
 import { gradesRedesignedRouter } from "./routes/grades-redesigned";
