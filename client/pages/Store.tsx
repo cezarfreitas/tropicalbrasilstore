@@ -179,46 +179,47 @@ function Store() {
         {/* Products Grid */}
         {!loading && filteredProducts.length > 0 && (
           <>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
               {filteredProducts.map((product, index) => (
                 <Card
                   key={product.id}
-                  className="group cursor-pointer hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 relative border hover:border-primary/20"
+                  className="group cursor-pointer hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 relative border-2 border-transparent hover:border-primary/30 rounded-2xl overflow-hidden bg-gradient-to-b from-white to-primary/5 hover:to-primary/10 hover:-translate-y-1"
                   onClick={() => handleProductClick(product.id)}
                 >
                   <CardContent className="p-0 relative">
                     {/* Product Image */}
-                    <div className="aspect-square relative overflow-hidden rounded-t-lg">
+                    <div className="aspect-square relative overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10">
+                      <div className="absolute inset-0 bg-white/50 group-hover:bg-white/30 transition-colors duration-300"></div>
                       <ProductImage
                         src={selectedVariantImages[product.id] || product.photo}
                         alt={product.name}
-                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
-                        priority={index < 8} // Priority loading for first 8 products
+                        className="w-full h-full object-contain group-hover:scale-110 transition-all duration-500 relative z-10 p-4"
+                        priority={index < 8}
                         loading={index < 8 ? "eager" : "lazy"}
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
                       />
 
                       {/* Category Badge */}
                       {product.category_name && (
                         <Badge
                           variant="secondary"
-                          className="absolute top-1 left-1 sm:top-2 sm:left-2 text-[10px] sm:text-xs bg-accent/90 text-accent-foreground backdrop-blur-sm px-1 sm:px-2.5 py-0.5 sm:py-1 border border-accent/20"
+                          className="absolute top-3 left-3 text-[10px] sm:text-xs bg-primary/90 text-white backdrop-blur-sm px-2 sm:px-3 py-1 sm:py-1.5 border border-primary/20 rounded-full shadow-lg font-medium"
                         >
                           {product.category_name}
                         </Badge>
                       )}
 
-                      {/* Colors - Mobile: bottom right corner */}
+                      {/* Colors - Available on all devices */}
                       {product.available_colors &&
                         product.available_colors.length > 0 && (
-                          <div className="absolute bottom-1 right-1 sm:hidden">
-                            <div className="flex gap-1 bg-white/90 backdrop-blur-sm rounded-lg p-1">
+                          <div className="absolute bottom-3 right-3">
+                            <div className="flex gap-1.5 bg-white/95 backdrop-blur-sm rounded-xl p-2 shadow-lg border border-white/50">
                               {product.available_colors
                                 .slice(0, 3)
                                 .map((color) => (
                                   <div
                                     key={color.id}
-                                    className="w-6 h-6 rounded border border-slate-300 overflow-hidden bg-white cursor-pointer hover:scale-110 transition-transform"
+                                    className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white overflow-hidden bg-white cursor-pointer hover:scale-125 transition-all duration-200 shadow-md"
                                     title={color.name}
                                     onClick={(e) => color.image_url && handleColorVariantClick(product.id, color.image_url, e)}
                                   >
@@ -230,7 +231,7 @@ function Store() {
                                       />
                                     ) : (
                                       <div
-                                        className="w-full h-full flex items-center justify-center text-[8px] font-medium"
+                                        className="w-full h-full flex items-center justify-center text-[8px] sm:text-[10px] font-bold text-white"
                                         style={{ backgroundColor: color.hex_code }}
                                       >
                                         {color.name?.charAt(0)}
@@ -239,8 +240,8 @@ function Store() {
                                   </div>
                                 ))}
                               {product.available_colors.length > 3 && (
-                                <div className="w-6 h-6 rounded border border-slate-300 bg-gray-100 flex items-center justify-center">
-                                  <span className="text-[8px] text-slate-600 font-medium">
+                                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center shadow-md">
+                                  <span className="text-[8px] sm:text-[10px] text-gray-600 font-bold">
                                     +{product.available_colors.length - 3}
                                   </span>
                                 </div>
@@ -251,17 +252,17 @@ function Store() {
                     </div>
 
                     {/* Product Info */}
-                    <div className="p-2 sm:p-4 space-y-2 sm:space-y-3">
-                      <div>
-                        <h3 className="font-medium text-xs sm:text-sm text-foreground line-clamp-1 group-hover:text-primary transition-colors duration-200">
+                    <div className="p-4 sm:p-5 space-y-3 bg-white/50 backdrop-blur-sm">
+                      <div className="space-y-2">
+                        <h3 className="font-semibold text-sm sm:text-base text-foreground line-clamp-2 group-hover:text-primary transition-colors duration-200 leading-tight">
                           {product.name}
                         </h3>
                       </div>
 
-                      {/* Pricing and Colors */}
+                      {/* Pricing */}
                       {product.base_price && (
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between">
+                        <div className="space-y-2">
+                          <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg p-3 border border-primary/20">
                             <PriceDisplay
                               price={product.base_price}
                               suggestedPrice={product.suggested_price}
@@ -272,11 +273,10 @@ function Store() {
                         </div>
                       )}
 
-                      {/* Add to Cart Button - Desktop only - Only show if authenticated and approved */}
+                      {/* Add to Cart Button - Desktop only */}
                       {isAuthenticated && isApproved && (
                         <Button
-                          className="hidden sm:flex w-full mt-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm h-8 transition-all duration-200 hover:shadow-md"
-                          size="sm"
+                          className="hidden sm:flex w-full mt-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground text-sm h-10 transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 rounded-xl font-medium"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleProductClick(product.id);
@@ -287,16 +287,16 @@ function Store() {
                       )}
                     </div>
 
-                    {/* Add to Cart Icon - Mobile only, positioned in bottom right - Only show if authenticated and approved */}
+                    {/* Add to Cart Icon - Mobile */}
                     {isAuthenticated && isApproved && (
                       <div
-                        className="sm:hidden absolute bottom-2 right-2 bg-primary hover:bg-primary/90 rounded-full p-2 shadow-lg transition-all duration-200 active:scale-95 border border-primary/20"
+                        className="sm:hidden absolute bottom-4 right-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 rounded-full p-3 shadow-xl transition-all duration-300 active:scale-95 border-2 border-white hover:shadow-primary/30"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleProductClick(product.id);
                         }}
                       >
-                        <ShoppingCart className="h-4 w-4 text-primary-foreground" />
+                        <ShoppingCart className="h-5 w-5 text-white" />
                       </div>
                     )}
                   </CardContent>
