@@ -197,9 +197,9 @@ router.get("/products", async (req, res) => {
           co.id,
           co.name,
           co.hex_code
-        FROM product_variants pv
-        LEFT JOIN colors co ON pv.color_id = co.id
-        WHERE pv.product_id = ? AND pv.stock > 0 AND co.id IS NOT NULL
+        FROM product_color_grades pcg
+        LEFT JOIN colors co ON pcg.color_id = co.id
+        WHERE pcg.product_id = ? AND co.id IS NOT NULL
         ORDER BY co.name
       `,
         [product.id],
