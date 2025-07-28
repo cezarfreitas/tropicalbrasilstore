@@ -203,7 +203,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-center h-16 p-0"
+                  className="w-full justify-center h-5 p-0 hover:bg-transparent"
                   aria-label="Menu do usuário"
                 >
                   <User className="h-10 w-10 flex-shrink-0" />
