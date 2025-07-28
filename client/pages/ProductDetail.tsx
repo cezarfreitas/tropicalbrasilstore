@@ -416,20 +416,20 @@ export default function ProductDetail() {
 
   return (
     <StoreLayout>
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-2 py-2">
         {/* Breadcrumb */}
-        <div className="mb-4">
+        <div className="mb-2">
           <Button
             variant="ghost"
             onClick={() => navigate("/loja")}
-            className="text-sm text-muted-foreground hover:text-primary p-0 h-auto mb-2"
+            className="text-sm text-muted-foreground hover:text-primary p-0 h-auto mb-1"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Voltar à Loja
           </Button>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid lg:grid-cols-2 gap-6">
           {/* Product Image Section */}
           <div>
             <div className="sticky top-4">
