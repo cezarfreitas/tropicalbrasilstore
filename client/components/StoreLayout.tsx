@@ -193,9 +193,6 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 size={sidebarOpen ? "w-10 h-10" : "w-8 h-8"}
                 className="flex-shrink-0"
               />
-              {sidebarOpen && (
-                <span className="ml-3 text-lg font-semibold text-primary">Loja</span>
-              )}
             </Link>
             <Button
               variant="ghost"
