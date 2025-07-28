@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { StoreLayout } from "@/components/StoreLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,11 +11,11 @@ import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { ProductImage } from "@/components/ProductImage";
 import { LoginModal } from "@/components/LoginModal";
-import { 
-  ShoppingCart, 
-  Package, 
-  Minus, 
-  Plus, 
+import {
+  ShoppingCart,
+  Package,
+  Minus,
+  Plus,
   Lock,
   ArrowLeft,
   Info,
