@@ -236,6 +236,18 @@ export default function ProductsWooCommerce() {
     }
   };
 
+  const fetchSizeGroups = async () => {
+    try {
+      const response = await fetch("/api/size-groups");
+      if (response.ok) {
+        const data = await response.json();
+        setSizeGroups(data);
+      }
+    } catch (error) {
+      console.error("Error fetching size groups:", error);
+    }
+  };
+
   const handleNewProduct = () => {
     setEditingProduct(null);
     setFormData({
