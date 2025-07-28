@@ -189,7 +189,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         <div className="p-4 border-b border-primary/10">
           <Link to="/loja" className="flex items-center justify-center" aria-label="Ir para página inicial">
             <LogoDisplay
-              size="w-10 h-10"
+              size="w-40 h-40"
               className="flex-shrink-0"
             />
           </Link>
