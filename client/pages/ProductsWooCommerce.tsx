@@ -1077,6 +1077,54 @@ export default function ProductsWooCommerce() {
           </div>
         </CardHeader>
         <CardContent>
+          {/* Bulk Actions */}
+          {selectedProducts.length > 0 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <span className="text-sm font-medium">
+                    {selectedProducts.length} produto{selectedProducts.length > 1 ? 's' : ''} selecionado{selectedProducts.length > 1 ? 's' : ''}
+                  </span>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => bulkToggleStatus(true)}
+                      disabled={saving}
+                    >
+                      Ativar
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => bulkToggleStatus(false)}
+                      disabled={saving}
+                    >
+                      Desativar
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={bulkDelete}
+                      disabled={saving}
+                    >
+                      {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                      Excluir
+                    </Button>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedProducts([])}
+                >
+                  <X className="h-4 w-4" />
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          )}
+
           <Table>
             <TableHeader>
               <TableRow>
