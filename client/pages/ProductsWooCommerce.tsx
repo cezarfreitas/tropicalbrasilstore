@@ -142,8 +142,8 @@ export default function ProductsWooCommerce() {
 
   // Filters
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
