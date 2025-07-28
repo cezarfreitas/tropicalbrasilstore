@@ -247,7 +247,7 @@ router.get("/products-paginated", async (req, res) => {
           co.id,
           co.name,
           co.hex_code,
-          pv.image_url
+          MIN(pv.image_url) as image_url
         FROM product_color_grades pcg
         LEFT JOIN colors co ON pcg.color_id = co.id
         LEFT JOIN product_variants pv ON pv.product_id = pcg.product_id AND pv.color_id = co.id
