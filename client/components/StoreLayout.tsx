@@ -195,6 +195,76 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           </Link>
         </div>
 
+        {/* User and Cart Actions */}
+        <div className="p-4 border-b border-primary/10 space-y-2">
+          {/* User Menu */}
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-center h-12 p-3"
+                  aria-label="Menu do usuário"
+                >
+                  <User className="h-6 w-6 flex-shrink-0" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {customer?.name || "Cliente"}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {customer?.whatsapp}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-xs">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        isApproved ? "bg-green-500" : "bg-yellow-500"
+                      }`}
+                    />
+                    {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sair
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button
+              variant="ghost"
+              className="w-full justify-center h-12 p-3"
+              onClick={() => setLoginModalOpen(true)}
+              aria-label="Fazer login"
+            >
+              <LogIn className="h-6 w-6 flex-shrink-0" />
+            </Button>
+          )}
+
+          {/* Cart */}
+          <Button
+            variant="outline"
+            className="w-full justify-center h-12 p-3 border-primary/20 hover:bg-primary/5 relative"
+            onClick={() => setCartOpen(true)}
+            aria-label={cartAriaLabel}
+          >
+            <ShoppingCart className="h-6 w-6 text-primary flex-shrink-0" />
+            {totalItems > 0 && (
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse">
+                {totalItems}
+              </Badge>
+            )}
+          </Button>
+        </div>
+
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2" role="navigation" aria-label="Categorias principais">
           {navigationLinks.map((link) => {
