@@ -190,7 +190,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         <div className="border-b border-primary/10 bg-gradient-to-b from-primary/5 to-transparent">
           <Link to="/loja" className="flex items-center justify-center py-6" aria-label="Ir para página inicial">
             <LogoDisplay
-              size="w-72 h-72"
+              size="w-48 h-48"
               className="flex-shrink-0 transition-transform hover:scale-105"
             />
           </Link>
@@ -363,7 +363,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               {/* Mobile Logo */}
               <Link to="/loja" className="flex items-center" aria-label="Ir para página inicial">
                 <LogoDisplay
-                  size="w-48 h-48"
+                  size="w-32 h-32"
                   className="flex-shrink-0"
                 />
               </Link>
