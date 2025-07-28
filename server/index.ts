@@ -91,6 +91,7 @@ export function createServer() {
       await redesignGradeSystem(); // Create grade templates and product color grades tables
       await createStoreSettingsTable(); // Create store settings table
       await addDesignColumns(); // Add design customization columns
+      await addShowInMenuColumn(); // Add show_in_menu column to categories
       await fixOrdersTable(); // Fix any missing columns
       await checkAndFixTables(); // Final table structure checks
       console.log("✅ All database initialization completed successfully");
