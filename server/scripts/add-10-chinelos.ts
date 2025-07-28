@@ -138,15 +138,13 @@ export async function addNewChinelos() {
   }
 }
 
-// Execute the function if this file is run directly
-if (require.main === module) {
-  addNewChinelos()
-    .then(() => {
-      console.log("Script concluído!");
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error("Erro no script:", error);
-      process.exit(1);
-    });
-}
+// Execute the function directly
+addNewChinelos()
+  .then(() => {
+    console.log("Script concluído!");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error("Erro no script:", error);
+    process.exit(1);
+  });
