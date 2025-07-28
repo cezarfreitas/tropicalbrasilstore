@@ -112,6 +112,7 @@ export default function Categories() {
     setFormData({
       name: category.name,
       description: category.description || "",
+      show_in_menu: category.show_in_menu ?? true,
     });
     setDialogOpen(true);
   };
