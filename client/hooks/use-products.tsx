@@ -120,7 +120,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
   const [currentSearchTerm, setCurrentSearchTerm] = useState<string>("");
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
 
-  const fetchProducts = useCallback(async (page: number = 1, retryCount: number = 0, searchTerm: string = "") => {
+  const fetchProducts = useCallback(async (page: number = 1, retryCount: number = 0, searchTerm: string = "", colorFilter: number | null = null) => {
     // Prevent multiple concurrent requests
     if (isRequestInProgress && retryCount === 0) {
       console.log("⏸️ Request already in progress, skipping duplicate call");
@@ -128,7 +128,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
     }
 
     setIsRequestInProgress(true);
-    const cacheKey = `products-v3-${page}-${productsPerPage}-${searchTerm}`; // v3 to force cache invalidation
+    const cacheKey = `products-v4-${page}-${productsPerPage}-${searchTerm}-${colorFilter || 'all'}`; // v4 to force cache invalidation
 
     // Check cache first
     const cached = globalCache.get(cacheKey);
