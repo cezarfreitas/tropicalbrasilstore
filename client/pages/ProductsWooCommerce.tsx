@@ -330,18 +330,18 @@ export default function ProductsWooCommerce() {
     });
   };
 
-  const updateVariantSizeGroups = (variantIndex: number, sizeGroupIds: number[]) => {
+  const updateVariantGrades = (variantIndex: number, gradeIds: number[]) => {
     const updatedVariants = [...formData.color_variants];
-    updatedVariants[variantIndex].size_group_ids = sizeGroupIds;
+    updatedVariants[variantIndex].grade_ids = gradeIds;
 
-    // Get all available sizes from selected groups
+    // Get all available sizes from selected grades
     const allAvailableSizes: Size[] = [];
-    sizeGroupIds.forEach(groupId => {
-      const group = sizeGroups.find(g => g.id === groupId);
-      if (group) {
-        const groupSizes = sizes.filter(size => group.sizes.includes(size.size));
-        groupSizes.forEach(size => {
-          if (!allAvailableSizes.find(s => s.id === size.id)) {
+    gradeIds.forEach(gradeId => {
+      const grade = grades.find(g => g.id === gradeId);
+      if (grade && grade.items) {
+        grade.items.forEach((item: any) => {
+          const size = sizes.find(s => s.id === item.size_id);
+          if (size && !allAvailableSizes.find(s => s.id === size.id)) {
             allAvailableSizes.push(size);
           }
         });
