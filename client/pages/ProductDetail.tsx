@@ -499,19 +499,15 @@ export default function ProductDetail() {
                         onLoginClick={() => setShowLoginModal(true)}
                       />
                     </div>
-                    {isAuthenticated && isApproved && (
+                    {isAuthenticated && isApproved && product.suggested_price && typeof product.suggested_price === 'number' && product.suggested_price > product.base_price && (
                       <div className="text-right">
                         <div className="text-xs text-gray-600 mb-1">Por peça</div>
                         <div className="text-sm font-medium text-gray-900">
-                          {product.suggested_price && (
-                            <span className="text-xs text-gray-500 line-through mr-2">
-                              R$ {product.suggested_price.toFixed(2)}
-                            </span>
-                          )}
+                          <span className="text-xs text-gray-500 line-through mr-2">
+                            R$ {product.suggested_price.toFixed(2)}
+                          </span>
                           <span className="text-green-600">
-                            Economia: R$ {product.suggested_price && product.base_price
-                              ? (product.suggested_price - product.base_price).toFixed(2)
-                              : '0.00'}
+                            Economia: R$ {(product.suggested_price - product.base_price).toFixed(2)}
                           </span>
                         </div>
                       </div>
