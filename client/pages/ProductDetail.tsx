@@ -470,11 +470,6 @@ export default function ProductDetail() {
                   <h1 className="text-3xl font-bold text-gray-900 mb-3 leading-tight">
                     {product.name}
                   </h1>
-                  {product.description && (
-                    <p className="text-gray-600 leading-relaxed">
-                      {product.description}
-                    </p>
-                  )}
                 </div>
 
                 {/* Action Buttons */}
