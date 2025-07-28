@@ -293,10 +293,19 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           {/* Desktop Layout - Logo left, Collections center, Actions right */}
           <div className="hidden sm:flex items-center justify-between">
             <div className="flex items-center gap-6">
-              <Link to="/loja" className="flex items-center gap-3">
-                <LogoDisplay size="h-10 w-10" />
-                <div className="text-sm text-muted-foreground">
-                  B2B
+              <Link to="/loja" className="flex items-center gap-4">
+                <LogoDisplay
+                  size="w-12 h-12"
+                  maxHeight="max-h-12"
+                  className="flex-shrink-0"
+                />
+                <div className="flex flex-col">
+                  <span className="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    {storeSettings?.store_name || getGlobalStoreSettings()?.store_name || "Chinelos"}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    B2B Store
+                  </span>
                 </div>
               </Link>
 
