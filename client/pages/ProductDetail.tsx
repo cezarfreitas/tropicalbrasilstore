@@ -488,12 +488,12 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* Price Section - Prominent */}
+              {/* Price Section */}
               {product.base_price && (
-                <div className="py-3">
+                <div className="bg-gray-50 rounded-xl p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-xs text-gray-500 mb-1">
+                      <div className="text-sm text-gray-600 mb-2">
                         Preço Unitário
                       </div>
                       <PriceDisplay
@@ -503,10 +503,10 @@ export default function ProductDetail() {
                         onLoginClick={() => setShowLoginModal(true)}
                       />
                     </div>
-                    {isAuthenticated && isApproved && product.suggested_price && typeof product.suggested_price === 'number' && product.suggested_price > product.base_price && (
+                    {product.suggested_price && typeof product.suggested_price === 'number' && product.suggested_price > product.base_price && (
                       <div className="text-right">
-                        <div className="text-xs text-gray-500 mb-1">Economia</div>
-                        <div className="text-sm text-green-600 font-semibold">
+                        <div className="text-sm text-gray-600 mb-2">Você Economiza</div>
+                        <div className="text-xl font-bold text-green-600">
                           R$ {formatPrice(product.suggested_price - product.base_price)}
                         </div>
                       </div>
