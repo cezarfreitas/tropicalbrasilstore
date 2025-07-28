@@ -211,6 +211,7 @@ function Store() {
                       {/* Colors - Simple circles like in reference */}
                       {product.available_colors &&
                         product.available_colors.length > 0 && (
+                          console.log('Product colors for', product.name, ':', product.available_colors),
                           <div className="absolute bottom-1.5 right-1.5">
                             <div className="flex gap-1">
                               {product.available_colors
