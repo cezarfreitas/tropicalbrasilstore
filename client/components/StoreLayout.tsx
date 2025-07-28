@@ -348,67 +348,67 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 </Link>
               );
             })}
+
+            {/* Color Filter Section */}
+            <div className="mt-6 pt-4 border-t border-white/20">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between px-3">
+                  <h3 className="text-xs font-semibold text-white/80 uppercase tracking-wider">
+                    Filtrar por Cor
+                  </h3>
+                  {selectedColorFilter && (
+                    <button
+                      onClick={() => handleColorFilter(null)}
+                      className="text-xs text-white/60 hover:text-white transition-colors"
+                    >
+                      Limpar
+                    </button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-4 gap-2 px-3">
+                  {availableColors.map((color) => (
+                    <button
+                      key={color.id}
+                      onClick={() => handleColorFilter(color.id)}
+                      className={`group relative w-10 h-10 rounded-lg border-2 transition-all duration-200 hover:scale-110 ${
+                        selectedColorFilter === color.id
+                          ? 'border-white shadow-lg scale-110'
+                          : 'border-white/30 hover:border-white/60'
+                      }`}
+                      title={color.name}
+                    >
+                      <div
+                        className="w-full h-full rounded-md"
+                        style={{
+                          backgroundColor: color.hex_code || '#E5E7EB'
+                        }}
+                      >
+                        {!color.hex_code && (
+                          <div className="w-full h-full flex items-center justify-center text-xs font-bold text-gray-700 rounded-md bg-gray-200">
+                            {color.name?.charAt(0)?.toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+
+                      {selectedColorFilter === color.id && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-3 h-3 bg-white rounded-full shadow-lg"></div>
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                {availableColors.length === 0 && (
+                  <div className="text-center py-4 px-3">
+                    <p className="text-xs text-white/60">Carregando cores...</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </nav>
-
-        {/* Color Filter Section */}
-        <div className="px-4 py-6 border-t border-white/20">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-semibold text-white/80 uppercase tracking-wider">
-                Filtrar por Cor
-              </h3>
-              {selectedColorFilter && (
-                <button
-                  onClick={() => handleColorFilter(null)}
-                  className="text-xs text-white/60 hover:text-white transition-colors"
-                >
-                  Limpar
-                </button>
-              )}
-            </div>
-
-            <div className="grid grid-cols-4 gap-2">
-              {availableColors.map((color) => (
-                <button
-                  key={color.id}
-                  onClick={() => handleColorFilter(color.id)}
-                  className={`group relative w-10 h-10 rounded-lg border-2 transition-all duration-200 hover:scale-110 ${
-                    selectedColorFilter === color.id
-                      ? 'border-white shadow-lg scale-110'
-                      : 'border-white/30 hover:border-white/60'
-                  }`}
-                  title={color.name}
-                >
-                  <div
-                    className="w-full h-full rounded-md"
-                    style={{
-                      backgroundColor: color.hex_code || '#E5E7EB'
-                    }}
-                  >
-                    {!color.hex_code && (
-                      <div className="w-full h-full flex items-center justify-center text-xs font-bold text-gray-700 rounded-md bg-gray-200">
-                        {color.name?.charAt(0)?.toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-
-                  {selectedColorFilter === color.id && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-3 h-3 bg-white rounded-full shadow-lg"></div>
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-
-            {availableColors.length === 0 && (
-              <div className="text-center py-4">
-                <p className="text-xs text-white/60">Carregando cores...</p>
-              </div>
-            )}
-          </div>
-        </div>
 
       </aside>
 
