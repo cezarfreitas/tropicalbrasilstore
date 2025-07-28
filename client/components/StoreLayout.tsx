@@ -285,101 +285,20 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           })}
         </nav>
 
-        {/* Sidebar Actions */}
+        {/* Search and Theme */}
         <div className="p-4 border-t border-primary/10 space-y-2">
           {/* Search */}
-          {sidebarOpen && (
-            <form onSubmit={handleSearch} className="relative mb-4">
-              <Input
-                type="text"
-                placeholder="Buscar produtos..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-10 pl-10 pr-4 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
-                aria-label="Campo de busca de produtos"
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            </form>
-          )}
-
-          {/* User Menu */}
-          {isAuthenticated ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className={`w-full ${sidebarOpen ? 'justify-start' : 'justify-center'} h-12 p-3`}
-                  aria-label="Menu do usuário"
-                >
-                  <User className="h-4 w-4 flex-shrink-0" />
-                  {sidebarOpen && (
-                    <div className="ml-3 text-left flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">
-                        {customer?.name || "Cliente"}
-                      </p>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {customer?.whatsapp}
-                      </p>
-                    </div>
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuLabel>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {customer?.name || "Cliente"}
-                    </p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {customer?.whatsapp}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-xs">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`w-2 h-2 rounded-full ${
-                        isApproved ? "bg-green-500" : "bg-yellow-500"
-                      }`}
-                    />
-                    {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sair
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Button
-              variant="ghost"
-              className={`w-full ${sidebarOpen ? 'justify-start' : 'justify-center'} h-12 p-3`}
-              onClick={() => setLoginModalOpen(true)}
-              aria-label="Fazer login"
-            >
-              <LogIn className="h-4 w-4 flex-shrink-0" />
-              {sidebarOpen && <span className="ml-3">Entrar</span>}
-            </Button>
-          )}
-
-          {/* Cart */}
-          <Button
-            variant="outline"
-            className={`w-full ${sidebarOpen ? 'justify-start' : 'justify-center'} h-12 p-3 border-primary/20 hover:bg-primary/5 relative`}
-            onClick={() => setCartOpen(true)}
-            aria-label={cartAriaLabel}
-          >
-            <ShoppingCart className="h-4 w-4 text-primary flex-shrink-0" />
-            {sidebarOpen && <span className="ml-3">Carrinho</span>}
-            {totalItems > 0 && (
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground animate-pulse">
-                {totalItems}
-              </Badge>
-            )}
-          </Button>
+          <form onSubmit={handleSearch} className="relative mb-4">
+            <Input
+              type="text"
+              placeholder="Buscar produtos..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full h-10 pl-10 pr-4 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
+              aria-label="Campo de busca de produtos"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          </form>
 
           {/* Theme Indicator - Desktop */}
           <div className="pt-2">
