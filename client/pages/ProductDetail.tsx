@@ -1,17 +1,40 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { StoreLayout } from "@/components/StoreLayout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/use-cart";
 import { useToast } from "@/hooks/use-toast";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { PriceDisplay } from "@/components/PriceDisplay";
+import { ProductImage } from "@/components/ProductImage";
 import { LoginModal } from "@/components/LoginModal";
-import { ShoppingCart, Package, Grid3x3, Minus, Plus, Lock } from "lucide-react";
+import { 
+  ShoppingCart, 
+  Package, 
+  Minus, 
+  Plus, 
+  Lock,
+  ArrowLeft,
+  Info,
+  Heart,
+  Share2,
+  ImageIcon
+} from "lucide-react";
+
+interface ProductVariant {
+  id: number;
+  size_id: number;
+  color_id: number;
+  stock: number;
+  price_override?: number;
+  image_url?: string;
+  size?: string;
+  color_name?: string;
+  hex_code?: string;
+}
 
 interface GradeTemplate {
   size_id: number;
@@ -29,6 +52,8 @@ interface AvailableGrade {
   color_id: number;
   templates: GradeTemplate[];
   total_quantity: number;
+  has_full_stock?: boolean;
+  has_any_stock?: boolean;
 }
 
 interface ProductDetail {
@@ -39,14 +64,21 @@ interface ProductDetail {
   suggested_price?: number;
   photo?: string;
   category_name?: string;
-  available_grades: AvailableGrade[];
+  sell_without_stock?: boolean;
+  variants: ProductVariant[];
+  available_grades?: AvailableGrade[];
 }
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [quantities, setQuantities] = useState<Record<number, number>>({});
+  const [selectedColor, setSelectedColor] = useState<number | null>(null);
+  const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
+  const [selectedSize, setSelectedSize] = useState<number | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const [selectedVariantImage, setSelectedVariantImage] = useState<string | null>(null);
   const { addItem } = useCart();
   const { toast } = useToast();
   const { isAuthenticated, isApproved } = useCustomerAuth();
@@ -58,72 +90,300 @@ export default function ProductDetail() {
     }
   }, [id]);
 
-  const fetchProduct = async () => {
+  const fetchProduct = async (retryCount: number = 0) => {
+    if (!id) return;
+
+    setLoading(true);
     try {
-      const response = await fetch(`/api/store/products/${id}`);
+      // Use XMLHttpRequest directly to bypass fetch interference
+      const response = await new Promise<Response>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", `/api/store/products/${id}`, true);
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onload = () => {
+          const headers = new Headers();
+          xhr
+            .getAllResponseHeaders()
+            .split("\r\n")
+            .forEach((line) => {
+              const [key, value] = line.split(": ");
+              if (key && value) headers.set(key, value);
+            });
+
+          const response = new Response(xhr.responseText, {
+            status: xhr.status,
+            statusText: xhr.statusText,
+            headers: headers,
+          });
+          resolve(response);
+        };
+
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.ontimeout = () => reject(new Error("Request timeout"));
+        xhr.timeout = 8000; // 8 second timeout
+
+        xhr.send();
+      });
+
       if (response.ok) {
         const data = await response.json();
         setProduct(data);
+        // Auto-select first color if only one available
+        const colors = getAvailableColors(data);
+        if (colors.length === 1) {
+          setSelectedColor(colors[0].id);
+          // Set the initial variant image
+          const firstVariant = data.variants?.find((v: ProductVariant) => v.color_id === colors[0].id);
+          if (firstVariant?.image_url) {
+            setSelectedVariantImage(firstVariant.image_url);
+          }
+        } else {
+          setSelectedColor(null);
+          setSelectedVariantImage(null);
+        }
+        setSelectedGrade(null);
+        setSelectedSize(null);
+        setQuantity(1);
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching product:", error);
+
+      // Simple retry for any error
+      if (retryCount < 2) {
+        console.log(`Retrying product fetch... (attempt ${retryCount + 1}/3)`);
+        setTimeout(() => fetchProduct(retryCount + 1), 1000);
+        return;
+      }
+
+      // Show user-friendly error only after all retries
+      toast({
+        title: "Erro ao carregar",
+        description: "Tente novamente em alguns segundos",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const getGradeQuantity = (gradeId: number) => {
-    return quantities[gradeId] || 1;
-  };
+  const getAvailableColors = (productData = product) => {
+    if (!productData?.variants) return [];
 
-  const updateGradeQuantity = (gradeId: number, quantity: number) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [gradeId]: Math.max(1, quantity),
-    }));
-  };
-
-  const addGradeToCart = (grade: AvailableGrade) => {
-    if (!product) return;
-
-    const quantity = getGradeQuantity(grade.id);
-
-    // Calculate grade price - quantity times unit price
-    const gradePrice = product.base_price
-      ? product.base_price * grade.total_quantity
-      : 0;
-
-    addItem({
-      type: "grade",
-      productId: product.id,
-      productName: product.name,
-      colorId: grade.color_id,
-      colorName: grade.color_name,
-      gradeId: grade.id,
-      gradeName: grade.name,
-      quantity,
-      unitPrice: gradePrice,
-      photo: product.photo,
+    const colorMap = new Map();
+    productData.variants.forEach((variant) => {
+      // Only show colors that have stock
+      if (variant.stock > 0 && !colorMap.has(variant.color_id)) {
+        colorMap.set(variant.color_id, {
+          id: variant.color_id,
+          name: variant.color_name,
+          hex_code: variant.hex_code,
+          image_url: variant.image_url, // Include image URL
+        });
+      }
     });
 
-    toast({
-      title: "Grade adicionada ao carrinho",
-      description: `${quantity}x ${grade.name} - ${grade.color_name}`,
-    });
+    const colors = Array.from(colorMap.values());
 
-    // Reset quantity for this grade
-    updateGradeQuantity(grade.id, 1);
+    // If product has grades, filter colors to only show those with available grades
+    if (
+      productData?.available_grades &&
+      productData.available_grades.length > 0
+    ) {
+      return colors.filter((color) => {
+        const gradesForColor = productData.available_grades.filter(
+          (grade) => grade.color_id === color.id,
+        );
+        return gradesForColor.some((grade) => {
+          // Check if grade is available (either sell without stock is enabled or has full stock)
+          return productData.sell_without_stock || grade.has_full_stock;
+        });
+      });
+    }
+
+    return colors;
   };
+
+  const getAvailableSizes = () => {
+    if (!product?.variants || !selectedColor) return [];
+
+    const sizeMap = new Map();
+    product.variants
+      .filter((v) => v.color_id === selectedColor && v.stock > 0)
+      .forEach((variant) => {
+        if (!sizeMap.has(variant.size_id)) {
+          sizeMap.set(variant.size_id, {
+            id: variant.size_id,
+            name: variant.size,
+            stock: variant.stock,
+          });
+        }
+      });
+
+    return Array.from(sizeMap.values());
+  };
+
+  const getAvailableGradesForColor = () => {
+    if (!product?.available_grades || !selectedColor) return [];
+
+    return product.available_grades.filter(
+      (grade) => grade.color_id === selectedColor,
+    );
+  };
+
+  const hasGrades = () => {
+    return product?.available_grades && product.available_grades.length > 0;
+  };
+
+  const canAddGradeToCart = (grade: any) => {
+    if (product?.sell_without_stock) return true;
+    return grade.has_full_stock;
+  };
+
+  const addToCart = () => {
+    if (!product || !selectedColor) {
+      toast({
+        title: "Erro",
+        description: "Selecione uma cor",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const selectedColorData = getAvailableColors().find(
+      (c) => c.id === selectedColor,
+    );
+
+    if (hasGrades() && selectedGrade) {
+      const grade = getAvailableGradesForColor().find(
+        (g) => g.id === selectedGrade,
+      );
+      if (!grade) return;
+
+      if (!canAddGradeToCart(grade)) {
+        toast({
+          title: "Erro",
+          description: "Estoque insuficiente para esta grade",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const gradePrice = product.base_price
+        ? product.base_price * grade.total_quantity
+        : 0;
+
+      addItem({
+        type: "grade",
+        productId: product.id,
+        productName: product.name,
+        colorId: selectedColor,
+        colorName: selectedColorData?.name || "",
+        gradeId: grade.id,
+        gradeName: grade.name,
+        quantity,
+        unitPrice: gradePrice,
+        photo: selectedVariantImage || product.photo,
+      });
+
+      toast({
+        title: "✓ Adicionado ao carrinho",
+        description: `${grade.name}`,
+      });
+    } else if (!hasGrades() && selectedSize) {
+      const variant = product.variants.find(
+        (v) => v.color_id === selectedColor && v.size_id === selectedSize,
+      );
+
+      if (!variant || variant.stock < quantity) {
+        toast({
+          title: "Erro",
+          description: "Estoque insuficiente",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const unitPrice = variant.price_override || product.base_price || 0;
+
+      addItem({
+        type: "variant",
+        productId: product.id,
+        productName: product.name,
+        colorId: selectedColor,
+        colorName: selectedColorData?.name || "",
+        sizeId: selectedSize,
+        sizeName: variant.size || "",
+        quantity,
+        unitPrice,
+        photo: selectedVariantImage || product.photo,
+      });
+
+      toast({
+        title: "✓ Adicionado ao carrinho",
+        description: `${selectedColorData?.name}`,
+      });
+    } else {
+      toast({
+        title: "Erro",
+        description: hasGrades()
+          ? "Selecione uma grade"
+          : "Selecione um tamanho",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Reset quantity after adding to cart
+    setQuantity(1);
+  };
+
+  const canAddToCart = () => {
+    if (!selectedColor) return false;
+    if (hasGrades()) {
+      return selectedGrade !== null;
+    } else {
+      return selectedSize !== null;
+    }
+  };
+
+  const handleColorSelect = (colorId: number, imageUrl?: string) => {
+    setSelectedColor(colorId);
+    if (imageUrl) {
+      setSelectedVariantImage(imageUrl);
+    }
+    // Reset size/grade selection when color changes
+    setSelectedGrade(null);
+    setSelectedSize(null);
+  };
+
+  // Auto-select single options
+  useEffect(() => {
+    if (selectedColor && hasGrades()) {
+      const grades = getAvailableGradesForColor();
+      if (grades.length === 1 && canAddGradeToCart(grades[0])) {
+        setSelectedGrade(grades[0].id);
+      }
+    } else if (selectedColor && !hasGrades()) {
+      const sizes = getAvailableSizes();
+      if (sizes.length === 1) {
+        setSelectedSize(sizes[0].id);
+      }
+    }
+  }, [selectedColor, product]);
 
   if (loading) {
     return (
       <StoreLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Carregando produto...
-            </p>
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-center py-20">
+            <div className="text-center space-y-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+              <p className="text-sm text-muted-foreground">Carregando produto...</p>
+            </div>
           </div>
         </div>
       </StoreLayout>
@@ -134,8 +394,14 @@ export default function ProductDetail() {
     return (
       <StoreLayout>
         <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold">Produto não encontrado</h1>
+          <div className="text-center py-20">
+            <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Produto não encontrado</h1>
+            <p className="text-muted-foreground mb-6">O produto que você está procurando não existe ou foi removido.</p>
+            <Button onClick={() => navigate("/loja")} className="bg-primary hover:bg-primary/90">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Voltar à Loja
+            </Button>
           </div>
         </div>
       </StoreLayout>
@@ -144,217 +410,352 @@ export default function ProductDetail() {
 
   return (
     <StoreLayout>
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Product Image */}
-          <div className="aspect-square bg-muted rounded-lg flex items-center justify-center">
-            {product.photo ? (
-              <img
-                src={product.photo}
-                alt={product.name}
-                className="w-full h-full object-cover rounded-lg"
-                loading="lazy"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = "none";
-                  const parent = target.parentElement;
-                  if (parent) {
-                    parent.innerHTML =
-                      '<div class="flex items-center justify-center w-full h-full"><svg class="h-32 w-32 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg></div>';
-                  }
-                }}
-              />
-            ) : (
-              <Package className="h-32 w-32 text-muted-foreground/50" />
-            )}
+      <div className="container mx-auto px-4 py-6">
+        {/* Breadcrumb */}
+        <div className="mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/loja")}
+            className="text-sm text-muted-foreground hover:text-primary p-0 h-auto"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Voltar à Loja
+          </Button>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* Product Image Section */}
+          <div className="space-y-4">
+            <div className="relative bg-gray-50 rounded-2xl overflow-hidden">
+              <div className="aspect-square relative">
+                <ProductImage
+                  src={selectedVariantImage || product.photo}
+                  alt={product.name}
+                  className="w-full h-full object-contain transition-all duration-300"
+                  priority={true}
+                />
+                
+                {/* Category Badge */}
+                {product.category_name && (
+                  <Badge
+                    variant="secondary"
+                    className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm border border-gray-200"
+                  >
+                    {product.category_name}
+                  </Badge>
+                )}
+
+                {/* Image indicator */}
+                {selectedVariantImage && (
+                  <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1.5 rounded-full text-sm flex items-center gap-2">
+                    <ImageIcon className="h-4 w-4" />
+                    Variante
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* Product Info */}
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold">{product.name}</h1>
-              {product.category_name && (
-                <Badge variant="secondary" className="mt-2">
-                  {product.category_name}
-                </Badge>
+          {/* Product Information */}
+          <div className="space-y-8">
+            {/* Product Title & Price */}
+            <div className="space-y-4">
+              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
+                {product.name}
+              </h1>
+              
+              {product.base_price && (
+                <div className="flex items-center justify-between">
+                  <PriceDisplay
+                    price={product.base_price}
+                    suggestedPrice={product.suggested_price}
+                    variant="large"
+                    onLoginClick={() => setShowLoginModal(true)}
+                  />
+                  
+                  {/* Action buttons */}
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" className="h-10 w-10 p-0">
+                      <Heart className="h-5 w-5" />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-10 w-10 p-0">
+                      <Share2 className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </div>
               )}
+
+              {/* Product Description */}
               {product.description && (
-                <p className="text-muted-foreground mt-4">
-                  {product.description}
-                </p>
+                <Card className="border-0 bg-gray-50">
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      <Info className="h-5 w-5 text-gray-500 mt-0.5 flex-shrink-0" />
+                      <p className="text-gray-700 leading-relaxed">
+                        {product.description}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
               )}
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-4">
-                <Grid3x3 className="h-5 w-5 text-primary" />
-                <h2 className="text-xl font-semibold">Grades Disponíveis</h2>
-              </div>
+            <Separator />
 
-              {product.available_grades.length === 0 ? (
-                <Card>
-                  <CardContent className="text-center py-8">
-                    <Grid3x3 className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                    <p className="mt-2 text-muted-foreground">
-                      Nenhuma grade disponível para este produto
+            {/* Authentication Check */}
+            {!isAuthenticated || !isApproved ? (
+              <Card className="border-0 bg-gray-50">
+                <CardContent className="text-center py-8 space-y-4">
+                  <div className="flex justify-center">
+                    <Lock className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Login necessário
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Faça login para ver preços e adicionar produtos ao carrinho
                     </p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-4">
-                  {product.available_grades.map((grade) => (
-                    <Card key={grade.id} className="border">
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <CardTitle className="text-lg">
-                              {grade.name}
-                            </CardTitle>
-                            <div className="flex items-center gap-2 mt-1">
-                              <div
-                                className="w-4 h-4 rounded border"
-                                style={{
-                                  backgroundColor: grade.hex_code || "#999999",
-                                }}
-                              />
-                              <span className="text-sm text-muted-foreground">
-                                {grade.color_name}
-                              </span>
-                              <Badge variant="outline" className="ml-2">
-                                {grade.total_quantity} peças
-                              </Badge>
-                            </div>
-                            {grade.description && (
-                              <p className="text-sm text-muted-foreground mt-1">
-                                {grade.description}
-                              </p>
-                            )}
-                          </div>
-                          <div className="text-right">
-                            {product.base_price && (
-                              <div className="space-y-1">
-                                <PriceDisplay
-                                  price={product.base_price * grade.total_quantity}
-                                  variant="large"
-                                  className="text-xl font-bold"
-                                  onLoginClick={() => setShowLoginModal(true)}
-                                />
-                                <p className="text-xs text-muted-foreground">
-                                  preço da grade
-                                </p>
-                                {isAuthenticated && isApproved && (
-                                  <div className="border-t pt-2 mt-2">
-                                    <PriceDisplay
-                                      price={product.base_price}
-                                      suggestedPrice={product.suggested_price}
-                                      variant="small"
-                                      onLoginClick={() => setShowLoginModal(true)}
+                  </div>
+                  <Button
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                    onClick={() => setShowLoginModal(true)}
+                  >
+                    Fazer Login
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <>
+                {/* Color Variants Section */}
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Cores Disponíveis
+                    </h3>
+                    {getAvailableColors().length === 0 ? (
+                      <Card className="border-0 bg-gray-50">
+                        <CardContent className="text-center py-8">
+                          <Package className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
+                          <p className="text-sm text-muted-foreground">
+                            Nenhuma variação disponível para este produto
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {getAvailableColors().map((color) => (
+                          <button
+                            key={color.id}
+                            onClick={() => handleColorSelect(color.id, color.image_url)}
+                            className={`relative group p-4 border-2 rounded-xl transition-all duration-200 ${
+                              selectedColor === color.id
+                                ? "border-primary bg-primary/5 shadow-lg"
+                                : "border-gray-200 hover:border-gray-300 hover:shadow-md"
+                            }`}
+                          >
+                            <div className="flex items-center gap-4">
+                              {/* Variant Image or Color Circle */}
+                              <div className="relative">
+                                {color.image_url ? (
+                                  <div className="w-16 h-16 rounded-xl overflow-hidden border border-gray-200 bg-white">
+                                    <ProductImage
+                                      src={color.image_url}
+                                      alt={`${product.name} - ${color.name}`}
+                                      className="w-full h-full object-cover"
                                     />
-                                    <p className="text-xs text-muted-foreground">
-                                      preço unitário
-                                    </p>
+                                  </div>
+                                ) : (
+                                  <div
+                                    className="w-16 h-16 rounded-xl border border-gray-200 flex items-center justify-center text-sm font-medium text-white shadow-sm"
+                                    style={{ backgroundColor: color.hex_code || "#999" }}
+                                  >
+                                    {color.name?.charAt(0).toUpperCase()}
+                                  </div>
+                                )}
+                                
+                                {/* Selection indicator */}
+                                {selectedColor === color.id && (
+                                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary rounded-full border-2 border-white flex items-center justify-center">
+                                    <div className="w-2 h-2 bg-white rounded-full" />
                                   </div>
                                 )}
                               </div>
-                            )}
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="grid grid-cols-2 gap-2 mb-4">
-                          {grade.templates.map((template) => (
-                            <div
-                              key={template.size_id}
-                              className="flex justify-between text-sm p-2 bg-muted rounded"
-                            >
-                              <span>Tamanho {template.size}:</span>
-                              <span className="font-medium">
-                                {template.required_quantity} un
-                              </span>
-                            </div>
-                          ))}
-                        </div>
 
-                        {!isAuthenticated || !isApproved ? (
-                          <div className="text-center py-4 space-y-3">
-                            <div className="flex justify-center">
-                              <Lock className="h-8 w-8 text-muted-foreground" />
+                              {/* Color Name */}
+                              <div className="flex-1 text-left">
+                                <p className="font-medium text-gray-900">
+                                  {color.name}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {color.image_url ? "Com imagem" : "Cor padrão"}
+                                </p>
+                              </div>
                             </div>
-                            <div className="space-y-1">
-                              <p className="text-sm font-medium text-gray-900">
-                                Login necessário
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                Faça login para adicionar ao carrinho
-                              </p>
-                            </div>
-                            <Button
-                              size="sm"
-                              className="bg-primary hover:bg-primary/90"
-                              onClick={() => setShowLoginModal(true)}
-                            >
-                              Fazer Login
-                            </Button>
-                          </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Grades or Sizes Section */}
+                  {selectedColor && (
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {hasGrades() ? "Grades Disponíveis" : "Tamanhos Disponíveis"}
+                      </h3>
+                      
+                      <div className="space-y-4">
+                        {hasGrades() ? (
+                          getAvailableGradesForColor().map((grade) => {
+                            const canAdd = canAddGradeToCart(grade);
+                            const sortedTemplates = [...grade.templates].sort(
+                              (a, b) => a.display_order - b.display_order,
+                            );
+
+                            return (
+                              <button
+                                key={grade.id}
+                                onClick={() =>
+                                  canAdd ? setSelectedGrade(grade.id) : null
+                                }
+                                disabled={!canAdd}
+                                className={`w-full p-6 border-2 rounded-xl text-left transition-all duration-200 ${
+                                  !canAdd
+                                    ? "border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
+                                    : selectedGrade === grade.id
+                                      ? "border-primary bg-primary/5 shadow-lg"
+                                      : "border-gray-200 hover:border-gray-300 hover:shadow-md"
+                                }`}
+                              >
+                                <div className="space-y-3">
+                                  <div className="flex justify-between items-start">
+                                    <div>
+                                      <div className="font-semibold text-lg text-gray-900">
+                                        {grade.name}
+                                      </div>
+                                      {grade.description && (
+                                        <div className="text-sm text-gray-600 mt-1">
+                                          {grade.description}
+                                        </div>
+                                      )}
+                                    </div>
+                                    {product.base_price && (
+                                      <div className="text-right">
+                                        <PriceDisplay
+                                          price={product.base_price * grade.total_quantity}
+                                          variant="default"
+                                          className="text-primary text-lg font-bold"
+                                          onLoginClick={() => setShowLoginModal(true)}
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  <div className="bg-gray-50 rounded-lg p-3">
+                                    <div className="text-sm text-gray-600 mb-2">
+                                      <span className="font-medium text-primary">
+                                        {grade.total_quantity} peças total:
+                                      </span>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                      {sortedTemplates.map((template, index) => (
+                                        <span key={`${template.size_id}-${index}`} className="inline-flex items-center gap-1 bg-white px-2 py-1 rounded-md text-xs border">
+                                          <span className="font-medium">{template.size}</span>
+                                          <span className="text-gray-500">({template.required_quantity})</span>
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              </button>
+                            );
+                          })
                         ) : (
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Label className="text-sm">Quantidade:</Label>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                className="h-8 w-8"
-                                onClick={() =>
-                                  updateGradeQuantity(
-                                    grade.id,
-                                    getGradeQuantity(grade.id) - 1,
-                                  )
-                                }
+                          <div className="grid grid-cols-2 gap-4">
+                            {getAvailableSizes().map((size) => (
+                              <button
+                                key={size.id}
+                                onClick={() => setSelectedSize(size.id)}
+                                className={`p-4 border-2 rounded-xl text-left transition-all duration-200 ${
+                                  selectedSize === size.id
+                                    ? "border-primary bg-primary/5 shadow-lg"
+                                    : "border-gray-200 hover:border-gray-300 hover:shadow-md"
+                                }`}
                               >
-                                <Minus className="h-3 w-3" />
-                              </Button>
-                              <Input
-                                type="number"
-                                min="1"
-                                value={getGradeQuantity(grade.id)}
-                                onChange={(e) =>
-                                  updateGradeQuantity(
-                                    grade.id,
-                                    parseInt(e.target.value) || 1,
-                                  )
-                                }
-                                className="w-16 h-8 text-center text-sm"
-                              />
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                className="h-8 w-8"
-                                onClick={() =>
-                                  updateGradeQuantity(
-                                    grade.id,
-                                    getGradeQuantity(grade.id) + 1,
-                                  )
-                                }
-                              >
-                                <Plus className="h-3 w-3" />
-                              </Button>
-                            </div>
-
-                            <Button
-                              onClick={() => addGradeToCart(grade)}
-                            className="ml-4"
-                          >
-                              <ShoppingCart className="mr-2 h-4 w-4" />
-                              Adicionar ao Carrinho
-                            </Button>
+                                <div className="space-y-2">
+                                  <div className="flex justify-between items-center">
+                                    <div className="font-medium text-gray-900">
+                                      {size.name}
+                                    </div>
+                                    {product.base_price && (
+                                      <PriceDisplay
+                                        price={product.base_price}
+                                        variant="small"
+                                        className="text-primary"
+                                        onLoginClick={() => setShowLoginModal(true)}
+                                      />
+                                    )}
+                                  </div>
+                                  <div className="flex items-center justify-between text-sm">
+                                    <span className="font-medium text-primary">1 peça</span>
+                                    <span className="text-gray-500">
+                                      {size.stock} disponível
+                                    </span>
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
                           </div>
                         )}
-                      </CardContent>
-                    </Card>
-                  ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+
+                {/* Quantity & Add to Cart Section */}
+                {canAddToCart() && (
+                  <>
+                    <Separator />
+                    <div className="space-y-6">
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-medium text-gray-700">Quantidade</span>
+                        <div className="flex items-center gap-4">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                            className="h-10 w-10 p-0"
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <span className="w-10 text-center text-lg font-medium">
+                            {quantity}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setQuantity(quantity + 1)}
+                            className="h-10 w-10 p-0"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      <Button
+                        onClick={addToCart}
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-14 text-lg font-medium"
+                        size="lg"
+                      >
+                        <ShoppingCart className="mr-3 h-5 w-5" />
+                        Adicionar ao Carrinho
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
