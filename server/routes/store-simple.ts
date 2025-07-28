@@ -174,6 +174,12 @@ router.get("/products-paginated", async (req, res) => {
       queryParams.push(`%${searchTerm.trim()}%`);
     }
 
+    // Add color filter if specified
+    if (colorFilter !== null) {
+      whereClause += " AND EXISTS (SELECT 1 FROM product_color_grades pcg WHERE pcg.product_id = p.id AND pcg.color_id = ?)";
+      queryParams.push(colorFilter);
+    }
+
     // Get total count
     const countQuery = `
       SELECT COUNT(*) as total 
