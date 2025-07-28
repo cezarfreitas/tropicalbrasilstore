@@ -551,7 +551,7 @@ export default function ProductDetail() {
           {/* Product Image Section */}
           <div>
             <div className="sticky top-2">
-              <div className="bg-gray-50 rounded-2xl p-4">
+              <div className="bg-gray-50 rounded-2xl p-4 max-w-lg mx-auto">
                 <div className="aspect-square relative">
                   <ProductImage
                     src={selectedVariantImage || product.photo}
