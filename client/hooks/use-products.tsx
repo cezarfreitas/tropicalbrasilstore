@@ -100,8 +100,8 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
     setIsRequestInProgress(true);
     const cacheKey = `products-${page}-${productsPerPage}-${searchTerm}`;
 
-    // Check cache first (temporarily disabled for fresh data)
-    const cached = false; // globalCache.get(cacheKey);
+    // Check cache first
+    const cached = globalCache.get(cacheKey);
     if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
       console.log(`📦 Using cached products for page ${page}`);
       setProducts(cached.data.products || []);
