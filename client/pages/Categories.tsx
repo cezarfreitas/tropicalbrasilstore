@@ -294,6 +294,11 @@ export default function Categories() {
                     <TableCell className="text-muted-foreground">
                       {category.description || "—"}
                     </TableCell>
+                    <TableCell>
+                      <Badge variant={category.show_in_menu ? "default" : "secondary"}>
+                        {category.show_in_menu ? "Sim" : "Não"}
+                      </Badge>
+                    </TableCell>
                     <TableCell className="text-muted-foreground">
                       {new Date(category.created_at).toLocaleDateString(
                         "pt-BR",
