@@ -152,9 +152,10 @@ router.get("/products-paginated", async (req, res) => {
     const limit = parseInt(req.query.limit as string) || 20;
     const category = req.query.category as string;
     const searchTerm = req.query.busca as string;
+    const colorFilter = req.query.cor ? parseInt(req.query.cor as string) : null;
 
     console.log(
-      `Getting products - page: ${page}, limit: ${limit}, category: ${category || "all"}, search: "${searchTerm || "none"}"`,
+      `Getting products - page: ${page}, limit: ${limit}, category: ${category || "all"}, search: "${searchTerm || "none"}", color: ${colorFilter || "none"}"`,
     );
 
     const offset = (page - 1) * limit;
