@@ -211,23 +211,28 @@ function Store() {
                       {product.available_colors &&
                         product.available_colors.length > 0 && (
                           <div className="absolute bottom-1 right-1 sm:hidden">
-                            <div className="flex gap-1 bg-white/80 backdrop-blur-sm rounded-full px-1.5 py-1">
+                            <div className="flex gap-1 bg-white/90 backdrop-blur-sm rounded-lg p-1">
                               {product.available_colors
                                 .slice(0, 3)
                                 .map((color) => (
                                   <div
                                     key={color.id}
-                                    className="w-2.5 h-2.5 rounded-full border border-slate-300"
-                                    style={{
-                                      backgroundColor: color.hex_code || "#999",
-                                    }}
+                                    className="w-6 h-6 rounded border border-slate-300 overflow-hidden bg-white"
                                     title={color.name}
-                                  />
+                                  >
+                                    <ProductImage
+                                      src={color.image_url || product.photo || ""}
+                                      alt={`${product.name} - ${color.name}`}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
                                 ))}
                               {product.available_colors.length > 3 && (
-                                <span className="text-[9px] text-slate-600 ml-0.5">
-                                  +{product.available_colors.length - 3}
-                                </span>
+                                <div className="w-6 h-6 rounded border border-slate-300 bg-gray-100 flex items-center justify-center">
+                                  <span className="text-[8px] text-slate-600 font-medium">
+                                    +{product.available_colors.length - 3}
+                                  </span>
+                                </div>
                               )}
                             </div>
                           </div>
@@ -353,7 +358,7 @@ function Store() {
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={!pagination.hasNextPage}
                 >
-                  Próxima
+                  Pr��xima
                 </Button>
               </div>
             )}
