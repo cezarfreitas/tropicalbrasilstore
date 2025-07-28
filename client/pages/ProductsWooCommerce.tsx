@@ -790,35 +790,48 @@ export default function ProductsWooCommerce() {
                                 <Label className="text-sm font-medium mb-3 block">
                                   Estoque por Tamanho
                                 </Label>
-                                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                                  {sizes
-                                    .sort((a, b) => a.display_order - b.display_order)
-                                    .map((size) => {
-                                      const sizeStock = variant.size_stocks.find(
-                                        (ss) => ss.size_id === size.id
-                                      );
-                                      return (
-                                        <div key={size.id} className="text-center">
-                                          <Label className="text-xs block mb-1">
-                                            {size.size}
-                                          </Label>
-                                          <Input
-                                            type="number"
-                                            min="0"
-                                            value={sizeStock?.stock || 0}
-                                            onChange={(e) =>
-                                              updateSizeStock(
-                                                variantIndex,
-                                                size.id,
-                                                parseInt(e.target.value) || 0
-                                              )
-                                            }
-                                            className="h-8 text-center"
-                                          />
-                                        </div>
-                                      );
-                                    })}
-                                </div>
+                                {!formData.size_group_id ? (
+                                  <div className="text-center py-4 text-muted-foreground text-sm">
+                                    Selecione um grupo de tamanhos primeiro
+                                  </div>
+                                ) : (
+                                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                                    {(() => {
+                                      const selectedGroup = sizeGroups.find(g => g.id === formData.size_group_id);
+                                      const availableSizes = selectedGroup
+                                        ? sizes.filter(size => selectedGroup.sizes.includes(size.size))
+                                        : [];
+
+                                      return availableSizes
+                                        .sort((a, b) => a.display_order - b.display_order)
+                                        .map((size) => {
+                                          const sizeStock = variant.size_stocks.find(
+                                            (ss) => ss.size_id === size.id
+                                          );
+                                          return (
+                                            <div key={size.id} className="text-center">
+                                              <Label className="text-xs block mb-1">
+                                                {size.size}
+                                              </Label>
+                                              <Input
+                                                type="number"
+                                                min="0"
+                                                value={sizeStock?.stock || 0}
+                                                onChange={(e) =>
+                                                  updateSizeStock(
+                                                    variantIndex,
+                                                    size.id,
+                                                    parseInt(e.target.value) || 0
+                                                  )
+                                                }
+                                                className="h-8 text-center"
+                                              />
+                                            </div>
+                                          );
+                                        });
+                                    })()}
+                                  </div>
+                                )}
                               </div>
                             </CardContent>
                           </Card>
