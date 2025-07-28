@@ -413,6 +413,85 @@ export default function ProductsWooCommerce() {
     });
   };
 
+  // Multi-selection functions
+  const toggleProductSelection = (productId: number) => {
+    setSelectedProducts(prev =>
+      prev.includes(productId)
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedProducts.length === products.length) {
+      setSelectedProducts([]);
+    } else {
+      setSelectedProducts(products.map(p => p.id!));
+    }
+  };
+
+  const bulkDelete = async () => {
+    if (selectedProducts.length === 0) return;
+
+    try {
+      setSaving(true);
+      const promises = selectedProducts.map(id =>
+        fetch(`/api/products-woocommerce/${id}`, { method: 'DELETE' })
+      );
+
+      await Promise.all(promises);
+
+      toast({
+        title: "Sucesso",
+        description: `${selectedProducts.length} produtos excluídos com sucesso.`,
+      });
+
+      setSelectedProducts([]);
+      fetchProducts();
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Erro ao excluir produtos selecionados.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const bulkToggleStatus = async (active: boolean) => {
+    if (selectedProducts.length === 0) return;
+
+    try {
+      setSaving(true);
+      const promises = selectedProducts.map(id =>
+        fetch(`/api/products-woocommerce/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ active })
+        })
+      );
+
+      await Promise.all(promises);
+
+      toast({
+        title: "Sucesso",
+        description: `${selectedProducts.length} produtos ${active ? 'ativados' : 'desativados'} com sucesso.`,
+      });
+
+      setSelectedProducts([]);
+      fetchProducts();
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Erro ao alterar status dos produtos selecionados.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
