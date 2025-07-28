@@ -200,7 +200,7 @@ function Store() {
                     {/* Product Image */}
                     <div className="aspect-square relative overflow-hidden rounded-t-lg">
                       <ProductImage
-                        src={product.photo}
+                        src={selectedVariantImages[product.id] || product.photo}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                         priority={index < 8} // Priority loading for first 8 products
