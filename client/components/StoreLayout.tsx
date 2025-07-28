@@ -271,6 +271,20 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             </div>
             <span className="text-xs text-muted-foreground font-medium">Carrinho</span>
           </div>
+
+          {/* Search */}
+          <div className="flex-1 flex flex-col items-center gap-2">
+            <div className="relative">
+              <Button
+                variant="ghost"
+                className="justify-center h-auto p-2 hover:bg-primary/5 rounded-lg"
+                onClick={() => setSearchModalOpen(true)}
+              >
+                <Search className="h-8 w-8 text-primary flex-shrink-0" />
+              </Button>
+            </div>
+            <span className="text-xs text-muted-foreground font-medium">Buscar</span>
+          </div>
         </div>
 
         {/* Navigation */}
