@@ -1039,6 +1039,17 @@ export default function ProductsWooCommerce() {
                     </div>
                   </TableCell>
                   <TableCell>
+                    {product.grade_count ? (
+                      <Badge variant="outline" className="text-blue-600">
+                        {product.grade_count} grades
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary">
+                        Sem grades
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <Badge variant={product.total_stock ? "default" : "secondary"}>
                       {product.total_stock || 0}
                     </Badge>
