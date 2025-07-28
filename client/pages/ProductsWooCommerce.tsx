@@ -773,38 +773,39 @@ export default function ProductsWooCommerce() {
 
                               <div>
                                 <Label className="text-sm font-medium">
-                                  Grades de Tamanhos* (selecione uma ou mais)
+                                  Grade Vendida* (selecione uma ou mais)
                                 </Label>
                                 <div className="mt-2 space-y-2">
-                                  {sizeGroups.map((group) => (
-                                    <div key={group.id} className="flex items-center space-x-2">
+                                  {grades.map((grade) => (
+                                    <div key={grade.id} className="flex items-center space-x-2">
                                       <input
                                         type="checkbox"
-                                        id={`group-${variantIndex}-${group.id}`}
-                                        checked={variant.size_group_ids.includes(group.id)}
+                                        id={`grade-${variantIndex}-${grade.id}`}
+                                        checked={variant.grade_ids.includes(grade.id)}
                                         onChange={(e) => {
-                                          const newGroupIds = e.target.checked
-                                            ? [...variant.size_group_ids, group.id]
-                                            : variant.size_group_ids.filter(id => id !== group.id);
-                                          updateVariantSizeGroups(variantIndex, newGroupIds);
+                                          const newGradeIds = e.target.checked
+                                            ? [...variant.grade_ids, grade.id]
+                                            : variant.grade_ids.filter(id => id !== grade.id);
+                                          updateVariantGrades(variantIndex, newGradeIds);
                                         }}
                                         className="rounded border-gray-300"
                                       />
                                       <label
-                                        htmlFor={`group-${variantIndex}-${group.id}`}
+                                        htmlFor={`grade-${variantIndex}-${grade.id}`}
                                         className="text-sm flex items-center gap-2 cursor-pointer"
                                       >
-                                        <span>{group.icon}</span>
-                                        <span>{group.name}</span>
-                                        <span className="text-xs text-muted-foreground">
-                                          ({group.sizes.join(", ")})
-                                        </span>
+                                        <span>{grade.name}</span>
+                                        {grade.total_price && (
+                                          <span className="text-xs text-muted-foreground">
+                                            (R$ {grade.total_price.toFixed(2)})
+                                          </span>
+                                        )}
                                       </label>
                                     </div>
                                   ))}
-                                  {variant.size_group_ids.length === 0 && (
+                                  {variant.grade_ids.length === 0 && (
                                     <div className="text-xs text-muted-foreground">
-                                      Selecione pelo menos uma grade de tamanhos
+                                      Selecione pelo menos uma grade vendida
                                     </div>
                                   )}
                                 </div>
