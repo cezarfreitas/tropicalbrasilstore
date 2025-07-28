@@ -600,18 +600,12 @@ export default function ProductDetail() {
                                     : "hover:opacity-75"
                                 }`}
                               >
-                                <div className="flex justify-between items-start mb-3">
+                                <div className="flex justify-between items-start mb-2">
                                   <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-1">
-                                      <h4 className="font-semibold text-sm text-gray-900">{grade.name}</h4>
-                                      {selectedGrade === grade.id && (
-                                        <div className="w-2 h-2 bg-primary rounded-full"></div>
-                                      )}
-                                    </div>
-                                    {grade.description && (
-                                      <p className="text-xs text-gray-500 mb-2">{grade.description}</p>
-                                    )}
-                                    <span className="text-xs text-primary font-medium">
+                                    <h4 className={`text-sm mb-1 ${selectedGrade === grade.id ? 'font-semibold text-gray-900' : 'font-medium text-gray-700'}`}>
+                                      {grade.name}
+                                    </h4>
+                                    <span className="text-xs text-gray-500">
                                       {grade.total_quantity} peças
                                     </span>
                                   </div>
@@ -621,24 +615,20 @@ export default function ProductDetail() {
                                       <PriceDisplay
                                         price={product.base_price * grade.total_quantity}
                                         variant="small"
-                                        className="text-primary font-semibold"
+                                        className="text-gray-900 font-semibold"
                                         onLoginClick={() => setShowLoginModal(true)}
                                       />
-                                      <div className="text-xs text-gray-500 mt-0.5">
+                                      <div className="text-xs text-gray-500">
                                         R$ {formatPrice(product.base_price)} cada
                                       </div>
                                     </div>
                                   )}
                                 </div>
 
-                                <div className="flex flex-wrap gap-1">
+                                <div className="flex flex-wrap gap-2 text-xs text-gray-600">
                                   {sortedTemplates.map((template, index) => (
-                                    <span
-                                      key={`${template.size_id}-${index}`}
-                                      className="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs"
-                                    >
-                                      <span className="font-medium">{template.size}</span>
-                                      <span>({template.required_quantity})</span>
+                                    <span key={`${template.size_id}-${index}`}>
+                                      {template.size}({template.required_quantity})
                                     </span>
                                   ))}
                                 </div>
