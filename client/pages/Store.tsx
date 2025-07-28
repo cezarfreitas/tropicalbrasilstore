@@ -268,46 +268,6 @@ function Store() {
                               variant="default"
                               onLoginClick={() => setShowLoginModal(true)}
                             />
-                            {/* Colors - Desktop only */}
-                            {product.available_colors &&
-                              product.available_colors.length > 0 && (
-                                <div className="hidden sm:flex items-center gap-1">
-                                  <div className="flex gap-1">
-                                    {product.available_colors
-                                      .slice(0, 5)
-                                      .map((color) => (
-                                        <div
-                                          key={color.id}
-                                          className="w-7 h-7 rounded border border-slate-300 overflow-hidden bg-white shadow-sm hover:shadow-md transition-all cursor-pointer hover:scale-110"
-                                          title={`${color.name}`}
-                                          onClick={(e) => color.image_url && handleColorVariantClick(product.id, color.image_url, e)}
-                                        >
-                                          {color.image_url ? (
-                                            <ProductImage
-                                              src={color.image_url}
-                                              alt={`${product.name} - ${color.name}`}
-                                              className="w-full h-full object-cover hover:scale-105 transition-transform"
-                                            />
-                                          ) : (
-                                            <div
-                                              className="w-full h-full flex items-center justify-center text-xs font-medium text-white"
-                                              style={{ backgroundColor: color.hex_code }}
-                                            >
-                                              {color.name?.charAt(0)}
-                                            </div>
-                                          )}
-                                        </div>
-                                      ))}
-                                    {product.available_colors.length > 5 && (
-                                      <div className="w-7 h-7 rounded border border-slate-300 bg-gray-100 flex items-center justify-center shadow-sm">
-                                        <span className="text-xs text-slate-600 font-medium">
-                                          +{product.available_colors.length - 5}
-                                        </span>
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
                           </div>
                         </div>
                       )}
