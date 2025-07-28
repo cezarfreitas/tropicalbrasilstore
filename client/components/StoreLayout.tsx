@@ -170,7 +170,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-background/95 backdrop-blur-sm shadow-lg sticky top-0 z-40 border-primary/10">
-        <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3 lg:py-4">
+        <div className="container mx-auto px-1 sm:px-2 py-1">
           {/* Mobile Layout - Centered Logo */}
           <div className="flex sm:hidden items-center justify-center relative">
             {/* Mobile Hamburger Menu */}
