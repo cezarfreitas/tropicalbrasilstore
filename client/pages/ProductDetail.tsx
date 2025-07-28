@@ -649,7 +649,7 @@ export default function ProductDetail() {
             {/* Add to Cart Section */}
             {canAddToCart() && (
               <div className="border-t pt-3">
-                <div className="flex items-center gap-3 mb-2">
+                <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1.5">
                     <label className="text-sm font-medium text-gray-700">Quantidade:</label>
                     <div className="flex items-center border border-gray-300 rounded-lg">
@@ -674,16 +674,16 @@ export default function ProductDetail() {
                       </Button>
                     </div>
                   </div>
-                </div>
 
-                <Button
-                  onClick={addToCart}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground h-10 text-base font-semibold"
-                  size="lg"
-                >
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  Adicionar ao Carrinho
-                </Button>
+                  <Button
+                    onClick={addToCart}
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground h-8 text-sm font-semibold"
+                    size="sm"
+                  >
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    Adicionar ao Carrinho
+                  </Button>
+                </div>
               </div>
             )}
 
