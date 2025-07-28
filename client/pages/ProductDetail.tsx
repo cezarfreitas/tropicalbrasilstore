@@ -458,8 +458,9 @@ export default function ProductDetail() {
 
           {/* Product Information */}
           <div className="space-y-4">
-            {/* Product Header - Compact */}
-            <div className="space-y-3">
+            {/* Product Header */}
+            <div className="space-y-4">
+              {/* Title and Actions */}
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <h1 className="text-xl lg:text-2xl font-bold text-gray-900 leading-tight">
@@ -472,26 +473,52 @@ export default function ProductDetail() {
                   )}
                 </div>
 
-                {/* Price & Actions */}
-                <div className="text-right flex-shrink-0">
-                  {product.base_price && (
-                    <PriceDisplay
-                      price={product.base_price}
-                      suggestedPrice={product.suggested_price}
-                      variant="default"
-                      onLoginClick={() => setShowLoginModal(true)}
-                    />
-                  )}
-                  <div className="flex items-center gap-1 mt-1">
-                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                      <Heart className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                      <Share2 className="h-3 w-3" />
-                    </Button>
-                  </div>
+                {/* Action Buttons */}
+                <div className="flex items-center gap-1">
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <Heart className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <Share2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
+
+              {/* Price Section - Prominent */}
+              {product.base_price && (
+                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-xs text-gray-600 uppercase tracking-wide font-medium mb-1">
+                        Preço Unitário
+                      </div>
+                      <PriceDisplay
+                        price={product.base_price}
+                        suggestedPrice={product.suggested_price}
+                        variant="large"
+                        onLoginClick={() => setShowLoginModal(true)}
+                      />
+                    </div>
+                    {isAuthenticated && isApproved && (
+                      <div className="text-right">
+                        <div className="text-xs text-gray-600 mb-1">Por peça</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {product.suggested_price && (
+                            <span className="text-xs text-gray-500 line-through mr-2">
+                              R$ {product.suggested_price.toFixed(2)}
+                            </span>
+                          )}
+                          <span className="text-green-600">
+                            Economia: R$ {product.suggested_price && product.base_price
+                              ? (product.suggested_price - product.base_price).toFixed(2)
+                              : '0.00'}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Authentication Check */}
