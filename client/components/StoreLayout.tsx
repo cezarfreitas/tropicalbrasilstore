@@ -50,6 +50,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
