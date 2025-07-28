@@ -13,6 +13,50 @@ import { useProducts } from "@/hooks/use-products";
 import { LoginModal } from "@/components/LoginModal";
 import { Package, AlertCircle, ShoppingCart, Search } from "lucide-react";
 
+// Function to get proper color value from different sources
+const getColorValue = (color: any) => {
+  // If hex_code is provided, use it
+  if (color.hex_code) {
+    return color.hex_code;
+  }
+
+  // Common color name mappings for WooCommerce
+  const colorMap: { [key: string]: string } = {
+    'branco': '#FFFFFF',
+    'white': '#FFFFFF',
+    'preto': '#000000',
+    'black': '#000000',
+    'azul': '#0066CC',
+    'blue': '#0066CC',
+    'vermelho': '#CC0000',
+    'red': '#CC0000',
+    'verde': '#00CC00',
+    'green': '#00CC00',
+    'amarelo': '#FFCC00',
+    'yellow': '#FFCC00',
+    'rosa': '#FF6699',
+    'pink': '#FF6699',
+    'roxo': '#9966CC',
+    'purple': '#9966CC',
+    'laranja': '#FF6600',
+    'orange': '#FF6600',
+    'marrom': '#996633',
+    'brown': '#996633',
+    'cinza': '#999999',
+    'gray': '#999999',
+    'grey': '#999999'
+  };
+
+  // Try to map by color name
+  const colorName = color.name?.toLowerCase();
+  if (colorName && colorMap[colorName]) {
+    return colorMap[colorName];
+  }
+
+  // Default fallback
+  return '#E5E7EB';
+};
+
 function Store() {
   // Authentication
   const { isAuthenticated, isApproved } = useCustomerAuth();
