@@ -303,8 +303,8 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
   }, [fetchProducts]);
 
   // Wrapper function to maintain API compatibility
-  const fetchProductsWrapper = useCallback((page: number = 1, searchTerm: string = "") => {
-    return fetchProducts(page, 0, searchTerm); // Always start with retry count 0
+  const fetchProductsWrapper = useCallback((page: number = 1, searchTerm: string = "", colorFilter: number | null = null) => {
+    return fetchProducts(page, 0, searchTerm, colorFilter); // Always start with retry count 0
   }, [fetchProducts]);
 
   return {
