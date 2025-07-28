@@ -594,12 +594,10 @@ export default function ProductDetail() {
                                 key={grade.id}
                                 onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
                                 disabled={!canAdd}
-                                className={`w-full p-4 border rounded-lg text-left transition-all duration-200 ${
+                                className={`w-full p-3 text-left transition-opacity ${
                                   !canAdd
-                                    ? "border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
-                                    : selectedGrade === grade.id
-                                      ? "border-primary bg-primary/5"
-                                      : "border-gray-200 hover:border-gray-300 bg-white"
+                                    ? "opacity-40 cursor-not-allowed"
+                                    : "hover:opacity-75"
                                 }`}
                               >
                                 <div className="flex justify-between items-start mb-3">
