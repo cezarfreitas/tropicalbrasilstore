@@ -187,23 +187,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       <aside className={`hidden lg:flex flex-col bg-card border-r border-primary/10 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'}`}>
         {/* Sidebar Header */}
         <div className="p-4 border-b border-primary/10">
-          <div className="flex items-center justify-between">
-            <Link to="/loja" className="flex items-center" aria-label="Ir para página inicial">
-              <LogoDisplay
-                size={sidebarOpen ? "w-10 h-10" : "w-8 h-8"}
-                className="flex-shrink-0"
-              />
-            </Link>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="h-8 w-8 p-0"
-              aria-label={sidebarOpen ? "Recolher sidebar" : "Expandir sidebar"}
-            >
-              <Menu className="h-4 w-4" />
-            </Button>
-          </div>
+          <Link to="/loja" className="flex items-center justify-center" aria-label="Ir para página inicial">
+            <LogoDisplay
+              size="w-10 h-10"
+              className="flex-shrink-0"
+            />
+          </Link>
         </div>
 
         {/* Navigation */}
