@@ -78,12 +78,10 @@ router.get("/products-paginated", async (req, res) => {
         SELECT DISTINCT
           co.id,
           co.name,
-          co.hex_code,
-          COUNT(pv.id) as variant_count,
-          SUM(pv.stock) as total_stock
-        FROM product_variants pv
-        LEFT JOIN colors co ON pv.color_id = co.id
-        WHERE pv.product_id = ? AND co.id IS NOT NULL AND pv.stock > 0
+          co.hex_code
+        FROM product_color_grades pcg
+        LEFT JOIN colors co ON pcg.color_id = co.id
+        WHERE pcg.product_id = ? AND co.id IS NOT NULL
         GROUP BY co.id, co.name, co.hex_code
         ORDER BY co.name
       `,
