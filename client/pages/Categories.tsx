@@ -92,7 +92,7 @@ export default function Categories() {
         });
         setDialogOpen(false);
         setEditingCategory(null);
-        setFormData({ name: "", description: "" });
+        setFormData({ name: "", description: "", show_in_menu: true });
         fetchCategories();
       } else {
         const error = await response.json();
