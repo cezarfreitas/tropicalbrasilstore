@@ -196,17 +196,17 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         </div>
 
         {/* User and Cart Actions */}
-        <div className="p-4 border-b border-primary/10 flex gap-2">
+        <div className="p-2 border-b border-primary/10 flex gap-1">
           {/* User Menu */}
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-center h-12 p-3"
+                  className="w-full justify-center h-16 p-2"
                   aria-label="Menu do usuário"
                 >
-                  <User className="h-6 w-6 flex-shrink-0" />
+                  <User className="h-10 w-10 flex-shrink-0" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
