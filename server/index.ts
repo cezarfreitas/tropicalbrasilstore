@@ -168,6 +168,7 @@ export function createServer() {
   app.use("/api/seed-chinelos", seedChinelosRouter);
   app.use("/api/import", importRouter);
   app.use("/api/admin/logs", apiLogsRouter);
+  app.use("/api", stockManagementRouter);
 
   return app;
 }
