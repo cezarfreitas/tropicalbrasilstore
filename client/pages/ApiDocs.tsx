@@ -390,7 +390,9 @@ export default function ApiDocs() {
   "nome": "Chinelo Havaianas Top", // Nome do produto (obrigatório)
   "categoria": "Chinelos",         // Categoria (criada automaticamente se não existir)
   "tipo": "Casual",               // Tipo (criado automaticamente se não existir)
+  "genero": "Unissex",             // Gênero (criado automaticamente se não existir)
   "descricao": "Descrição...",    // Descrição do produto (opcional)
+  "vender_infinito": false,       // Flag para venda sem controle de estoque (opcional)
   "variantes": [                  // Array de variantes (obrigatório, mín: 1)
     {
       "cor": "Preto",             // Cor (criada automaticamente se não existir)
@@ -414,9 +416,11 @@ export default function ApiDocs() {
                     <ul className="text-sm text-blue-700 space-y-1">
                       <li>• Criação automática de categorias</li>
                       <li>• Criação automática de tipos</li>
+                      <li>• Criação automática de gêneros</li>
                       <li>• Criação automática de cores</li>
                       <li>• Geração automática de SKUs</li>
                       <li>• Criação de grades com tamanhos automáticos</li>
+                      <li>• Criação de variantes físicas para cada cor</li>
                     </ul>
                   </div>
                   <div className="bg-yellow-50 p-4 rounded-lg">
@@ -450,7 +454,9 @@ Authorization: Bearer your_api_key
       "nome": "Chinelo Havaianas Top",
       "categoria": "Chinelos",
       "tipo": "Casual",
+      "genero": "Unissex",
       "descricao": "O chinelo mais famoso do Brasil",
+      "vender_infinito": true,
       "variantes": [
         {
           "cor": "Preto",
@@ -469,7 +475,7 @@ Authorization: Bearer your_api_key
     {
       "codigo": "SND001",
       "nome": "Sandália Feminina Elegante",
-      "categoria": "Sandálias",
+      "categoria": "Sand��lias",
       "tipo": "Feminino",
       "descricao": "Sandália para ocasiões especiais",
       "variantes": [
