@@ -335,7 +335,13 @@ export default function ProductDetail() {
 
     const sizeMap = new Map();
     product.variants
-      .filter((v) => v.color_id === selectedColor && v.stock > 0)
+      .filter((v) => {
+        const matchesColor = v.color_id === selectedColor;
+        const hasStock = v.stock > 0;
+        const allowedWithoutStock = product.sell_without_stock;
+
+        return matchesColor && (hasStock || allowedWithoutStock);
+      })
       .forEach((variant) => {
         if (!sizeMap.has(variant.size_id)) {
           sizeMap.set(variant.size_id, {
