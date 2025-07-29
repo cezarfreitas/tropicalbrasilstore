@@ -472,7 +472,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 )}
               </div>
               <span className="text-xs text-white/80 font-medium">
-                {isAuthenticated ? "Perfil" : "Entrar"}
+                {isAuthenticated ? "Minha Conta" : "Entrar"}
               </span>
             </div>
 
