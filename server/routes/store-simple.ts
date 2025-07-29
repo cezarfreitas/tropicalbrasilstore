@@ -50,8 +50,18 @@ router.get("/products", async (req, res) => {
     }
 
     baseQuery += `
-      GROUP BY p.id, p.name, p.description, p.base_price, p.suggested_price, p.photo, p.active, p.sell_without_stock, c.name
-      HAVING SUM(pv.stock) > 0 OR p.sell_without_stock = 1
+      GROUP BY p.id, p.name, p.description, p.base_price, p.suggested_price, p.photo, p.active, p.sell_without_stock, p.stock_type, c.name
+      HAVING (
+        CASE
+          WHEN p.stock_type = 'size' THEN SUM(pv.stock) > 0
+          WHEN p.stock_type = 'grade' THEN EXISTS(
+            SELECT 1 FROM product_color_grades pcg
+            INNER JOIN grade_vendida g ON pcg.grade_id = g.id
+            WHERE pcg.product_id = p.id AND g.active = 1
+          )
+          ELSE FALSE
+        END
+      ) OR p.sell_without_stock = 1
     `;
 
     // Get total count for pagination
