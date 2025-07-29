@@ -43,7 +43,7 @@ async function checkStoreProducts() {
           (
             SELECT COUNT(*)
             FROM grade_templates gt
-            WHERE gt.grade_id = g.id AND gt.pieces > 0
+            WHERE gt.grade_id = g.id AND gt.required_quantity > 0
           ) as template_count
         FROM grade_vendida g
         INNER JOIN product_color_grades pcg ON g.id = pcg.grade_id
