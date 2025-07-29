@@ -661,24 +661,25 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             </div>
 
             {/* Type Filter Section */}
-            <div className="mt-4 pt-3 border-t border-white/20">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between px-3">
+            <div className="mt-6 pt-4 border-t border-white/20">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between px-4">
                   <button
                     onClick={() => setTypeFilterOpen(!typeFilterOpen)}
-                    className="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wider hover:text-white transition-colors"
+                    className="flex items-center gap-3 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
                   >
+                    <Tag className="h-4 w-4 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
                     <span>Filtrar por Tipo</span>
                     <ChevronDown
-                      className={`h-3 w-3 transition-transform duration-200 ${
-                        typeFilterOpen ? 'rotate-180' : ''
+                      className={`h-4 w-4 transition-all duration-300 ${
+                        typeFilterOpen ? 'rotate-180 text-white' : 'text-white/70'
                       }`}
                     />
                   </button>
                   {selectedTypeFilter && (
                     <button
                       onClick={() => handleTypeFilter(null)}
-                      className="text-xs text-white/60 hover:text-white transition-colors"
+                      className="text-xs text-white/70 hover:text-white bg-white/10 hover:bg-white/20 px-2 py-1 rounded-full transition-all duration-300"
                     >
                       Limpar
                     </button>
@@ -687,19 +688,24 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                 {typeFilterOpen && (
                   <>
-                    <div className="space-y-1 px-3">
+                    <div className="space-y-2 px-4">
                       {availableTypes.map((type) => (
                         <button
                           key={type.id}
                           onClick={() => handleTypeFilter(type.id)}
-                          className={`w-full text-left p-2 rounded-lg text-sm transition-all duration-200 ${
+                          className={`w-full text-left p-3 rounded-2xl text-sm transition-all duration-300 group ${
                             selectedTypeFilter === type.id
-                              ? 'bg-white/20 text-white font-medium'
-                              : 'text-white/80 hover:bg-white/10 hover:text-white'
+                              ? 'bg-white/20 text-white font-bold shadow-lg border border-white/30'
+                              : 'text-white/80 hover:bg-white/15 hover:text-white border border-transparent hover:border-white/20'
                           }`}
                           title={type.description}
                         >
-                          {type.name}
+                          <div className="flex items-center gap-3">
+                            <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                              selectedTypeFilter === type.id ? 'bg-white scale-125' : 'bg-white/40 group-hover:bg-white/80'
+                            }`}></div>
+                            <span className="font-medium">{type.name}</span>
+                          </div>
                         </button>
                       ))}
                     </div>
