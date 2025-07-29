@@ -167,6 +167,14 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
         params.append("categoria", categoryFilter.trim());
       }
 
+      if (genderFilter !== null) {
+        params.append("genero", genderFilter.toString());
+      }
+
+      if (typeFilter !== null) {
+        params.append("tipo", typeFilter.toString());
+      }
+
       const endpoint = `/api/store/products-paginated?${params}`;
 
       // Debug log
