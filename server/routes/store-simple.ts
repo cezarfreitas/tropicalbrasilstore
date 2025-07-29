@@ -182,6 +182,18 @@ router.get("/products-paginated", async (req, res) => {
       queryParams.push(colorFilter);
     }
 
+    // Add gender filter if specified
+    if (genderFilter !== null) {
+      whereClause += " AND p.gender_id = ?";
+      queryParams.push(genderFilter);
+    }
+
+    // Add type filter if specified
+    if (typeFilter !== null) {
+      whereClause += " AND p.type_id = ?";
+      queryParams.push(typeFilter);
+    }
+
     // Get total count
     const countQuery = `
       SELECT COUNT(*) as total 
