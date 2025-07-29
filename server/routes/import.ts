@@ -438,15 +438,75 @@ async function processImport(data: any[]) {
 
         // Process single color
         const colorId = await processColor(item.color);
-        const stockPerVariant = parseInt(item.stock_per_variant) || 0;
+        const stockType = item.stock_type || 'grade';
 
-        // Create variants for this color and all sizes
-        for (const size of sizes) {
-          await connection.execute(
-            `INSERT INTO product_variants (product_id, size_id, color_id, stock)
-             VALUES (?, ?, ?, ?)`,
-            [productId, size.id, colorId, stockPerVariant],
+        if (stockType === 'grade') {
+          // Estoque por grade - criar grade se não existir e configurar estoque
+          const gradeStock = parseInt(item.grade_stock) || 0;
+
+          // Buscar ou criar grade (usando size_group_id como referência)
+          const [gradeResult] = await connection.execute(
+            `SELECT id FROM grade_vendida WHERE name = ? LIMIT 1`,
+            [`Grade Grupo ${item.size_group_id}`]
           );
+
+          let gradeId;
+          if ((gradeResult as any[]).length === 0) {
+            // Criar nova grade
+            const [newGrade] = await connection.execute(
+              `INSERT INTO grade_vendida (name, description, active) VALUES (?, ?, ?)`,
+              [`Grade Grupo ${item.size_group_id}`, `Grade automática para grupo ${item.size_group_id}`, 1]
+            );
+            gradeId = (newGrade as any).insertId;
+
+            // Criar templates da grade para todos os tamanhos
+            for (const size of sizes) {
+              await connection.execute(
+                `INSERT INTO grade_templates (grade_id, size_id, required_quantity) VALUES (?, ?, ?)`,
+                [gradeId, size.id, 1]
+              );
+            }
+          } else {
+            gradeId = (gradeResult as any[])[0].id;
+          }
+
+          // Criar relação produto-cor-grade com estoque
+          await connection.execute(
+            `INSERT INTO product_color_grades (product_id, color_id, grade_id, stock_quantity)
+             VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE stock_quantity = VALUES(stock_quantity)`,
+            [productId, colorId, gradeId, gradeStock]
+          );
+
+          // Criar variantes físicas sem estoque (controlado pela grade)
+          for (const size of sizes) {
+            await connection.execute(
+              `INSERT INTO product_variants (product_id, size_id, color_id, stock)
+               VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE stock = VALUES(stock)`,
+              [productId, size.id, colorId, 0]
+            );
+          }
+
+        } else {
+          // Estoque por tamanho - criar variantes com estoque individual
+          const sizeStocks = {
+            '37': parseInt(item.size_37) || 0,
+            '38': parseInt(item.size_38) || 0,
+            '39': parseInt(item.size_39) || 0,
+            '40': parseInt(item.size_40) || 0,
+            '41': parseInt(item.size_41) || 0,
+            '42': parseInt(item.size_42) || 0,
+            '43': parseInt(item.size_43) || 0,
+            '44': parseInt(item.size_44) || 0,
+          };
+
+          for (const size of sizes) {
+            const sizeStock = sizeStocks[size.size] || parseInt(item.stock_per_variant) || 0;
+            await connection.execute(
+              `INSERT INTO product_variants (product_id, size_id, color_id, stock)
+               VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE stock = VALUES(stock)`,
+              [productId, size.id, colorId, sizeStock]
+            );
+          }
         }
       }
 
