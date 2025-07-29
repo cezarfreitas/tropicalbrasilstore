@@ -533,14 +533,14 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             })}
 
             {/* Color Filter Section */}
-            <div className="mt-6 pt-4 border-t border-white/20">
+            <div className="mt-4 pt-3 border-t border-white/20">
               <div className="space-y-4">
-                <div className="flex items-center justify-between px-4">
+                <div className="flex items-center justify-between px-2">
                   <button
                     onClick={() => setColorFilterOpen(!colorFilterOpen)}
-                    className="flex items-center gap-3 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
+                    className="flex items-center gap-2 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
                   >
-                    <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-blue-400 rounded-full group-hover:scale-110 transition-transform duration-300"></div>
+                    <div className="w-2 h-2 bg-gradient-to-br from-red-400 to-blue-400 rounded-full group-hover:scale-110 transition-transform duration-300"></div>
                     <span>Filtrar por Cor</span>
                     <ChevronDown
                       className={`h-4 w-4 transition-all duration-300 ${
