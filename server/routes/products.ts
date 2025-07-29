@@ -161,9 +161,28 @@ async function getOrCreateGrade(name: string): Promise<number> {
 
   // Inserir os tamanhos da grade
   for (const size of sizes) {
+    // Verificar se o tamanho já existe na tabela sizes
+    const [existingSize] = await db.execute(
+      "SELECT id FROM sizes WHERE size = ?",
+      [size],
+    );
+
+    let sizeId;
+    if ((existingSize as any[]).length > 0) {
+      sizeId = (existingSize as any[])[0].id;
+    } else {
+      // Criar novo tamanho
+      const [sizeResult] = await db.execute(
+        "INSERT INTO sizes (size, display_order) VALUES (?, ?)",
+        [size, sizes.indexOf(size) + 1],
+      );
+      sizeId = (sizeResult as any).insertId;
+    }
+
+    // Inserir na grade_templates
     await db.execute(
-      "INSERT INTO grade_templates (grade_id, size, required_quantity, position) VALUES (?, ?, ?, ?)",
-      [gradeId, size, 0, sizes.indexOf(size) + 1],
+      "INSERT INTO grade_templates (grade_id, size_id, required_quantity) VALUES (?, ?, ?)",
+      [gradeId, sizeId, 0],
     );
   }
 
@@ -288,12 +307,12 @@ router.post("/bulk", validateApiKey, async (req, res) => {
 
         // Buscar o primeiro tamanho da grade para criar a variante padrão
         const [gradeTemplates] = await db.execute(
-          "SELECT id FROM grade_templates WHERE grade_id = ? ORDER BY position LIMIT 1",
+          "SELECT gt.id, gt.size_id FROM grade_templates gt JOIN sizes s ON gt.size_id = s.id WHERE gt.grade_id = ? ORDER BY s.display_order LIMIT 1",
           [gradeId],
         );
 
         if ((gradeTemplates as any[]).length > 0) {
-          const sizeId = (gradeTemplates as any[])[0].id;
+          const sizeId = (gradeTemplates as any[])[0].size_id;
 
           // Criar variante física do produto (product_variants)
           const [physicalVariantResult] = await db.execute(
@@ -426,14 +445,14 @@ router.post("/single", validateApiKey, async (req, res) => {
 
     // Buscar o primeiro tamanho da grade para criar a variante padrão
     const [gradeTemplates] = await db.execute(
-      "SELECT id FROM grade_templates WHERE grade_id = ? ORDER BY position LIMIT 1",
+      "SELECT gt.id, gt.size_id FROM grade_templates gt JOIN sizes s ON gt.size_id = s.id WHERE gt.grade_id = ? ORDER BY s.display_order LIMIT 1",
       [gradeId],
     );
 
     const variantSku = `${codigo}-${cor.toUpperCase().replace(/\s+/g, "-")}`;
 
     if ((gradeTemplates as any[]).length > 0) {
-      const sizeId = (gradeTemplates as any[])[0].id;
+      const sizeId = (gradeTemplates as any[])[0].size_id;
 
       // Criar variante física do produto
       await db.execute(
