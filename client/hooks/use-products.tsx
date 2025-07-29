@@ -128,7 +128,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
     }
 
     setIsRequestInProgress(true);
-    const cacheKey = `products-v6-${page}-${productsPerPage}-${searchTerm}-${colorFilter || 'all'}-${categoryFilter || 'all'}-${genderFilter || 'all'}-${typeFilter || 'all'}`; // v6 to force cache invalidation
+    const cacheKey = `products-v7-${page}-${productsPerPage}-${searchTerm}-${colorFilter || 'all'}-${categoryFilter || 'all'}-${genderFilter || 'all'}-${typeFilter || 'all'}`; // v7 to force cache invalidation
 
     // Check cache first
     const cached = globalCache.get(cacheKey);
@@ -294,7 +294,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
         } else if (err.message.includes("CORS")) {
           errorMessage = "🔒 Erro de segurança. Recarregue a página.";
         } else if (err.message.includes("HTTP")) {
-          errorMessage = `📡 Erro do servidor: ${err.message}`;
+          errorMessage = `��� Erro do servidor: ${err.message}`;
         } else {
           errorMessage = `❌ Erro inesperado: ${err.message}`;
         }
