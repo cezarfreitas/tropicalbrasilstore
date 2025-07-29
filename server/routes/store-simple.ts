@@ -418,48 +418,58 @@ router.get("/products/:id", async (req, res) => {
       [req.params.id],
     );
 
-    // Fallback to old system if no WooCommerce variants found
+    // Get variants based on stock type
     let variantRows = wooVariantRows;
     if ((wooVariantRows as any[]).length === 0) {
-      const variantStockCondition = product.sell_without_stock
-        ? ""
-        : "AND pv.stock > 0";
-      const [oldVariantRows] = await db.execute(
-        `SELECT
-          pv.id,
-          pv.size_id,
-          pv.color_id,
-          pv.stock,
-          COALESCE(pv.price_override, 0) as price_override,
-          s.size,
-          s.display_order,
-          c.name as color_name,
-          c.hex_code
-         FROM product_variants pv
-         LEFT JOIN sizes s ON pv.size_id = s.id
-         LEFT JOIN colors c ON pv.color_id = c.id
-         WHERE pv.product_id = ? ${variantStockCondition}
-         ORDER BY s.display_order, c.name`,
-        [req.params.id],
-      );
-      variantRows = oldVariantRows;
+      if (product.stock_type === 'size') {
+        // Para estoque por tamanho: mostrar variantes individuais
+        const variantStockCondition = product.sell_without_stock
+          ? ""
+          : "AND pv.stock > 0";
+        const [sizeVariantRows] = await db.execute(
+          `SELECT
+            pv.id,
+            pv.size_id,
+            pv.color_id,
+            pv.stock,
+            COALESCE(pv.price_override, 0) as price_override,
+            s.size,
+            s.display_order,
+            c.name as color_name,
+            c.hex_code
+           FROM product_variants pv
+           LEFT JOIN sizes s ON pv.size_id = s.id
+           LEFT JOIN colors c ON pv.color_id = c.id
+           WHERE pv.product_id = ? ${variantStockCondition}
+           ORDER BY s.display_order, c.name`,
+          [req.params.id],
+        );
+        variantRows = sizeVariantRows;
+      } else {
+        // Para estoque por grade: não mostrar variantes individuais
+        variantRows = [];
+      }
     }
 
-    // Get available grades for this product
-    const [gradeRows] = await db.execute(
-      `SELECT DISTINCT
-        g.id,
-        g.name,
-        g.description,
-        c.name as color_name,
-        c.hex_code,
-        pcg.color_id
-       FROM grade_vendida g
-       INNER JOIN product_color_grades pcg ON g.id = pcg.grade_id
-       INNER JOIN colors c ON pcg.color_id = c.id
-       WHERE pcg.product_id = ? AND g.active = true`,
-      [req.params.id],
-    );
+    // Get available grades only for grade-based stock products
+    let gradeRows = [];
+    if (product.stock_type === 'grade') {
+      const [grades] = await db.execute(
+        `SELECT DISTINCT
+          g.id,
+          g.name,
+          g.description,
+          c.name as color_name,
+          c.hex_code,
+          pcg.color_id
+         FROM grade_vendida g
+         INNER JOIN product_color_grades pcg ON g.id = pcg.grade_id
+         INNER JOIN colors c ON pcg.color_id = c.id
+         WHERE pcg.product_id = ? AND g.active = true`,
+        [req.params.id],
+      );
+      gradeRows = grades;
+    }
 
     // For each grade, get the template requirements and check stock availability
     const gradesWithTemplates = [];
