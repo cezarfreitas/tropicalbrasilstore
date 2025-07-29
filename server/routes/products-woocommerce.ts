@@ -337,7 +337,7 @@ router.put("/:id", async (req, res) => {
     await connection.execute(
       `UPDATE products SET
        name = ?, description = ?, category_id = ?, base_price = ?, suggested_price = ?,
-       sku = ?, parent_sku = ?, photo = ?, active = ?, sell_without_stock = ?
+       sku = ?, parent_sku = ?, photo = ?, active = ?, sell_without_stock = ?, stock_type = ?
        WHERE id = ?`,
       [
         name,
@@ -350,6 +350,7 @@ router.put("/:id", async (req, res) => {
         photo || null,
         active !== false,
         sell_without_stock || false,
+        (req.body as WooCommerceProduct).stock_type || 'grade',
         req.params.id,
       ],
     );
