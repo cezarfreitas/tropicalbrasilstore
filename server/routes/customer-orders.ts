@@ -8,17 +8,29 @@ router.get("/:customerId", async (req, res) => {
   try {
     const { customerId } = req.params;
 
-    // Get customer details first
-    const [customerRows] = await db.execute(
-      `SELECT email FROM customers WHERE id = ?`,
+    // First try to get email from customer_auth table (where the ID comes from login)
+    let customerEmail: string | null = null;
+
+    const [authRows] = await db.execute(
+      `SELECT email FROM customer_auth WHERE id = ?`,
       [customerId]
     );
 
-    if ((customerRows as any[]).length === 0) {
-      return res.status(404).json({ error: "Cliente não encontrado" });
-    }
+    if ((authRows as any[]).length > 0) {
+      customerEmail = (authRows as any[])[0].email;
+    } else {
+      // Fallback: try customers table
+      const [customerRows] = await db.execute(
+        `SELECT email FROM customers WHERE id = ?`,
+        [customerId]
+      );
 
-    const customerEmail = (customerRows as any[])[0].email;
+      if ((customerRows as any[]).length === 0) {
+        return res.status(404).json({ error: "Cliente não encontrado" });
+      }
+
+      customerEmail = (customerRows as any[])[0].email;
+    }
     
     // Get orders for the customer
     const [orderRows] = await db.execute(`
