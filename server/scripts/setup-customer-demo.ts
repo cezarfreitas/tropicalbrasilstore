@@ -61,7 +61,7 @@ async function setupCustomerDemo() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        whatsapp: '5511999991111',
+        whatsapp: '11999991111',
         password: 'demo123'
       })
     });
