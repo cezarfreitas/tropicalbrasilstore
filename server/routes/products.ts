@@ -303,6 +303,17 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           variante.sku ||
           `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}`;
 
+        // Download e salvar imagem se fornecida
+        let localImageUrl = null;
+        if (variante.foto && isValidImageUrl(variante.foto)) {
+          localImageUrl = await downloadAndSaveImage(
+            variante.foto,
+            product.codigo,
+            variante.cor
+          );
+          console.log(`  📷 Imagem processada para ${variante.cor}: ${localImageUrl || 'falhou'}`);
+        }
+
         // Inserir relação produto-cor-grade
         const [variantResult] = await db.execute(
           `INSERT INTO product_color_grades
