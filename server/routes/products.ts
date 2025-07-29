@@ -275,6 +275,81 @@ router.post("/bulk", async (req, res) => {
   }
 });
 
+// Single product create with one variant
+router.post("/single", async (req, res) => {
+  try {
+    const { codigo, nome, categoria, tipo, descricao, cor, preco, grade, foto } = req.body;
+
+    // Validações básicas
+    if (!codigo || !nome || !cor || !preco || preco <= 0 || !grade) {
+      return res.status(422).json({
+        success: false,
+        error: "Dados inválidos",
+        message: "Código, nome, cor, preço > 0 e grade são obrigatórios"
+      });
+    }
+
+    // Verificar se produto com código já existe
+    const [existingProduct] = await db.execute(
+      "SELECT id FROM products WHERE sku = ?",
+      [codigo]
+    );
+
+    if ((existingProduct as any[]).length > 0) {
+      return res.status(400).json({
+        success: false,
+        error: "Código já existe",
+        message: `O produto com código '${codigo}' já está cadastrado`,
+        code: "DUPLICATE_CODE"
+      });
+    }
+
+    // Criar ou buscar entidades
+    const categoryId = await getOrCreateCategory(categoria);
+    const typeId = await getOrCreateType(tipo);
+    const colorId = await getOrCreateColor(cor);
+    const gradeId = await getOrCreateGrade(grade);
+
+    // Criar produto
+    const [productResult] = await db.execute(
+      "INSERT INTO products (name, description, category_id, sku, base_price, active) VALUES (?, ?, ?, ?, ?, ?)",
+      [nome, descricao || null, categoryId, codigo, preco, true]
+    );
+
+    const productId = (productResult as any).insertId;
+
+    // Criar relação produto-cor-grade
+    await db.execute(
+      "INSERT INTO product_color_grades (product_id, color_id, grade_id) VALUES (?, ?, ?)",
+      [productId, colorId, gradeId]
+    );
+
+    // Resposta de sucesso
+    res.status(201).json({
+      success: true,
+      message: "Produto cadastrado com sucesso",
+      data: {
+        id: productId,
+        codigo,
+        nome,
+        categoria,
+        tipo,
+        cor,
+        grade,
+        preco
+      }
+    });
+
+  } catch (error: any) {
+    console.error("Error creating single product:", error);
+    res.status(500).json({
+      success: false,
+      error: "Erro interno do servidor",
+      message: "Não foi possível criar o produto"
+    });
+  }
+});
+
 // Get all products with category information
 router.get("/", async (req, res) => {
   try {
