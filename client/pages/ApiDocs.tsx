@@ -676,6 +676,18 @@ Authorization: Bearer YOUR_API_KEY`}
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {usingMockData && (
+                <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+                  <div className="flex items-center gap-2 text-blue-700">
+                    <Code className="h-4 w-4" />
+                    <span className="text-sm font-medium">Modo Desenvolvimento</span>
+                  </div>
+                  <p className="text-sm text-blue-600 mt-1">
+                    Exibindo dados de exemplo. As chaves reais serão gerenciadas quando o backend estiver conectado.
+                  </p>
+                </div>
+              )}
+
               {loading ? (
                 <div className="flex items-center justify-center py-8">
                   <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mr-3"></div>
@@ -703,7 +715,7 @@ Authorization: Bearer YOUR_API_KEY`}
                             {key.last_used && (
                               <>
                                 <span>•</span>
-                                <span>��ltimo uso: {new Date(key.last_used).toLocaleDateString('pt-BR')}</span>
+                                <span>Último uso: {new Date(key.last_used).toLocaleDateString('pt-BR')}</span>
                               </>
                             )}
                             <Badge
