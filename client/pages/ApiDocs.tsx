@@ -711,23 +711,33 @@ Authorization: Bearer YOUR_API_KEY`}
                         Versão: {database.version} • Atualizado: {new Date(database.updated_at).toLocaleString('pt-BR')}
                       </p>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const jsonData = exportJson();
-                        if (jsonData) {
-                          copyToClipboard(jsonData);
-                          toast({
-                            title: "JSON Exportado",
-                            description: "Estrutura completa do arquivo JSON copiada para área de transferência.",
-                          });
-                        }
-                      }}
-                    >
-                      <Copy className="h-4 w-4 mr-2" />
-                      Exportar JSON
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const jsonData = exportJson();
+                          if (jsonData) {
+                            copyToClipboard(jsonData);
+                            toast({
+                              title: "JSON Copiado",
+                              description: "Estrutura completa do arquivo JSON copiada para área de transferência.",
+                            });
+                          }
+                        }}
+                      >
+                        <Copy className="h-4 w-4 mr-2" />
+                        Copiar JSON
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={downloadJsonFile}
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        Baixar JSON
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}
