@@ -165,7 +165,7 @@ router.get("/products-paginated", async (req, res) => {
     let queryParams: any[] = [];
 
     if (category && category !== "all") {
-      whereClause += " AND p.category_id = ?";
+      whereClause += " AND EXISTS (SELECT 1 FROM categories c WHERE c.id = p.category_id AND LOWER(c.name) = LOWER(?))";
       queryParams.push(category);
     }
 
