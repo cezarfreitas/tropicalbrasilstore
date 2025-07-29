@@ -333,7 +333,24 @@ export default function ProductsWooCommerce() {
         }
 
         setEditingProduct(fullProduct);
-        setFormData(fullProduct);
+        // Ensure no null values in form data
+        const cleanedFormData = {
+          ...fullProduct,
+          name: fullProduct.name || "",
+          description: fullProduct.description || "",
+          sku: fullProduct.sku || "",
+          parent_sku: fullProduct.parent_sku || "",
+          photo: fullProduct.photo || "",
+          color_variants: (fullProduct.color_variants || []).map((variant: ColorVariant) => ({
+            ...variant,
+            variant_name: variant.variant_name || "",
+            variant_sku: variant.variant_sku || "",
+            image_url: variant.image_url || "",
+            grade_ids: variant.grade_ids || [],
+            size_stocks: variant.size_stocks || [],
+          }))
+        };
+        setFormData(cleanedFormData);
         setDialogOpen(true);
       }
     } catch (error) {
