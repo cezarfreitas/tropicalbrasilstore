@@ -133,6 +133,8 @@ interface SizeGroup {
 export default function ProductsWooCommerce() {
   const [products, setProducts] = useState<WooCommerceProduct[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [genders, setGenders] = useState<any[]>([]);
+  const [types, setTypes] = useState<any[]>([]);
   const [colors, setColors] = useState<Color[]>([]);
   const [sizes, setSizes] = useState<Size[]>([]);
   const [grades, setGrades] = useState<any[]>([]);
