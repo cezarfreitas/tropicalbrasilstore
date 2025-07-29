@@ -84,28 +84,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     null,
   );
 
-  // Accordion states for filter sections - persist in localStorage
-  const [colorFilterOpen, setColorFilterOpen] = useState(() => {
-    try {
-      return localStorage.getItem('sidebar-color-filter-open') === 'true';
-    } catch {
-      return false;
-    }
-  });
-  const [genderFilterOpen, setGenderFilterOpen] = useState(() => {
-    try {
-      return localStorage.getItem('sidebar-gender-filter-open') === 'true';
-    } catch {
-      return false;
-    }
-  });
-  const [typeFilterOpen, setTypeFilterOpen] = useState(() => {
-    try {
-      return localStorage.getItem('sidebar-type-filter-open') === 'true';
-    } catch {
-      return false;
-    }
-  });
+  // Accordion states for filter sections - sempre fechados por padrão
+  const [colorFilterOpen, setColorFilterOpen] = useState(false);
+  const [genderFilterOpen, setGenderFilterOpen] = useState(false);
+  const [typeFilterOpen, setTypeFilterOpen] = useState(false);
 
   // Use global store settings for instant loading
   const storeSettings = useGlobalStoreSettings();
