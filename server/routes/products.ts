@@ -2,6 +2,7 @@ import { Router } from "express";
 import db from "../lib/db";
 import { Product, CreateProductRequest } from "@shared/types";
 import { validateApiKey } from "../lib/api-auth";
+import { downloadAndSaveImage, isValidImageUrl } from "../lib/image-uploader";
 
 interface BulkProductVariant {
   cor: string;
@@ -323,7 +324,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             variante.preco,
             variante.foto || null,
             0, // stock_total inicial
-            true,
+            true
           ],
         );
 
@@ -509,7 +510,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         preco,
         foto || null,
         0, // stock_total inicial
-        true,
+        true
       ],
     );
 
