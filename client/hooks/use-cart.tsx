@@ -37,6 +37,8 @@ interface CartState {
   items: CartItem[];
   totalItems: number;
   totalPrice: number;
+  isModalOpen: boolean;
+  modalProduct: ModalProduct | null;
 }
 
 type CartAction =
@@ -242,7 +244,7 @@ export function useCart() {
       },
     });
 
-    console.log("�� Item dispatched to cart");
+    console.log("🛒 Item dispatched to cart");
 
     // Prepare modal product data
     let variant = "";
