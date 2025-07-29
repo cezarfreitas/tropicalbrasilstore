@@ -60,6 +60,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [availableTypes, setAvailableTypes] = useState<any[]>([]);
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<number | null>(null);
 
+  // Accordion states for filter sections
+  const [colorFilterOpen, setColorFilterOpen] = useState(false);
+  const [genderFilterOpen, setGenderFilterOpen] = useState(false);
+  const [typeFilterOpen, setTypeFilterOpen] = useState(false);
+
   // Use global store settings for instant loading
   const storeSettings = useGlobalStoreSettings();
 
