@@ -47,6 +47,14 @@ interface UseProductsResult {
 const globalCache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
+// HMR guard to prevent connection issues
+if (typeof window !== 'undefined' && import.meta.hot) {
+  import.meta.hot.accept(() => {
+    // Clear cache on HMR to prevent stale data
+    globalCache.clear();
+  });
+}
+
 // Custom fetch using XMLHttpRequest to completely avoid FullStory conflicts
 const customFetch = async (
   url: string,
