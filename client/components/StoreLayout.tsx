@@ -84,10 +84,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     null,
   );
 
-  // Accordion states for filter sections - sempre fechados por padrão
-  const [colorFilterOpen, setColorFilterOpen] = useState(false);
-  const [genderFilterOpen, setGenderFilterOpen] = useState(false);
-  const [typeFilterOpen, setTypeFilterOpen] = useState(false);
+  // Accordion states for filter sections - sempre abertos por padrão
+  const [colorFilterOpen, setColorFilterOpen] = useState(true);
+  const [genderFilterOpen, setGenderFilterOpen] = useState(true);
+  const [typeFilterOpen, setTypeFilterOpen] = useState(true);
 
   // Use global store settings for instant loading
   const storeSettings = useGlobalStoreSettings();
