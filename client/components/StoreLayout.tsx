@@ -1210,9 +1210,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 )}
               </div>
 
-              {/* Cart Footer - Fixed at bottom */}
-              {items.length > 0 && (
-                <div className="border-t bg-white p-4 space-y-4">
+            {/* Cart Footer - Always visible at bottom */}
+            {items.length > 0 && (
+              <div className="border-t bg-white p-4 space-y-4 flex-shrink-0 pb-safe-offset-4">
                   {/* Summary */}
                   <div className="space-y-2">
                     <div className="flex justify-between items-center text-sm">
