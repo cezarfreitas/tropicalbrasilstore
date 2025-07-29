@@ -40,29 +40,6 @@ export default function Sizes() {
     display_order: 0,
   });
 
-  // Hook para grupos de tamanhos integrado com banco de dados
-  const {
-    sizeGroups,
-    loading: sizeGroupsLoading,
-    error: sizeGroupsError,
-    addGroup,
-    updateGroup,
-    deleteGroup,
-    refetch: refetchSizeGroups,
-  } = useSizeGroups();
-
-  const [groupDialogOpen, setGroupDialogOpen] = useState(false);
-  const [editingGroup, setEditingGroup] = useState<SizeGroup | null>(null);
-  const [groupFormData, setGroupFormData] = useState<
-    Omit<SizeGroup, "id" | "created_at" | "updated_at">
-  >({
-    name: "",
-    description: "",
-    icon: "",
-    sizes: [],
-    active: true,
-  });
-
   const { toast } = useToast();
 
   useEffect(() => {
