@@ -232,11 +232,12 @@ export function useApiKeys() {
   return {
     apiKeys,
     loading,
-    usingMockData,
+    database,
     createApiKey,
     revokeApiKey,
     regenerateApiKey,
     reload: loadApiKeys,
+    exportJson: () => database ? JSON.stringify(database, null, 2) : null,
   };
 }
 
