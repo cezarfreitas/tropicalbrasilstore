@@ -230,46 +230,46 @@ function Store() {
         {/* Products Grid */}
         {!loading && filteredProducts.length > 0 && (
           <>
-            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
               {filteredProducts.map((product, index) => (
                 <Card
                   key={product.id}
-                  className="group cursor-pointer hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 relative border border-gray-200 hover:border-primary/40 rounded-xl overflow-hidden bg-white hover:-translate-y-1"
+                  className="group cursor-pointer hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 relative border border-gray-200 hover:border-primary/40 rounded-lg sm:rounded-xl overflow-hidden bg-white active:scale-[0.98] sm:hover:-translate-y-1 touch-manipulation"
                   onClick={() => handleProductClick(product.id)}
                 >
                   <CardContent className="p-0 relative">
-                    {/* Product Image */}
+                    {/* Product Image - Otimizado para mobile */}
                     <div className="aspect-square relative overflow-hidden bg-white">
                       <ProductImage
                         src={selectedVariantImages[product.id] || product.photo}
                         alt={product.name}
-                        className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-3"
+                        className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-2 sm:p-3"
                         priority={index < 8}
                         loading={index < 8 ? "eager" : "lazy"}
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
                       />
 
-                      {/* Category Badge */}
+                      {/* Category Badge - Mobile otimizado */}
                       {product.category_name && (
                         <Badge
                           variant="secondary"
-                          className="absolute top-1.5 left-1.5 text-[10px] sm:text-xs bg-primary text-white px-1 sm:px-1.5 py-0.5 rounded-full shadow-md font-medium"
+                          className="absolute top-1 left-1 sm:top-1.5 sm:left-1.5 text-[9px] sm:text-[10px] md:text-xs bg-primary text-white px-1 sm:px-1.5 py-0.5 rounded-full shadow-md font-medium"
                         >
                           {product.category_name}
                         </Badge>
                       )}
 
-                      {/* Variant Thumbnails */}
+                      {/* Variant Thumbnails - Mobile friendly */}
                       {product.available_colors &&
                         product.available_colors.length > 0 && (
-                          <div className="absolute bottom-1.5 right-1.5">
-                            <div className="flex gap-1">
+                          <div className="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5">
+                            <div className="flex gap-0.5 sm:gap-1">
                               {product.available_colors
                                 .slice(0, 2)
                                 .map((color) => (
                                   <div
                                     key={color.id}
-                                    className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 rounded-lg border-2 border-white cursor-pointer hover:scale-110 transition-all duration-200 shadow-lg overflow-hidden bg-gray-100"
+                                    className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-md sm:rounded-lg border-2 border-white cursor-pointer active:scale-95 sm:hover:scale-110 transition-all duration-200 shadow-md sm:shadow-lg overflow-hidden bg-gray-100 touch-manipulation"
                                     title={`${color.name}${color.hex_code ? ` (${color.hex_code})` : ''}`}
                                     onClick={(e) => color.image_url && handleColorVariantClick(product.id, color.image_url, e)}
                                   >
@@ -298,38 +298,38 @@ function Store() {
                         )}
                     </div>
 
-                    {/* Product Info */}
-                    <div className="p-2 sm:p-2.5 space-y-1.5 sm:space-y-2">
+                    {/* Product Info - Responsivo */}
+                    <div className="p-2 sm:p-2.5 md:p-3 space-y-1 sm:space-y-1.5 md:space-y-2">
                       <div>
-                        <h3 className="font-medium text-sm sm:text-base text-gray-900 line-clamp-2 leading-tight sm:leading-relaxed">
+                        <h3 className="font-medium text-xs sm:text-sm md:text-base text-gray-900 line-clamp-2 leading-tight">
                           {product.name}
                         </h3>
                       </div>
 
-                      {/* Pricing */}
+                      {/* Pricing - Mobile friendly */}
                       {product.base_price && (
-                        <div className="bg-gray-50 rounded-lg p-1.5 sm:p-2">
+                        <div className="bg-gray-50 rounded-md sm:rounded-lg p-1.5 sm:p-2">
                           <PriceDisplay
                             price={product.base_price}
                             suggestedPrice={product.suggested_price}
                             variant="default"
-                            className="[&>div:first-child]:text-lg [&>div:first-child]:sm:text-xl [&>div:first-child]:lg:text-2xl"
+                            className="[&>div:first-child]:text-sm [&>div:first-child]:sm:text-lg [&>div:first-child]:md:text-xl [&>div:first-child]:lg:text-2xl"
                             onLoginClick={() => setShowLoginModal(true)}
                           />
                         </div>
                       )}
 
-                      {/* Add to Cart Button - Responsive */}
+                      {/* Add to Cart Button - Mobile otimizado */}
                       {isAuthenticated && isApproved && (
                         <Button
-                          className="w-full bg-primary hover:bg-primary/90 text-white text-xs sm:text-sm lg:text-base font-medium h-10 sm:h-12 rounded-lg transition-all duration-200 hover:shadow-lg"
+                          className="w-full bg-primary hover:bg-primary/90 active:bg-primary/80 text-white text-[10px] sm:text-xs md:text-sm lg:text-base font-medium h-8 sm:h-10 md:h-12 rounded-md sm:rounded-lg transition-all duration-200 active:scale-95 sm:hover:shadow-lg touch-manipulation"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleProductClick(product.id);
                           }}
                         >
                           <span className="hidden sm:inline">Adicionar ao Carrinho</span>
-                          <span className="sm:hidden">Adicionar</span>
+                          <span className="sm:hidden">Comprar</span>
                         </Button>
                       )}
                     </div>
