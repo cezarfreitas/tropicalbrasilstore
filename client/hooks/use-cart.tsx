@@ -193,6 +193,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     case "LOAD_CART":
       return {
         ...action.state,
+        totalItems: calculateTotalItems(action.state.items),
         isModalOpen: false,
         modalProduct: null,
       };
