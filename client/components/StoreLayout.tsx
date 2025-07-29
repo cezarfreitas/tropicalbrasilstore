@@ -114,6 +114,32 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     navigate(`/loja?${currentParams.toString()}`);
   };
 
+  const handleGenderFilter = (genderId: number | null) => {
+    setSelectedGenderFilter(genderId);
+    const currentParams = new URLSearchParams(searchParams);
+
+    if (genderId === null) {
+      currentParams.delete('genero');
+    } else {
+      currentParams.set('genero', genderId.toString());
+    }
+
+    navigate(`/loja?${currentParams.toString()}`);
+  };
+
+  const handleTypeFilter = (typeId: number | null) => {
+    setSelectedTypeFilter(typeId);
+    const currentParams = new URLSearchParams(searchParams);
+
+    if (typeId === null) {
+      currentParams.delete('tipo');
+    } else {
+      currentParams.set('tipo', typeId.toString());
+    }
+
+    navigate(`/loja?${currentParams.toString()}`);
+  };
+
   // Memoized navigation links from database categories
   const navigationLinks = useMemo(() => {
     const links = [{ to: "/loja", label: "Todos" }];
