@@ -408,47 +408,79 @@ function Store() {
               ))}
             </div>
 
-            {/* Pagination */}
+            {/* Pagination - Mobile Otimizada */}
             {pagination && pagination.totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-8">
-                <Button
-                  variant="outline"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={!pagination.hasPrevPage}
-                >
-                  Anterior
-                </Button>
+              <div className="mt-6 sm:mt-8">
+                {/* Mobile Pagination */}
+                <div className="flex items-center justify-between sm:hidden mb-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={!pagination.hasPrevPage}
+                    className="flex items-center gap-1 h-9 px-3 text-xs touch-manipulation"
+                  >
+                    ← Anterior
+                  </Button>
 
-                <div className="flex items-center gap-1">
-                  {[...Array(Math.min(5, pagination.totalPages))].map(
-                    (_, i) => {
-                      const page = i + 1;
-                      return (
-                        <Button
-                          key={page}
-                          variant={page === currentPage ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handlePageChange(page)}
-                          className={
-                            page === currentPage
-                              ? "bg-primary hover:bg-primary/90 text-primary-foreground"
-                              : ""
-                          }
-                        >
-                          {page}
-                        </Button>
-                      );
-                    },
-                  )}
+                  <div className="flex items-center gap-1 bg-gray-100 rounded-lg px-2 py-1">
+                    <span className="text-xs font-medium text-gray-600">
+                      {currentPage} de {pagination.totalPages}
+                    </span>
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={!pagination.hasNextPage}
+                    className="flex items-center gap-1 h-9 px-3 text-xs touch-manipulation"
+                  >
+                    Próxima →
+                  </Button>
                 </div>
 
-                <Button
-                  variant="outline"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={!pagination.hasNextPage}
-                >
-                  Próxima
-                </Button>
+                {/* Desktop Pagination */}
+                <div className="hidden sm:flex items-center justify-center gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={!pagination.hasPrevPage}
+                  >
+                    Anterior
+                  </Button>
+
+                  <div className="flex items-center gap-1">
+                    {[...Array(Math.min(5, pagination.totalPages))].map(
+                      (_, i) => {
+                        const page = i + 1;
+                        return (
+                          <Button
+                            key={page}
+                            variant={page === currentPage ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => handlePageChange(page)}
+                            className={
+                              page === currentPage
+                                ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+                                : ""
+                            }
+                          >
+                            {page}
+                          </Button>
+                        );
+                      },
+                    )}
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={!pagination.hasNextPage}
+                  >
+                    Próxima
+                  </Button>
+                </div>
               </div>
             )}
           </>
