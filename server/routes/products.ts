@@ -613,11 +613,19 @@ router.post("/single", validateApiKey, async (req, res) => {
 
     const productId = (productResult as any).insertId;
 
-    // Criar relação produto-cor-grade
-    await db.execute(
-      "INSERT INTO product_color_grades (product_id, color_id, grade_id) VALUES (?, ?, ?)",
+    // Verificar se a relação produto-cor-grade já existe
+    const [existingRelation] = await db.execute(
+      "SELECT id FROM product_color_grades WHERE product_id = ? AND color_id = ? AND grade_id = ?",
       [productId, colorId, gradeId],
     );
+
+    if ((existingRelation as any[]).length === 0) {
+      // Criar relação produto-cor-grade apenas se não existir
+      await db.execute(
+        "INSERT INTO product_color_grades (product_id, color_id, grade_id) VALUES (?, ?, ?)",
+        [productId, colorId, gradeId],
+      );
+    }
 
     const variantSku = `${codigo}-${cor.toUpperCase().replace(/\s+/g, "-")}`;
 
