@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
+const API_KEYS_STORAGE_KEY = "api-keys-database.json";
+
 interface ApiKey {
   id: string;
   name: string;
