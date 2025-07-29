@@ -58,7 +58,10 @@ router.get("/", async (req, res) => {
     );
     const total = (countResult as any[])[0].total;
 
-    // Get logs with pagination
+    // Get logs with pagination (MySQL doesn't allow prepared statements for LIMIT/OFFSET)
+    const safeLimit = Math.max(1, Math.min(100, Number(limit))); // Limit between 1-100
+    const safeOffset = Math.max(0, Number(offset));
+
     const [logs] = await db.execute(
       `SELECT
         id,
@@ -73,8 +76,8 @@ router.get("/", async (req, res) => {
       FROM api_logs
       ${whereClause}
       ORDER BY created_at DESC
-      LIMIT ? OFFSET ?`,
-      [...filterParams, Number(limit), offset]
+      LIMIT ${safeLimit} OFFSET ${safeOffset}`,
+      filterParams
     );
 
     res.json({
