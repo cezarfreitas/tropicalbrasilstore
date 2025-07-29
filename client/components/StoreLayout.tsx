@@ -633,12 +633,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                 {genderFilterOpen && (
                   <>
-                    <div className="space-y-1 px-3">
+                    <div className="space-y-1 px-2">
                       {availableGenders.map((gender) => (
                         <button
                           key={gender.id}
                           onClick={() => handleGenderFilter(gender.id)}
-                          className={`w-full text-left p-2 rounded-lg text-sm transition-all duration-200 ${
+                          className={`w-full text-left p-2 rounded-lg text-xs transition-all duration-200 ${
                             selectedGenderFilter === gender.id
                               ? 'bg-white/20 text-white font-medium'
                               : 'text-white/80 hover:bg-white/10 hover:text-white'
