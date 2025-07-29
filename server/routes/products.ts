@@ -682,11 +682,26 @@ router.post("/single", validateApiKey, async (req, res) => {
     if ((gradeTemplates as any[]).length > 0) {
       const sizeId = (gradeTemplates as any[])[0].size_id;
 
-      // Criar variante física do produto
-      await db.execute(
-        "INSERT INTO product_variants (product_id, color_id, size_id, price_override, created_at) VALUES (?, ?, ?, ?, NOW())",
-        [productId, colorId, sizeId, preco],
+      // Verificar se a variante já existe
+      const [existingVariant] = await db.execute(
+        "SELECT id FROM product_variants WHERE product_id = ? AND color_id = ? AND size_id = ?",
+        [productId, colorId, sizeId],
       );
+
+      if ((existingVariant as any[]).length === 0) {
+        // Criar variante física do produto apenas se não existir
+        await db.execute(
+          "INSERT INTO product_variants (product_id, color_id, size_id, price_override, created_at) VALUES (?, ?, ?, ?, NOW())",
+          [productId, colorId, sizeId, preco],
+        );
+      } else {
+        console.log(`⚠️ Variante já existe, atualizando preço`);
+        // Atualizar preço se necessário
+        await db.execute(
+          "UPDATE product_variants SET price_override = ? WHERE product_id = ? AND color_id = ? AND size_id = ?",
+          [preco, productId, colorId, sizeId],
+        );
+      }
 
       console.log(`✅ Produto e variante criados: ${nome} - ${cor}`);
     } else {
