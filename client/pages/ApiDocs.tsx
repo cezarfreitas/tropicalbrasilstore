@@ -24,19 +24,13 @@ const apiEndpoints = [
             {
               cor: "Preto",
               preco: 29.90,
-              grade: {
-                nome: "Grade Unissex",
-                tamanhos: ["35", "36", "37", "38", "39", "40", "41", "42"]
-              },
+              grade: "Grade Unissex",
               foto: "https://exemplo.com/chinelo-preto.jpg"
             },
             {
               cor: "Azul",
               preco: 29.90,
-              grade: {
-                nome: "Grade Unissex",
-                tamanhos: ["35", "36", "37", "38", "39", "40", "41", "42"]
-              },
+              grade: "Grade Unissex",
               foto: "https://exemplo.com/chinelo-azul.jpg"
             }
           ]
