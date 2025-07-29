@@ -48,6 +48,7 @@ const App = () => (
             <ThemeLoader />
             <Toaster />
             <Sonner />
+            <GlobalCartModal />
             <BrowserRouter>
               <Routes>
                 {/* Store Routes (Public) */}
