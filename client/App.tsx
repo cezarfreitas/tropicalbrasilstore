@@ -259,7 +259,8 @@ const App = () => (
 
 const rootElement = document.getElementById("root")!;
 
-// Evita recrear root durante hot reload
-if (!rootElement._reactRootContainer) {
+// Apenas renderiza uma vez - hot reload é gerenciado pelo Vite
+if (!rootElement.hasAttribute('data-react-root')) {
+  rootElement.setAttribute('data-react-root', 'true');
   createRoot(rootElement).render(<App />);
 }
