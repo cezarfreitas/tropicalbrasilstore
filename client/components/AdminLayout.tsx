@@ -38,7 +38,7 @@ const navigation = [
   },
   {
     name: "Produtos V2",
-    href: "/admin/products-woocommerce",
+    href: "/admin/products-v2",
     icon: Package,
   },
   {
