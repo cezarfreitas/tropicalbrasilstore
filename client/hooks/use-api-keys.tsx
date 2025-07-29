@@ -202,70 +202,30 @@ export function useApiKeys() {
 
   const regenerateApiKey = async (keyId: string): Promise<ApiKey | null> => {
     try {
-      const response = await new Promise<Response>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", `/api/admin/api-keys/${keyId}/regenerate`, true);
-        xhr.setRequestHeader("Accept", "application/json");
+      const newKeyValue = generateApiKey();
+      const updatedKeys = apiKeys.map(key =>
+        key.id === keyId ? { ...key, key: newKeyValue } : key
+      );
 
-        xhr.onload = () => {
-          const headers = new Headers();
-          xhr
-            .getAllResponseHeaders()
-            .split("\r\n")
-            .forEach((line) => {
-              const [key, value] = line.split(": ");
-              if (key && value) headers.set(key, value);
-            });
+      updateDatabase(updatedKeys);
 
-          const response = new Response(xhr.responseText, {
-            status: xhr.status,
-            statusText: xhr.statusText,
-            headers: headers,
-          });
-          resolve(response);
-        };
-
-        xhr.onerror = () => reject(new Error("Network error"));
-        xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 10000;
-
-        xhr.send();
-      });
-
-      if (response.ok) {
-        const updatedKey = await response.json();
-        setApiKeys(prev => prev.map(key => 
-          key.id === keyId ? updatedKey : key
-        ));
-        toast({
-          title: "Chave regenerada",
-          description: "Uma nova chave foi gerada. Copie-a agora, pois a antiga foi invalidada.",
-        });
-        return updatedKey;
-      } else {
-        const error = await response.json();
-        toast({
-          title: "Erro ao regenerar chave",
-          description: error.message || "Não foi possível regenerar a chave de API.",
-          variant: "destructive",
-        });
-        return null;
-      }
-    } catch (error) {
-      console.error("Error regenerating API key:", error);
-      
-      // Mock regeneration for development
-      const newKey = `sk_live_${Math.random().toString(36).substring(2, 15)}_${Date.now()}`;
-      setApiKeys(prev => prev.map(key => 
-        key.id === keyId ? { ...key, key: newKey } : key
-      ));
       toast({
         title: "Chave regenerada",
-        description: "Uma nova chave foi gerada. Copie-a agora, pois a antiga foi invalidada.",
+        description: "Uma nova chave foi gerada e salva no arquivo JSON.",
       });
-      
-      const updatedKey = apiKeys.find(k => k.id === keyId);
-      return updatedKey ? { ...updatedKey, key: newKey } : null;
+
+      const updatedKey = updatedKeys.find(k => k.id === keyId);
+      console.log("Chave regenerada:", keyId, "Nova chave gerada");
+
+      return updatedKey || null;
+    } catch (error) {
+      console.error("Erro ao regenerar chave de API:", error);
+      toast({
+        title: "Erro ao regenerar chave",
+        description: "Não foi possível regenerar a chave de API.",
+        variant: "destructive",
+      });
+      return null;
     }
   };
 
