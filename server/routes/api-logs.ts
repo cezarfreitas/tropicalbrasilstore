@@ -89,7 +89,12 @@ router.get("/", async (req, res) => {
 
   } catch (error) {
     console.error("Error fetching API logs:", error);
-    res.status(500).json({ error: "Erro ao buscar logs da API" });
+    console.error("Error details:", error);
+    console.error("Error stack:", (error as Error).stack);
+    res.status(500).json({
+      error: "Erro ao buscar logs da API",
+      details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
+    });
   }
 });
 
