@@ -105,43 +105,8 @@ export default function CustomerOrders() {
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
-      // Mock data for development
-      setOrders([
-        {
-          id: "PED-001",
-          date: "2024-01-15",
-          status: "delivered",
-          total: 159.90,
-          items: [
-            {
-              id: "1",
-              productName: "Chinelo Havaianas Top",
-              quantity: 2,
-              unitPrice: 79.95,
-              photo: "/placeholder.svg",
-              colorName: "Preto",
-              gradeName: "Tamanhos Variados"
-            }
-          ]
-        },
-        {
-          id: "PED-002", 
-          date: "2024-01-20",
-          status: "shipped",
-          total: 299.80,
-          items: [
-            {
-              id: "2",
-              productName: "Sandália Melissa Classic",
-              quantity: 1,
-              unitPrice: 299.80,
-              photo: "/placeholder.svg",
-              colorName: "Rosa",
-              gradeName: "Grade Feminina"
-            }
-          ]
-        }
-      ]);
+      // Set empty orders array on error
+      setOrders([]);
     } finally {
       setLoading(false);
     }
