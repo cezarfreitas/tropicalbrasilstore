@@ -27,20 +27,20 @@ export function createApiLogger(pathPattern: string) {
     const logEntry: LogEntry = {
       method: req.method,
       endpoint: req.path,
-      user_agent: req.get('User-Agent'),
+      user_agent: req.get("User-Agent"),
       ip_address: req.ip || req.connection.remoteAddress,
       request_headers: req.headers,
-      request_body: req.body || null
+      request_body: req.body || null,
     };
 
     // Override res.send to capture response
-    res.send = function(body: any) {
+    res.send = function (body: any) {
       const endTime = Date.now();
       logEntry.response_status = res.statusCode;
       logEntry.response_time_ms = endTime - startTime;
 
       // Log to database (async, don't block response)
-      saveLogEntry(logEntry).catch(error => {
+      saveLogEntry(logEntry).catch((error) => {
         console.error("Error saving API log:", error);
       });
 
@@ -49,12 +49,12 @@ export function createApiLogger(pathPattern: string) {
     };
 
     // Handle errors
-    res.on('error', (error: Error) => {
+    res.on("error", (error: Error) => {
       logEntry.error_message = error.message;
       logEntry.response_status = res.statusCode || 500;
       logEntry.response_time_ms = Date.now() - startTime;
-      
-      saveLogEntry(logEntry).catch(err => {
+
+      saveLogEntry(logEntry).catch((err) => {
         console.error("Error saving API error log:", err);
       });
     });
@@ -79,8 +79,8 @@ async function saveLogEntry(logEntry: LogEntry) {
         JSON.stringify(logEntry.request_body),
         logEntry.response_status || null,
         logEntry.response_time_ms || null,
-        logEntry.error_message || null
-      ]
+        logEntry.error_message || null,
+      ],
     );
   } catch (error) {
     console.error("Database error saving API log:", error);

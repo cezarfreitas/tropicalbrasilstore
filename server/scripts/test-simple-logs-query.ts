@@ -7,7 +7,9 @@ async function testSimpleLogsQuery() {
     // Teste 1: Query mais simples possível
     console.log("\n📋 Teste 1: SELECT simples");
     try {
-      const [result1] = await db.execute('SELECT COUNT(*) as total FROM api_logs');
+      const [result1] = await db.execute(
+        "SELECT COUNT(*) as total FROM api_logs",
+      );
       console.log("✅ Count funcionou:", result1);
     } catch (error) {
       console.log("❌ Count falhou:", error);
@@ -31,12 +33,15 @@ async function testSimpleLogsQuery() {
     // Teste 3: SELECT com LIMIT como parâmetro
     console.log("\n📋 Teste 3: SELECT com LIMIT como parâmetro");
     try {
-      const [result3] = await db.execute(`
+      const [result3] = await db.execute(
+        `
         SELECT id, method, endpoint, created_at 
         FROM api_logs 
         ORDER BY created_at DESC 
         LIMIT ?
-      `, [3]);
+      `,
+        [3],
+      );
       console.log("✅ SELECT com LIMIT parâmetro funcionou:");
       console.table(result3);
     } catch (error) {
@@ -46,12 +51,15 @@ async function testSimpleLogsQuery() {
     // Teste 4: SELECT com LIMIT e OFFSET como parâmetros
     console.log("\n📋 Teste 4: SELECT com LIMIT e OFFSET como parâmetros");
     try {
-      const [result4] = await db.execute(`
+      const [result4] = await db.execute(
+        `
         SELECT id, method, endpoint, created_at 
         FROM api_logs 
         ORDER BY created_at DESC 
         LIMIT ? OFFSET ?
-      `, [3, 0]);
+      `,
+        [3, 0],
+      );
       console.log("✅ SELECT com LIMIT e OFFSET funcionou:");
       console.table(result4);
     } catch (error) {
@@ -66,27 +74,31 @@ async function testSimpleLogsQuery() {
     console.log(`offset type: ${typeof offset}, value: ${offset}`);
 
     try {
-      const [result5] = await db.execute(`
+      const [result5] = await db.execute(
+        `
         SELECT id, method, endpoint 
         FROM api_logs 
         ORDER BY created_at DESC 
         LIMIT ? OFFSET ?
-      `, [limit, offset]);
+      `,
+        [limit, offset],
+      );
       console.log("✅ Com variáveis funcionou:");
       console.table(result5);
     } catch (error) {
       console.log("❌ Com variáveis falhou:", error);
     }
-
   } catch (error) {
     console.error("❌ Erro geral:", error);
   }
 }
 
-testSimpleLogsQuery().then(() => {
-  console.log("🏁 Teste finalizado");
-  process.exit(0);
-}).catch((error) => {
-  console.error("💥 Erro fatal:", error);
-  process.exit(1);
-});
+testSimpleLogsQuery()
+  .then(() => {
+    console.log("🏁 Teste finalizado");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error("💥 Erro fatal:", error);
+    process.exit(1);
+  });

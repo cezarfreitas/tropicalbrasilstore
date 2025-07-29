@@ -71,7 +71,7 @@ export function createServer() {
   app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
   // API logging middleware for /admin/api routes only
-  app.use(createApiLogger('/admin/api'));
+  app.use(createApiLogger("/admin/api"));
 
   // Inject store settings into HTML responses
   app.use(injectStoreSettings);

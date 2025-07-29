@@ -1052,11 +1052,11 @@ function ApiLogsInterface() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
-    method: '',
-    endpoint: '',
-    status: '',
-    from_date: '',
-    to_date: ''
+    method: "",
+    endpoint: "",
+    status: "",
+    from_date: "",
+    to_date: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
@@ -1067,8 +1067,8 @@ function ApiLogsInterface() {
     try {
       const queryParams = new URLSearchParams({
         page: page.toString(),
-        limit: '20',
-        ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v))
+        limit: "20",
+        ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v)),
       });
 
       const response = await fetch(`/api/admin/logs?${queryParams}`);
@@ -1078,7 +1078,7 @@ function ApiLogsInterface() {
         setCurrentPage(page);
       }
     } catch (error) {
-      console.error('Erro ao carregar logs:', error);
+      console.error("Erro ao carregar logs:", error);
     }
     setLoading(false);
   };
@@ -1086,13 +1086,13 @@ function ApiLogsInterface() {
   // Carregar estatísticas
   const fetchStats = async () => {
     try {
-      const response = await fetch('/api/admin/logs/stats');
+      const response = await fetch("/api/admin/logs/stats");
       if (response.ok) {
         const data = await response.json();
         setStats(data);
       }
     } catch (error) {
-      console.error('Erro ao carregar estatísticas:', error);
+      console.error("Erro ao carregar estatísticas:", error);
     }
   };
 
@@ -1111,11 +1111,11 @@ function ApiLogsInterface() {
   // Limpar filtros
   const clearFilters = () => {
     setFilters({
-      method: '',
-      endpoint: '',
-      status: '',
-      from_date: '',
-      to_date: ''
+      method: "",
+      endpoint: "",
+      status: "",
+      from_date: "",
+      to_date: "",
     });
     setCurrentPage(1);
     fetchLogs(1);
@@ -1136,12 +1136,12 @@ function ApiLogsInterface() {
   // Formatar método HTTP
   const getMethodBadge = (method: string) => {
     const colors: any = {
-      GET: 'bg-blue-500',
-      POST: 'bg-green-500',
-      PUT: 'bg-yellow-500',
-      DELETE: 'bg-red-500'
+      GET: "bg-blue-500",
+      POST: "bg-green-500",
+      PUT: "bg-yellow-500",
+      DELETE: "bg-red-500",
     };
-    return <Badge className={colors[method] || 'bg-gray-500'}>{method}</Badge>;
+    return <Badge className={colors[method] || "bg-gray-500"}>{method}</Badge>;
   };
 
   return (
@@ -1151,22 +1151,33 @@ function ApiLogsInterface() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total de Requisições</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total de Requisições
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.overview.total_requests}</div>
+              <div className="text-2xl font-bold">
+                {stats.overview.total_requests}
+              </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Taxa de Sucesso</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Taxa de Sucesso
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-600">
                 {stats.overview.total_requests > 0
-                  ? Math.round((stats.overview.success_requests / stats.overview.total_requests) * 100)
-                  : 0}%
+                  ? Math.round(
+                      (stats.overview.success_requests /
+                        stats.overview.total_requests) *
+                        100,
+                    )
+                  : 0}
+                %
               </div>
             </CardContent>
           </Card>
@@ -1177,7 +1188,10 @@ function ApiLogsInterface() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {stats.overview.avg_response_time ? Math.round(stats.overview.avg_response_time) : 0}ms
+                {stats.overview.avg_response_time
+                  ? Math.round(stats.overview.avg_response_time)
+                  : 0}
+                ms
               </div>
             </CardContent>
           </Card>
@@ -1233,7 +1247,9 @@ function ApiLogsInterface() {
                   id="method"
                   className="w-full px-3 py-2 border rounded-md"
                   value={filters.method}
-                  onChange={(e) => setFilters({...filters, method: e.target.value})}
+                  onChange={(e) =>
+                    setFilters({ ...filters, method: e.target.value })
+                  }
                 >
                   <option value="">Todos</option>
                   <option value="GET">GET</option>
@@ -1249,7 +1265,9 @@ function ApiLogsInterface() {
                   id="endpoint"
                   placeholder="/admin/..."
                   value={filters.endpoint}
-                  onChange={(e) => setFilters({...filters, endpoint: e.target.value})}
+                  onChange={(e) =>
+                    setFilters({ ...filters, endpoint: e.target.value })
+                  }
                 />
               </div>
 
@@ -1259,7 +1277,9 @@ function ApiLogsInterface() {
                   id="status"
                   className="w-full px-3 py-2 border rounded-md"
                   value={filters.status}
-                  onChange={(e) => setFilters({...filters, status: e.target.value})}
+                  onChange={(e) =>
+                    setFilters({ ...filters, status: e.target.value })
+                  }
                 >
                   <option value="">Todos</option>
                   <option value="200">200 - OK</option>
@@ -1276,7 +1296,9 @@ function ApiLogsInterface() {
                   id="from_date"
                   type="datetime-local"
                   value={filters.from_date}
-                  onChange={(e) => setFilters({...filters, from_date: e.target.value})}
+                  onChange={(e) =>
+                    setFilters({ ...filters, from_date: e.target.value })
+                  }
                 />
               </div>
 
@@ -1286,14 +1308,18 @@ function ApiLogsInterface() {
                   id="to_date"
                   type="datetime-local"
                   value={filters.to_date}
-                  onChange={(e) => setFilters({...filters, to_date: e.target.value})}
+                  onChange={(e) =>
+                    setFilters({ ...filters, to_date: e.target.value })
+                  }
                 />
               </div>
             </div>
 
             <div className="flex gap-2">
               <Button onClick={applyFilters}>Aplicar Filtros</Button>
-              <Button variant="outline" onClick={clearFilters}>Limpar</Button>
+              <Button variant="outline" onClick={clearFilters}>
+                Limpar
+              </Button>
             </div>
           </CardContent>
         )}
@@ -1333,7 +1359,7 @@ function ApiLogsInterface() {
                         {log.response_time_ms}ms
                       </div>
                       <span>
-                        {new Date(log.created_at).toLocaleString('pt-BR')}
+                        {new Date(log.created_at).toLocaleString("pt-BR")}
                       </span>
                     </div>
                   </div>
@@ -1341,16 +1367,19 @@ function ApiLogsInterface() {
                   <div className="text-sm text-gray-600">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <span className="font-medium">IP:</span> {log.ip_address}
+                        <span className="font-medium">IP:</span>{" "}
+                        {log.ip_address}
                       </div>
                       <div className="truncate">
-                        <span className="font-medium">User Agent:</span> {log.user_agent}
+                        <span className="font-medium">User Agent:</span>{" "}
+                        {log.user_agent}
                       </div>
                     </div>
 
                     {log.error_message && (
                       <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-red-700">
-                        <span className="font-medium">Erro:</span> {log.error_message}
+                        <span className="font-medium">Erro:</span>{" "}
+                        {log.error_message}
                       </div>
                     )}
                   </div>
@@ -1370,9 +1399,7 @@ function ApiLogsInterface() {
         >
           Anterior
         </Button>
-        <span className="flex items-center px-4">
-          Página {currentPage}
-        </span>
+        <span className="flex items-center px-4">Página {currentPage}</span>
         <Button
           variant="outline"
           onClick={() => fetchLogs(currentPage + 1)}

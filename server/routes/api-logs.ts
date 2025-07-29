@@ -13,11 +13,11 @@ router.get("/", async (req, res) => {
       endpoint,
       status,
       from_date,
-      to_date
+      to_date,
     } = req.query;
 
     const offset = (Number(page) - 1) * Number(limit);
-    
+
     // Build WHERE clause
     let whereConditions = [];
     let filterParams = [];
@@ -47,14 +47,15 @@ router.get("/", async (req, res) => {
       filterParams.push(to_date);
     }
 
-    const whereClause = whereConditions.length > 0
-      ? `WHERE ${whereConditions.join(" AND ")}`
-      : "";
+    const whereClause =
+      whereConditions.length > 0
+        ? `WHERE ${whereConditions.join(" AND ")}`
+        : "";
 
     // Get total count
     const [countResult] = await db.execute(
       `SELECT COUNT(*) as total FROM api_logs ${whereClause}`,
-      filterParams
+      filterParams,
     );
     const total = (countResult as any[])[0].total;
 
@@ -77,7 +78,7 @@ router.get("/", async (req, res) => {
       ${whereClause}
       ORDER BY created_at DESC
       LIMIT ${safeLimit} OFFSET ${safeOffset}`,
-      filterParams
+      filterParams,
     );
 
     res.json({
@@ -86,17 +87,19 @@ router.get("/", async (req, res) => {
         page: Number(page),
         limit: Number(limit),
         total,
-        pages: Math.ceil(total / Number(limit))
-      }
+        pages: Math.ceil(total / Number(limit)),
+      },
     });
-
   } catch (error) {
     console.error("Error fetching API logs:", error);
     console.error("Error details:", error);
     console.error("Error stack:", (error as Error).stack);
     res.status(500).json({
       error: "Erro ao buscar logs da API",
-      details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
+      details:
+        process.env.NODE_ENV === "development"
+          ? (error as Error).message
+          : undefined,
     });
   }
 });
@@ -105,7 +108,7 @@ router.get("/", async (req, res) => {
 router.get("/stats", async (req, res) => {
   try {
     const { from_date, to_date } = req.query;
-    
+
     let whereClause = "";
     let queryParams = [];
 
@@ -122,7 +125,8 @@ router.get("/stats", async (req, res) => {
     }
 
     // Get request statistics
-    const [stats] = await db.execute(`
+    const [stats] = await db.execute(
+      `
       SELECT 
         COUNT(*) as total_requests,
         COUNT(CASE WHEN response_status >= 200 AND response_status < 300 THEN 1 END) as success_requests,
@@ -132,10 +136,13 @@ router.get("/stats", async (req, res) => {
         MIN(response_time_ms) as min_response_time
       FROM api_logs 
       ${whereClause}
-    `, queryParams);
+    `,
+      queryParams,
+    );
 
     // Get most frequent endpoints
-    const [endpoints] = await db.execute(`
+    const [endpoints] = await db.execute(
+      `
       SELECT 
         endpoint,
         method,
@@ -146,10 +153,13 @@ router.get("/stats", async (req, res) => {
       GROUP BY endpoint, method
       ORDER BY request_count DESC
       LIMIT 10
-    `, queryParams);
+    `,
+      queryParams,
+    );
 
     // Get status code distribution
-    const [statusCodes] = await db.execute(`
+    const [statusCodes] = await db.execute(
+      `
       SELECT 
         response_status,
         COUNT(*) as count
@@ -157,14 +167,15 @@ router.get("/stats", async (req, res) => {
       ${whereClause}
       GROUP BY response_status
       ORDER BY count DESC
-    `, queryParams);
+    `,
+      queryParams,
+    );
 
     res.json({
       overview: (stats as any[])[0],
       top_endpoints: endpoints,
-      status_distribution: statusCodes
+      status_distribution: statusCodes,
     });
-
   } catch (error) {
     console.error("Error fetching API stats:", error);
     res.status(500).json({ error: "Erro ao buscar estatísticas da API" });
@@ -175,17 +186,16 @@ router.get("/stats", async (req, res) => {
 router.delete("/cleanup", async (req, res) => {
   try {
     const { days = 30 } = req.query;
-    
+
     const [result] = await db.execute(
       `DELETE FROM api_logs WHERE created_at < DATE_SUB(NOW(), INTERVAL ? DAY)`,
-      [Number(days)]
+      [Number(days)],
     );
 
-    res.json({ 
+    res.json({
       message: `Logs antigos removidos com sucesso`,
-      deleted_count: (result as any).affectedRows
+      deleted_count: (result as any).affectedRows,
     });
-
   } catch (error) {
     console.error("Error cleaning up API logs:", error);
     res.status(500).json({ error: "Erro ao limpar logs antigos" });
