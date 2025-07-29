@@ -399,13 +399,20 @@ export default function ApiDocs() {
   "descricao": "Descrição...",    // Descrição do produto (opcional)
   "preco_sugerido": 39.90,        // Preço sugerido de venda (opcional)
   "vender_infinito": false,       // Flag para venda sem controle de estoque (opcional)
+  "tipo_estoque": "grade",        // "grade" ou "size" - Define o tipo de controle de estoque
   "variantes": [                  // Array de variantes (obrigatório, mín: 1)
     {
       "cor": "Preto",             // Cor (criada automaticamente se não existir)
-      "preco": 29.90,             // Pre��o da variante (obrigatório)
+      "preco": 29.90,             // Preço da variante (obrigatório)
       "grade": "Grade Unissex",   // Nome da grade (tamanhos criados automaticamente)
       "foto": "https://...",      // URL da foto (opcional)
-      "sku": "CHN001-PRETO"       // SKU específico (opcional, gerado automaticamente)
+      "sku": "CHN001-PRETO",      // SKU específico (opcional, gerado automaticamente)
+      "estoque_grade": 25,        // Quantidade fixa para estoque por grade (se tipo_estoque = "grade")
+      "estoque_tamanhos": {       // Estoque individual por tamanho (se tipo_estoque = "size")
+        "37": 5,
+        "38": 8,
+        "39": 3
+      }
     }
   ]
 }`}
