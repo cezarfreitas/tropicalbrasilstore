@@ -163,6 +163,10 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
         params.append("cor", colorFilter.toString());
       }
 
+      if (categoryFilter !== null && categoryFilter.trim()) {
+        params.append("categoria", categoryFilter.trim());
+      }
+
       const endpoint = `/api/store/products-paginated?${params}`;
 
       // Debug log
