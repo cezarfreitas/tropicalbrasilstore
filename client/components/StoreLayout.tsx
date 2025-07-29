@@ -305,10 +305,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         console.warn("Failed to fetch categories:", error);
         // Set default categories
         setCategories([
-          { id: "all", name: "Todas as Categorias" },
-          { id: "1", name: "Chinelos" },
-          { id: "2", name: "Sandálias" },
-          { id: "3", name: "Tênis" },
+          { id: "all", name: "Todos" },
+          { id: "6", name: "Brasileirinhos" },
+          { id: "11", name: "Chinelos" },
+          { id: "12", name: "Sandálias" },
+          { id: "10", name: "Tênis" },
         ]);
       }
     };
