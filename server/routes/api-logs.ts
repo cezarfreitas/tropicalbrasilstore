@@ -20,47 +20,47 @@ router.get("/", async (req, res) => {
     
     // Build WHERE clause
     let whereConditions = [];
-    let queryParams = [];
+    let filterParams = [];
 
     if (method) {
       whereConditions.push("method = ?");
-      queryParams.push(method);
+      filterParams.push(method);
     }
 
     if (endpoint) {
       whereConditions.push("endpoint LIKE ?");
-      queryParams.push(`%${endpoint}%`);
+      filterParams.push(`%${endpoint}%`);
     }
 
     if (status) {
       whereConditions.push("response_status = ?");
-      queryParams.push(Number(status));
+      filterParams.push(Number(status));
     }
 
     if (from_date) {
       whereConditions.push("created_at >= ?");
-      queryParams.push(from_date);
+      filterParams.push(from_date);
     }
 
     if (to_date) {
       whereConditions.push("created_at <= ?");
-      queryParams.push(to_date);
+      filterParams.push(to_date);
     }
 
-    const whereClause = whereConditions.length > 0 
-      ? `WHERE ${whereConditions.join(" AND ")}` 
+    const whereClause = whereConditions.length > 0
+      ? `WHERE ${whereConditions.join(" AND ")}`
       : "";
 
     // Get total count
     const [countResult] = await db.execute(
       `SELECT COUNT(*) as total FROM api_logs ${whereClause}`,
-      queryParams
+      filterParams
     );
     const total = (countResult as any[])[0].total;
 
     // Get logs with pagination
     const [logs] = await db.execute(
-      `SELECT 
+      `SELECT
         id,
         method,
         endpoint,
@@ -70,11 +70,11 @@ router.get("/", async (req, res) => {
         response_time_ms,
         error_message,
         created_at
-      FROM api_logs 
+      FROM api_logs
       ${whereClause}
-      ORDER BY created_at DESC 
+      ORDER BY created_at DESC
       LIMIT ? OFFSET ?`,
-      [...queryParams, Number(limit), offset]
+      [...filterParams, Number(limit), offset]
     );
 
     res.json({
