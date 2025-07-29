@@ -1431,6 +1431,20 @@ export default function ProductsWooCommerce() {
                   <TableCell className="p-3 text-center">
                     <div className="flex justify-center">
                       <Badge
+                        variant={product.sell_without_stock ? "default" : "secondary"}
+                        className={`text-xs font-medium ${
+                          product.sell_without_stock
+                            ? "bg-blue-100 text-blue-700 border-blue-200"
+                            : "bg-gray-100 text-gray-600"
+                        }`}
+                      >
+                        {product.sell_without_stock ? "SIM" : "NÃO"}
+                      </Badge>
+                    </div>
+                  </TableCell>
+                  <TableCell className="p-3 text-center">
+                    <div className="flex justify-center">
+                      <Badge
                         variant={product.active ? "default" : "secondary"}
                         className={`text-xs font-medium ${
                           product.active
