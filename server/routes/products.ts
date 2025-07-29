@@ -275,16 +275,18 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           product.descricao ||
           product.categoria ||
           product.tipo ||
-          product.genero
+          product.genero ||
+          product.preco_sugerido !== undefined
         ) {
           await db.execute(
-            "UPDATE products SET name = COALESCE(?, name), description = COALESCE(?, description), category_id = ?, type_id = ?, gender_id = ? WHERE id = ?",
+            "UPDATE products SET name = COALESCE(?, name), description = COALESCE(?, description), category_id = ?, type_id = ?, gender_id = ?, suggested_price = COALESCE(?, suggested_price) WHERE id = ?",
             [
               product.nome || null,
               product.descricao || null,
               categoryId,
               typeId,
               genderId,
+              product.preco_sugerido || null,
               productId,
             ],
           );
