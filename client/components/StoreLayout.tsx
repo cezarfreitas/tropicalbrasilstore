@@ -407,10 +407,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col bg-gradient-to-b from-primary to-primary/95 border-r border-primary/20 shadow-xl w-64 min-h-screen">
         {/* Sidebar Header */}
-        <div className="border-b border-white/10 bg-gradient-to-r from-primary to-primary/90 p-4">
+        <div className="border-b border-white/10 bg-gradient-to-r from-primary to-primary/90 p-3">
           <Link to="/loja" className="flex items-center justify-center group" aria-label="Ir para página inicial">
             <LogoDisplay
-              size="w-52 h-28"
+              size="w-44 h-24"
               className="flex-shrink-0 transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
             />
           </Link>
