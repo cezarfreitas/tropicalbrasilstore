@@ -83,10 +83,9 @@ router.get("/:customerId", async (req, res) => {
       });
     }
     
-    console.log(`✅ API: Retornando ${orders.length} pedidos processados`);
     res.json(orders);
   } catch (error) {
-    console.error("❌ API Error fetching customer orders:", error);
+    console.error("Error fetching customer orders:", error);
     res.status(500).json({ error: "Erro ao buscar pedidos do cliente" });
   }
 });
