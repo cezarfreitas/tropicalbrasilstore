@@ -25,6 +25,7 @@ import Orders from "./pages/Orders";
 import Customers from "./pages/Customers";
 import Settings from "./pages/Settings";
 import Notifications from "./pages/Notifications";
+import ApiDocs from "./pages/ApiDocs";
 import Login from "./pages/Login";
 import CustomerLogin from "./pages/CustomerLogin";
 import CustomerRegister from "./pages/CustomerRegister";
