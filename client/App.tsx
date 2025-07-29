@@ -58,6 +58,7 @@ const App = () => (
                 <Route path="/loja/produto/:id" element={<ProductDetail />} />
                 <Route path="/loja/carrinho" element={<Cart />} />
                 <Route path="/loja/checkout" element={<Checkout />} />
+                <Route path="/loja/pedidos" element={<CustomerOrders />} />
 
                 {/* Customer Authentication Routes */}
                 <Route path="/login" element={<CustomerLogin />} />
