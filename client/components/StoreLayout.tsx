@@ -471,8 +471,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   </Button>
                 )}
               </div>
-              <span className="text-xs text-white/80 font-medium">
-                {isAuthenticated ? "Minha Conta" : "Entrar"}
+              <span className="text-xs text-white/80 font-medium text-center">
+                {isAuthenticated ? "Conta" : "Entrar"}
               </span>
             </div>
 
