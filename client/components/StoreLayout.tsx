@@ -633,7 +633,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                       className={`h-4 w-4 transition-all duration-300 ${
                         colorFilterOpen
                           ? "rotate-180 text-white"
-                          : "text-white/70"
+                          : "text-white/50 rotate-[-90deg]"
                       }`}
                     />
                   </button>
