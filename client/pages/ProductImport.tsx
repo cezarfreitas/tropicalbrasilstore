@@ -698,6 +698,61 @@ export default function ProductImport() {
         </div>
       </div>
 
+      {/* Guia de Tipos de Estoque */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-blue-600" />
+            Novos Tipos de Estoque - Como Usar
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Estoque por Grade */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-blue-800 flex items-center gap-2">
+                🎯 Estoque por Grade
+              </h4>
+              <p className="text-sm text-muted-foreground">
+                Configure <code>Tipo de Estoque = "grade"</code> e use <code>Estoque por Grade</code>
+              </p>
+              <div className="bg-blue-50 p-3 rounded text-sm">
+                <strong>Exemplo:</strong><br/>
+                • Tipo de Estoque: <code>grade</code><br/>
+                • Estoque por Grade: <code>25</code><br/>
+                • Deixe os campos de tamanho vazios<br/>
+                <em>→ Resultado: 25 pares no total, independente dos tamanhos</em>
+              </div>
+            </div>
+
+            {/* Estoque por Tamanho */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-green-800 flex items-center gap-2">
+                📏 Estoque por Tamanho
+              </h4>
+              <p className="text-sm text-muted-foreground">
+                Configure <code>Tipo de Estoque = "size"</code> e use os campos <code>Estoque Tam XX</code>
+              </p>
+              <div className="bg-green-50 p-3 rounded text-sm">
+                <strong>Exemplo:</strong><br/>
+                • Tipo de Estoque: <code>size</code><br/>
+                • Estoque Tam 37: <code>5</code><br/>
+                • Estoque Tam 38: <code>8</code><br/>
+                • Estoque Tam 39: <code>3</code><br/>
+                <em>→ Resultado: Estoque específico por tamanho</em>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-3 bg-yellow-50 rounded border border-yellow-200">
+            <p className="text-sm text-yellow-800">
+              <strong>💡 Dica:</strong> Se não especificar o "Tipo de Estoque", será usado "grade" por padrão.
+              O campo "Estoque por Variante" ainda funciona para compatibilidade, mas recomendamos usar os novos campos.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
       <Tabs defaultValue="export" className="space-y-4">
         <TabsList>
           <TabsTrigger value="export">Exportação</TabsTrigger>
@@ -761,7 +816,7 @@ export default function ProductImport() {
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     <li>• Backup completo dos produtos</li>
                     <li>• Edição em massa no Excel</li>
-                    <li>• Migração para outro sistema</li>
+                    <li>• Migraç��o para outro sistema</li>
                     <li>• Análise de dados de produtos</li>
                     <li>• Compartilhamento de cat��logo</li>
                     <li>• Importação em outro ambiente</li>
