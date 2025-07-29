@@ -248,6 +248,26 @@ export default function ApiDocs() {
     }
   };
 
+  const downloadJsonFile = () => {
+    const jsonData = exportJson();
+    if (jsonData) {
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'api-keys-database.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: "Arquivo baixado",
+        description: "O arquivo JSON foi baixado com sucesso.",
+      });
+    }
+  };
+
   const MethodBadge = ({ method }: { method: string }) => {
     const colors = {
       GET: "bg-green-100 text-green-800",
@@ -311,7 +331,7 @@ export default function ApiDocs() {
   "descricao": "Descrição...",    // Descrição do produto (opcional)
   "variantes": [                  // Array de variantes (obrigatório, mín: 1)
     {
-      "cor": "Preto",             // Cor (criada automaticamente se não existir)
+      "cor": "Preto",             // Cor (criada automaticamente se n��o existir)
       "preco": 29.90,             // Preço da variante (obrigatório)
       "grade": "Grade Unissex",   // Nome da grade (tamanhos criados automaticamente)
       "foto": "https://...",      // URL da foto (opcional)
