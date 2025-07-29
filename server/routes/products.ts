@@ -91,10 +91,9 @@ async function getOrCreateColor(name: string): Promise<number> {
 // Função auxiliar para criar ou buscar gênero
 async function getOrCreateGender(name: string): Promise<number> {
   // Buscar gênero existente
-  const [existing] = await db.execute(
-    "SELECT id FROM genders WHERE name = ?",
-    [name],
-  );
+  const [existing] = await db.execute("SELECT id FROM genders WHERE name = ?", [
+    name,
+  ]);
 
   if ((existing as any[]).length > 0) {
     return (existing as any[])[0].id;
@@ -268,7 +267,9 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         ],
       );
 
-      console.log(`✅ Produto criado: ${product.nome} (ID: ${(productResult as any).insertId})`);
+      console.log(
+        `✅ Produto criado: ${product.nome} (ID: ${(productResult as any).insertId})`,
+      );
 
       const productId = (productResult as any).insertId;
       const variants = [];
@@ -322,9 +323,13 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             [productId, colorId, sizeId, variante.preco],
           );
 
-          console.log(`  ✅ Variante criada: ${variante.cor} - SKU: ${variantSku}`);
+          console.log(
+            `  ✅ Variante criada: ${variante.cor} - SKU: ${variantSku}`,
+          );
         } else {
-          console.log(`  ⚠️ Não foi possível criar variante física para ${variante.cor} - grade sem tamanhos`);
+          console.log(
+            `  ⚠️ Não foi possível criar variante física para ${variante.cor} - grade sem tamanhos`,
+          );
         }
 
         // Atualizar preço base do produto se necessário
@@ -432,7 +437,17 @@ router.post("/single", validateApiKey, async (req, res) => {
     // Criar produto
     const [productResult] = await db.execute(
       "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, sell_without_stock, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [nome, descricao || null, categoryId, typeId, genderId, codigo, preco, vender_infinito || false, true],
+      [
+        nome,
+        descricao || null,
+        categoryId,
+        typeId,
+        genderId,
+        codigo,
+        preco,
+        vender_infinito || false,
+        true,
+      ],
     );
 
     const productId = (productResult as any).insertId;
@@ -462,7 +477,9 @@ router.post("/single", validateApiKey, async (req, res) => {
 
       console.log(`✅ Produto e variante criados: ${nome} - ${cor}`);
     } else {
-      console.log(`⚠️ Produto criado mas sem variante física - grade sem tamanhos`);
+      console.log(
+        `⚠️ Produto criado mas sem variante física - grade sem tamanhos`,
+      );
     }
 
     // Resposta de sucesso
