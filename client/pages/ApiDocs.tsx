@@ -189,7 +189,7 @@ const webhookExamples = [
 ];
 
 export default function ApiDocs() {
-  const { apiKeys, loading, createApiKey, revokeApiKey, regenerateApiKey } = useApiKeys();
+  const { apiKeys, loading, usingMockData, createApiKey, revokeApiKey, regenerateApiKey } = useApiKeys();
   const [showKeys, setShowKeys] = useState<{ [keyId: string]: boolean }>({});
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [newKeyName, setNewKeyName] = useState("");
@@ -703,7 +703,7 @@ Authorization: Bearer YOUR_API_KEY`}
                             {key.last_used && (
                               <>
                                 <span>•</span>
-                                <span>Último uso: {new Date(key.last_used).toLocaleDateString('pt-BR')}</span>
+                                <span>��ltimo uso: {new Date(key.last_used).toLocaleDateString('pt-BR')}</span>
                               </>
                             )}
                             <Badge
