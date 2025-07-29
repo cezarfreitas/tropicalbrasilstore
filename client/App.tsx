@@ -35,6 +35,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import ProductImport from "./pages/ProductImport";
 import NotFound from "./pages/NotFound";
+import { GlobalCartModal } from "./components/GlobalCartModal";
 
 const queryClient = new QueryClient();
 
