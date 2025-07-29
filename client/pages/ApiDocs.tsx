@@ -124,10 +124,7 @@ const apiEndpoints = [
       descricao: "Sandália elegante",
       cor: "Rosa",
       preco: 199.90,
-      grade: {
-        nome: "Grade Feminina",
-        tamanhos: ["35", "36", "37", "38", "39", "40"]
-      },
+      grade: "Grade Feminina",
       foto: "https://exemplo.com/sandalia-rosa.jpg"
     }
   },
