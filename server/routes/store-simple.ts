@@ -382,11 +382,11 @@ router.get("/products-paginated", async (req, res) => {
 // Get product details with variants and available grades
 router.get("/products/:id", async (req, res) => {
   try {
-    // Get product basic info including sell_without_stock setting
+    // Get product basic info including stock settings
     const [productRows] = await db.execute(
-      `SELECT p.*, c.name as category_name 
-       FROM products p 
-       LEFT JOIN categories c ON p.category_id = c.id 
+      `SELECT p.*, c.name as category_name
+       FROM products p
+       LEFT JOIN categories c ON p.category_id = c.id
        WHERE p.id = ? AND p.active = true`,
       [req.params.id],
     );
