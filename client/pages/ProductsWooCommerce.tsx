@@ -233,6 +233,30 @@ export default function ProductsWooCommerce() {
     }
   };
 
+  const fetchGenders = async () => {
+    try {
+      const response = await fetch("/api/genders");
+      if (response.ok) {
+        const data = await response.json();
+        setGenders(data);
+      }
+    } catch (error) {
+      console.error("Error fetching genders:", error);
+    }
+  };
+
+  const fetchTypes = async () => {
+    try {
+      const response = await fetch("/api/types");
+      if (response.ok) {
+        const data = await response.json();
+        setTypes(data);
+      }
+    } catch (error) {
+      console.error("Error fetching types:", error);
+    }
+  };
+
   const fetchColors = async () => {
     try {
       const response = await fetch("/api/colors");
