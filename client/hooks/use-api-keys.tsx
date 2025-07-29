@@ -62,7 +62,7 @@ export function useApiKeys() {
         const data = await response.json();
         setApiKeys(data.api_keys || []);
       } else {
-        console.error("Failed to load API keys");
+        console.warn("Backend API não disponível, usando dados mock");
         // Set mock data for development
         setApiKeys([
           {
@@ -74,7 +74,7 @@ export function useApiKeys() {
             status: "active"
           },
           {
-            id: "2", 
+            id: "2",
             name: "Integração Mobile",
             key: "sk_live_xyz9876543210xyz9876543210xyz987654321",
             created_at: new Date(Date.now() - 7 * 86400000).toISOString(), // 7 days ago
