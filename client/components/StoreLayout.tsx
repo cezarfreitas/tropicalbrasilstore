@@ -94,14 +94,22 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     navigate(`/loja?${currentParams.toString()}`);
   };
 
-  // Memoized navigation links
-  const navigationLinks = useMemo(() => [
-    { to: "/loja", label: "Todos" },
-    { to: "/loja?categoria=havaianas", label: "Havaianas" },
-    { to: "/loja?categoria=adidas", label: "Adidas" },
-    { to: "/loja?categoria=nike", label: "Nike" },
-    { to: "/loja?categoria=feminino", label: "Feminino" }
-  ], []);
+  // Memoized navigation links from database categories
+  const navigationLinks = useMemo(() => {
+    const links = [{ to: "/loja", label: "Todos" }];
+
+    // Add categories that have show_in_menu = true
+    categories.forEach((category) => {
+      if (category.id !== "all") {
+        links.push({
+          to: `/loja?categoria=${encodeURIComponent(category.name.toLowerCase())}`,
+          label: category.name
+        });
+      }
+    });
+
+    return links;
+  }, [categories]);
 
   // Memoized cart aria label
   const cartAriaLabel = useMemo(() => 
