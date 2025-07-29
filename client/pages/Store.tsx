@@ -90,7 +90,7 @@ function Store() {
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= (pagination?.totalPages || 1)) {
-      fetchProducts(newPage, searchTerm);
+      fetchProducts(newPage, searchTerm, colorFilter, categoryFilter);
     }
   };
 
