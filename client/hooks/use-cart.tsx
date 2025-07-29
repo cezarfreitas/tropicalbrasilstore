@@ -211,6 +211,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     items: [],
     totalItems: 0,
     totalPrice: 0,
+    isModalOpen: false,
+    modalProduct: null,
   });
 
   useEffect(() => {
