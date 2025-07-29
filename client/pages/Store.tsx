@@ -227,6 +227,63 @@ function Store() {
           </Card>
         )}
 
+        {/* Filtros Rápidos Mobile */}
+        {!loading && filteredProducts.length > 0 && (
+          <div className="lg:hidden mb-4">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              <span className="text-xs font-medium text-gray-600 whitespace-nowrap flex-shrink-0">
+                Filtros:
+              </span>
+
+              {/* Filtro todos */}
+              <Link
+                to="/loja"
+                className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 whitespace-nowrap flex-shrink-0 active:scale-95 ${
+                  !categoryFilter && !colorFilter && !genderFilter && !typeFilter
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary/40'
+                }`}
+              >
+                Todos
+              </Link>
+
+              {/* Categorias principais */}
+              <Link
+                to="/loja?categoria=chinelos"
+                className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 whitespace-nowrap flex-shrink-0 active:scale-95 ${
+                  categoryFilter === 'chinelos'
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary/40'
+                }`}
+              >
+                Chinelos
+              </Link>
+
+              <Link
+                to="/loja?categoria=sandálias"
+                className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 whitespace-nowrap flex-shrink-0 active:scale-95 ${
+                  categoryFilter === 'sandálias'
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary/40'
+                }`}
+              >
+                Sandálias
+              </Link>
+
+              <Link
+                to="/loja?categoria=tênis"
+                className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 whitespace-nowrap flex-shrink-0 active:scale-95 ${
+                  categoryFilter === 'tênis'
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary/40'
+                }`}
+              >
+                Tênis
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Products Grid */}
         {!loading && filteredProducts.length > 0 && (
           <>
