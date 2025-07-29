@@ -252,9 +252,12 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         genderId = await getOrCreateGender(product.genero);
       }
 
+      // Calcular preço base a partir da primeira variante
+      const basePrice = product.variantes[0].preco;
+
       // Criar produto principal
       const [productResult] = await db.execute(
-        "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, sell_without_stock, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, sell_without_stock, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           product.nome,
           product.descricao || null,
@@ -262,6 +265,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           typeId,
           genderId,
           product.codigo,
+          basePrice,
           product.vender_infinito || false,
           true,
         ],
@@ -306,25 +310,32 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           [productId, colorId, gradeId],
         );
 
-        // Buscar o primeiro tamanho da grade para criar a variante padrão
+        // Buscar todos os tamanhos da grade para criar variantes para cada um
         const [gradeTemplates] = await db.execute(
-          "SELECT gt.id, gt.size_id FROM grade_templates gt JOIN sizes s ON gt.size_id = s.id WHERE gt.grade_id = ? ORDER BY s.display_order LIMIT 1",
+          "SELECT gt.id, gt.size_id, s.size FROM grade_templates gt JOIN sizes s ON gt.size_id = s.id WHERE gt.grade_id = ? ORDER BY s.display_order",
           [gradeId],
         );
 
         if ((gradeTemplates as any[]).length > 0) {
-          const sizeId = (gradeTemplates as any[])[0].size_id;
+          // Criar uma variante física para cada tamanho da grade
+          for (const template of gradeTemplates as any[]) {
+            const sizeId = template.size_id;
+            const sizeName = template.size;
 
-          // Criar variante física do produto (product_variants)
-          const [physicalVariantResult] = await db.execute(
-            `INSERT INTO product_variants
-             (product_id, color_id, size_id, price_override, created_at)
-             VALUES (?, ?, ?, ?, NOW())`,
-            [productId, colorId, sizeId, variante.preco],
-          );
+            // SKU específico para cada tamanho
+            const sizeVariantSku = `${variantSku}-${sizeName}`;
+
+            // Criar variante física do produto (product_variants)
+            await db.execute(
+              `INSERT INTO product_variants
+               (product_id, color_id, size_id, price_override, image_url, created_at)
+               VALUES (?, ?, ?, ?, ?, NOW())`,
+              [productId, colorId, sizeId, variante.preco, variante.foto || null],
+            );
+          }
 
           console.log(
-            `  ✅ Variante criada: ${variante.cor} - SKU: ${variantSku}`,
+            `  ✅ ${(gradeTemplates as any[]).length} variantes criadas para ${variante.cor} - SKU: ${variantSku}`,
           );
         } else {
           console.log(
@@ -332,11 +343,13 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           );
         }
 
-        // Atualizar preço base do produto se necessário
-        await db.execute(
-          "UPDATE products SET base_price = ? WHERE id = ? AND base_price IS NULL",
-          [variante.preco, productId],
-        );
+        // Salvar foto do produto se fornecida (na primeira variante)
+        if (variante.foto && variants.length === 0) {
+          await db.execute(
+            "UPDATE products SET photo = ? WHERE id = ?",
+            [variante.foto, productId],
+          );
+        }
 
         variants.push({
           id: (variantResult as any).insertId,
