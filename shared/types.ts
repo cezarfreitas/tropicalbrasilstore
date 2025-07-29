@@ -109,6 +109,8 @@ export interface CreateProductRequest {
   name: string;
   description?: string;
   category_id?: number;
+  gender_id?: number;
+  type_id?: number;
   base_price?: number;
   suggested_price?: number;
   sku?: string;
