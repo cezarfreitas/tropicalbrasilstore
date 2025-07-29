@@ -6,19 +6,24 @@ const router = Router();
 // Get orders for a specific customer by ID
 router.get("/:customerId", async (req, res) => {
   try {
+    console.log(`🔍 API: Buscando pedidos para cliente ID: ${req.params.customerId}`);
     const { customerId } = req.params;
-    
+
     // Get customer details first
     const [customerRows] = await db.execute(
       `SELECT email FROM customers WHERE id = ?`,
       [customerId]
     );
-    
+
+    console.log(`👤 API: Clientes encontrados: ${(customerRows as any[]).length}`);
+
     if ((customerRows as any[]).length === 0) {
+      console.log("❌ API: Cliente não encontrado");
       return res.status(404).json({ error: "Cliente não encontrado" });
     }
-    
+
     const customerEmail = (customerRows as any[])[0].email;
+    console.log(`📧 API: Email do cliente: ${customerEmail}`);
     
     // Get orders for the customer
     const [orderRows] = await db.execute(`
