@@ -935,6 +935,53 @@ export default function ProductsWooCommerce() {
                         Vender Infinito
                       </Label>
                     </div>
+
+                    {/* Configuração de Tipo de Estoque */}
+                    <div className="space-y-3">
+                      <Label className="text-base font-semibold">Controle de Estoque</Label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div
+                          className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                            (formData as any).stock_type === 'grade'
+                              ? 'border-primary bg-primary/5'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                          onClick={() => setFormData({ ...formData, stock_type: 'grade' } as any)}
+                        >
+                          <div className="flex items-center space-x-2 mb-2">
+                            <div className={`w-4 h-4 rounded-full border-2 ${
+                              (formData as any).stock_type === 'grade'
+                                ? 'border-primary bg-primary'
+                                : 'border-gray-300'
+                            }`} />
+                            <Label className="font-medium">Estoque por Grade</Label>
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            Cada grade tem uma quantidade específica (ex: 25 pares) independente dos tamanhos
+                          </p>
+                        </div>
+                        <div
+                          className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                            (formData as any).stock_type === 'size'
+                              ? 'border-primary bg-primary/5'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                          onClick={() => setFormData({ ...formData, stock_type: 'size' } as any)}
+                        >
+                          <div className="flex items-center space-x-2 mb-2">
+                            <div className={`w-4 h-4 rounded-full border-2 ${
+                              (formData as any).stock_type === 'size'
+                                ? 'border-primary bg-primary'
+                                : 'border-gray-300'
+                            }`} />
+                            <Label className="font-medium">Estoque por Tamanho</Label>
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            Cada tamanho/cor tem estoque individual (ex: 5 pares tam 38 azul, 3 pares tam 39 azul)
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </TabsContent>
 
                   <TabsContent value="variants" className="space-y-6">
