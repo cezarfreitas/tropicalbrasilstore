@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useCustomerAuth } from "./use-customer-auth";
 
 interface CartItem {
   id: string;
