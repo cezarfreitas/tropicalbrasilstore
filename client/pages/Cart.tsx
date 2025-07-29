@@ -245,7 +245,7 @@ export default function Cart() {
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">
-                        Subtotal ({totalItems} {totalItems === 1 ? 'item' : 'itens'})
+                        Subtotal ({items.length} {items.length === 1 ? 'produto' : 'produtos'}, {totalItems} {totalItems === 1 ? 'item' : 'itens'})
                       </span>
                       <span className="font-medium">
                         R$ {formatPrice(totalPrice)}
@@ -318,7 +318,7 @@ export default function Cart() {
                   <ul className="text-xs text-green-700 space-y-1">
                     <li>• Melhor preço por peça</li>
                     <li>• Mix completo de tamanhos</li>
-                    <li>• Ideal para revenda</li>
+                    <li>�� Ideal para revenda</li>
                   </ul>
                 </CardContent>
               </Card>
