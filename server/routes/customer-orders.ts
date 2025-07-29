@@ -27,7 +27,7 @@ router.get("/:customerId", async (req, res) => {
     
     // Get orders for the customer
     const [orderRows] = await db.execute(`
-      SELECT 
+      SELECT
         o.id,
         o.total_amount,
         o.status,
@@ -40,7 +40,9 @@ router.get("/:customerId", async (req, res) => {
       GROUP BY o.id
       ORDER BY o.created_at DESC
     `, [customerEmail]);
-    
+
+    console.log(`📦 API: Pedidos encontrados: ${(orderRows as any[]).length}`);
+
     const orders = [];
     
     // For each order, get the detailed items
