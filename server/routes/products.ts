@@ -211,16 +211,11 @@ router.post("/bulk", validateApiKey, async (req, res) => {
     // Processar cada produto
     for (const product of products) {
       // Validações básicas
-      if (
-        !product.codigo ||
-        !product.nome ||
-        !product.variantes ||
-        product.variantes.length === 0
-      ) {
+      if (!product.codigo || !product.variantes || product.variantes.length === 0) {
         return res.status(422).json({
           success: false,
           error: "Dados inválidos",
-          message: "Código, nome e pelo menos uma variante são obrigatórios",
+          message: "Código e pelo menos uma variante são obrigatórios",
         });
       }
 
@@ -229,6 +224,15 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         "SELECT id, name, category_id, type_id, gender_id FROM products WHERE sku = ?",
         [product.codigo],
       );
+
+      // Validação adicional para produtos novos
+      if ((existingProduct as any[]).length === 0 && !product.nome) {
+        return res.status(422).json({
+          success: false,
+          error: "Dados inválidos",
+          message: "Nome é obrigatório para criar um novo produto",
+        });
+      }
 
       let productId;
       let isNewProduct = false;
