@@ -94,6 +94,19 @@ function saveCartToStorage(state: CartState) {
   }
 }
 
+// Helper function to calculate total items considering pieces per grade
+function calculateTotalItems(items: CartItem[]): number {
+  return items.reduce((sum, item) => {
+    if (item.type === "grade" && item.piecesPerGrade) {
+      // For grades: quantity of grades × pieces per grade
+      return sum + (item.quantity * item.piecesPerGrade);
+    } else {
+      // For variants/units: just the quantity
+      return sum + item.quantity;
+    }
+  }, 0);
+}
+
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "ADD_ITEM": {
