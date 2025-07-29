@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import {
   ShoppingCart,
   Package,
+  Package2,
   User,
   LogOut,
   LogIn,
