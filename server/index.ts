@@ -166,6 +166,7 @@ export function createServer() {
   app.use("/api/cleanup-products", cleanupProductsRouter);
   app.use("/api/seed-chinelos", seedChinelosRouter);
   app.use("/api/import", importRouter);
+  app.use("/api/admin/logs", apiLogsRouter);
 
   return app;
 }
