@@ -50,8 +50,8 @@ router.get("/products", async (req, res) => {
     }
 
     baseQuery += `
-      GROUP BY p.id, p.name, p.description, p.base_price, p.suggested_price, p.photo, p.active, c.name
-      HAVING SUM(pv.stock) > 0
+      GROUP BY p.id, p.name, p.description, p.base_price, p.suggested_price, p.photo, p.active, p.sell_without_stock, c.name
+      HAVING SUM(pv.stock) > 0 OR p.sell_without_stock = 1
     `;
 
     // Get total count for pagination
