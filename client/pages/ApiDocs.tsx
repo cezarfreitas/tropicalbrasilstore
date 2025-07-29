@@ -271,10 +271,7 @@ export default function ApiDocs() {
     {
       "cor": "Preto",             // Cor (criada automaticamente se não existir)
       "preco": 29.90,             // Preço da variante (obrigatório)
-      "grade": {                  // Grade de tamanhos (obrigatório)
-        "nome": "Grade Unissex",  // Nome da grade
-        "tamanhos": ["35", "36", "37", "38", "39", "40", "41", "42"]
-      },
+      "grade": "Grade Unissex",   // Nome da grade (tamanhos criados automaticamente)
       "foto": "https://...",      // URL da foto (opcional)
       "sku": "CHN001-PRETO"       // SKU específico (opcional, gerado automaticamente)
     }
