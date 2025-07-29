@@ -257,4 +257,9 @@ const App = () => (
   </QueryClientProvider>
 );
 
-createRoot(document.getElementById("root")!).render(<App />);
+const rootElement = document.getElementById("root")!;
+
+// Evita recrear root durante hot reload
+if (!rootElement._reactRootContainer) {
+  createRoot(rootElement).render(<App />);
+}
