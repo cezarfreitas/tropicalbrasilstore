@@ -72,6 +72,8 @@ function Store() {
   const searchTerm = searchParams.get("busca") || "";
   const colorFilter = searchParams.get("cor") ? parseInt(searchParams.get("cor")!) : null;
   const categoryFilter = searchParams.get("categoria") || null;
+  const genderFilter = searchParams.get("genero") ? parseInt(searchParams.get("genero")!) : null;
+  const typeFilter = searchParams.get("tipo") ? parseInt(searchParams.get("tipo")!) : null;
 
   // Products with optimized hook
   const productsPerPage = 20;
