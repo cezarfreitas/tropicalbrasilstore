@@ -60,6 +60,11 @@ const customFetch = async (
   url: string,
   options?: RequestInit,
 ): Promise<Response> => {
+  // HMR guard to prevent issues during development
+  if (import.meta.hot?.data?.hmrInvalidated) {
+    throw new Error('HMR invalidation in progress');
+  }
+
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     const method = options?.method || "GET";
