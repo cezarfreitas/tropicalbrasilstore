@@ -87,7 +87,8 @@ export default function Sizes() {
             : "Tamanho criado com sucesso",
         });
         setDialogOpen(false);
-        resetForm();
+        setEditingSize(null);
+        setFormData({ size: "", display_order: 0 });
         fetchSizes();
       } else {
         const error = await response.json();
@@ -100,25 +101,6 @@ export default function Sizes() {
         variant: "destructive",
       });
     }
-  };
-
-  const resetForm = () => {
-    setEditingSize(null);
-    setFormData({
-      size: "",
-      display_order: 0,
-    });
-  };
-
-  const resetGroupForm = () => {
-    setEditingGroup(null);
-    setGroupFormData({
-      name: "",
-      description: "",
-      icon: "",
-      sizes: [],
-      active: true,
-    });
   };
 
   const handleEdit = (size: Size) => {
@@ -157,88 +139,9 @@ export default function Sizes() {
   };
 
   const handleNewSize = () => {
-    resetForm();
+    setEditingSize(null);
+    setFormData({ size: "", display_order: 0 });
     setDialogOpen(true);
-  };
-
-  const handleNewGroup = () => {
-    resetGroupForm();
-    setGroupDialogOpen(true);
-  };
-
-  const handleEditGroup = (group: SizeGroup) => {
-    setEditingGroup(group);
-    setGroupFormData({
-      name: group.name,
-      description: group.description || "",
-      icon: group.icon || "",
-      sizes: group.sizes,
-      active: group.active,
-    });
-    setGroupDialogOpen(true);
-  };
-
-  const handleSaveGroup = async () => {
-    if (!groupFormData.name.trim()) {
-      toast({
-        title: "Erro",
-        description: "Nome do grupo é obrigatório",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      if (editingGroup) {
-        await updateGroup(editingGroup.id, groupFormData);
-        toast({
-          title: "Sucesso",
-          description: "Grupo atualizado com sucesso",
-        });
-      } else {
-        await addGroup(groupFormData);
-        toast({
-          title: "Sucesso",
-          description: "Grupo criado com sucesso",
-        });
-      }
-
-      setGroupDialogOpen(false);
-      resetGroupForm();
-    } catch (error: any) {
-      toast({
-        title: "Erro",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleDeleteGroup = async (groupId: number) => {
-    if (!confirm("Tem certeza que deseja excluir este grupo?")) return;
-
-    try {
-      await deleteGroup(groupId);
-      toast({
-        title: "Sucesso",
-        description: "Grupo excluído com sucesso",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Erro",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const toggleSizeInGroup = (sizeValue: string) => {
-    setGroupFormData((prev) => ({
-      ...prev,
-      sizes: prev.sizes.includes(sizeValue)
-        ? prev.sizes.filter((s) => s !== sizeValue)
-        : [...prev.sizes, sizeValue],
-    }));
   };
 
   if (loading) {
@@ -259,124 +162,136 @@ export default function Sizes() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Tamanhos</h1>
         <p className="text-muted-foreground">
-          Configure os tamanhos e grupos de tamanhos disponíveis para seus
-          produtos
+          Gerencie os tamanhos disponíveis para seus produtos
         </p>
       </div>
 
-      <Tabs defaultValue="sizes" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="sizes">
-            <Ruler className="mr-2 h-4 w-4" />
-            Tamanhos
-          </TabsTrigger>
-          <TabsTrigger value="groups">
-            <Users className="mr-2 h-4 w-4" />
-            Grupos de Tamanhos
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Aba de Tamanhos */}
-        <TabsContent value="sizes" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">Lista de Tamanhos</h2>
-              <p className="text-muted-foreground">
-                Gerencie os tamanhos individuais disponíveis
-              </p>
-            </div>
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button onClick={handleNewSize}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Novo Tamanho
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <form onSubmit={handleSubmit}>
-                  <DialogHeader>
-                    <DialogTitle>
-                      {editingSize ? "Editar Tamanho" : "Novo Tamanho"}
-                    </DialogTitle>
-                    <DialogDescription>
-                      {editingSize
-                        ? "Atualize as informações do tamanho"
-                        : "Adicione um novo tamanho para seus produtos"}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="size">Tamanho</Label>
-                      <Input
-                        id="size"
-                        value={formData.size}
-                        onChange={(e) =>
-                          setFormData({ ...formData, size: e.target.value })
-                        }
-                        placeholder="Ex: 32, 34, 36, 38, 40"
-                        required
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="display_order">Ordem de Exibição</Label>
-                      <Input
-                        id="display_order"
-                        type="number"
-                        value={formData.display_order}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            display_order: parseInt(e.target.value) || 0,
-                          })
-                        }
-                        placeholder="Ex: 1, 2, 3..."
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setDialogOpen(false)}
-                    >
-                      Cancelar
-                    </Button>
-                    <Button type="submit">
-                      {editingSize ? "Atualizar" : "Criar"}
-                    </Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold">Lista de Tamanhos</h2>
+            <p className="text-muted-foreground">
+              Gerencie os tamanhos individuais disponíveis
+            </p>
           </div>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={handleNewSize}>
+                <Plus className="mr-2 h-4 w-4" />
+                Novo Tamanho
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <form onSubmit={handleSubmit}>
+                <DialogHeader>
+                  <DialogTitle>
+                    {editingSize ? "Editar Tamanho" : "Novo Tamanho"}
+                  </DialogTitle>
+                  <DialogDescription>
+                    {editingSize
+                      ? "Atualize as informações do tamanho"
+                      : "Adicione um novo tamanho para seus produtos"}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="size">Tamanho</Label>
+                    <Input
+                      id="size"
+                      value={formData.size}
+                      onChange={(e) =>
+                        setFormData({ ...formData, size: e.target.value })
+                      }
+                      placeholder="Ex: 32, 34, 36, 38, 40"
+                      required
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="display_order">Ordem de Exibição</Label>
+                    <Input
+                      id="display_order"
+                      type="number"
+                      value={formData.display_order}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          display_order: parseInt(e.target.value) || 0,
+                        })
+                      }
+                      placeholder="Ex: 1, 2, 3..."
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setDialogOpen(false)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button type="submit">
+                    {editingSize ? "Atualizar" : "Criar"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
 
-          <Card>
-            <CardContent>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Ruler className="h-5 w-5" />
+              Tamanhos Cadastrados
+            </CardTitle>
+            <CardDescription>
+              {sizes.length === 0
+                ? "Nenhum tamanho cadastrado"
+                : `${sizes.length} tamanho${sizes.length !== 1 ? "s" : ""} cadastrado${sizes.length !== 1 ? "s" : ""}`}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {sizes.length === 0 ? (
+              <div className="text-center py-8">
+                <Ruler className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                <h3 className="mt-2 text-sm font-semibold">
+                  Nenhum tamanho cadastrado
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Comece adicionando os tamanhos para seus produtos.
+                </p>
+                <div className="mt-6">
+                  <Button onClick={handleNewSize}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Novo Tamanho
+                  </Button>
+                </div>
+              </div>
+            ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Tamanho</TableHead>
-                    <TableHead>Ordem de Exibição</TableHead>
+                    <TableHead>Ordem</TableHead>
+                    <TableHead>Criado em</TableHead>
                     <TableHead className="w-[100px]">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {sizes.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={3} className="text-center py-8">
-                        <Ruler className="mx-auto h-8 w-8 text-muted-foreground/50" />
-                        <p className="mt-2 text-sm text-muted-foreground">
-                          Nenhum tamanho cadastrado
-                        </p>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    sizes.map((size) => (
+                  {sizes
+                    .sort((a, b) => a.display_order - b.display_order)
+                    .map((size) => (
                       <TableRow key={size.id}>
                         <TableCell className="font-medium">
                           {size.size}
                         </TableCell>
                         <TableCell>{size.display_order}</TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {new Date(size.created_at).toLocaleDateString(
+                            "pt-BR",
+                          )}
+                        </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <Button
@@ -396,249 +311,13 @@ export default function Sizes() {
                           </div>
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
+                    ))}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Aba de Grupos de Tamanhos */}
-        <TabsContent value="groups" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">Grupos de Tamanhos</h2>
-              <p className="text-muted-foreground">
-                Crie grupos para facilitar a seleção de tamanhos durante a
-                criação de produtos
-              </p>
-            </div>
-            <Dialog open={groupDialogOpen} onOpenChange={setGroupDialogOpen}>
-              <DialogTrigger asChild>
-                <Button onClick={handleNewGroup}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Novo Grupo
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px]">
-                <DialogHeader>
-                  <DialogTitle>
-                    {editingGroup ? "Editar Grupo" : "Novo Grupo de Tamanhos"}
-                  </DialogTitle>
-                  <DialogDescription>
-                    {editingGroup
-                      ? "Atualize as informações do grupo"
-                      : "Crie um novo grupo de tamanhos para facilitar a criação de produtos"}
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="groupName">Nome do Grupo</Label>
-                      <Input
-                        id="groupName"
-                        value={groupFormData.name}
-                        onChange={(e) =>
-                          setGroupFormData({
-                            ...groupFormData,
-                            name: e.target.value,
-                          })
-                        }
-                        placeholder="Ex: Masculino, Feminino, Infantil"
-                        required
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="groupIcon">Ícone (Emoji)</Label>
-                      <Input
-                        id="groupIcon"
-                        value={groupFormData.icon}
-                        onChange={(e) =>
-                          setGroupFormData({
-                            ...groupFormData,
-                            icon: e.target.value,
-                          })
-                        }
-                        placeholder="Ex: 👨, 👩, 👶"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="groupDescription">Descrição</Label>
-                    <Input
-                      id="groupDescription"
-                      value={groupFormData.description}
-                      onChange={(e) =>
-                        setGroupFormData({
-                          ...groupFormData,
-                          description: e.target.value,
-                        })
-                      }
-                      placeholder="Descrição do grupo"
-                    />
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label>Tamanhos do Grupo</Label>
-                    <div className="grid grid-cols-6 gap-2 p-4 border rounded-lg">
-                      {sizes.map((size) => (
-                        <div
-                          key={size.id}
-                          className="flex items-center space-x-2"
-                        >
-                          <Checkbox
-                            id={`size-${size.id}`}
-                            checked={groupFormData.sizes.includes(size.size)}
-                            onCheckedChange={() => toggleSizeInGroup(size.size)}
-                          />
-                          <Label
-                            htmlFor={`size-${size.id}`}
-                            className="text-sm"
-                          >
-                            {size.size}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                    {groupFormData.sizes.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        <span className="text-sm text-muted-foreground">
-                          Selecionados:
-                        </span>
-                        {groupFormData.sizes.map((size) => (
-                          <Badge
-                            key={size}
-                            variant="secondary"
-                            className="text-xs"
-                          >
-                            {size}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setGroupDialogOpen(false)}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button onClick={handleSaveGroup}>
-                    {editingGroup ? "Atualizar" : "Criar"}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {sizeGroupsLoading ? (
-            <div className="flex items-center justify-center h-32">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  Carregando grupos...
-                </p>
-              </div>
-            </div>
-          ) : sizeGroupsError ? (
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center text-red-500">
-                  <p>Erro ao carregar grupos: {sizeGroupsError}</p>
-                  <Button
-                    onClick={refetchSizeGroups}
-                    variant="outline"
-                    className="mt-2"
-                  >
-                    Tentar novamente
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid gap-4">
-              {sizeGroups.length === 0 ? (
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center py-8">
-                      <Users className="mx-auto h-8 w-8 text-muted-foreground/50" />
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Nenhum grupo de tamanhos cadastrado
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ) : (
-                sizeGroups.map((group) => (
-                  <Card key={group.id}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="text-2xl">{group.icon}</div>
-                          <div>
-                            <CardTitle className="text-lg">
-                              {group.name}
-                            </CardTitle>
-                            {group.description && (
-                              <CardDescription>
-                                {group.description}
-                              </CardDescription>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge
-                            variant={group.active ? "default" : "secondary"}
-                          >
-                            {group.active ? "Ativo" : "Inativo"}
-                          </Badge>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleEditGroup(group)}
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleDeleteGroup(group.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div>
-                        <Label className="text-sm font-medium">
-                          Tamanhos ({group.sizes.length}):
-                        </Label>
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {group.sizes.map((size) => (
-                            <Badge
-                              key={size}
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              {size}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
