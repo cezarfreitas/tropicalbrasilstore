@@ -622,51 +622,165 @@ Authorization: Bearer YOUR_API_KEY`}
         <TabsContent value="authentication" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Chave de API</CardTitle>
-              <CardDescription>
-                Use sua chave de API para autenticar suas requisições
-              </CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Chaves de API</CardTitle>
+                  <CardDescription>
+                    Gerencie suas chaves de API para autenticar requisições
+                  </CardDescription>
+                </div>
+                <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Nova Chave
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Criar Nova Chave de API</DialogTitle>
+                      <DialogDescription>
+                        Crie uma nova chave de API para autenticar suas requisições.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="key-name">Nome da Chave</Label>
+                        <Input
+                          id="key-name"
+                          placeholder="Ex: Integração Mobile"
+                          value={newKeyName}
+                          onChange={(e) => setNewKeyName(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="key-description">Descrição (Opcional)</Label>
+                        <Input
+                          id="key-description"
+                          placeholder="Para que será usada esta chave?"
+                          value={newKeyDescription}
+                          onChange={(e) => setNewKeyDescription(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
+                        Cancelar
+                      </Button>
+                      <Button onClick={handleCreateKey}>
+                        Criar Chave
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <h4 className="font-semibold">Sua Chave de API</h4>
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 relative">
-                    <input
-                      type={showApiKey ? "text" : "password"}
-                      value={apiKey}
-                      readOnly
-                      className="w-full px-3 py-2 border rounded-md bg-gray-50 font-mono text-sm"
-                    />
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowApiKey(!showApiKey)}
-                  >
-                    {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => copyToClipboard(apiKey)}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={generateNewApiKey}
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
+              {loading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mr-3"></div>
+                  <span>Carregando chaves...</span>
                 </div>
-              </div>
+              ) : apiKeys.length === 0 ? (
+                <div className="text-center py-8">
+                  <Code className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Nenhuma chave de API
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Crie sua primeira chave de API para começar a usar a integração.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {apiKeys.map((key) => (
+                    <div key={key.id} className="border rounded-lg p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-semibold">{key.name}</h4>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <span>Criada em {new Date(key.created_at).toLocaleDateString('pt-BR')}</span>
+                            {key.last_used && (
+                              <>
+                                <span>•</span>
+                                <span>Último uso: {new Date(key.last_used).toLocaleDateString('pt-BR')}</span>
+                              </>
+                            )}
+                            <Badge
+                              variant={key.status === "active" ? "default" : "destructive"}
+                              className="ml-2"
+                            >
+                              {key.status === "active" ? "Ativa" : "Revogada"}
+                            </Badge>
+                          </div>
+                        </div>
+                        {key.status === "active" && (
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleRegenerateKey(key.id, key.name)}
+                            >
+                              <RefreshCw className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleRevokeKey(key.id, key.name)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+
+                      {key.status === "active" && (
+                        <div className="space-y-2">
+                          <h5 className="font-medium text-sm">Chave de API</h5>
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1 relative">
+                              <input
+                                type={showKeys[key.id] ? "text" : "password"}
+                                value={key.key}
+                                readOnly
+                                className="w-full px-3 py-2 border rounded-md bg-gray-50 font-mono text-sm"
+                              />
+                            </div>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => toggleShowKey(key.id)}
+                            >
+                              {showKeys[key.id] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => copyToClipboard(key.key)}
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
+                      {key.status === "revoked" && (
+                        <div className="bg-red-50 border border-red-200 rounded-md p-3">
+                          <div className="flex items-center gap-2 text-red-700">
+                            <AlertTriangle className="h-4 w-4" />
+                            <span className="text-sm font-medium">Esta chave foi revogada e não pode mais ser usada</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
                 <h5 className="font-medium text-yellow-800 mb-2">⚠️ Importante</h5>
                 <p className="text-sm text-yellow-700">
-                  Mantenha sua chave de API segura. Não a compartilhe publicamente ou a inclua 
+                  Mantenha suas chaves de API seguras. Não as compartilhe publicamente ou as inclua
                   em código front-end. Use sempre HTTPS em produção.
                 </p>
               </div>
@@ -675,7 +789,7 @@ Authorization: Bearer YOUR_API_KEY`}
                 <h4 className="font-semibold">Exemplo de Uso</h4>
                 <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
 {`curl -X GET "https://sua-loja.com/api/products" \\
-  -H "Authorization: Bearer ${apiKey}" \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json"`}
                 </pre>
               </div>
