@@ -189,7 +189,7 @@ const webhookExamples = [
 ];
 
 export default function ApiDocs() {
-  const { apiKeys, loading, usingMockData, createApiKey, revokeApiKey, regenerateApiKey } = useApiKeys();
+  const { apiKeys, loading, database, createApiKey, revokeApiKey, regenerateApiKey, exportJson } = useApiKeys();
   const [showKeys, setShowKeys] = useState<{ [keyId: string]: boolean }>({});
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [newKeyName, setNewKeyName] = useState("");
