@@ -376,9 +376,9 @@ export function useCart() {
   };
 
   return {
-    items: state.items,
-    totalItems: state.totalItems,
-    totalPrice: state.totalPrice,
+    items: isAuthenticated ? state.items : [],
+    totalItems: isAuthenticated ? state.totalItems : 0,
+    totalPrice: isAuthenticated ? state.totalPrice : 0,
     addItem,
     removeItem,
     updateQuantity,
@@ -387,6 +387,9 @@ export function useCart() {
     isModalOpen: state.isModalOpen,
     modalProduct: state.modalProduct,
     closeModal,
+    // Authentication state
+    isAuthenticated,
+    requiresLogin: !isAuthenticated,
   };
 }
 
