@@ -420,6 +420,40 @@ export default function ApiDocs() {
               </div>
 
               <div className="space-y-4">
+                <h4 className="text-lg font-semibold">Tipos de Controle de Estoque</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h5 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                      🎯 Estoque por Grade
+                    </h5>
+                    <p className="text-sm text-blue-700 mb-2">
+                      <code>"tipo_estoque": "grade"</code>
+                    </p>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      <li>• Quantidade fixa por grade/cor</li>
+                      <li>• Independente dos tamanhos individuais</li>
+                      <li>• Exemplo: 25 pares no total</li>
+                      <li>• Use "estoque_grade" na variante</li>
+                    </ul>
+                  </div>
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h5 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
+                      📏 Estoque por Tamanho
+                    </h5>
+                    <p className="text-sm text-green-700 mb-2">
+                      <code>"tipo_estoque": "size"</code>
+                    </p>
+                    <ul className="text-sm text-green-700 space-y-1">
+                      <li>• Quantidade específica por tamanho/cor</li>
+                      <li>• Controle granular por variante</li>
+                      <li>• Exemplo: 5 tam 38, 3 tam 39</li>
+                      <li>• Use "estoque_tamanhos" na variante</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
                 <h4 className="text-lg font-semibold">Regras de Negócio</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-blue-50 p-4 rounded-lg">
