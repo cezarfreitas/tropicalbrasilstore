@@ -404,8 +404,14 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
   // Initial fetch
   useEffect(() => {
     // Skip initial fetch during HMR to prevent connection issues
-    if (import.meta.hot?.data?.hmrInvalidated) {
-      return;
+    if (import.meta.hot?.data?.hmrInvalidated || !isHMRReady()) {
+      // Retry after a short delay if HMR is not ready
+      const timer = setTimeout(() => {
+        if (isHMRReady()) {
+          fetchProducts(1);
+        }
+      }, 200);
+      return () => clearTimeout(timer);
     }
     fetchProducts(1);
   }, [fetchProducts]);
