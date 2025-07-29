@@ -126,6 +126,8 @@ export function createServer() {
   app.use("/api/sizes", sizesRouter);
   app.use("/api/size-groups", sizeGroupsRouter);
   app.use("/api/colors", colorsRouter);
+  app.use("/api/genders", gendersRouter);
+  app.use("/api/types", typesRouter);
   app.use("/api/products", productsRouter);
   app.use("/api/products-enhanced", productsEnhancedRouter);
   app.use("/api/products-woocommerce", productsWooCommerceRouter);
