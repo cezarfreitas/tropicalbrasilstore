@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+// Using native Node.js fetch (available in Node 18+)
 
 async function testCustomerOrdersAPI() {
   try {
