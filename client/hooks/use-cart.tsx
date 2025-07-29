@@ -4,6 +4,7 @@ import {
   useReducer,
   ReactNode,
   useEffect,
+  useState,
 } from "react";
 
 interface CartItem {
