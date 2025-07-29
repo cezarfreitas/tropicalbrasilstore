@@ -277,21 +277,67 @@ export default function Attributes() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8">
-                <Users className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                <h3 className="mt-2 text-sm font-semibold">
-                  Nenhum gênero cadastrado
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Comece criando seu primeiro gênero de produtos.
-                </p>
-                <div className="mt-6">
-                  <Button onClick={handleNew}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Novo Gênero
-                  </Button>
+              {genders.length === 0 ? (
+                <div className="text-center py-8">
+                  <Users className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                  <h3 className="mt-2 text-sm font-semibold">
+                    Nenhum gênero cadastrado
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Comece criando seu primeiro gênero de produtos.
+                  </p>
+                  <div className="mt-6">
+                    <Button onClick={handleNew}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Novo Gênero
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Nome</TableHead>
+                      <TableHead>Descrição</TableHead>
+                      <TableHead>Criado em</TableHead>
+                      <TableHead className="w-[100px]">Ações</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {genders.map((gender) => (
+                      <TableRow key={gender.id}>
+                        <TableCell className="font-medium">
+                          {gender.name}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {gender.description || "—"}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {new Date(gender.created_at).toLocaleDateString("pt-BR")}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleEdit(gender)}
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleDelete(gender.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
