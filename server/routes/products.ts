@@ -441,6 +441,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           sku: variantSku,
           grade: variante.grade,
           preco: variante.preco,
+          status: "created"
         });
 
         variantesCreadas++;
