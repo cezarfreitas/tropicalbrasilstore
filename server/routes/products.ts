@@ -322,6 +322,27 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         const colorId = await getOrCreateColor(variante.cor);
         colorsCreated.add(variante.cor);
 
+        // Verificar se já existe uma variante desta cor para este produto
+        const [existingColorVariant] = await db.execute(
+          "SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?",
+          [productId, colorId],
+        );
+
+        if ((existingColorVariant as any[]).length > 0) {
+          console.log(`⚠️ Variante de cor ${variante.cor} já existe para o produto ${product.codigo} - pulando...`);
+
+          // Adicionar à lista de variantes retornadas (mesmo que não criada)
+          variants.push({
+            id: (existingColorVariant as any[])[0].id,
+            cor: variante.cor,
+            sku: variante.sku || `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}`,
+            grade: variante.grade,
+            preco: variante.preco,
+            status: "existing"
+          });
+          continue;
+        }
+
         // Criar ou buscar grade
         const gradeId = await getOrCreateGrade(variante.grade);
         gradesCreated.add(variante.grade);
