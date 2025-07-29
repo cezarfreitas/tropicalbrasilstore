@@ -152,7 +152,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       try {
         const response = await new Promise<Response>((resolve, reject) => {
           const xhr = new XMLHttpRequest();
-          xhr.open("GET", "/api/store/categories", true);
+          xhr.open("GET", "/api/categories", true);
           xhr.setRequestHeader("Accept", "application/json");
 
           xhr.onload = () => {
