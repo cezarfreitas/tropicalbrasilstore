@@ -35,6 +35,7 @@ interface WooCommerceProduct {
   active?: boolean;
   sell_without_stock?: boolean;
   size_group_id?: number;
+  stock_type?: 'size' | 'grade';
   color_variants: ColorVariant[];
 }
 
