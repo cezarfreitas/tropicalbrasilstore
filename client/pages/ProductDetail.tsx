@@ -367,6 +367,13 @@ export default function ProductDetail() {
   };
 
   const addToCart = () => {
+    console.log("addToCart called");
+    console.log("isAuthenticated:", isAuthenticated);
+    console.log("isApproved:", isApproved);
+    console.log("selectedColor:", selectedColor);
+    console.log("selectedGrade:", selectedGrade);
+    console.log("hasGrades():", hasGrades());
+
     if (!product || !selectedColor) {
       toast({
         title: "Erro",
