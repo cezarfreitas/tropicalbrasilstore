@@ -600,13 +600,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
                   <button
-                    onClick={() => {
-                      const newState = !colorFilterOpen;
-                      setColorFilterOpen(newState);
-                      try {
-                        localStorage.setItem('sidebar-color-filter-open', newState.toString());
-                      } catch {}
-                    }}
+                    onClick={() => setColorFilterOpen(!colorFilterOpen)}
                     className="flex items-center gap-2 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
                   >
                     <div className="w-2 h-2 bg-gradient-to-br from-red-400 to-blue-400 rounded-full group-hover:scale-110 transition-transform duration-300"></div>
@@ -1026,7 +1020,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <div className="relative">
                   <Input
                     type="text"
-                    placeholder="Digite o que você procura..."
+                    placeholder="Digite o que voc�� procura..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full h-12 pl-12 pr-4 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
