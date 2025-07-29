@@ -316,7 +316,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
 
         // Criar produto principal
         const [productResult] = await db.execute(
-          "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, suggested_price, sell_without_stock, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, suggested_price, sell_without_stock, stock_type, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
           [
             product.nome,
             product.descricao || null,
@@ -327,6 +327,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             basePrice,
             product.preco_sugerido || null,
             product.vender_infinito || false,
+            product.tipo_estoque || 'grade',
             true,
           ],
         );
