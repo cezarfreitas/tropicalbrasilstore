@@ -314,7 +314,8 @@ export default function ProductsWooCommerce() {
       active: true,
       sell_without_stock: false,
       color_variants: [],
-    });
+      stock_type: 'grade', // Padrão: estoque por grade
+    } as any);
     setDialogOpen(true);
   };
 
