@@ -412,11 +412,6 @@ export default function ProductDetail() {
         photo: selectedVariantImage || product.photo,
         piecesPerGrade: grade.total_quantity,
       });
-
-      toast({
-        title: "✓ Adicionado ao carrinho",
-        description: `${grade.name}`,
-      });
     } else if (!hasGrades() && selectedSize) {
       const variant = product.variants.find(
         (v) => v.color_id === selectedColor && v.size_id === selectedSize,
