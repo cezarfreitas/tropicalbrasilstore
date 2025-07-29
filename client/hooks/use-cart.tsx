@@ -271,6 +271,30 @@ export function useCart() {
   }
 
   const { state, dispatch } = context;
+  const { customer, isAuthenticated } = useCustomerAuth();
+  const [cartLoaded, setCartLoaded] = useState(false);
+
+  // Load cart when user logs in
+  useEffect(() => {
+    if (isAuthenticated && customer && !cartLoaded) {
+      const storedCart = loadCartFromStorage(customer.id);
+      if (storedCart.items.length > 0 || storedCart.totalItems > 0) {
+        dispatch({ type: "LOAD_CART", state: storedCart });
+      }
+      setCartLoaded(true);
+    } else if (!isAuthenticated && cartLoaded) {
+      // Clear cart when user logs out
+      dispatch({ type: "CLEAR_CART" });
+      setCartLoaded(false);
+    }
+  }, [isAuthenticated, customer, cartLoaded, dispatch]);
+
+  // Save cart to storage when cart changes (only for authenticated users)
+  useEffect(() => {
+    if (isAuthenticated && customer && cartLoaded) {
+      saveCartToStorage(state, customer.id);
+    }
+  }, [state, isAuthenticated, customer, cartLoaded]);
 
   const addItem = (item: Omit<CartItem, "id" | "totalPrice">) => {
     let id: string;
