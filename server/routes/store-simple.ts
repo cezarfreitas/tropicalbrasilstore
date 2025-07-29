@@ -57,7 +57,7 @@ router.get("/products", async (req, res) => {
           WHEN p.stock_type = 'grade' THEN EXISTS(
             SELECT 1 FROM product_color_grades pcg
             INNER JOIN grade_vendida g ON pcg.grade_id = g.id
-            WHERE pcg.product_id = p.id AND g.active = 1
+            WHERE pcg.product_id = p.id AND g.active = 1 AND pcg.stock_quantity > 0
           )
           ELSE FALSE
         END
@@ -272,7 +272,7 @@ router.get("/products-paginated", async (req, res) => {
           WHEN p.stock_type = 'grade' THEN EXISTS(
             SELECT 1 FROM product_color_grades pcg
             INNER JOIN grade_vendida g ON pcg.grade_id = g.id
-            WHERE pcg.product_id = p.id AND (g.active = 1 OR p.sell_without_stock = 1)
+            WHERE pcg.product_id = p.id AND g.active = 1 AND (pcg.stock_quantity > 0 OR p.sell_without_stock = 1)
           )
           ELSE FALSE
         END
@@ -301,21 +301,22 @@ router.get("/products-paginated", async (req, res) => {
           FROM product_color_grades pcg
           INNER JOIN colors co ON pcg.color_id = co.id
           INNER JOIN grade_vendida g ON pcg.grade_id = g.id
-          WHERE pcg.product_id = ? AND g.active = 1
+          WHERE pcg.product_id = ? AND g.active = 1 AND (pcg.stock_quantity > 0 OR ? = 1)
           ORDER BY co.name`,
-          [product.id],
+          [product.id, product.sell_without_stock],
         );
         available_colors = gradeColors;
 
-        // Contar grades disponíveis
+        // Contar grades disponíveis com estoque
         const [availableGrades] = await db.execute(
-          `SELECT COUNT(*) as available_count
+          `SELECT COUNT(*) as available_count, SUM(pcg.stock_quantity) as total_grade_stock
           FROM product_color_grades pcg
           INNER JOIN grade_vendida gv ON pcg.grade_id = gv.id
-          WHERE pcg.product_id = ? AND gv.active = 1`,
-          [product.id],
+          WHERE pcg.product_id = ? AND gv.active = 1 AND (pcg.stock_quantity > 0 OR ? = 1)`,
+          [product.id, product.sell_without_stock],
         );
         available_grades_count = (availableGrades as any)[0].available_count;
+        product.total_grade_stock = (availableGrades as any)[0].total_grade_stock || 0;
 
       } else if (product.stock_type === 'size') {
         // Para produtos com estoque por tamanho
