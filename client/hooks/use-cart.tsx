@@ -257,17 +257,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     modalProduct: null,
   });
 
-  useEffect(() => {
-    const storedCart = loadCartFromStorage();
-    if (storedCart.items.length > 0 || storedCart.totalItems > 0) {
-      dispatch({ type: "LOAD_CART", state: storedCart });
-    }
-  }, []);
-
-  useEffect(() => {
-    saveCartToStorage(state);
-  }, [state]);
-
   return (
     <CartContext.Provider value={{ state, dispatch }}>
       {children}
