@@ -19,6 +19,7 @@ import ProductsWooCommerce from "./pages/ProductsWooCommerce";
 import Categories from "./pages/Categories";
 import Sizes from "./pages/Sizes";
 import Colors from "./pages/Colors";
+import Attributes from "./pages/Attributes";
 import GradesRedesigned from "./pages/GradesRedesigned";
 import Orders from "./pages/Orders";
 import Customers from "./pages/Customers";
