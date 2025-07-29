@@ -65,6 +65,7 @@ export function useApiKeys() {
         setUsingMockData(false);
       } else {
         console.warn("Backend API não disponível, usando dados mock");
+        setUsingMockData(true);
         // Set mock data for development
         setApiKeys([
           {
