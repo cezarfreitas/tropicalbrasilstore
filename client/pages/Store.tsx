@@ -179,17 +179,19 @@ function Store() {
           </Card>
         )}
 
-        {/* Loading State */}
+        {/* Loading State - Mobile Otimizado */}
         {loading && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-center py-4">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex items-center justify-center py-3 sm:py-4">
               <div className="text-center">
-                <p className="text-foreground font-medium text-sm">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-2"></div>
+                <p className="text-foreground font-medium text-xs sm:text-sm">
                   Carregando produtos...
                 </p>
               </div>
             </div>
-            <ProductSkeleton count={productsPerPage} />
+            {/* Mobile: Mostrar menos skeletons para melhor performance */}
+            <ProductSkeleton count={window.innerWidth < 640 ? 6 : productsPerPage} />
           </div>
         )}
 
