@@ -88,6 +88,8 @@ interface WooCommerceProduct {
   name: string;
   description?: string;
   category_id?: number;
+  gender_id?: number;
+  type_id?: number;
   base_price?: number;
   suggested_price?: number;
   sku?: string;
@@ -97,6 +99,8 @@ interface WooCommerceProduct {
   sell_without_stock?: boolean;
   color_variants: ColorVariant[];
   category_name?: string;
+  gender_name?: string;
+  type_name?: string;
   variant_count?: number;
   total_stock?: number;
   available_colors?: string;
