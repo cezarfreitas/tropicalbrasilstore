@@ -462,11 +462,13 @@ router.get("/products/:id", async (req, res) => {
           g.description,
           c.name as color_name,
           c.hex_code,
-          pcg.color_id
+          pcg.color_id,
+          pcg.stock_quantity
          FROM grade_vendida g
          INNER JOIN product_color_grades pcg ON g.id = pcg.grade_id
          INNER JOIN colors c ON pcg.color_id = c.id
-         WHERE pcg.product_id = ? AND g.active = true`,
+         WHERE pcg.product_id = ? AND g.active = true
+         ORDER BY g.name, c.name`,
         [req.params.id],
       );
       gradeRows = grades;
@@ -513,12 +515,17 @@ router.get("/products/:id", async (req, res) => {
       // Determine if grade should be shown based on sell_without_stock setting
       let shouldShowGrade = false;
 
+      // Para estoque por grade, verificar se há estoque na combinação grade/cor
+      const gradeStockAvailable = (gradeRows as any[]).find(
+        g => g.id === grade.id && g.color_id === grade.color_id
+      )?.stock_quantity || 0;
+
       if (product.sell_without_stock) {
-        // If sell without stock is enabled, show grade regardless of stock
-        shouldShowGrade = totalRequired > 0;
+        // Se permite venda sem estoque, mostrar grade se estiver ativa
+        shouldShowGrade = true;
       } else {
-        // If sell without stock is disabled, only show grade if there's sufficient stock
-        shouldShowGrade = hasFullStock && totalRequired > 0;
+        // Se não permite venda sem estoque, só mostrar se há estoque da grade
+        shouldShowGrade = gradeStockAvailable > 0;
       }
 
       if (shouldShowGrade) {
@@ -528,6 +535,7 @@ router.get("/products/:id", async (req, res) => {
           total_quantity: totalRequired,
           has_full_stock: hasFullStock,
           has_any_stock: hasAnyStock,
+          grade_stock: gradeStockAvailable,
         });
       }
     }
