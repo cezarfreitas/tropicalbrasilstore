@@ -1,5 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Criar CSV de teste com os novos campos de estoque
 const csvContent = `Nome do Produto,Categoria,Preço Base,Preço de Venda,URL da Foto,Grupo de Tamanhos,Cor (uma por linha),SKU,SKU Pai,Descrição,Preço Sugerido,Tipo de Estoque (grade/size),Estoque por Grade,Estoque Tam 37,Estoque Tam 38,Estoque Tam 39,Estoque Tam 40,Estoque Tam 41,Estoque Tam 42,Estoque Tam 43,Estoque Tam 44,Estoque por Variante (DEPRECATED)
