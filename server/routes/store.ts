@@ -13,7 +13,9 @@ router.get("/products-paginated", async (req, res) => {
     const offset = (page - 1) * limit;
 
     // Debug log
-    console.log(`🔍 Search request - term: "${searchTerm}", page: ${page}, limit: ${limit}`);
+    console.log(
+      `🔍 Search request - term: "${searchTerm}", page: ${page}, limit: ${limit}`,
+    );
 
     // Get total count for pagination
     let countQuery = `
@@ -67,7 +69,9 @@ router.get("/products-paginated", async (req, res) => {
     const [products] = await db.execute(productsQuery, productsParams);
 
     // Debug log
-    console.log(`📊 Query results - found ${(products as any[]).length} products for search: "${searchTerm}"`);
+    console.log(
+      `📊 Query results - found ${(products as any[]).length} products for search: "${searchTerm}"`,
+    );
 
     // For each product, get available colors and variants
     const productsWithDetails = [];

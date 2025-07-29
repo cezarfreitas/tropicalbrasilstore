@@ -27,9 +27,9 @@ async function debugGradesAPI() {
 
     // 3. Simular a query que a API usa para buscar grades
     console.log("\n🔍 Simulando query da API store-simple.ts:");
-    
+
     const productId = 150;
-    
+
     // Esta é a query exata da API
     const [gradeRows] = await db.execute(
       `SELECT DISTINCT
@@ -46,13 +46,15 @@ async function debugGradesAPI() {
       [productId],
     );
 
-    console.log(`📋 Resultado da query da API: ${(gradeRows as any[]).length} grades encontradas`);
+    console.log(
+      `📋 Resultado da query da API: ${(gradeRows as any[]).length} grades encontradas`,
+    );
     console.table(gradeRows);
 
     // 4. Para cada grade, verificar templates
     if ((gradeRows as any[]).length > 0) {
       console.log("\n📋 Processando grades (simulando API):");
-      
+
       for (const grade of gradeRows as any[]) {
         const [templateRows] = await db.execute(
           `SELECT gt.*, s.size, s.display_order
@@ -63,9 +65,13 @@ async function debugGradesAPI() {
           [grade.id],
         );
 
-        console.log(`\n📐 Grade ${grade.name} (ID: ${grade.id}) - Cor: ${grade.color_name}`);
-        console.log(`   Templates encontrados: ${(templateRows as any[]).length}`);
-        
+        console.log(
+          `\n📐 Grade ${grade.name} (ID: ${grade.id}) - Cor: ${grade.color_name}`,
+        );
+        console.log(
+          `   Templates encontrados: ${(templateRows as any[]).length}`,
+        );
+
         if ((templateRows as any[]).length === 0) {
           console.log("   ❌ PROBLEMA: Nenhum template encontrado!");
         } else {
@@ -73,7 +79,9 @@ async function debugGradesAPI() {
           console.log("   📊 Templates:");
           (templateRows as any[]).forEach((template: any) => {
             totalRequired += template.required_quantity;
-            console.log(`     - ${template.size}: ${template.required_quantity} unidades`);
+            console.log(
+              `     - ${template.size}: ${template.required_quantity} unidades`,
+            );
           });
           console.log(`   📊 Total requerido: ${totalRequired} unidades`);
         }
@@ -81,27 +89,30 @@ async function debugGradesAPI() {
     } else {
       console.log("❌ PROBLEMA: Nenhuma grade encontrada pela query da API!");
       console.log("   Verificando motivos possíveis:");
-      
+
       // Verificar se grade está ativa
-      const [activeCheck] = await db.execute('SELECT id, active FROM grade_vendida WHERE id = 10');
+      const [activeCheck] = await db.execute(
+        "SELECT id, active FROM grade_vendida WHERE id = 10",
+      );
       console.log("   - Grade ativa:", activeCheck);
-      
+
       // Verificar relacionamento
       const [relationCheck] = await db.execute(`
         SELECT * FROM product_color_grades WHERE product_id = 150 AND grade_id = 10
       `);
       console.log("   - Relacionamento produto-grade:", relationCheck);
     }
-
   } catch (error) {
     console.error("❌ Erro no debug:", error);
   }
 }
 
-debugGradesAPI().then(() => {
-  console.log("🏁 Debug finalizado");
-  process.exit(0);
-}).catch((error) => {
-  console.error("💥 Erro fatal:", error);
-  process.exit(1);
-});
+debugGradesAPI()
+  .then(() => {
+    console.log("🏁 Debug finalizado");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error("💥 Erro fatal:", error);
+    process.exit(1);
+  });

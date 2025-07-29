@@ -7,22 +7,24 @@ async function fixProductVariants() {
     // 1. Mostrar situação atual
     console.log("\n📊 Situação atual:");
     const [wooCount] = await db.execute(
-      `SELECT COUNT(*) as count FROM product_color_variants WHERE product_id = 150`
+      `SELECT COUNT(*) as count FROM product_color_variants WHERE product_id = 150`,
     );
     const [oldCount] = await db.execute(
-      `SELECT COUNT(*) as count FROM product_variants WHERE product_id = 150`
+      `SELECT COUNT(*) as count FROM product_variants WHERE product_id = 150`,
     );
-    
+
     console.log(`- WooCommerce variants: ${(wooCount as any[])[0].count}`);
     console.log(`- Individual variants: ${(oldCount as any[])[0].count}`);
 
     // 2. Deletar variantes WooCommerce para este produto
     console.log("\n🗑️ Removendo variantes WooCommerce...");
     const [deleteResult] = await db.execute(
-      `DELETE FROM product_color_variants WHERE product_id = 150`
+      `DELETE FROM product_color_variants WHERE product_id = 150`,
     );
-    
-    console.log(`✅ ${(deleteResult as any).affectedRows} variantes WooCommerce removidas`);
+
+    console.log(
+      `✅ ${(deleteResult as any).affectedRows} variantes WooCommerce removidas`,
+    );
 
     // 3. Verificar se as variantes individuais têm estoque correto
     console.log("\n🔄 Verificando variantes individuais...");
@@ -41,8 +43,10 @@ async function fixProductVariants() {
       ORDER BY c.name, s.display_order
     `);
 
-    console.log(`✅ ${(variants as any[]).length} variantes individuais encontradas`);
-    
+    console.log(
+      `✅ ${(variants as any[]).length} variantes individuais encontradas`,
+    );
+
     // Mostrar resumo por cor
     const colorSummary = new Map();
     (variants as any[]).forEach((v: any) => {
@@ -57,26 +61,32 @@ async function fixProductVariants() {
 
     console.log("\n📋 Resumo por cor:");
     colorSummary.forEach((summary, color) => {
-      console.log(`- ${color}: ${summary.total} tamanhos (${summary.sizes.join(', ')})`);
+      console.log(
+        `- ${color}: ${summary.total} tamanhos (${summary.sizes.join(", ")})`,
+      );
     });
 
     // 4. Testar API após a correção
     console.log("\n🧪 Testando API após correção...");
     try {
-      const response = await fetch('http://localhost:8080/api/store/products/150');
+      const response = await fetch(
+        "http://localhost:8080/api/store/products/150",
+      );
       if (response.ok) {
         const product = await response.json();
         console.log("✅ API funcionando após correção!");
         console.log({
           variants_count: product.variants?.length || 0,
           available_colors_count: product.available_colors?.length || 0,
-          available_grades_count: product.available_grades?.length || 0
+          available_grades_count: product.available_grades?.length || 0,
         });
 
         if (product.variants && product.variants.length > 0) {
           console.log("🎯 Primeiras variantes:");
           product.variants.slice(0, 3).forEach((v: any, i: number) => {
-            console.log(`  ${i + 1}. ${v.color_name} - ${v.size} (Estoque: ${v.stock})`);
+            console.log(
+              `  ${i + 1}. ${v.color_name} - ${v.size} (Estoque: ${v.stock})`,
+            );
           });
         }
       } else {
@@ -87,17 +97,20 @@ async function fixProductVariants() {
     }
 
     console.log("\n🎉 Correção concluída!");
-    console.log("💡 Agora o produto deveria mostrar tamanhos individuais para seleção");
-
+    console.log(
+      "💡 Agora o produto deveria mostrar tamanhos individuais para seleção",
+    );
   } catch (error) {
     console.error("❌ Erro ao corrigir variantes:", error);
   }
 }
 
-fixProductVariants().then(() => {
-  console.log("🏁 Correção finalizada");
-  process.exit(0);
-}).catch((error) => {
-  console.error("💥 Erro fatal:", error);
-  process.exit(1);
-});
+fixProductVariants()
+  .then(() => {
+    console.log("🏁 Correção finalizada");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error("💥 Erro fatal:", error);
+    process.exit(1);
+  });

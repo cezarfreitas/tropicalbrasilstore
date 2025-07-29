@@ -16,7 +16,9 @@ async function checkWooVariants() {
     `);
     console.table(wooVariants);
 
-    console.log(`📊 Total WooCommerce variants: ${(wooVariants as any[]).length}`);
+    console.log(
+      `📊 Total WooCommerce variants: ${(wooVariants as any[]).length}`,
+    );
 
     // 2. Verificar product_variants (sistema antigo)
     console.log("\n📐 Product variants (sistema antigo):");
@@ -32,11 +34,13 @@ async function checkWooVariants() {
 
     // 3. Explicar o problema
     console.log("\n🔍 Análise do problema:");
-    
+
     if ((wooVariants as any[]).length > 0) {
       console.log("✅ Existem variantes WooCommerce");
       console.log("   → API usa essas variantes PRIMEIRO");
-      console.log("   → Cada cor é uma variante única (sem tamanhos individuais)");
+      console.log(
+        "   → Cada cor é uma variante única (sem tamanhos individuais)",
+      );
       console.log("   → Por isso aparece 'size: undefined'");
     } else {
       console.log("❌ Não existem variantes WooCommerce");
@@ -45,7 +49,9 @@ async function checkWooVariants() {
 
     // 4. Mostrar a lógica da API
     console.log("\n📋 Lógica da API store-simple.ts:");
-    console.log("1. Primeiro tenta buscar WooCommerce variants (product_color_variants)");
+    console.log(
+      "1. Primeiro tenta buscar WooCommerce variants (product_color_variants)",
+    );
     console.log("2. Se não encontrar, usa system antigo (product_variants)");
     console.log("3. Como encontrou WooCommerce variants, para por aí");
     console.log("4. Resultado: só cores, sem tamanhos individuais");
@@ -55,16 +61,17 @@ async function checkWooVariants() {
     console.log("A. Deletar product_color_variants para usar product_variants");
     console.log("B. Criar grades adequadas para o produto");
     console.log("C. Modificar a API para considerar ambos os sistemas");
-
   } catch (error) {
     console.error("❌ Erro ao verificar variantes:", error);
   }
 }
 
-checkWooVariants().then(() => {
-  console.log("🏁 Verificação finalizada");
-  process.exit(0);
-}).catch((error) => {
-  console.error("💥 Erro fatal:", error);
-  process.exit(1);
-});
+checkWooVariants()
+  .then(() => {
+    console.log("🏁 Verificação finalizada");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error("💥 Erro fatal:", error);
+    process.exit(1);
+  });

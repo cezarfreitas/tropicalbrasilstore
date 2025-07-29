@@ -6,14 +6,20 @@ async function checkSellWithoutStock() {
 
     // 1. Verificar se a coluna existe
     console.log("\n📋 Verificando estrutura da tabela products:");
-    const [columns] = await db.execute('DESCRIBE products');
-    const sellWithoutStockColumn = (columns as any[]).find(col => col.Field === 'sell_without_stock');
-    
+    const [columns] = await db.execute("DESCRIBE products");
+    const sellWithoutStockColumn = (columns as any[]).find(
+      (col) => col.Field === "sell_without_stock",
+    );
+
     if (sellWithoutStockColumn) {
       console.log("✅ Coluna 'sell_without_stock' existe na tabela products");
-      console.log(`   Tipo: ${sellWithoutStockColumn.Type}, Default: ${sellWithoutStockColumn.Default}`);
+      console.log(
+        `   Tipo: ${sellWithoutStockColumn.Type}, Default: ${sellWithoutStockColumn.Default}`,
+      );
     } else {
-      console.log("❌ Coluna 'sell_without_stock' NÃO existe na tabela products");
+      console.log(
+        "❌ Coluna 'sell_without_stock' NÃO existe na tabela products",
+      );
       return;
     }
 
@@ -26,7 +32,7 @@ async function checkSellWithoutStock() {
         COUNT(CASE WHEN sell_without_stock = 0 OR sell_without_stock IS NULL THEN 1 END) as without_infinite_sell
       FROM products
     `);
-    
+
     const stats = (countResult as any[])[0];
     console.table(stats);
 
@@ -69,11 +75,13 @@ async function checkSellWithoutStock() {
     // 5. Verificar se há produtos sendo exibidos na API da loja
     console.log("\n🏪 Testando API da loja...");
     try {
-      const storeResponse = await fetch('http://localhost:8080/api/store/products');
+      const storeResponse = await fetch(
+        "http://localhost:8080/api/store/products",
+      );
       if (storeResponse.ok) {
         const storeProducts = await storeResponse.json();
         console.log(`✅ API da loja retorna ${storeProducts.length} produtos`);
-        
+
         if (storeProducts.length > 0) {
           console.log("📋 Exemplo de produto da loja:");
           const sampleProduct = storeProducts[0];
@@ -81,7 +89,7 @@ async function checkSellWithoutStock() {
             id: sampleProduct.id,
             name: sampleProduct.name,
             sell_without_stock: sampleProduct.sell_without_stock,
-            price: sampleProduct.price
+            price: sampleProduct.price,
           });
         }
       } else {
@@ -90,17 +98,18 @@ async function checkSellWithoutStock() {
     } catch (error) {
       console.log("❌ Erro ao testar API da loja:", error);
     }
-
   } catch (error) {
     console.error("❌ Erro ao verificar venda infinita:", error);
   }
 }
 
 // Executar
-checkSellWithoutStock().then(() => {
-  console.log("🏁 Verificação finalizada");
-  process.exit(0);
-}).catch((error) => {
-  console.error("💥 Erro fatal:", error);
-  process.exit(1);
-});
+checkSellWithoutStock()
+  .then(() => {
+    console.log("🏁 Verificação finalizada");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error("💥 Erro fatal:", error);
+    process.exit(1);
+  });

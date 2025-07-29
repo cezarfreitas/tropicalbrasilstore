@@ -21,7 +21,7 @@ import {
   Info,
   Heart,
   Share2,
-  ImageIcon
+  ImageIcon,
 } from "lucide-react";
 
 interface ProductVariant {
@@ -71,7 +71,7 @@ interface ProductDetail {
 
 // Helper function to safely format prices
 const formatPrice = (price: any): string => {
-  const numPrice = typeof price === 'number' ? price : parseFloat(price) || 0;
+  const numPrice = typeof price === "number" ? price : parseFloat(price) || 0;
   return numPrice.toFixed(2);
 };
 
@@ -84,32 +84,32 @@ const getColorValue = (color: any) => {
 
   // Common color name mappings for WooCommerce
   const colorMap: { [key: string]: string } = {
-    'branco': '#FFFFFF',
-    'white': '#FFFFFF',
-    'preto': '#000000',
-    'black': '#000000',
-    'azul': '#0066CC',
-    'blue': '#0066CC',
-    'vermelho': '#CC0000',
-    'red': '#CC0000',
-    'verde': '#228B22',
-    'green': '#228B22',
-    'verde brasil': '#228B22',
-    'amarelo': '#FFFF99',
-    'yellow': '#FFFF99',
-    'amarelo canário': '#FFFF99',
-    'amarelo canario': '#FFFF99',
-    'rosa': '#FF6699',
-    'pink': '#FF6699',
-    'roxo': '#9966CC',
-    'purple': '#9966CC',
-    'laranja': '#FF6600',
-    'orange': '#FF6600',
-    'marrom': '#996633',
-    'brown': '#996633',
-    'cinza': '#999999',
-    'gray': '#999999',
-    'grey': '#999999'
+    branco: "#FFFFFF",
+    white: "#FFFFFF",
+    preto: "#000000",
+    black: "#000000",
+    azul: "#0066CC",
+    blue: "#0066CC",
+    vermelho: "#CC0000",
+    red: "#CC0000",
+    verde: "#228B22",
+    green: "#228B22",
+    "verde brasil": "#228B22",
+    amarelo: "#FFFF99",
+    yellow: "#FFFF99",
+    "amarelo canário": "#FFFF99",
+    "amarelo canario": "#FFFF99",
+    rosa: "#FF6699",
+    pink: "#FF6699",
+    roxo: "#9966CC",
+    purple: "#9966CC",
+    laranja: "#FF6600",
+    orange: "#FF6600",
+    marrom: "#996633",
+    brown: "#996633",
+    cinza: "#999999",
+    gray: "#999999",
+    grey: "#999999",
   };
 
   // Try to map by color name
@@ -119,13 +119,13 @@ const getColorValue = (color: any) => {
   }
 
   // Default fallback
-  return '#E5E7EB';
+  return "#E5E7EB";
 };
 
 // Function to determine text color based on background
 const getTextColor = (backgroundColor: string) => {
   // Convert hex to RGB
-  const hex = backgroundColor.replace('#', '');
+  const hex = backgroundColor.replace("#", "");
   const r = parseInt(hex.substr(0, 2), 16);
   const g = parseInt(hex.substr(2, 2), 16);
   const b = parseInt(hex.substr(4, 2), 16);
@@ -134,7 +134,7 @@ const getTextColor = (backgroundColor: string) => {
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 
   // Return white text for dark backgrounds, dark text for light backgrounds
-  return luminance > 0.5 ? '#000000' : '#FFFFFF';
+  return luminance > 0.5 ? "#000000" : "#FFFFFF";
 };
 
 export default function ProductDetail() {
@@ -146,7 +146,9 @@ export default function ProductDetail() {
   const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariantImage, setSelectedVariantImage] = useState<string | null>(null);
+  const [selectedVariantImage, setSelectedVariantImage] = useState<
+    string | null
+  >(null);
   const [suggestedProducts, setSuggestedProducts] = useState<any[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const { addItem } = useCart();
@@ -169,7 +171,7 @@ export default function ProductDetail() {
       // Use XMLHttpRequest to avoid FullStory conflicts
       const response = await new Promise<Response>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open("GET", '/api/store/products-paginated?page=1&limit=5', true);
+        xhr.open("GET", "/api/store/products-paginated?page=1&limit=5", true);
         xhr.setRequestHeader("Accept", "application/json");
         xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -201,7 +203,9 @@ export default function ProductDetail() {
       if (response.ok) {
         const data = await response.json();
         // Filter out the current product and get random 5 products
-        const filtered = data.products.filter((p: any) => p.id !== parseInt(id));
+        const filtered = data.products.filter(
+          (p: any) => p.id !== parseInt(id),
+        );
         const shuffled = filtered.sort(() => 0.5 - Math.random());
         setSuggestedProducts(shuffled.slice(0, 5));
       }
@@ -257,7 +261,9 @@ export default function ProductDetail() {
         if (colors.length > 0) {
           setSelectedColor(colors[0].id);
           // Set the initial variant image
-          const firstVariant = data.variants?.find((v: ProductVariant) => v.color_id === colors[0].id);
+          const firstVariant = data.variants?.find(
+            (v: ProductVariant) => v.color_id === colors[0].id,
+          );
           if (firstVariant?.image_url) {
             setSelectedVariantImage(firstVariant.image_url);
           }
@@ -505,7 +511,9 @@ export default function ProductDetail() {
           <div className="flex items-center justify-center py-20">
             <div className="text-center space-y-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-              <p className="text-sm text-muted-foreground">Carregando produto...</p>
+              <p className="text-sm text-muted-foreground">
+                Carregando produto...
+              </p>
             </div>
           </div>
         </div>
@@ -519,9 +527,16 @@ export default function ProductDetail() {
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-20">
             <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Produto não encontrado</h1>
-            <p className="text-muted-foreground mb-6">O produto que você está procurando não existe ou foi removido.</p>
-            <Button onClick={() => navigate("/loja")} className="bg-primary hover:bg-primary/90">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Produto não encontrado
+            </h1>
+            <p className="text-muted-foreground mb-6">
+              O produto que você está procurando não existe ou foi removido.
+            </p>
+            <Button
+              onClick={() => navigate("/loja")}
+              className="bg-primary hover:bg-primary/90"
+            >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Voltar à Loja
             </Button>
@@ -558,10 +573,6 @@ export default function ProductDetail() {
                     className="w-full h-full object-contain"
                     priority={true}
                   />
-
-
-
-
                 </div>
               </div>
             </div>
@@ -611,14 +622,21 @@ export default function ProductDetail() {
                         onLoginClick={() => setShowLoginModal(true)}
                       />
                     </div>
-                    {product.suggested_price && typeof product.suggested_price === 'number' && product.suggested_price > product.base_price && (
-                      <div className="text-right">
-                        <div className="text-sm text-gray-600 mb-1">Você Economiza</div>
-                        <div className="text-xl font-bold text-green-600">
-                          R$ {formatPrice(product.suggested_price - product.base_price)}
+                    {product.suggested_price &&
+                      typeof product.suggested_price === "number" &&
+                      product.suggested_price > product.base_price && (
+                        <div className="text-right">
+                          <div className="text-sm text-gray-600 mb-1">
+                            Você Economiza
+                          </div>
+                          <div className="text-xl font-bold text-green-600">
+                            R${" "}
+                            {formatPrice(
+                              product.suggested_price - product.base_price,
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                   </div>
                 </div>
               )}
@@ -636,7 +654,9 @@ export default function ProductDetail() {
                   {getAvailableColors().map((color) => (
                     <button
                       key={color.id}
-                      onClick={() => handleColorSelect(color.id, color.image_url)}
+                      onClick={() =>
+                        handleColorSelect(color.id, color.image_url)
+                      }
                       className={`flex items-center gap-1.5 p-1.5 rounded-lg transition-all ${
                         selectedColor === color.id
                           ? "bg-primary/10 border-2 border-primary"
@@ -658,7 +678,7 @@ export default function ProductDetail() {
                             className="w-full h-full flex items-center justify-center text-sm font-medium"
                             style={{
                               backgroundColor: getColorValue(color),
-                              color: getTextColor(getColorValue(color))
+                              color: getTextColor(getColorValue(color)),
                             }}
                           >
                             {color.name?.charAt(0).toUpperCase()}
@@ -704,28 +724,46 @@ export default function ProductDetail() {
                         >
                           <div
                             className="p-2 cursor-pointer"
-                            onClick={() => canAdd ? setSelectedGrade(grade.id) : null}
+                            onClick={() =>
+                              canAdd ? setSelectedGrade(grade.id) : null
+                            }
                           >
                             <div className="text-sm">
-                              <span className="font-medium text-gray-900">{grade.name}</span>
+                              <span className="font-medium text-gray-900">
+                                {grade.name}
+                              </span>
                               <span className="text-gray-600 mx-1">•</span>
-                              <span className="text-gray-900">{grade.total_quantity} peças total</span>
+                              <span className="text-gray-900">
+                                {grade.total_quantity} peças total
+                              </span>
                               {product.base_price && (
                                 <>
                                   <span className="text-gray-600 mx-1">•</span>
                                   <span className="text-primary font-medium">
-                                    R$ {formatPrice(product.base_price * grade.total_quantity)}
+                                    R${" "}
+                                    {formatPrice(
+                                      product.base_price * grade.total_quantity,
+                                    )}
                                   </span>
                                 </>
                               )}
                             </div>
                             <div className="text-xs text-gray-600 mt-1 font-mono">
                               {sortedTemplates.map((template, index) => (
-                                <span key={`size-qty-${template.size_id || `no-size-${index}`}-${index}`} className="inline-block">
-                                  <span className="font-medium text-gray-800">{template.size}</span>
-                                  <span className="text-gray-500">({template.required_quantity})</span>
+                                <span
+                                  key={`size-qty-${template.size_id || `no-size-${index}`}-${index}`}
+                                  className="inline-block"
+                                >
+                                  <span className="font-medium text-gray-800">
+                                    {template.size}
+                                  </span>
+                                  <span className="text-gray-500">
+                                    ({template.required_quantity})
+                                  </span>
                                   {index < sortedTemplates.length - 1 && (
-                                    <span className="text-gray-400 mx-1">•</span>
+                                    <span className="text-gray-400 mx-1">
+                                      •
+                                    </span>
                                   )}
                                 </span>
                               ))}
@@ -766,10 +804,14 @@ export default function ProductDetail() {
                 <Lock className="h-8 w-8 text-gray-400 mx-auto" />
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {hasGrades() ? "Grades Disponíveis" : "Tamanhos Disponíveis"}
+                    {hasGrades()
+                      ? "Grades Disponíveis"
+                      : "Tamanhos Disponíveis"}
                   </h3>
                   <p className="text-sm text-gray-600 mb-3">
-                    Para ver {hasGrades() ? "as grades" : "os tamanhos"} disponíveis e adicionar ao carrinho, você precisa estar logado.
+                    Para ver {hasGrades() ? "as grades" : "os tamanhos"}{" "}
+                    disponíveis e adicionar ao carrinho, você precisa estar
+                    logado.
                   </p>
                   <Button
                     onClick={() => setShowLoginModal(true)}
@@ -786,7 +828,9 @@ export default function ProductDetail() {
             {canAddToCart() && (
               <div className="border-t pt-3">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Quantidade:</label>
+                  <label className="text-sm font-medium text-gray-700">
+                    Quantidade:
+                  </label>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center border border-gray-300 rounded-lg">
                       <Button
@@ -821,8 +865,6 @@ export default function ProductDetail() {
                 </div>
               </div>
             )}
-
-
 
             {/* Product Description at bottom */}
             {product.description && (
@@ -902,10 +944,10 @@ export default function ProductDetail() {
                                     className="w-4 h-4 rounded-full border border-white shadow-sm"
                                     title={color.name}
                                     style={{
-                                      backgroundColor: color.hex_code || '#E5E7EB'
+                                      backgroundColor:
+                                        color.hex_code || "#E5E7EB",
                                     }}
-                                  >
-                                  </div>
+                                  ></div>
                                 ))}
                             </div>
                           </div>

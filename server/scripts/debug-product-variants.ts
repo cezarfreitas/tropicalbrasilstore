@@ -69,11 +69,11 @@ async function debugProductVariants() {
 
     // 6. Simular criação de variantes com tamanhos
     console.log("\n🛠️ Análise de problema:");
-    
+
     if ((variants as any[]).length > 0) {
       console.log("✅ Existem variantes para o produto");
-      
-      const hasValidSizes = (variants as any[]).some(v => v.size_id !== null);
+
+      const hasValidSizes = (variants as any[]).some((v) => v.size_id !== null);
       if (!hasValidSizes) {
         console.log("❌ PROBLEMA: Variantes não têm size_id definido");
         console.log("   Solução: Precisa associar tamanhos às variantes");
@@ -91,16 +91,17 @@ async function debugProductVariants() {
       console.log("⚠️ Não existem grades para este produto");
       console.log("   Isso significa que usará seleção individual de tamanhos");
     }
-
   } catch (error) {
     console.error("❌ Erro no debug:", error);
   }
 }
 
-debugProductVariants().then(() => {
-  console.log("🏁 Debug finalizado");
-  process.exit(0);
-}).catch((error) => {
-  console.error("💥 Erro fatal:", error);
-  process.exit(1);
-});
+debugProductVariants()
+  .then(() => {
+    console.log("🏁 Debug finalizado");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error("💥 Erro fatal:", error);
+    process.exit(1);
+  });

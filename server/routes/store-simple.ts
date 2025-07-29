@@ -153,9 +153,15 @@ router.get("/products-paginated", async (req, res) => {
     const limit = parseInt(req.query.limit as string) || 20;
     const category = req.query.categoria as string;
     const searchTerm = req.query.busca as string;
-    const colorFilter = req.query.cor ? parseInt(req.query.cor as string) : null;
-    const genderFilter = req.query.genero ? parseInt(req.query.genero as string) : null;
-    const typeFilter = req.query.tipo ? parseInt(req.query.tipo as string) : null;
+    const colorFilter = req.query.cor
+      ? parseInt(req.query.cor as string)
+      : null;
+    const genderFilter = req.query.genero
+      ? parseInt(req.query.genero as string)
+      : null;
+    const typeFilter = req.query.tipo
+      ? parseInt(req.query.tipo as string)
+      : null;
 
     console.log(
       `Getting products - page: ${page}, limit: ${limit}, category: ${category || "all"}, search: "${searchTerm || "none"}", color: ${colorFilter || "none"}, gender: ${genderFilter || "none"}, type: ${typeFilter || "none"}"`,
@@ -168,7 +174,8 @@ router.get("/products-paginated", async (req, res) => {
     let queryParams: any[] = [];
 
     if (category && category !== "all") {
-      whereClause += " AND EXISTS (SELECT 1 FROM categories c WHERE c.id = p.category_id AND LOWER(c.name) = LOWER(?))";
+      whereClause +=
+        " AND EXISTS (SELECT 1 FROM categories c WHERE c.id = p.category_id AND LOWER(c.name) = LOWER(?))";
       queryParams.push(category);
     }
 
@@ -179,7 +186,8 @@ router.get("/products-paginated", async (req, res) => {
 
     // Add color filter if specified
     if (colorFilter !== null) {
-      whereClause += " AND EXISTS (SELECT 1 FROM product_color_grades pcg WHERE pcg.product_id = p.id AND pcg.color_id = ?)";
+      whereClause +=
+        " AND EXISTS (SELECT 1 FROM product_color_grades pcg WHERE pcg.product_id = p.id AND pcg.color_id = ?)";
       queryParams.push(colorFilter);
     }
 
@@ -342,7 +350,9 @@ router.get("/products/:id", async (req, res) => {
     const product = (productRows as any)[0];
 
     // Try to get WooCommerce-style color variants first
-    const stockCondition = product.sell_without_stock ? "" : "AND pcv.stock_total > 0";
+    const stockCondition = product.sell_without_stock
+      ? ""
+      : "AND pcv.stock_total > 0";
     const [wooVariantRows] = await db.execute(
       `SELECT
         pcv.id,
@@ -363,7 +373,9 @@ router.get("/products/:id", async (req, res) => {
     // Fallback to old system if no WooCommerce variants found
     let variantRows = wooVariantRows;
     if ((wooVariantRows as any[]).length === 0) {
-      const variantStockCondition = product.sell_without_stock ? "" : "AND pv.stock > 0";
+      const variantStockCondition = product.sell_without_stock
+        ? ""
+        : "AND pv.stock > 0";
       const [oldVariantRows] = await db.execute(
         `SELECT
           pv.id,
@@ -472,7 +484,7 @@ router.get("/products/:id", async (req, res) => {
           id: variant.color_id,
           name: variant.color_name,
           hex_code: variant.hex_code,
-          image_url: variant.image_url
+          image_url: variant.image_url,
         });
       }
     }

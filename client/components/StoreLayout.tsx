@@ -282,24 +282,24 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           );
 
           // Remove duplicates by name and clean up encoding issues
-          const uniqueCategories = visibleCategories.reduce((acc: any[], cat: any) => {
-            // Skip if name contains encoding issues
-            if (cat.name && cat.name.includes('�')) {
+          const uniqueCategories = visibleCategories.reduce(
+            (acc: any[], cat: any) => {
+              // Skip if name contains encoding issues
+              if (cat.name && cat.name.includes("�")) {
+                return acc;
+              }
+
+              // Check if category name already exists
+              const exists = acc.some((existing) => existing.name === cat.name);
+              if (!exists) {
+                acc.push(cat);
+              }
               return acc;
-            }
+            },
+            [],
+          );
 
-            // Check if category name already exists
-            const exists = acc.some(existing => existing.name === cat.name);
-            if (!exists) {
-              acc.push(cat);
-            }
-            return acc;
-          }, []);
-
-          setCategories([
-            { id: "all", name: "Todos" },
-            ...uniqueCategories,
-          ]);
+          setCategories([{ id: "all", name: "Todos" }, ...uniqueCategories]);
         }
       } catch (error) {
         console.warn("Failed to fetch categories:", error);
@@ -630,7 +630,6 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                       }`}
                     />
                   </button>
-
                 </div>
 
                 {colorFilterOpen && (
