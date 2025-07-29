@@ -35,6 +35,7 @@ import { resetProductsRouter } from "./routes/reset-products";
 import { verifyProductsRouter } from "./routes/verify-products";
 import { cleanupProductsRouter } from "./routes/cleanup-products";
 import { seedChinelosRouter } from "./routes/seed-chinelos";
+import { apiLogsRouter } from "./routes/api-logs";
 import { createStoreSchema } from "./lib/store-schema";
 import { fixOrdersTable } from "./lib/fix-orders-table";
 import { checkAndFixTables } from "./lib/check-tables";
