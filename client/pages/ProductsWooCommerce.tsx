@@ -154,7 +154,7 @@ export default function ProductsWooCommerce() {
     useState<WooCommerceProduct | null>(null);
 
   // Form data
-  const [formData, setFormData] = useState<WooCommerceProduct>({
+  const [formData, setFormData] = useState<WooCommerceProduct & { stock_type?: 'size' | 'grade' }>({
     name: "",
     description: "",
     category_id: undefined,
@@ -168,6 +168,7 @@ export default function ProductsWooCommerce() {
     active: true,
     sell_without_stock: false,
     color_variants: [],
+    stock_type: 'grade', // Padrão: estoque por grade
   });
 
   // Filters
