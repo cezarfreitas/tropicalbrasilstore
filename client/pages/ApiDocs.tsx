@@ -435,7 +435,8 @@ Authorization: Bearer your_api_key
                 <h5 className="font-semibold text-blue-800 mb-2">💡 Dicas de Implementação</h5>
                 <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Use códigos alfanuméricos únicos para cada produto</li>
-                  <li>• Organize as grades por gênero ou categoria para reutilização</li>
+                  <li>• Use nomes de grades padronizados (ex: "Grade Feminina", "Grade Masculina", "Grade Infantil")</li>
+                  <li>• Os tamanhos são criados automaticamente baseados no nome da grade informada</li>
                   <li>• Mantenha nomes de cores consistentes para evitar duplicatas</li>
                   <li>• Use URLs válidas para as fotos dos produtos</li>
                   <li>• Teste com poucos produtos antes de enviar grandes lotes</li>
