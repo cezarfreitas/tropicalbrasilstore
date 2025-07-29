@@ -2,6 +2,27 @@ import { Router } from "express";
 import db from "../lib/db";
 import { Product, CreateProductRequest } from "@shared/types";
 
+interface BulkProductVariant {
+  cor: string;
+  preco: number;
+  grade: string;
+  foto?: string;
+  sku?: string;
+}
+
+interface BulkProduct {
+  codigo: string;
+  nome: string;
+  categoria: string;
+  tipo: string;
+  descricao?: string;
+  variantes: BulkProductVariant[];
+}
+
+interface BulkProductsRequest {
+  products: BulkProduct[];
+}
+
 const router = Router();
 
 // Get all products with category information
