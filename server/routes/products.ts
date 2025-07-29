@@ -10,6 +10,8 @@ interface BulkProductVariant {
   grade: string; // Grade/tamanho
   foto?: string; // URL da foto (opcional)
   sku?: string; // SKU específico (opcional)
+  estoque_grade?: number; // Quantidade fixa para estoque por grade
+  estoque_tamanhos?: { [tamanho: string]: number }; // Estoque por tamanho individual
 }
 
 interface BulkProduct {
