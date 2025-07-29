@@ -212,6 +212,8 @@ export function useCart() {
   const [modalProduct, setModalProduct] = useState<ModalProduct | null>(null);
 
   const addItem = (item: Omit<CartItem, "id" | "totalPrice">) => {
+    console.log("addItem called with:", item);
+
     let id: string;
 
     switch (item.type) {
@@ -249,13 +251,18 @@ export function useCart() {
     }
 
     // Show confirmation modal
-    setModalProduct({
+    const modalData = {
       name: item.productName,
       photo: item.photo,
       variant: variant || undefined,
       quantity: item.quantity,
       unitPrice: item.unitPrice,
-    });
+    };
+
+    console.log("Setting modal product:", modalData);
+    console.log("Setting modal open to true");
+
+    setModalProduct(modalData);
     setIsModalOpen(true);
   };
 
