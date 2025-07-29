@@ -538,6 +538,7 @@ router.post("/single", validateApiKey, async (req, res) => {
       descricao,
       cor,
       preco,
+      preco_sugerido,
       grade,
       foto,
       vender_infinito,
