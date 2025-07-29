@@ -18,6 +18,7 @@ interface CreateApiKeyRequest {
 export function useApiKeys() {
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [loading, setLoading] = useState(true);
+  const [usingMockData, setUsingMockData] = useState(false);
   const { toast } = useToast();
 
   // Load API keys on mount
