@@ -336,16 +336,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               Categorias
             </h3>
             {navigationLinks.map((link, index) => {
-              const IconComponent = link.icon;
               return (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="group flex items-center gap-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 rounded-xl px-3 py-3 transition-all duration-200 hover:shadow-sm border border-transparent hover:border-white/20"
+                  className="group flex items-center text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 rounded-xl px-3 py-3 transition-all duration-200 hover:shadow-sm border border-transparent hover:border-white/20"
                 >
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 transition-colors duration-200">
-                    <IconComponent className="h-4 w-4 flex-shrink-0 text-white" />
-                  </div>
                   <span className="group-hover:translate-x-1 transition-transform duration-200">{link.label}</span>
                 </Link>
               );
