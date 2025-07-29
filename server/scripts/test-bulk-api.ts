@@ -13,7 +13,9 @@ async function testBulkAPI() {
         nome: "Chinelo Teste 1",
         categoria: "Chinelos",
         tipo: "Casual",
+        genero: "Unissex",
         descricao: "Produto de teste da API",
+        vender_infinito: true,
         variantes: [
           {
             cor: "Preto",
@@ -33,8 +35,10 @@ async function testBulkAPI() {
         codigo: "TEST002",
         nome: "Sandália Teste",
         categoria: "Sandálias",
-        tipo: "Feminino",
+        tipo: "Sandália",
+        genero: "Feminino",
         descricao: "Sandália de teste",
+        vender_infinito: false,
         variantes: [
           {
             cor: "Rosa",
