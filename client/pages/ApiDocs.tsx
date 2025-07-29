@@ -8,28 +8,54 @@ import { useToast } from "@/hooks/use-toast";
 
 const apiEndpoints = [
   {
-    method: "GET",
-    endpoint: "/api/products",
-    description: "Listar todos os produtos",
-    parameters: "?page=1&limit=20&search=termo",
+    method: "POST",
+    endpoint: "/api/products/bulk",
+    description: "Cadastrar produtos em lote com variantes e grades",
+    parameters: "Body: Array de produtos agrupados por código",
     example: {
-      id: 1,
-      name: "Chinelo Havaianas",
-      price: 29.90,
-      category: "Chinelos",
-      stock: 100
+      products: [
+        {
+          codigo: "CHN001",
+          nome: "Chinelo Havaianas Top",
+          categoria: "Chinelos",
+          tipo: "Casual",
+          descricao: "Chinelo tradicional Havaianas",
+          variantes: [
+            {
+              cor: "Preto",
+              preco: 29.90,
+              grade: {
+                nome: "Grade Unissex",
+                tamanhos: ["35", "36", "37", "38", "39", "40", "41", "42"]
+              },
+              foto: "https://exemplo.com/chinelo-preto.jpg"
+            },
+            {
+              cor: "Azul",
+              preco: 29.90,
+              grade: {
+                nome: "Grade Unissex",
+                tamanhos: ["35", "36", "37", "38", "39", "40", "41", "42"]
+              },
+              foto: "https://exemplo.com/chinelo-azul.jpg"
+            }
+          ]
+        }
+      ]
     }
   },
   {
-    method: "POST",
+    method: "GET",
     endpoint: "/api/products",
-    description: "Criar novo produto",
-    parameters: "Body: { name, price, category, description }",
+    description: "Listar todos os produtos",
+    parameters: "?page=1&limit=20&search=termo&codigo=CHN001",
     example: {
-      name: "Novo Produto",
-      price: 39.90,
-      category: "Sandálias",
-      description: "Descrição do produto"
+      id: 1,
+      codigo: "CHN001",
+      name: "Chinelo Havaianas Top",
+      price: 29.90,
+      category: "Chinelos",
+      variants: 2
     }
   },
   {
