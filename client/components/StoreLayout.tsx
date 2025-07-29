@@ -195,14 +195,24 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             alt="Logo da Loja"
             className="transition-opacity duration-200 hover:opacity-90"
             onError={(e) => {
-              e.currentTarget.style.display = 'none';
+              // Show fallback when image fails to load
+              const fallback = document.createElement('div');
+              fallback.className = `${size} bg-primary rounded-lg flex items-center justify-center text-white font-bold text-sm`;
+              fallback.textContent = 'LOGO';
+              e.currentTarget.parentNode?.replaceChild(fallback, e.currentTarget);
             }}
             loading="eager"
           />
         </div>
       );
     }
-    return null;
+
+    // Fallback logo when no logo is configured
+    return (
+      <div className={`logo-fallback ${size} ${className} bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xs`}>
+        <Package2 className="h-full w-full p-1" />
+      </div>
+    );
   };
 
   // Fetch categories for mobile menu
