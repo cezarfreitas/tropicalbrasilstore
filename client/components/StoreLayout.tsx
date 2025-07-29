@@ -492,7 +492,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   </Badge>
                 )}
               </div>
-              <span className="text-xs text-white/90 font-medium tracking-wide">Carrinho</span>
+              <span className="text-xs text-white/80 font-medium">Carrinho</span>
             </div>
 
             {/* Search */}
