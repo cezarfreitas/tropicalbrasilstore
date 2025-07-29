@@ -95,6 +95,16 @@ export interface CreateColorRequest {
   hex_code?: string;
 }
 
+export interface CreateGenderRequest {
+  name: string;
+  description?: string;
+}
+
+export interface CreateTypeRequest {
+  name: string;
+  description?: string;
+}
+
 export interface CreateProductRequest {
   name: string;
   description?: string;
