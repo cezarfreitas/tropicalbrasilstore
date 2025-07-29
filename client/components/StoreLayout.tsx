@@ -485,6 +485,90 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 )}
               </div>
             </div>
+
+            {/* Gender Filter Section */}
+            <div className="mt-4 pt-3 border-t border-white/20">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between px-3">
+                  <h3 className="text-xs font-semibold text-white/80 uppercase tracking-wider">
+                    Filtrar por Gênero
+                  </h3>
+                  {selectedGenderFilter && (
+                    <button
+                      onClick={() => handleGenderFilter(null)}
+                      className="text-xs text-white/60 hover:text-white transition-colors"
+                    >
+                      Limpar
+                    </button>
+                  )}
+                </div>
+
+                <div className="space-y-1 px-3">
+                  {availableGenders.map((gender) => (
+                    <button
+                      key={gender.id}
+                      onClick={() => handleGenderFilter(gender.id)}
+                      className={`w-full text-left p-2 rounded-lg text-sm transition-all duration-200 ${
+                        selectedGenderFilter === gender.id
+                          ? 'bg-white/20 text-white font-medium'
+                          : 'text-white/80 hover:bg-white/10 hover:text-white'
+                      }`}
+                      title={gender.description}
+                    >
+                      {gender.name}
+                    </button>
+                  ))}
+                </div>
+
+                {availableGenders.length === 0 && (
+                  <div className="text-center py-4 px-3">
+                    <p className="text-xs text-white/60">Carregando gêneros...</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Type Filter Section */}
+            <div className="mt-4 pt-3 border-t border-white/20">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between px-3">
+                  <h3 className="text-xs font-semibold text-white/80 uppercase tracking-wider">
+                    Filtrar por Tipo
+                  </h3>
+                  {selectedTypeFilter && (
+                    <button
+                      onClick={() => handleTypeFilter(null)}
+                      className="text-xs text-white/60 hover:text-white transition-colors"
+                    >
+                      Limpar
+                    </button>
+                  )}
+                </div>
+
+                <div className="space-y-1 px-3">
+                  {availableTypes.map((type) => (
+                    <button
+                      key={type.id}
+                      onClick={() => handleTypeFilter(type.id)}
+                      className={`w-full text-left p-2 rounded-lg text-sm transition-all duration-200 ${
+                        selectedTypeFilter === type.id
+                          ? 'bg-white/20 text-white font-medium'
+                          : 'text-white/80 hover:bg-white/10 hover:text-white'
+                      }`}
+                      title={type.description}
+                    >
+                      {type.name}
+                    </button>
+                  ))}
+                </div>
+
+                {availableTypes.length === 0 && (
+                  <div className="text-center py-4 px-3">
+                    <p className="text-xs text-white/60">Carregando tipos...</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </nav>
 
