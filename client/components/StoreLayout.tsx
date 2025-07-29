@@ -19,6 +19,8 @@ import {
   CheckCircle2,
   MessageCircle,
   Grid3x3,
+  Users,
+  Tag,
 } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
