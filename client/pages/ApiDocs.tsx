@@ -339,12 +339,13 @@ export default function ApiDocs() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="products">Cadastro de Produtos</TabsTrigger>
           <TabsTrigger value="endpoints">Endpoints</TabsTrigger>
           <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
           <TabsTrigger value="authentication">Autenticação</TabsTrigger>
+          <TabsTrigger value="logs">Logs de API</TabsTrigger>
         </TabsList>
 
         <TabsContent value="products" className="space-y-4">
