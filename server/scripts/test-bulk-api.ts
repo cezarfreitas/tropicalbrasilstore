@@ -89,11 +89,13 @@ async function testSingleAPI() {
     nome: "Produto Individual",
     categoria: "Tênis",
     tipo: "Esportivo",
+    genero: "Masculino",
     descricao: "Produto criado individualmente",
     cor: "Branco",
     preco: 149.9,
     grade: "Grade Esportiva",
     foto: "https://exemplo.com/tenis-branco.jpg",
+    vender_infinito: true,
   };
 
   try {
