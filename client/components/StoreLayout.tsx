@@ -270,7 +270,37 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   const fetchAvailableGenders = async () => {
     try {
-      const response = await fetch('/api/genders');
+      // Use XMLHttpRequest to avoid FullStory conflicts
+      const response = await new Promise<Response>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/genders", true);
+        xhr.setRequestHeader("Accept", "application/json");
+
+        xhr.onload = () => {
+          const headers = new Headers();
+          xhr
+            .getAllResponseHeaders()
+            .split("\r\n")
+            .forEach((line) => {
+              const [key, value] = line.split(": ");
+              if (key && value) headers.set(key, value);
+            });
+
+          const response = new Response(xhr.responseText, {
+            status: xhr.status,
+            statusText: xhr.statusText,
+            headers: headers,
+          });
+          resolve(response);
+        };
+
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.ontimeout = () => reject(new Error("Request timeout"));
+        xhr.timeout = 5000;
+
+        xhr.send();
+      });
+
       if (response.ok) {
         const genders = await response.json();
         setAvailableGenders(genders);
@@ -282,7 +312,37 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   const fetchAvailableTypes = async () => {
     try {
-      const response = await fetch('/api/types');
+      // Use XMLHttpRequest to avoid FullStory conflicts
+      const response = await new Promise<Response>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/types", true);
+        xhr.setRequestHeader("Accept", "application/json");
+
+        xhr.onload = () => {
+          const headers = new Headers();
+          xhr
+            .getAllResponseHeaders()
+            .split("\r\n")
+            .forEach((line) => {
+              const [key, value] = line.split(": ");
+              if (key && value) headers.set(key, value);
+            });
+
+          const response = new Response(xhr.responseText, {
+            status: xhr.status,
+            statusText: xhr.statusText,
+            headers: headers,
+          });
+          resolve(response);
+        };
+
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.ontimeout = () => reject(new Error("Request timeout"));
+        xhr.timeout = 5000;
+
+        xhr.send();
+      });
+
       if (response.ok) {
         const types = await response.json();
         setAvailableTypes(types);
