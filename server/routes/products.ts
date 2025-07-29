@@ -364,7 +364,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
                 colorId,
                 sizeId,
                 variante.preco,
-                variante.foto || null,
+                localImageUrl,
               ],
             );
           }
