@@ -45,15 +45,84 @@ export default function Attributes() {
     fetchTypes();
   }, []);
 
+  const fetchGenders = async () => {
+    try {
+      const response = await fetch("/api/genders");
+      if (response.ok) {
+        const data = await response.json();
+        setGenders(data);
+      }
+    } catch (error) {
+      console.error("Error fetching genders:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível carregar os gêneros",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const fetchTypes = async () => {
+    try {
+      const response = await fetch("/api/types");
+      if (response.ok) {
+        const data = await response.json();
+        setTypes(data);
+      }
+    } catch (error) {
+      console.error("Error fetching types:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível carregar os tipos",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement API calls when backend is ready
-    toast({
-      title: "Em desenvolvimento",
-      description: "Funcionalidade será implementada em breve",
-    });
-    setDialogOpen(false);
-    resetForm();
+
+    try {
+      const endpoint = activeTab === "genders" ? "/api/genders" : "/api/types";
+      const url = editingItem ? `${endpoint}/${editingItem.id}` : endpoint;
+      const method = editingItem ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Sucesso",
+          description: editingItem
+            ? `${activeTab === "genders" ? "Gênero" : "Tipo"} atualizado com sucesso`
+            : `${activeTab === "genders" ? "Gênero" : "Tipo"} criado com sucesso`,
+        });
+        setDialogOpen(false);
+        resetForm();
+        setEditingItem(null);
+
+        // Refresh the appropriate list
+        if (activeTab === "genders") {
+          fetchGenders();
+        } else {
+          fetchTypes();
+        }
+      } else {
+        const error = await response.json();
+        throw new Error(error.error || "Erro desconhecido");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const handleEdit = (item: Gender | Type) => {
@@ -67,12 +136,35 @@ export default function Attributes() {
 
   const handleDelete = async (id: number) => {
     if (!confirm("Tem certeza que deseja excluir este item?")) return;
-    
-    // TODO: Implement API calls when backend is ready
-    toast({
-      title: "Em desenvolvimento",
-      description: "Funcionalidade será implementada em breve",
-    });
+
+    try {
+      const endpoint = activeTab === "genders" ? "/api/genders" : "/api/types";
+      const response = await fetch(`${endpoint}/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Sucesso",
+          description: `${activeTab === "genders" ? "Gênero" : "Tipo"} excluído com sucesso`,
+        });
+
+        // Refresh the appropriate list
+        if (activeTab === "genders") {
+          fetchGenders();
+        } else {
+          fetchTypes();
+        }
+      } else {
+        throw new Error(`Erro ao excluir ${activeTab === "genders" ? "gênero" : "tipo"}`);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const handleNew = () => {
