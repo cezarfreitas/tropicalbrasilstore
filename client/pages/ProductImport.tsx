@@ -534,20 +534,40 @@ export default function ProductImport() {
         "HAV001",
         "Chinelo clássico Havaianas Top",
         "35.90",
-        "100",
+        "grade", // Tipo de Estoque
+        "25", // Estoque por Grade
+        "", // Tam 37 (vazio para estoque por grade)
+        "", // Tam 38
+        "", // Tam 39
+        "", // Tam 40
+        "", // Tam 41
+        "", // Tam 42
+        "", // Tam 43
+        "", // Tam 44
+        "", // Stock per variant (deprecated)
       ],
       [
-        "Chinelo Havaianas Top",
-        "1",
-        "18.50",
-        "25.90",
-        "https://example.com/havaianas-top.jpg",
-        "1",
-        "branco",
-        "HAV001-BRANCO",
-        "HAV001",
-        "Chinelo clássico Havaianas Top",
-        "35.90",
+        "Tênis Nike Air Max",
+        "2",
+        "150.00",
+        "199.90",
+        "https://example.com/nike-air-max.jpg",
+        "2",
+        "preto",
+        "NIKE001-PRETO",
+        "NIKE001",
+        "Tênis esportivo Nike Air Max",
+        "249.90",
+        "size", // Tipo de Estoque
+        "", // Estoque por Grade (vazio para estoque por tamanho)
+        "5", // Tam 37
+        "8", // Tam 38
+        "12", // Tam 39
+        "10", // Tam 40
+        "6", // Tam 41
+        "4", // Tam 42
+        "2", // Tam 43
+        "1", // Tam 44
         "100",
       ],
       [
@@ -911,7 +931,7 @@ export default function ProductImport() {
                       • <strong>Nome:</strong> Nome do produto
                     </li>
                     <li>
-                      �� <strong>Categoria:</strong> ID ou nome da categoria
+                      • <strong>Categoria:</strong> ID ou nome da categoria
                     </li>
                     <li>
                       • <strong>Preço Base:</strong> Preço de custo/base do
