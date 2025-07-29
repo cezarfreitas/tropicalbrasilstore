@@ -83,6 +83,11 @@ const navigation = [
     href: "/admin/settings",
     icon: Settings,
   },
+  {
+    name: "API",
+    href: "/admin/api",
+    icon: Code,
+  },
 ];
 
 export function AdminLayout({ children }: AdminLayoutProps) {
