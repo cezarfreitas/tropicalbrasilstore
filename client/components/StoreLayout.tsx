@@ -339,7 +339,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
         {/* Navigation */}
         <nav className="flex-1 px-4 py-4" role="navigation" aria-label="Categorias principais">
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             <h3 className="px-3 mb-2 text-xs font-semibold text-muted-foreground/80 uppercase tracking-wider">
               Categorias
             </h3>
