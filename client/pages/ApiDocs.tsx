@@ -676,15 +676,39 @@ Authorization: Bearer YOUR_API_KEY`}
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              {usingMockData && (
-                <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-                  <div className="flex items-center gap-2 text-blue-700">
-                    <Code className="h-4 w-4" />
-                    <span className="text-sm font-medium">Modo Desenvolvimento</span>
+              {database && (
+                <div className="bg-green-50 border border-green-200 rounded-md p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 text-green-700">
+                        <Code className="h-4 w-4" />
+                        <span className="text-sm font-medium">Arquivo JSON Ativo</span>
+                      </div>
+                      <p className="text-sm text-green-600 mt-1">
+                        Chaves salvas em: <code className="bg-green-100 px-1 rounded">api-keys-database.json</code>
+                      </p>
+                      <p className="text-xs text-green-600 mt-1">
+                        Versão: {database.version} • Atualizado: {new Date(database.updated_at).toLocaleString('pt-BR')}
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const jsonData = exportJson();
+                        if (jsonData) {
+                          copyToClipboard(jsonData);
+                          toast({
+                            title: "JSON Exportado",
+                            description: "Estrutura completa do arquivo JSON copiada para área de transferência.",
+                          });
+                        }
+                      }}
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      Exportar JSON
+                    </Button>
                   </div>
-                  <p className="text-sm text-blue-600 mt-1">
-                    Exibindo dados de exemplo. As chaves reais serão gerenciadas quando o backend estiver conectado.
-                  </p>
                 </div>
               )}
 
