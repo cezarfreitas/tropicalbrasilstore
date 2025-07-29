@@ -116,6 +116,52 @@ const apiEndpoints = [
       name: "Grade Feminina",
       sizes: ["35", "36", "37", "38", "39", "40"]
     }
+  },
+  {
+    method: "POST",
+    endpoint: "/api/products/single",
+    description: "Cadastrar produto individual com variante única",
+    parameters: "Body: Produto com uma variante",
+    example: {
+      codigo: "SND002",
+      nome: "Sandália Melissa",
+      categoria: "Sandálias",
+      tipo: "Feminino",
+      descricao: "Sandália elegante",
+      cor: "Rosa",
+      preco: 199.90,
+      grade: {
+        nome: "Grade Feminina",
+        tamanhos: ["35", "36", "37", "38", "39", "40"]
+      },
+      foto: "https://exemplo.com/sandalia-rosa.jpg"
+    }
+  },
+  {
+    method: "GET",
+    endpoint: "/api/products/{codigo}/variants",
+    description: "Listar variantes de um produto específico",
+    parameters: "codigo: Código do produto",
+    example: [
+      {
+        id: 1,
+        cor: "Preto",
+        preco: 29.90,
+        grade_id: 1,
+        grade_nome: "Grade Unissex",
+        foto: "url_da_foto",
+        estoque_total: 240
+      },
+      {
+        id: 2,
+        cor: "Azul",
+        preco: 29.90,
+        grade_id: 1,
+        grade_nome: "Grade Unissex",
+        foto: "url_da_foto",
+        estoque_total: 240
+      }
+    ]
   }
 ];
 
