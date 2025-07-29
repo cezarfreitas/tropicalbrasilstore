@@ -504,33 +504,48 @@ Authorization: Bearer your_api_key
       "genero": "Unissex",
       "descricao": "O chinelo mais famoso do Brasil",
       "preco_sugerido": 39.90,
-      "vender_infinito": true,
+      "vender_infinito": false,
+      "tipo_estoque": "grade",
       "variantes": [
         {
           "cor": "Preto",
           "preco": 29.90,
           "grade": "Grade Unissex",
-          "foto": "https://exemplo.com/chinelo-preto.jpg"
+          "foto": "https://exemplo.com/chinelo-preto.jpg",
+          "estoque_grade": 25
         },
         {
           "cor": "Azul Marinho",
           "preco": 29.90,
           "grade": "Grade Unissex",
-          "foto": "https://exemplo.com/chinelo-azul.jpg"
+          "foto": "https://exemplo.com/chinelo-azul.jpg",
+          "estoque_grade": 30
         }
       ]
     },
     {
-      "codigo": "SND001",
-      "nome": "Sandália Feminina Elegante",
-      "categoria": "Sand��lias",
-      "tipo": "Feminino",
-      "descricao": "Sandália para ocasiões especiais",
+      "codigo": "TNS001",
+      "nome": "Tênis Nike Air Max",
+      "categoria": "Calçados",
+      "tipo": "Esportivo",
+      "genero": "Unissex",
+      "descricao": "Tênis esportivo com tecnologia Air Max",
+      "preco_sugerido": 399.90,
+      "tipo_estoque": "size",
       "variantes": [
         {
-          "cor": "Nude",
-          "preco": 89.90,
-          "grade": "Grade Feminina"
+          "cor": "Preto",
+          "preco": 349.90,
+          "grade": "Grade Adulto",
+          "foto": "https://exemplo.com/tenis-preto.jpg",
+          "estoque_tamanhos": {
+            "37": 5,
+            "38": 8,
+            "39": 12,
+            "40": 10,
+            "41": 6,
+            "42": 4
+          }
         }
       ]
     }
