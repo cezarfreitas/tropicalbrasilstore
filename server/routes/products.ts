@@ -21,6 +21,7 @@ interface BulkProduct {
   descricao?: string; // Descrição do produto (opcional)
   preco_sugerido?: number; // Preço sugerido de venda (opcional)
   vender_infinito?: boolean; // Venda sem controle de estoque
+  tipo_estoque?: 'size' | 'grade'; // Tipo de controle de estoque (opcional, default: 'grade')
   variantes: BulkProductVariant[]; // Lista de variantes
 }
 
