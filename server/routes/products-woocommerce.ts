@@ -216,8 +216,8 @@ router.post("/", async (req, res) => {
     const [productResult] = await connection.execute(
       `INSERT INTO products (
         name, description, category_id, base_price, suggested_price,
-        sku, parent_sku, photo, active, sell_without_stock
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        sku, parent_sku, photo, active, sell_without_stock, stock_type
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         name,
         description || null,
@@ -229,6 +229,7 @@ router.post("/", async (req, res) => {
         photo || null,
         active,
         sell_without_stock,
+        (req.body as WooCommerceProduct).stock_type || 'grade',
       ],
     );
 
