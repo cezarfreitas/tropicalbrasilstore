@@ -294,12 +294,14 @@ export function useCart() {
     };
 
     console.log("🛒 Setting modal product:", modalData);
-    console.log("🛒 Current isModalOpen before setting:", isModalOpen);
+    console.log("🛒 Current isModalOpen before setting:", state.isModalOpen);
 
-    setModalProduct(modalData);
-    setIsModalOpen(true);
+    dispatch({
+      type: "SHOW_MODAL",
+      product: modalData,
+    });
 
-    console.log("🛒 Modal state should now be open");
+    console.log("🛒 Modal dispatch sent");
   };
 
   const removeItem = (id: string) => {
