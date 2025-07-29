@@ -46,10 +46,10 @@ async function setupProductGrades() {
       console.log("\n📐 Criando templates da grade:");
       for (const template of sizeTemplates) {
         await db.execute(`
-          INSERT INTO grade_templates (grade_id, size_id, required_quantity, display_order)
-          VALUES (?, ?, ?, ?)
-        `, [gradeId, template.size_id, template.required_quantity, template.size_id]);
-        
+          INSERT INTO grade_templates (grade_id, size_id, required_quantity)
+          VALUES (?, ?, ?)
+        `, [gradeId, template.size_id, template.required_quantity]);
+
         console.log(`  ✅ Tamanho ${template.size_id}: ${template.required_quantity} unidades`);
       }
 
