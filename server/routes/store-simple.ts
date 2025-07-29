@@ -350,9 +350,11 @@ router.get("/products-paginated", async (req, res) => {
 
       productsWithData.push({
         ...product,
-        available_colors: colorRows || [],
+        available_colors: available_colors || [],
         variant_count: stockData.variant_count,
         total_stock: stockData.total_stock,
+        available_grades_count: available_grades_count,
+        stock_type: product.stock_type,
       });
     }
 
