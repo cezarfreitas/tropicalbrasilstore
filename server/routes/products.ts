@@ -310,6 +310,23 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           [productId, colorId, gradeId],
         );
 
+        // Criar entrada na tabela product_color_variants para compatibilidade com admin WooCommerce
+        const [colorVariantResult] = await db.execute(
+          `INSERT INTO product_color_variants
+           (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            productId,
+            colorId,
+            `${product.nome} - ${variante.cor}`,
+            variantSku,
+            variante.preco,
+            variante.foto || null,
+            0, // stock_total inicial
+            true
+          ],
+        );
+
         // Buscar todos os tamanhos da grade para criar variantes para cada um
         const [gradeTemplates] = await db.execute(
           "SELECT gt.id, gt.size_id, s.size FROM grade_templates gt JOIN sizes s ON gt.size_id = s.id WHERE gt.grade_id = ? ORDER BY s.display_order",
