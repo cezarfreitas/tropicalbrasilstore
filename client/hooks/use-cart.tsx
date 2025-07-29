@@ -140,7 +140,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       return {
         ...state,
         items: newItems,
-        totalItems: newItems.reduce((sum, item) => sum + item.quantity, 0),
+        totalItems: calculateTotalItems(newItems),
         totalPrice: newItems.reduce((sum, item) => sum + item.totalPrice, 0),
       };
     }
