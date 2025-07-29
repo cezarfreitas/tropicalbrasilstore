@@ -13,12 +13,12 @@
             "tipo": "Casual",
             "genero": "Masculino",
             "descricao": "O chinelo mais famoso do Brasil",
-            "preco_sugerido": 39.90,
+            "preco_sugerido": 39.9,
             "vender_infinito": true,
             "variantes": [
               {
                 "cor": "Preto",
-                "preco": 29.90,
+                "preco": 29.9,
                 "grade": "Grade Masculina",
                 "foto": "https://images.tcdn.com.br/img/img_prod/699671/chinelo_havaianas_top_masculino_preto_24851_1_da2ff112816d222cd40bc1e93a37953a_20250313182035.jpg"
               }
@@ -38,7 +38,7 @@
             "variantes": [
               {
                 "cor": "Azul Marinho",
-                "preco": 29.90,
+                "preco": 29.9,
                 "grade": "Grade Masculina",
                 "foto": "https://static1.efacil.com.br/wcsstore/ExtendedSitesCatalogAssetStore/Imagens/360/1204119_01.jpg"
               }
@@ -57,11 +57,11 @@
             "codigo": "CHN001",
             "nome": "Chinelo Havaianas Top Premium",
             "descricao": "O chinelo mais famoso do Brasil - versão premium",
-            "preco_sugerido": 49.90,
+            "preco_sugerido": 49.9,
             "variantes": [
               {
                 "cor": "Branco",
-                "preco": 32.90,
+                "preco": 32.9,
                 "grade": "Grade Masculina",
                 "foto": "https://example.com/chinelo-branco.jpg"
               }
@@ -81,7 +81,7 @@
             "variantes": [
               {
                 "cor": "Preto",
-                "preco": 29.90,
+                "preco": 29.9,
                 "grade": "Grade Masculina"
               }
             ]
