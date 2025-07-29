@@ -16,7 +16,9 @@ interface BulkProduct {
   nome: string;
   categoria: string;
   tipo: string;
+  genero?: string;
   descricao?: string;
+  vender_infinito?: boolean;
   variantes: BulkProductVariant[];
 }
 
@@ -82,6 +84,27 @@ async function getOrCreateColor(name: string): Promise<number> {
   const [result] = await db.execute("INSERT INTO colors (name) VALUES (?)", [
     name,
   ]);
+
+  return (result as any).insertId;
+}
+
+// Função auxiliar para criar ou buscar gênero
+async function getOrCreateGender(name: string): Promise<number> {
+  // Buscar gênero existente
+  const [existing] = await db.execute(
+    "SELECT id FROM genders WHERE name = ?",
+    [name],
+  );
+
+  if ((existing as any[]).length > 0) {
+    return (existing as any[])[0].id;
+  }
+
+  // Criar novo gênero
+  const [result] = await db.execute(
+    "INSERT INTO genders (name, description) VALUES (?, ?)",
+    [name, `Gênero ${name} criado automaticamente`],
+  );
 
   return (result as any).insertId;
 }
@@ -205,17 +228,28 @@ router.post("/bulk", validateApiKey, async (req, res) => {
       const typeId = await getOrCreateType(product.tipo);
       typesCreated.add(product.tipo);
 
+      // Criar ou buscar gênero se fornecido
+      let genderId = null;
+      if (product.genero) {
+        genderId = await getOrCreateGender(product.genero);
+      }
+
       // Criar produto principal
       const [productResult] = await db.execute(
-        "INSERT INTO products (name, description, category_id, sku, active) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, sell_without_stock, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         [
           product.nome,
           product.descricao || null,
           categoryId,
+          typeId,
+          genderId,
           product.codigo,
+          product.vender_infinito || false,
           true,
         ],
       );
+
+      console.log(`✅ Produto criado: ${product.nome} (ID: ${(productResult as any).insertId})`);
 
       const productId = (productResult as any).insertId;
       const variants = [];
@@ -252,6 +286,16 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           [productId, colorId, gradeId],
         );
 
+        // Criar variante física do produto (product_variants)
+        const [physicalVariantResult] = await db.execute(
+          `INSERT INTO product_variants
+           (product_id, color_id, sku, price_override, created_at)
+           VALUES (?, ?, ?, ?, NOW())`,
+          [productId, colorId, variantSku, variante.preco],
+        );
+
+        console.log(`  ✅ Variante criada: ${variante.cor} - SKU: ${variantSku}`);
+
         // Atualizar preço base do produto se necessário
         await db.execute(
           "UPDATE products SET base_price = ? WHERE id = ? AND base_price IS NULL",
@@ -259,7 +303,8 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         );
 
         variants.push({
-          id: (variantResult as any).insertId,
+          id: (physicalVariantResult as any).insertId,
+          variant_relation_id: (variantResult as any).insertId,
           cor: variante.cor,
           sku: variantSku,
           grade: variante.grade,
