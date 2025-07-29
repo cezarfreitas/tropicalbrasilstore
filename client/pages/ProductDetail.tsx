@@ -299,7 +299,7 @@ export default function ProductDetail() {
     productData.variants.forEach((variant) => {
       // Only show colors that actually have stock or if sell_without_stock is enabled
       const hasStock = variant.stock > 0 || productData.sell_without_stock;
-      if (hasStock && !colorMap.has(variant.color_id)) {
+      if (hasStock && variant.color_id && !colorMap.has(variant.color_id)) {
         colorMap.set(variant.color_id, {
           id: variant.color_id,
           name: variant.color_name,
