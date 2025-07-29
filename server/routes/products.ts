@@ -379,9 +379,9 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         }
 
         // Salvar foto do produto se fornecida (na primeira variante)
-        if (variante.foto && variants.length === 0) {
+        if (localImageUrl && variants.length === 0) {
           await db.execute("UPDATE products SET photo = ? WHERE id = ?", [
-            variante.foto,
+            localImageUrl,
             productId,
           ]);
         }
