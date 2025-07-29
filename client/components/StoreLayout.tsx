@@ -524,10 +524,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="group flex items-center text-sm font-medium text-white/80 hover:text-white hover:bg-white/15 rounded-2xl px-4 py-3 transition-all duration-300 hover:shadow-lg border border-transparent hover:border-white/20 backdrop-blur-sm hover:backdrop-blur-md"
+                  className="group flex items-center text-sm font-medium text-white/80 hover:text-white hover:bg-white/15 rounded-xl px-3 py-2 transition-all duration-300 hover:shadow-lg border border-transparent hover:border-white/20 backdrop-blur-sm hover:backdrop-blur-md"
                 >
-                  <div className="w-2 h-2 bg-white/40 rounded-full mr-3 group-hover:bg-white group-hover:scale-125 transition-all duration-300"></div>
-                  <span className="group-hover:translate-x-1 transition-transform duration-300 flex-1">{link.label}</span>
+                  <span className="flex-1">{link.label}</span>
                   <ChevronDown className="h-4 w-4 text-white/40 group-hover:text-white/80 rotate-[-90deg] transition-all duration-300" />
                 </Link>
               );
