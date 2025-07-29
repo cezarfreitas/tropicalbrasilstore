@@ -722,31 +722,89 @@ export default function ProductsWooCommerce() {
                         placeholder="SKU do produto"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="category">Categoria</Label>
-                      <Select
-                        value={formData.category_id?.toString() || ""}
-                        onValueChange={(value) =>
-                          setFormData({
-                            ...formData,
-                            category_id: value ? parseInt(value) : undefined,
-                          })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecionar categoria" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories.map((category) => (
-                            <SelectItem
-                              key={category.id}
-                              value={category.id.toString()}
-                            >
-                              {category.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+
+                    {/* Row with Category, Gender, and Type */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="category">Categoria</Label>
+                        <Select
+                          value={formData.category_id?.toString() || ""}
+                          onValueChange={(value) =>
+                            setFormData({
+                              ...formData,
+                              category_id: value ? parseInt(value) : undefined,
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecionar categoria" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {categories.map((category) => (
+                              <SelectItem
+                                key={category.id}
+                                value={category.id.toString()}
+                              >
+                                {category.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="gender">Gênero</Label>
+                        <Select
+                          value={formData.gender_id?.toString() || ""}
+                          onValueChange={(value) =>
+                            setFormData({
+                              ...formData,
+                              gender_id: value ? parseInt(value) : undefined,
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecionar gênero" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {genders.map((gender) => (
+                              <SelectItem
+                                key={gender.id}
+                                value={gender.id.toString()}
+                              >
+                                {gender.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="type">Tipo</Label>
+                        <Select
+                          value={formData.type_id?.toString() || ""}
+                          onValueChange={(value) =>
+                            setFormData({
+                              ...formData,
+                              type_id: value ? parseInt(value) : undefined,
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecionar tipo" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {types.map((type) => (
+                              <SelectItem
+                                key={type.id}
+                                value={type.id.toString()}
+                              >
+                                {type.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
 
                     <div>
