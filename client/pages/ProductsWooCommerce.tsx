@@ -1071,7 +1071,7 @@ export default function ProductsWooCommerce() {
                                         type="number"
                                         step="0.01"
                                         min="0"
-                                        value={variant.price || ""}
+                                        value={variant.price != null ? variant.price.toString() : ""}
                                         onChange={(e) =>
                                           updateColorVariant(
                                             variantIndex,
