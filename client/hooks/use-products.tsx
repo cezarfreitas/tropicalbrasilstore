@@ -311,6 +311,13 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       } catch (err: any) {
         console.error("Error fetching products:", err);
 
+        // Skip processing if HMR invalidation is in progress
+        if (err.message?.includes("HMR invalidation")) {
+          console.log("🔄 Skipping fetch due to HMR invalidation");
+          setIsRequestInProgress(false);
+          return;
+        }
+
         // Retry logic for network failures
         if (
           retryCount < 2 &&
