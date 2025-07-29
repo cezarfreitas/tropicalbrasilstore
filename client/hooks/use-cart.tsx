@@ -25,6 +25,14 @@ interface CartItem {
   piecesPerGrade?: number; // Para grades: quantas peças tem cada grade
 }
 
+interface ModalProduct {
+  name: string;
+  photo?: string;
+  variant?: string;
+  quantity: number;
+  unitPrice: number;
+}
+
 interface CartState {
   items: CartItem[];
   totalItems: number;
