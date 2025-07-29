@@ -155,6 +155,14 @@ const App = () => (
                   }
                 />
                 <Route
+                  path="/admin/attributes"
+                  element={
+                    <AdminLayout>
+                      <Attributes />
+                    </AdminLayout>
+                  }
+                />
+                <Route
                   path="/admin/grades"
                   element={
                     <AdminLayout>
