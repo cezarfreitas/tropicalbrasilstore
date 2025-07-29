@@ -508,9 +508,17 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             <div className="mt-4 pt-3 border-t border-white/20">
               <div className="space-y-3">
                 <div className="flex items-center justify-between px-3">
-                  <h3 className="text-xs font-semibold text-white/80 uppercase tracking-wider">
-                    Filtrar por Gênero
-                  </h3>
+                  <button
+                    onClick={() => setGenderFilterOpen(!genderFilterOpen)}
+                    className="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wider hover:text-white transition-colors"
+                  >
+                    <span>Filtrar por Gênero</span>
+                    <ChevronDown
+                      className={`h-3 w-3 transition-transform duration-200 ${
+                        genderFilterOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
                   {selectedGenderFilter && (
                     <button
                       onClick={() => handleGenderFilter(null)}
@@ -521,27 +529,31 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   )}
                 </div>
 
-                <div className="space-y-1 px-3">
-                  {availableGenders.map((gender) => (
-                    <button
-                      key={gender.id}
-                      onClick={() => handleGenderFilter(gender.id)}
-                      className={`w-full text-left p-2 rounded-lg text-sm transition-all duration-200 ${
-                        selectedGenderFilter === gender.id
-                          ? 'bg-white/20 text-white font-medium'
-                          : 'text-white/80 hover:bg-white/10 hover:text-white'
-                      }`}
-                      title={gender.description}
-                    >
-                      {gender.name}
-                    </button>
-                  ))}
-                </div>
+                {genderFilterOpen && (
+                  <>
+                    <div className="space-y-1 px-3">
+                      {availableGenders.map((gender) => (
+                        <button
+                          key={gender.id}
+                          onClick={() => handleGenderFilter(gender.id)}
+                          className={`w-full text-left p-2 rounded-lg text-sm transition-all duration-200 ${
+                            selectedGenderFilter === gender.id
+                              ? 'bg-white/20 text-white font-medium'
+                              : 'text-white/80 hover:bg-white/10 hover:text-white'
+                          }`}
+                          title={gender.description}
+                        >
+                          {gender.name}
+                        </button>
+                      ))}
+                    </div>
 
-                {availableGenders.length === 0 && (
-                  <div className="text-center py-4 px-3">
-                    <p className="text-xs text-white/60">Carregando gêneros...</p>
-                  </div>
+                    {availableGenders.length === 0 && (
+                      <div className="text-center py-4 px-3">
+                        <p className="text-xs text-white/60">Carregando gêneros...</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
