@@ -62,6 +62,11 @@ const navigation = [
     icon: Palette,
   },
   {
+    name: "Atributos",
+    href: "/admin/attributes",
+    icon: Tags,
+  },
+  {
     name: "Grade Vendida",
     href: "/admin/grades",
     icon: Grid3x3,
