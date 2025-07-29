@@ -4,21 +4,10 @@ async function setupProductGrades() {
   try {
     console.log("🔄 Configurando grades para o produto 150...");
 
-    // 1. Verificar se já existem grades
-    console.log("\n📊 Verificando grades existentes:");
-    const [existingGrades] = await db.execute(`
-      SELECT 
-        gv.*,
-        c.name as color_name
-      FROM grade_vendida gv
-      LEFT JOIN colors c ON gv.color_id = c.id
-      WHERE gv.product_id = 150
-    `);
-    console.table(existingGrades);
-
-    // 2. Verificar product_color_grades
+    // 1. Verificar se já existem grades para o produto
+    console.log("\n📊 Verificando grades existentes para produto 150:");
     const [existingColorGrades] = await db.execute(`
-      SELECT 
+      SELECT
         pcg.*,
         c.name as color_name,
         gv.name as grade_name
