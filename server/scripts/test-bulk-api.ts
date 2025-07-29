@@ -39,7 +39,7 @@ async function testBulkAPI() {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'X-API-Key': 'development-key' // Usando chave de desenvolvimento
+        'Authorization': 'Bearer sk_live_abcd1234567890abcdef1234567890abcdef12'
       },
       body: JSON.stringify(payload)
     });
