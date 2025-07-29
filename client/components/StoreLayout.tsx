@@ -661,14 +661,14 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             </div>
 
             {/* Type Filter Section */}
-            <div className="mt-6 pt-4 border-t border-white/20">
+            <div className="mt-4 pt-3 border-t border-white/20">
               <div className="space-y-4">
-                <div className="flex items-center justify-between px-4">
+                <div className="flex items-center justify-between px-2">
                   <button
                     onClick={() => setTypeFilterOpen(!typeFilterOpen)}
-                    className="flex items-center gap-3 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
+                    className="flex items-center gap-2 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
                   >
-                    <Tag className="h-4 w-4 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
+                    <Tag className="h-3 w-3 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
                     <span>Filtrar por Tipo</span>
                     <ChevronDown
                       className={`h-4 w-4 transition-all duration-300 ${
