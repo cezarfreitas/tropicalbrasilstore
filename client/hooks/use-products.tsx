@@ -120,7 +120,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
   const [currentSearchTerm, setCurrentSearchTerm] = useState<string>("");
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
 
-  const fetchProducts = useCallback(async (page: number = 1, retryCount: number = 0, searchTerm: string = "", colorFilter: number | null = null) => {
+  const fetchProducts = useCallback(async (page: number = 1, retryCount: number = 0, searchTerm: string = "", colorFilter: number | null = null, categoryFilter: string | null = null) => {
     // Prevent multiple concurrent requests
     if (isRequestInProgress && retryCount === 0) {
       console.log("⏸️ Request already in progress, skipping duplicate call");
