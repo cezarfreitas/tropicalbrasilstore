@@ -6,9 +6,9 @@ async function testCustomerOrdersAPI() {
 
     // Teste 1: Buscar pedidos por ID do cliente
     console.log("\n📋 Teste 1: Buscar pedidos por ID do cliente (ID: 1)");
-    const response1 = await fetch('http://localhost:3001/api/customer-orders/1');
+    const response1 = await fetch('http://localhost:8080/api/customer-orders/1');
     const orders1 = await response1.json();
-    
+
     if (response1.ok) {
       console.log(`✅ Sucesso! Encontrados ${orders1.length} pedidos`);
       orders1.forEach((order: any, index: number) => {
@@ -20,9 +20,9 @@ async function testCustomerOrdersAPI() {
 
     // Teste 2: Buscar pedidos por email
     console.log("\n📋 Teste 2: Buscar pedidos por email");
-    const response2 = await fetch('http://localhost:3001/api/customer-orders/by-email/maria.silva@email.com');
+    const response2 = await fetch('http://localhost:8080/api/customer-orders/by-email/maria.silva@email.com');
     const orders2 = await response2.json();
-    
+
     if (response2.ok) {
       console.log(`✅ Sucesso! Encontrados ${orders2.length} pedidos`);
       orders2.forEach((order: any, index: number) => {
@@ -37,7 +37,7 @@ async function testCustomerOrdersAPI() {
 
     // Teste 3: Cliente inexistente
     console.log("\n📋 Teste 3: Cliente inexistente (ID: 9999)");
-    const response3 = await fetch('http://localhost:3001/api/customer-orders/9999');
+    const response3 = await fetch('http://localhost:8080/api/customer-orders/9999');
     const orders3 = await response3.json();
     
     if (!response3.ok) {
