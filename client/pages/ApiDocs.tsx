@@ -412,6 +412,56 @@ Authorization: Bearer your_api_key
 }`}
                 </pre>
               </div>
+
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold">Exemplos de Erro</h4>
+
+                <div className="space-y-3">
+                  <div>
+                    <h5 className="font-medium text-red-700 mb-2">Código Duplicado (400)</h5>
+                    <pre className="bg-red-50 p-4 rounded text-sm overflow-x-auto border border-red-200">
+{`{
+  "success": false,
+  "error": "Código já existe",
+  "message": "O produto com código 'CHN001' já está cadastrado",
+  "code": "DUPLICATE_CODE"
+}`}
+                    </pre>
+                  </div>
+
+                  <div>
+                    <h5 className="font-medium text-red-700 mb-2">Dados Inválidos (422)</h5>
+                    <pre className="bg-red-50 p-4 rounded text-sm overflow-x-auto border border-red-200">
+{`{
+  "success": false,
+  "error": "Dados inválidos",
+  "message": "Validação falhou",
+  "errors": [
+    {
+      "field": "produtos[0].variantes",
+      "message": "Produto deve ter pelo menos uma variante"
+    },
+    {
+      "field": "produtos[1].variantes[0].preco",
+      "message": "Preço deve ser maior que 0"
+    }
+  ]
+}`}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h5 className="font-semibold text-blue-800 mb-2">💡 Dicas de Implementação</h5>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• Use códigos alfanuméricos únicos para cada produto</li>
+                  <li>• Organize as grades por gênero ou categoria para reutilização</li>
+                  <li>• Mantenha nomes de cores consistentes para evitar duplicatas</li>
+                  <li>• Use URLs válidas para as fotos dos produtos</li>
+                  <li>• Teste com poucos produtos antes de enviar grandes lotes</li>
+                </ul>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
