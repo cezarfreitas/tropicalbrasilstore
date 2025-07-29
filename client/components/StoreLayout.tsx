@@ -595,8 +595,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     </div>
 
                     {availableColors.length === 0 && (
-                      <div className="text-center py-4 px-3">
-                        <p className="text-xs text-white/60">Carregando cores...</p>
+                      <div className="text-center py-6 px-4">
+                        <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-2"></div>
+                        <p className="text-sm text-white/70 font-medium">Carregando cores...</p>
                       </div>
                     )}
                   </>
@@ -1086,7 +1087,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                       Seu carrinho está vazio
                     </h3>
                     <p className="text-gray-500 text-sm mb-6">
-                      Explore nossa loja e adicione produtos incr��veis
+                      Explore nossa loja e adicione produtos incríveis
                     </p>
                     <Button
                       onClick={() => setCartOpen(false)}
