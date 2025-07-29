@@ -189,8 +189,11 @@ const webhookExamples = [
 ];
 
 export default function ApiDocs() {
-  const [apiKey, setApiKey] = useState("sk_live_example_key_12345678901234567890");
-  const [showApiKey, setShowApiKey] = useState(false);
+  const { apiKeys, loading, createApiKey, revokeApiKey, regenerateApiKey } = useApiKeys();
+  const [showKeys, setShowKeys] = useState<{ [keyId: string]: boolean }>({});
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [newKeyName, setNewKeyName] = useState("");
+  const [newKeyDescription, setNewKeyDescription] = useState("");
   const { toast } = useToast();
 
   const copyToClipboard = (text: string) => {
