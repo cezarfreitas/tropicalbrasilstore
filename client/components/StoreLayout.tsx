@@ -96,11 +96,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   // Memoized navigation links
   const navigationLinks = useMemo(() => [
-    { to: "/loja", label: "Todos", icon: Package },
-    { to: "/loja?categoria=havaianas", label: "Havaianas", icon: Package },
-    { to: "/loja?categoria=adidas", label: "Adidas", icon: Package },
-    { to: "/loja?categoria=nike", label: "Nike", icon: Package },
-    { to: "/loja?categoria=feminino", label: "Feminino", icon: Package }
+    { to: "/loja", label: "Todos" },
+    { to: "/loja?categoria=havaianas", label: "Havaianas" },
+    { to: "/loja?categoria=adidas", label: "Adidas" },
+    { to: "/loja?categoria=nike", label: "Nike" },
+    { to: "/loja?categoria=feminino", label: "Feminino" }
   ], []);
 
   // Memoized cart aria label
