@@ -291,4 +291,4 @@ export function useCart() {
   };
 }
 
-export type { CartItem };
+export type { CartItem, ModalProduct };
