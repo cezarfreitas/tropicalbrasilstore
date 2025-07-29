@@ -7,26 +7,26 @@
       "tipo": "Casual",
       "genero": "Masculino",
       "descricao": "O chinelo mais famoso do Brasil, confortável e durável",
-      "preco_sugerido": 39.90,
+      "preco_sugerido": 39.9,
       "vender_infinito": true,
       "variantes": [
         {
           "cor": "Preto",
-          "preco": 29.90,
+          "preco": 29.9,
           "grade": "Grade Masculina",
           "foto": "https://images.tcdn.com.br/img/img_prod/699671/chinelo_havaianas_top_masculino_preto_24851_1_da2ff112816d222cd40bc1e93a37953a_20250313182035.jpg",
           "sku": "CHN001-PRETO"
         },
         {
           "cor": "Azul Marinho",
-          "preco": 29.90,
+          "preco": 29.9,
           "grade": "Grade Masculina",
           "foto": "https://static1.efacil.com.br/wcsstore/ExtendedSitesCatalogAssetStore/Imagens/360/1204119_01.jpg",
           "sku": "CHN001-AZUL-MARINHO"
         },
         {
           "cor": "Branco",
-          "preco": 32.90,
+          "preco": 32.9,
           "grade": "Grade Masculina",
           "foto": "https://example.com/chinelo-branco.jpg"
         }
@@ -39,18 +39,18 @@
       "tipo": "Feminino",
       "genero": "Feminino",
       "descricao": "Sandália confortável para uso diário",
-      "preco_sugerido": 119.90,
+      "preco_sugerido": 119.9,
       "vender_infinito": false,
       "variantes": [
         {
           "cor": "Rosa",
-          "preco": 89.90,
+          "preco": 89.9,
           "grade": "Grade Feminina",
           "foto": "https://example.com/sandalia-rosa.jpg"
         },
         {
           "cor": "Nude",
-          "preco": 89.90,
+          "preco": 89.9,
           "grade": "Grade Feminina",
           "foto": "https://example.com/sandalia-nude.jpg"
         }
@@ -63,12 +63,12 @@
       "tipo": "Esportivo",
       "genero": "Infantil",
       "descricao": "Tênis colorido e divertido para crianças",
-      "preco_sugerido": 179.90,
+      "preco_sugerido": 179.9,
       "vender_infinito": false,
       "variantes": [
         {
           "cor": "Multicolor",
-          "preco": 149.90,
+          "preco": 149.9,
           "grade": "Grade Infantil",
           "foto": "https://example.com/tenis-infantil-colorido.jpg"
         }
