@@ -533,24 +533,25 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             })}
 
             {/* Color Filter Section */}
-            <div className="mt-4 pt-3 border-t border-white/20">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between px-3">
+            <div className="mt-6 pt-4 border-t border-white/20">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between px-4">
                   <button
                     onClick={() => setColorFilterOpen(!colorFilterOpen)}
-                    className="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wider hover:text-white transition-colors"
+                    className="flex items-center gap-3 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
                   >
+                    <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-blue-400 rounded-full group-hover:scale-110 transition-transform duration-300"></div>
                     <span>Filtrar por Cor</span>
                     <ChevronDown
-                      className={`h-3 w-3 transition-transform duration-200 ${
-                        colorFilterOpen ? 'rotate-180' : ''
+                      className={`h-4 w-4 transition-all duration-300 ${
+                        colorFilterOpen ? 'rotate-180 text-white' : 'text-white/70'
                       }`}
                     />
                   </button>
                   {selectedColorFilter && (
                     <button
                       onClick={() => handleColorFilter(null)}
-                      className="text-xs text-white/60 hover:text-white transition-colors"
+                      className="text-xs text-white/70 hover:text-white bg-white/10 hover:bg-white/20 px-2 py-1 rounded-full transition-all duration-300"
                     >
                       Limpar
                     </button>
