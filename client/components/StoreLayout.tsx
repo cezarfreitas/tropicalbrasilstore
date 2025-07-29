@@ -560,26 +560,26 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                 {colorFilterOpen && (
                   <>
-                    <div className="grid grid-cols-4 gap-2 px-3">
+                    <div className="grid grid-cols-4 gap-3 px-4">
                       {availableColors.map((color) => (
                         <button
                           key={color.id}
                           onClick={() => handleColorFilter(color.id)}
-                          className={`group relative w-10 h-10 rounded-lg border-2 transition-all duration-200 hover:scale-110 ${
+                          className={`group relative w-12 h-12 rounded-2xl border-2 transition-all duration-300 hover:scale-110 hover:shadow-xl ${
                             selectedColorFilter === color.id
-                              ? 'border-white shadow-lg scale-110'
-                              : 'border-white/30 hover:border-white/60'
+                              ? 'border-white shadow-2xl scale-110 ring-2 ring-white/30'
+                              : 'border-white/40 hover:border-white/80'
                           }`}
                           title={color.name}
                         >
                           <div
-                            className="w-full h-full rounded-md"
+                            className="w-full h-full rounded-xl shadow-inner"
                             style={{
                               backgroundColor: color.hex_code || '#E5E7EB'
                             }}
                           >
                             {!color.hex_code && (
-                              <div className="w-full h-full flex items-center justify-center text-xs font-bold text-gray-700 rounded-md bg-gray-200">
+                              <div className="w-full h-full flex items-center justify-center text-xs font-bold text-gray-700 rounded-xl bg-gray-200">
                                 {color.name?.charAt(0)?.toUpperCase()}
                               </div>
                             )}
@@ -587,7 +587,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                           {selectedColorFilter === color.id && (
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="w-3 h-3 bg-white rounded-full shadow-lg"></div>
+                              <div className="w-4 h-4 bg-white rounded-full shadow-2xl border-2 border-gray-300"></div>
                             </div>
                           )}
                         </button>
@@ -1086,7 +1086,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                       Seu carrinho está vazio
                     </h3>
                     <p className="text-gray-500 text-sm mb-6">
-                      Explore nossa loja e adicione produtos incríveis
+                      Explore nossa loja e adicione produtos incr��veis
                     </p>
                     <Button
                       onClick={() => setCartOpen(false)}
