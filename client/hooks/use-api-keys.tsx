@@ -319,6 +319,7 @@ export function useApiKeys() {
   return {
     apiKeys,
     loading,
+    usingMockData,
     createApiKey,
     revokeApiKey,
     regenerateApiKey,
