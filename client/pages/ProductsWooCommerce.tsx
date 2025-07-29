@@ -183,6 +183,8 @@ export default function ProductsWooCommerce() {
   useEffect(() => {
     fetchProducts();
     fetchCategories();
+    fetchGenders();
+    fetchTypes();
     fetchColors();
     fetchSizes();
     fetchGrades();
