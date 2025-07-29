@@ -140,72 +140,37 @@ export function useApiKeys() {
 
   const createApiKey = async (request: CreateApiKeyRequest): Promise<ApiKey | null> => {
     try {
-      const response = await new Promise<Response>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/api/admin/api-keys", true);
-        xhr.setRequestHeader("Accept", "application/json");
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        xhr.onload = () => {
-          const headers = new Headers();
-          xhr
-            .getAllResponseHeaders()
-            .split("\r\n")
-            .forEach((line) => {
-              const [key, value] = line.split(": ");
-              if (key && value) headers.set(key, value);
-            });
-
-          const response = new Response(xhr.responseText, {
-            status: xhr.status,
-            statusText: xhr.statusText,
-            headers: headers,
-          });
-          resolve(response);
-        };
-
-        xhr.onerror = () => reject(new Error("Network error"));
-        xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 10000;
-
-        xhr.send(JSON.stringify(request));
-      });
-
-      if (response.ok) {
-        const newKey = await response.json();
-        setApiKeys(prev => [...prev, newKey]);
-        toast({
-          title: "Chave criada com sucesso",
-          description: `A chave "${request.name}" foi criada. Copie-a agora, pois ela não será mostrada novamente.`,
-        });
-        return newKey;
-      } else {
-        const error = await response.json();
-        toast({
-          title: "Erro ao criar chave",
-          description: error.message || "Não foi possível criar a chave de API.",
-          variant: "destructive",
-        });
-        return null;
-      }
-    } catch (error) {
-      console.error("Error creating API key:", error);
-      
-      // Mock creation for development
       const newKey: ApiKey = {
         id: Date.now().toString(),
         name: request.name,
-        key: `sk_live_${Math.random().toString(36).substring(2, 15)}_${Date.now()}`,
+        key: generateApiKey(),
         created_at: new Date().toISOString(),
         status: "active"
       };
-      
-      setApiKeys(prev => [...prev, newKey]);
+
+      const updatedKeys = [...apiKeys, newKey];
+      updateDatabase(updatedKeys);
+
       toast({
         title: "Chave criada com sucesso",
-        description: `A chave "${request.name}" foi criada. Copie-a agora, pois ela não será mostrada novamente.`,
+        description: `A chave "${request.name}" foi criada e salva no arquivo JSON.`,
       });
+
+      console.log("Nova chave criada:", {
+        id: newKey.id,
+        name: newKey.name,
+        created_at: newKey.created_at
+      });
+
       return newKey;
+    } catch (error) {
+      console.error("Erro ao criar chave de API:", error);
+      toast({
+        title: "Erro ao criar chave",
+        description: "Não foi possível criar a chave de API.",
+        variant: "destructive",
+      });
+      return null;
     }
   };
 
