@@ -83,7 +83,7 @@ export function useApiKeys() {
         ]);
       }
     } catch (error) {
-      console.error("Error loading API keys:", error);
+      console.warn("Erro ao conectar com API, usando dados mock:", error);
       // Set mock data for development
       setApiKeys([
         {
@@ -92,6 +92,13 @@ export function useApiKeys() {
           key: "sk_live_abcd1234567890abcdef1234567890abcdef12",
           created_at: new Date().toISOString(),
           last_used: new Date(Date.now() - 86400000).toISOString(),
+          status: "active"
+        },
+        {
+          id: "2",
+          name: "Integração Mobile",
+          key: "sk_live_xyz9876543210xyz9876543210xyz987654321",
+          created_at: new Date(Date.now() - 7 * 86400000).toISOString(),
           status: "active"
         }
       ]);
