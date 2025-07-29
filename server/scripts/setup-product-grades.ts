@@ -18,8 +18,8 @@ async function setupProductGrades() {
     `);
     console.table(existingColorGrades);
 
-    // 3. Se não existirem grades, criar grades padrão
-    if ((existingGrades as any[]).length === 0) {
+    // 2. Se não existirem grades, criar grades padrão
+    if ((existingColorGrades as any[]).length === 0) {
       console.log("\n🔧 Criando grades padrão para chinelos...");
 
       // Criar grade masculina padrão
