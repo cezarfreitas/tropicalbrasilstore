@@ -46,7 +46,9 @@ type CartAction =
   | { type: "REMOVE_ITEM"; id: string }
   | { type: "UPDATE_QUANTITY"; id: string; quantity: number }
   | { type: "CLEAR_CART" }
-  | { type: "LOAD_CART"; state: CartState };
+  | { type: "LOAD_CART"; state: CartState }
+  | { type: "SHOW_MODAL"; product: ModalProduct }
+  | { type: "HIDE_MODAL" };
 
 const CART_STORAGE_KEY = "shopping-cart";
 
