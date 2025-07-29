@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Package2, Calendar, CreditCard, Truck, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import {
+  Package2,
+  Calendar,
+  CreditCard,
+  Truck,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,32 +36,32 @@ const statusConfig = {
     label: "Aguardando Confirmação",
     color: "bg-yellow-500",
     icon: Clock,
-    description: "Seu pedido está sendo analisado"
+    description: "Seu pedido está sendo analisado",
   },
   confirmed: {
     label: "Confirmado",
-    color: "bg-blue-500", 
+    color: "bg-blue-500",
     icon: CheckCircle,
-    description: "Pedido confirmado e em preparação"
+    description: "Pedido confirmado e em preparação",
   },
   shipped: {
     label: "Enviado",
     color: "bg-purple-500",
     icon: Truck,
-    description: "Pedido foi enviado"
+    description: "Pedido foi enviado",
   },
   delivered: {
     label: "Entregue",
     color: "bg-green-500",
     icon: CheckCircle,
-    description: "Pedido foi entregue com sucesso"
+    description: "Pedido foi entregue com sucesso",
   },
   cancelled: {
     label: "Cancelado",
     color: "bg-red-500",
     icon: AlertCircle,
-    description: "Pedido foi cancelado"
-  }
+    description: "Pedido foi cancelado",
+  },
 };
 
 export default function CustomerOrders() {
@@ -124,7 +132,7 @@ export default function CustomerOrders() {
             <p className="text-gray-600 mb-6">
               Você precisa estar logado para ver seus pedidos.
             </p>
-            <Button onClick={() => window.location.href = "/login"}>
+            <Button onClick={() => (window.location.href = "/login")}>
               Fazer Login
             </Button>
           </div>
@@ -137,10 +145,10 @@ export default function CustomerOrders() {
     <StoreLayout>
       <div className="container mx-auto px-4 py-6">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Meus Pedidos</h1>
-          <p className="text-gray-600">
-            Acompanhe o status dos seus pedidos
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Meus Pedidos
+          </h1>
+          <p className="text-gray-600">Acompanhe o status dos seus pedidos</p>
         </div>
 
         {loading ? (
@@ -158,7 +166,7 @@ export default function CustomerOrders() {
               <p className="text-gray-600 mb-6">
                 Você ainda não fez nenhum pedido. Que tal começar agora?
               </p>
-              <Button onClick={() => window.location.href = "/loja"}>
+              <Button onClick={() => (window.location.href = "/loja")}>
                 Explorar Produtos
               </Button>
             </CardContent>
@@ -166,9 +174,10 @@ export default function CustomerOrders() {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => {
-              const config = statusConfig[order.status as keyof typeof statusConfig];
+              const config =
+                statusConfig[order.status as keyof typeof statusConfig];
               const StatusIcon = config.icon;
-              
+
               return (
                 <Card key={order.id} className="overflow-hidden">
                   <CardHeader className="bg-gray-50 border-b">
@@ -176,9 +185,11 @@ export default function CustomerOrders() {
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                           <Package2 className="h-5 w-5 text-primary" />
-                          <CardTitle className="text-lg">Pedido #{order.id}</CardTitle>
+                          <CardTitle className="text-lg">
+                            Pedido #{order.id}
+                          </CardTitle>
                         </div>
-                        <Badge 
+                        <Badge
                           className={`${config.color} text-white flex items-center gap-1`}
                         >
                           <StatusIcon className="h-3 w-3" />
@@ -188,7 +199,7 @@ export default function CustomerOrders() {
                       <div className="text-right">
                         <p className="text-sm text-gray-600 flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
-                          {new Date(order.date).toLocaleDateString('pt-BR')}
+                          {new Date(order.date).toLocaleDateString("pt-BR")}
                         </p>
                         <p className="text-lg font-bold text-primary flex items-center gap-1">
                           <CreditCard className="h-4 w-4" />
@@ -196,18 +207,20 @@ export default function CustomerOrders() {
                         </p>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600">{config.description}</p>
+                    <p className="text-sm text-gray-600">
+                      {config.description}
+                    </p>
                   </CardHeader>
-                  
+
                   <CardContent className="p-6">
                     <div className="space-y-4">
                       <h4 className="font-semibold text-gray-900 mb-3">
                         Itens do Pedido ({order.items.length})
                       </h4>
-                      
+
                       {order.items.map((item) => (
-                        <div 
-                          key={item.id} 
+                        <div
+                          key={item.id}
                           className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg"
                         >
                           <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden border">
@@ -224,22 +237,18 @@ export default function CustomerOrders() {
                               <Package2 className="h-8 w-8 text-gray-400" />
                             )}
                           </div>
-                          
+
                           <div className="flex-1">
                             <h5 className="font-medium text-gray-900 mb-1">
                               {item.productName}
                             </h5>
                             <div className="text-sm text-gray-600 space-y-1">
-                              {item.colorName && (
-                                <p>Cor: {item.colorName}</p>
-                              )}
-                              {item.gradeName && (
-                                <p>Grade: {item.gradeName}</p>
-                              )}
+                              {item.colorName && <p>Cor: {item.colorName}</p>}
+                              {item.gradeName && <p>Grade: {item.gradeName}</p>}
                               <p>Quantidade: {item.quantity}</p>
                             </div>
                           </div>
-                          
+
                           <div className="text-right">
                             <p className="text-lg font-bold text-primary">
                               R$ {(item.unitPrice * item.quantity).toFixed(2)}

@@ -13,7 +13,7 @@ router.get("/:customerId", async (req, res) => {
 
     const [authRows] = await db.execute(
       `SELECT email FROM customer_auth WHERE id = ?`,
-      [customerId]
+      [customerId],
     );
 
     if ((authRows as any[]).length > 0) {
@@ -22,7 +22,7 @@ router.get("/:customerId", async (req, res) => {
       // Fallback: try customers table
       const [customerRows] = await db.execute(
         `SELECT email FROM customers WHERE id = ?`,
-        [customerId]
+        [customerId],
       );
 
       if ((customerRows as any[]).length === 0) {
@@ -31,9 +31,10 @@ router.get("/:customerId", async (req, res) => {
 
       customerEmail = (customerRows as any[])[0].email;
     }
-    
+
     // Get orders for the customer
-    const [orderRows] = await db.execute(`
+    const [orderRows] = await db.execute(
+      `
       SELECT
         o.id,
         o.total_amount,
@@ -46,13 +47,16 @@ router.get("/:customerId", async (req, res) => {
       WHERE o.customer_email = ?
       GROUP BY o.id
       ORDER BY o.created_at DESC
-    `, [customerEmail]);
+    `,
+      [customerEmail],
+    );
 
     const orders = [];
-    
+
     // For each order, get the detailed items
     for (const order of orderRows as any[]) {
-      const [itemRows] = await db.execute(`
+      const [itemRows] = await db.execute(
+        `
         SELECT 
           oi.id,
           oi.quantity,
@@ -73,8 +77,10 @@ router.get("/:customerId", async (req, res) => {
         LEFT JOIN grade_vendida g ON oi.grade_id = g.id
         WHERE oi.order_id = ?
         ORDER BY oi.id
-      `, [order.id]);
-      
+      `,
+        [order.id],
+      );
+
       const items = (itemRows as any[]).map((item: any) => ({
         id: item.id.toString(),
         productName: item.product_name,
@@ -83,18 +89,18 @@ router.get("/:customerId", async (req, res) => {
         photo: item.photo,
         colorName: item.color_name,
         gradeName: item.grade_name || item.size_name,
-        type: item.type
+        type: item.type,
       }));
-      
+
       orders.push({
-        id: `PED-${order.id.toString().padStart(3, '0')}`,
+        id: `PED-${order.id.toString().padStart(3, "0")}`,
         date: order.date,
         status: order.status,
         total: parseFloat(order.total_amount),
-        items: items
+        items: items,
       });
     }
-    
+
     res.json(orders);
   } catch (error) {
     console.error("Error fetching customer orders:", error);
@@ -106,9 +112,10 @@ router.get("/:customerId", async (req, res) => {
 router.get("/by-email/:email", async (req, res) => {
   try {
     const { email } = req.params;
-    
+
     // Get orders for the customer
-    const [orderRows] = await db.execute(`
+    const [orderRows] = await db.execute(
+      `
       SELECT 
         o.id,
         o.total_amount,
@@ -121,13 +128,16 @@ router.get("/by-email/:email", async (req, res) => {
       WHERE o.customer_email = ?
       GROUP BY o.id
       ORDER BY o.created_at DESC
-    `, [email]);
-    
+    `,
+      [email],
+    );
+
     const orders = [];
-    
+
     // For each order, get the detailed items
     for (const order of orderRows as any[]) {
-      const [itemRows] = await db.execute(`
+      const [itemRows] = await db.execute(
+        `
         SELECT 
           oi.id,
           oi.quantity,
@@ -148,8 +158,10 @@ router.get("/by-email/:email", async (req, res) => {
         LEFT JOIN grade_vendida g ON oi.grade_id = g.id
         WHERE oi.order_id = ?
         ORDER BY oi.id
-      `, [order.id]);
-      
+      `,
+        [order.id],
+      );
+
       const items = (itemRows as any[]).map((item: any) => ({
         id: item.id.toString(),
         productName: item.product_name,
@@ -158,18 +170,18 @@ router.get("/by-email/:email", async (req, res) => {
         photo: item.photo,
         colorName: item.color_name,
         gradeName: item.grade_name || item.size_name,
-        type: item.type
+        type: item.type,
       }));
-      
+
       orders.push({
-        id: `PED-${order.id.toString().padStart(3, '0')}`,
+        id: `PED-${order.id.toString().padStart(3, "0")}`,
         date: order.date,
         status: order.status,
         total: parseFloat(order.total_amount),
-        items: items
+        items: items,
       });
     }
-    
+
     res.json(orders);
   } catch (error) {
     console.error("Error fetching customer orders by email:", error);
