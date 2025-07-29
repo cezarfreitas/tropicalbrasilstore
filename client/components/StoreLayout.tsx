@@ -736,13 +736,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
                   <button
-                    onClick={() => {
-                      const newState = !typeFilterOpen;
-                      setTypeFilterOpen(newState);
-                      try {
-                        localStorage.setItem('sidebar-type-filter-open', newState.toString());
-                      } catch {}
-                    }}
+                    onClick={() => setTypeFilterOpen(!typeFilterOpen)}
                     className="flex items-center gap-2 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
                   >
                     <Tag className="h-3 w-3 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
