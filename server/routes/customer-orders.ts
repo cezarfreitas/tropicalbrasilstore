@@ -59,7 +59,7 @@ router.get("/:customerId", async (req, res) => {
           p.photo,
           c.name as color_name,
           c.hex_code as color_hex,
-          s.name as size_name,
+          s.size as size_name,
           g.name as grade_name
         FROM order_items oi
         JOIN products p ON oi.product_id = p.id
@@ -135,7 +135,7 @@ router.get("/by-email/:email", async (req, res) => {
           p.photo,
           c.name as color_name,
           c.hex_code as color_hex,
-          s.name as size_name,
+          s.size as size_name,
           g.name as grade_name
         FROM order_items oi
         JOIN products p ON oi.product_id = p.id
