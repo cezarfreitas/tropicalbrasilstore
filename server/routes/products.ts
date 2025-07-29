@@ -493,6 +493,38 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           );
         }
 
+        // Processar estoque baseado no tipo
+        if (product.tipo_estoque === 'grade' && variante.estoque_grade !== undefined) {
+          // Estoque por grade - definir quantidade na relação produto-cor-grade
+          await db.execute(
+            `UPDATE product_color_grades
+             SET stock_quantity = ?
+             WHERE product_id = ? AND color_id = ? AND grade_id = ?`,
+            [variante.estoque_grade, productId, colorId, gradeId]
+          );
+          console.log(`  📦 Estoque por grade configurado: ${variante.estoque_grade} unidades`);
+        } else if (product.tipo_estoque === 'size' && variante.estoque_tamanhos) {
+          // Estoque por tamanho - definir quantidade individual por tamanho
+          for (const [tamanho, quantidade] of Object.entries(variante.estoque_tamanhos)) {
+            // Buscar size_id pelo nome do tamanho
+            const [sizeResult] = await db.execute(
+              `SELECT id FROM sizes WHERE size = ?`,
+              [tamanho]
+            );
+
+            if ((sizeResult as any[]).length > 0) {
+              const sizeId = (sizeResult as any[])[0].id;
+              await db.execute(
+                `UPDATE product_variants
+                 SET stock = ?
+                 WHERE product_id = ? AND color_id = ? AND size_id = ?`,
+                [quantidade, productId, colorId, sizeId]
+              );
+              console.log(`  📦 Estoque tamanho ${tamanho}: ${quantidade} unidades`);
+            }
+          }
+        }
+
         // Salvar foto do produto se fornecida (na primeira variante)
         if (localImageUrl && variants.length === 0) {
           await db.execute("UPDATE products SET photo = ? WHERE id = ?", [
