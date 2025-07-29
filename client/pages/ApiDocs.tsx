@@ -1,12 +1,36 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Code, Copy, Eye, EyeOff, RefreshCw, Plus, Trash2, AlertTriangle, Download } from "lucide-react";
+import {
+  Code,
+  Copy,
+  Eye,
+  EyeOff,
+  RefreshCw,
+  Plus,
+  Trash2,
+  AlertTriangle,
+  Download,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useApiKeys } from "@/hooks/use-api-keys";
 
@@ -27,20 +51,20 @@ const apiEndpoints = [
           variantes: [
             {
               cor: "Preto",
-              preco: 29.90,
+              preco: 29.9,
               grade: "Grade Unissex",
-              foto: "https://exemplo.com/chinelo-preto.jpg"
+              foto: "https://exemplo.com/chinelo-preto.jpg",
             },
             {
               cor: "Azul",
-              preco: 29.90,
+              preco: 29.9,
               grade: "Grade Unissex",
-              foto: "https://exemplo.com/chinelo-azul.jpg"
-            }
-          ]
-        }
-      ]
-    }
+              foto: "https://exemplo.com/chinelo-azul.jpg",
+            },
+          ],
+        },
+      ],
+    },
   },
   {
     method: "GET",
@@ -51,10 +75,10 @@ const apiEndpoints = [
       id: 1,
       codigo: "CHN001",
       name: "Chinelo Havaianas Top",
-      price: 29.90,
+      price: 29.9,
       category: "Chinelos",
-      variants: 2
-    }
+      variants: 2,
+    },
   },
   {
     method: "GET",
@@ -64,10 +88,10 @@ const apiEndpoints = [
     example: {
       id: 1,
       customer_id: 123,
-      total: 89.90,
+      total: 89.9,
       status: "pending",
-      items: []
-    }
+      items: [],
+    },
   },
   {
     method: "GET",
@@ -79,8 +103,8 @@ const apiEndpoints = [
       name: "João Silva",
       email: "joao@email.com",
       whatsapp: "(11) 99999-9999",
-      status: "approved"
-    }
+      status: "approved",
+    },
   },
   {
     method: "GET",
@@ -90,8 +114,8 @@ const apiEndpoints = [
     example: {
       id: 1,
       name: "Chinelos",
-      show_in_menu: true
-    }
+      show_in_menu: true,
+    },
   },
   {
     method: "GET",
@@ -101,8 +125,8 @@ const apiEndpoints = [
     example: {
       id: 1,
       name: "Preto",
-      hex_code: "#000000"
-    }
+      hex_code: "#000000",
+    },
   },
   {
     method: "GET",
@@ -112,8 +136,8 @@ const apiEndpoints = [
     example: {
       id: 1,
       name: "Grade Feminina",
-      sizes: ["35", "36", "37", "38", "39", "40"]
-    }
+      sizes: ["35", "36", "37", "38", "39", "40"],
+    },
   },
   {
     method: "POST",
@@ -127,10 +151,10 @@ const apiEndpoints = [
       tipo: "Feminino",
       descricao: "Sandália elegante",
       cor: "Rosa",
-      preco: 199.90,
+      preco: 199.9,
       grade: "Grade Feminina",
-      foto: "https://exemplo.com/sandalia-rosa.jpg"
-    }
+      foto: "https://exemplo.com/sandalia-rosa.jpg",
+    },
   },
   {
     method: "GET",
@@ -141,23 +165,23 @@ const apiEndpoints = [
       {
         id: 1,
         cor: "Preto",
-        preco: 29.90,
+        preco: 29.9,
         grade_id: 1,
         grade_nome: "Grade Unissex",
         foto: "url_da_foto",
-        estoque_total: 240
+        estoque_total: 240,
       },
       {
         id: 2,
         cor: "Azul",
-        preco: 29.90,
+        preco: 29.9,
         grade_id: 1,
         grade_nome: "Grade Unissex",
         foto: "url_da_foto",
-        estoque_total: 240
-      }
-    ]
-  }
+        estoque_total: 240,
+      },
+    ],
+  },
 ];
 
 const webhookExamples = [
@@ -169,10 +193,10 @@ const webhookExamples = [
       data: {
         order_id: 123,
         customer_id: 456,
-        total: 89.90,
-        items: []
-      }
-    }
+        total: 89.9,
+        items: [],
+      },
+    },
   },
   {
     event: "customer.approved",
@@ -182,14 +206,22 @@ const webhookExamples = [
       data: {
         customer_id: 456,
         name: "João Silva",
-        email: "joao@email.com"
-      }
-    }
-  }
+        email: "joao@email.com",
+      },
+    },
+  },
 ];
 
 export default function ApiDocs() {
-  const { apiKeys, loading, database, createApiKey, revokeApiKey, regenerateApiKey, exportJson } = useApiKeys();
+  const {
+    apiKeys,
+    loading,
+    database,
+    createApiKey,
+    revokeApiKey,
+    regenerateApiKey,
+    exportJson,
+  } = useApiKeys();
   const [showKeys, setShowKeys] = useState<{ [keyId: string]: boolean }>({});
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [newKeyName, setNewKeyName] = useState("");
@@ -205,7 +237,7 @@ export default function ApiDocs() {
   };
 
   const toggleShowKey = (keyId: string) => {
-    setShowKeys(prev => ({ ...prev, [keyId]: !prev[keyId] }));
+    setShowKeys((prev) => ({ ...prev, [keyId]: !prev[keyId] }));
   };
 
   const handleCreateKey = async () => {
@@ -228,22 +260,30 @@ export default function ApiDocs() {
       setNewKeyName("");
       setNewKeyDescription("");
       // Auto-show the new key
-      setShowKeys(prev => ({ ...prev, [newKey.id]: true }));
+      setShowKeys((prev) => ({ ...prev, [newKey.id]: true }));
     }
   };
 
   const handleRevokeKey = async (keyId: string, keyName: string) => {
-    if (confirm(`Tem certeza que deseja revogar a chave "${keyName}"? Esta ação não pode ser desfeita.`)) {
+    if (
+      confirm(
+        `Tem certeza que deseja revogar a chave "${keyName}"? Esta ação não pode ser desfeita.`,
+      )
+    ) {
       await revokeApiKey(keyId);
     }
   };
 
   const handleRegenerateKey = async (keyId: string, keyName: string) => {
-    if (confirm(`Tem certeza que deseja regenerar a chave "${keyName}"? A chave atual será invalidada.`)) {
+    if (
+      confirm(
+        `Tem certeza que deseja regenerar a chave "${keyName}"? A chave atual será invalidada.`,
+      )
+    ) {
       const updatedKey = await regenerateApiKey(keyId);
       if (updatedKey) {
         // Auto-show the regenerated key
-        setShowKeys(prev => ({ ...prev, [keyId]: true }));
+        setShowKeys((prev) => ({ ...prev, [keyId]: true }));
       }
     }
   };
@@ -251,11 +291,11 @@ export default function ApiDocs() {
   const downloadJsonFile = () => {
     const jsonData = exportJson();
     if (jsonData) {
-      const blob = new Blob([jsonData], { type: 'application/json' });
+      const blob = new Blob([jsonData], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = 'api-keys-database.json';
+      a.download = "api-keys-database.json";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -273,11 +313,15 @@ export default function ApiDocs() {
       GET: "bg-green-100 text-green-800",
       POST: "bg-blue-100 text-blue-800",
       PUT: "bg-yellow-100 text-yellow-800",
-      DELETE: "bg-red-100 text-red-800"
+      DELETE: "bg-red-100 text-red-800",
     };
-    
+
     return (
-      <Badge className={colors[method as keyof typeof colors] || "bg-gray-100 text-gray-800"}>
+      <Badge
+        className={
+          colors[method as keyof typeof colors] || "bg-gray-100 text-gray-800"
+        }
+      >
         {method}
       </Badge>
     );
@@ -286,7 +330,9 @@ export default function ApiDocs() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Documentação da API</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Documentação da API
+        </h1>
         <p className="text-gray-600 mt-2">
           Gerencie e integre com a API da loja de chinelos
         </p>
@@ -306,24 +352,40 @@ export default function ApiDocs() {
             <CardHeader>
               <CardTitle>API de Cadastro de Produtos</CardTitle>
               <CardDescription>
-                Sistema automatizado para cadastro de produtos com variantes e grades
+                Sistema automatizado para cadastro de produtos com variantes e
+                grades
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
-                <h4 className="text-lg font-semibold">Características Principais</h4>
+                <h4 className="text-lg font-semibold">
+                  Características Principais
+                </h4>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li>• <strong>Agrupamento por código:</strong> Produtos são agrupados por código único</li>
-                  <li>• <strong>Variantes obrigatórias:</strong> Todo produto deve ter pelo menos uma variante (cor)</li>
-                  <li>• <strong>Grades inteligentes:</strong> Apenas o nome da grade é necessário - os tamanhos são criados automaticamente baseado no padrão da grade</li>
-                  <li>• <strong>Auto-cadastro:</strong> Categorias, tipos e cores são criados automaticamente se não existirem</li>
+                  <li>
+                    • <strong>Agrupamento por código:</strong> Produtos são
+                    agrupados por código único
+                  </li>
+                  <li>
+                    • <strong>Variantes obrigatórias:</strong> Todo produto deve
+                    ter pelo menos uma variante (cor)
+                  </li>
+                  <li>
+                    • <strong>Grades inteligentes:</strong> Apenas o nome da
+                    grade é necessário - os tamanhos são criados automaticamente
+                    baseado no padrão da grade
+                  </li>
+                  <li>
+                    • <strong>Auto-cadastro:</strong> Categorias, tipos e cores
+                    são criados automaticamente se não existirem
+                  </li>
                 </ul>
               </div>
 
               <div className="space-y-4">
                 <h4 className="text-lg font-semibold">Estrutura do Produto</h4>
                 <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
-{`{
+                  {`{
   "codigo": "CHN001",              // Código único do produto (obrigatório)
   "nome": "Chinelo Havaianas Top", // Nome do produto (obrigatório)
   "categoria": "Chinelos",         // Categoria (criada automaticamente se não existir)
@@ -346,7 +408,9 @@ export default function ApiDocs() {
                 <h4 className="text-lg font-semibold">Regras de Negócio</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-blue-50 p-4 rounded-lg">
-                    <h5 className="font-semibold text-blue-800 mb-2">✓ Comportamentos Automáticos</h5>
+                    <h5 className="font-semibold text-blue-800 mb-2">
+                      ✓ Comportamentos Automáticos
+                    </h5>
                     <ul className="text-sm text-blue-700 space-y-1">
                       <li>• Criação automática de categorias</li>
                       <li>• Criação automática de tipos</li>
@@ -356,7 +420,9 @@ export default function ApiDocs() {
                     </ul>
                   </div>
                   <div className="bg-yellow-50 p-4 rounded-lg">
-                    <h5 className="font-semibold text-yellow-800 mb-2">⚠️ Validações</h5>
+                    <h5 className="font-semibold text-yellow-800 mb-2">
+                      ⚠️ Validações
+                    </h5>
                     <ul className="text-sm text-yellow-700 space-y-1">
                       <li>• Código deve ser único</li>
                       <li>• Mínimo 1 variante por produto</li>
@@ -369,9 +435,11 @@ export default function ApiDocs() {
               </div>
 
               <div className="space-y-4">
-                <h4 className="text-lg font-semibold">Exemplo de Requisição Completa</h4>
+                <h4 className="text-lg font-semibold">
+                  Exemplo de Requisição Completa
+                </h4>
                 <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
-{`POST /api/products/bulk
+                  {`POST /api/products/bulk
 Content-Type: application/json
 Authorization: Bearer your_api_key
 
@@ -420,7 +488,7 @@ Authorization: Bearer your_api_key
               <div className="space-y-4">
                 <h4 className="text-lg font-semibold">Resposta de Sucesso</h4>
                 <pre className="bg-green-50 p-4 rounded text-sm overflow-x-auto border border-green-200">
-{`{
+                  {`{
   "success": true,
   "message": "Produtos cadastrados com sucesso",
   "data": {
@@ -459,9 +527,11 @@ Authorization: Bearer your_api_key
 
                 <div className="space-y-3">
                   <div>
-                    <h5 className="font-medium text-red-700 mb-2">Código Duplicado (400)</h5>
+                    <h5 className="font-medium text-red-700 mb-2">
+                      Código Duplicado (400)
+                    </h5>
                     <pre className="bg-red-50 p-4 rounded text-sm overflow-x-auto border border-red-200">
-{`{
+                      {`{
   "success": false,
   "error": "Código já existe",
   "message": "O produto com código 'CHN001' já está cadastrado",
@@ -471,9 +541,11 @@ Authorization: Bearer your_api_key
                   </div>
 
                   <div>
-                    <h5 className="font-medium text-red-700 mb-2">Dados Inválidos (422)</h5>
+                    <h5 className="font-medium text-red-700 mb-2">
+                      Dados Inválidos (422)
+                    </h5>
                     <pre className="bg-red-50 p-4 rounded text-sm overflow-x-auto border border-red-200">
-{`{
+                      {`{
   "success": false,
   "error": "Dados inválidos",
   "message": "Validação falhou",
@@ -494,14 +566,27 @@ Authorization: Bearer your_api_key
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h5 className="font-semibold text-blue-800 mb-2">💡 Dicas de Implementação</h5>
+                <h5 className="font-semibold text-blue-800 mb-2">
+                  💡 Dicas de Implementação
+                </h5>
                 <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Use códigos alfanuméricos únicos para cada produto</li>
-                  <li>• Use nomes de grades padronizados (ex: "Grade Feminina", "Grade Masculina", "Grade Infantil")</li>
-                  <li>• Os tamanhos são criados automaticamente baseados no nome da grade informada</li>
-                  <li>• Mantenha nomes de cores consistentes para evitar duplicatas</li>
+                  <li>
+                    • Use nomes de grades padronizados (ex: "Grade Feminina",
+                    "Grade Masculina", "Grade Infantil")
+                  </li>
+                  <li>
+                    • Os tamanhos são criados automaticamente baseados no nome
+                    da grade informada
+                  </li>
+                  <li>
+                    • Mantenha nomes de cores consistentes para evitar
+                    duplicatas
+                  </li>
                   <li>• Use URLs válidas para as fotos dos produtos</li>
-                  <li>• Teste com poucos produtos antes de enviar grandes lotes</li>
+                  <li>
+                    • Teste com poucos produtos antes de enviar grandes lotes
+                  </li>
                 </ul>
               </div>
             </CardContent>
@@ -534,11 +619,11 @@ Authorization: Bearer your_api_key
                   </code>
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <h4 className="font-semibold">Headers Obrigatórios</h4>
                 <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
-{`Content-Type: application/json
+                  {`Content-Type: application/json
 Authorization: Bearer YOUR_API_KEY`}
                 </pre>
               </div>
@@ -559,7 +644,11 @@ Authorization: Bearer YOUR_API_KEY`}
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => copyToClipboard(`${endpoint.method} ${endpoint.endpoint}`)}
+                      onClick={() =>
+                        copyToClipboard(
+                          `${endpoint.method} ${endpoint.endpoint}`,
+                        )
+                      }
                     >
                       <Copy className="h-4 w-4" />
                     </Button>
@@ -575,7 +664,7 @@ Authorization: Bearer YOUR_API_KEY`}
                       </code>
                     </div>
                   )}
-                  
+
                   <div>
                     <h5 className="font-medium mb-2">Exemplo de Resposta</h5>
                     <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
@@ -593,7 +682,8 @@ Authorization: Bearer YOUR_API_KEY`}
             <CardHeader>
               <CardTitle>Configurar Webhooks</CardTitle>
               <CardDescription>
-                Receba notificações em tempo real quando eventos importantes acontecem
+                Receba notificações em tempo real quando eventos importantes
+                acontecem
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -621,7 +711,11 @@ Authorization: Bearer YOUR_API_KEY`}
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => copyToClipboard(JSON.stringify(webhook.payload, null, 2))}
+                      onClick={() =>
+                        copyToClipboard(
+                          JSON.stringify(webhook.payload, null, 2),
+                        )
+                      }
                     >
                       <Copy className="h-4 w-4" />
                     </Button>
@@ -649,7 +743,10 @@ Authorization: Bearer YOUR_API_KEY`}
                     Gerencie suas chaves de API para autenticar requisições
                   </CardDescription>
                 </div>
-                <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+                <Dialog
+                  open={createDialogOpen}
+                  onOpenChange={setCreateDialogOpen}
+                >
                   <DialogTrigger asChild>
                     <Button>
                       <Plus className="h-4 w-4 mr-2" />
@@ -660,7 +757,8 @@ Authorization: Bearer YOUR_API_KEY`}
                     <DialogHeader>
                       <DialogTitle>Criar Nova Chave de API</DialogTitle>
                       <DialogDescription>
-                        Crie uma nova chave de API para autenticar suas requisições.
+                        Crie uma nova chave de API para autenticar suas
+                        requisições.
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
@@ -674,7 +772,9 @@ Authorization: Bearer YOUR_API_KEY`}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="key-description">Descrição (Opcional)</Label>
+                        <Label htmlFor="key-description">
+                          Descrição (Opcional)
+                        </Label>
                         <Input
                           id="key-description"
                           placeholder="Para que será usada esta chave?"
@@ -684,12 +784,13 @@ Authorization: Bearer YOUR_API_KEY`}
                       </div>
                     </div>
                     <DialogFooter>
-                      <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
+                      <Button
+                        variant="outline"
+                        onClick={() => setCreateDialogOpen(false)}
+                      >
                         Cancelar
                       </Button>
-                      <Button onClick={handleCreateKey}>
-                        Criar Chave
-                      </Button>
+                      <Button onClick={handleCreateKey}>Criar Chave</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -702,13 +803,19 @@ Authorization: Bearer YOUR_API_KEY`}
                     <div>
                       <div className="flex items-center gap-2 text-green-700">
                         <Code className="h-4 w-4" />
-                        <span className="text-sm font-medium">Arquivo JSON Ativo</span>
+                        <span className="text-sm font-medium">
+                          Arquivo JSON Ativo
+                        </span>
                       </div>
                       <p className="text-sm text-green-600 mt-1">
-                        Chaves salvas em: <code className="bg-green-100 px-1 rounded">api-keys-database.json</code>
+                        Chaves salvas em:{" "}
+                        <code className="bg-green-100 px-1 rounded">
+                          api-keys-database.json
+                        </code>
                       </p>
                       <p className="text-xs text-green-600 mt-1">
-                        Versão: {database.version} • Atualizado: {new Date(database.updated_at).toLocaleString('pt-BR')}
+                        Versão: {database.version} • Atualizado:{" "}
+                        {new Date(database.updated_at).toLocaleString("pt-BR")}
                       </p>
                     </div>
                     <div className="flex gap-2">
@@ -721,7 +828,8 @@ Authorization: Bearer YOUR_API_KEY`}
                             copyToClipboard(jsonData);
                             toast({
                               title: "JSON Copiado",
-                              description: "Estrutura completa do arquivo JSON copiada para área de transferência.",
+                              description:
+                                "Estrutura completa do arquivo JSON copiada para área de transferência.",
                             });
                           }
                         }}
@@ -754,26 +862,44 @@ Authorization: Bearer YOUR_API_KEY`}
                     Nenhuma chave de API
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    Crie sua primeira chave de API para começar a usar a integração.
+                    Crie sua primeira chave de API para começar a usar a
+                    integração.
                   </p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {apiKeys.map((key) => (
-                    <div key={key.id} className="border rounded-lg p-4 space-y-3">
+                    <div
+                      key={key.id}
+                      className="border rounded-lg p-4 space-y-3"
+                    >
                       <div className="flex items-center justify-between">
                         <div>
                           <h4 className="font-semibold">{key.name}</h4>
                           <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <span>Criada em {new Date(key.created_at).toLocaleDateString('pt-BR')}</span>
+                            <span>
+                              Criada em{" "}
+                              {new Date(key.created_at).toLocaleDateString(
+                                "pt-BR",
+                              )}
+                            </span>
                             {key.last_used && (
                               <>
                                 <span>•</span>
-                                <span>Último uso: {new Date(key.last_used).toLocaleDateString('pt-BR')}</span>
+                                <span>
+                                  Último uso:{" "}
+                                  {new Date(key.last_used).toLocaleDateString(
+                                    "pt-BR",
+                                  )}
+                                </span>
                               </>
                             )}
                             <Badge
-                              variant={key.status === "active" ? "default" : "destructive"}
+                              variant={
+                                key.status === "active"
+                                  ? "default"
+                                  : "destructive"
+                              }
                               className="ml-2"
                             >
                               {key.status === "active" ? "Ativa" : "Revogada"}
@@ -785,7 +911,9 @@ Authorization: Bearer YOUR_API_KEY`}
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => handleRegenerateKey(key.id, key.name)}
+                              onClick={() =>
+                                handleRegenerateKey(key.id, key.name)
+                              }
                             >
                               <RefreshCw className="h-4 w-4" />
                             </Button>
@@ -817,7 +945,11 @@ Authorization: Bearer YOUR_API_KEY`}
                               size="sm"
                               onClick={() => toggleShowKey(key.id)}
                             >
-                              {showKeys[key.id] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              {showKeys[key.id] ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
                             </Button>
                             <Button
                               variant="outline"
@@ -834,7 +966,9 @@ Authorization: Bearer YOUR_API_KEY`}
                         <div className="bg-red-50 border border-red-200 rounded-md p-3">
                           <div className="flex items-center gap-2 text-red-700">
                             <AlertTriangle className="h-4 w-4" />
-                            <span className="text-sm font-medium">Esta chave foi revogada e não pode mais ser usada</span>
+                            <span className="text-sm font-medium">
+                              Esta chave foi revogada e não pode mais ser usada
+                            </span>
                           </div>
                         </div>
                       )}
@@ -844,28 +978,34 @@ Authorization: Bearer YOUR_API_KEY`}
               )}
 
               <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
-                <h5 className="font-medium text-yellow-800 mb-2">⚠️ Importante</h5>
+                <h5 className="font-medium text-yellow-800 mb-2">
+                  ⚠️ Importante
+                </h5>
                 <p className="text-sm text-yellow-700">
-                  Mantenha suas chaves de API seguras. Não as compartilhe publicamente ou as inclua
-                  em código front-end. Use sempre HTTPS em produção.
+                  Mantenha suas chaves de API seguras. Não as compartilhe
+                  publicamente ou as inclua em código front-end. Use sempre
+                  HTTPS em produção.
                 </p>
               </div>
 
               <div className="space-y-2">
                 <h4 className="font-semibold">Exemplo de Uso</h4>
                 <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
-{`curl -X GET "https://sua-loja.com/api/products" \\
+                  {`curl -X GET "https://sua-loja.com/api/products" \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json"`}
                 </pre>
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-                <h5 className="font-medium text-blue-800 mb-2">💾 Sistema de Persistência</h5>
+                <h5 className="font-medium text-blue-800 mb-2">
+                  💾 Sistema de Persistência
+                </h5>
                 <p className="text-sm text-blue-600">
-                  As chaves de API são salvas automaticamente em um arquivo JSON estruturado no localStorage.
-                  Todas as operações (criar, revogar, regenerar) são persistidas imediatamente.
-                  Use o botão "Exportar JSON" para ver a estrutura completa dos dados.
+                  As chaves de API são salvas automaticamente em um arquivo JSON
+                  estruturado no localStorage. Todas as operações (criar,
+                  revogar, regenerar) são persistidas imediatamente. Use o botão
+                  "Exportar JSON" para ver a estrutura completa dos dados.
                 </p>
               </div>
             </CardContent>

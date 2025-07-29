@@ -130,7 +130,7 @@ function calculateTotalItems(items: CartItem[]): number {
   return items.reduce((sum, item) => {
     if (item.type === "grade" && item.piecesPerGrade) {
       // For grades: quantity of grades × pieces per grade
-      return sum + (item.quantity * item.piecesPerGrade);
+      return sum + item.quantity * item.piecesPerGrade;
     } else {
       // For variants/units: just the quantity
       return sum + item.quantity;
@@ -300,7 +300,9 @@ export function useCart() {
     // Only allow adding items if user is authenticated
     if (!isAuthenticated || !customer) {
       // Show a message or redirect to login instead of adding to cart
-      console.warn("Usuário deve estar logado para adicionar itens ao carrinho");
+      console.warn(
+        "Usuário deve estar logado para adicionar itens ao carrinho",
+      );
       return;
     }
 

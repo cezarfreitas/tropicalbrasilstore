@@ -46,22 +46,22 @@ function createDefaultApiKeysDatabase(): ApiKeysDatabase {
         key: "sk_live_abcd1234567890abcdef1234567890abcdef12",
         created_at: now,
         last_used: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-        status: "active"
+        status: "active",
       },
       {
         id: "2",
         name: "Integração Mobile",
         key: "sk_live_xyz9876543210xyz9876543210xyz987654321",
         created_at: new Date(Date.now() - 7 * 86400000).toISOString(), // 7 days ago
-        status: "active"
-      }
-    ]
+        status: "active",
+      },
+    ],
   };
 }
 
 function generateApiKey(): string {
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  let result = 'sk_live_';
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "sk_live_";
   for (let i = 0; i < 32; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -109,7 +109,10 @@ export function useApiKeys() {
       setDatabase(localDatabase);
       setApiKeys(localDatabase.api_keys);
 
-      console.log("Chaves de API carregadas do arquivo JSON:", API_KEYS_STORAGE_KEY);
+      console.log(
+        "Chaves de API carregadas do arquivo JSON:",
+        API_KEYS_STORAGE_KEY,
+      );
       console.log("Database version:", localDatabase.version);
       console.log("Total de chaves:", localDatabase.api_keys.length);
     } catch (error) {
@@ -130,7 +133,7 @@ export function useApiKeys() {
       const updatedDatabase = {
         ...database,
         api_keys: updatedKeys,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
       setDatabase(updatedDatabase);
       setApiKeys(updatedKeys);
@@ -138,14 +141,16 @@ export function useApiKeys() {
     }
   };
 
-  const createApiKey = async (request: CreateApiKeyRequest): Promise<ApiKey | null> => {
+  const createApiKey = async (
+    request: CreateApiKeyRequest,
+  ): Promise<ApiKey | null> => {
     try {
       const newKey: ApiKey = {
         id: Date.now().toString(),
         name: request.name,
         key: generateApiKey(),
         created_at: new Date().toISOString(),
-        status: "active"
+        status: "active",
       };
 
       const updatedKeys = [...apiKeys, newKey];
@@ -159,7 +164,7 @@ export function useApiKeys() {
       console.log("Nova chave criada:", {
         id: newKey.id,
         name: newKey.name,
-        created_at: newKey.created_at
+        created_at: newKey.created_at,
       });
 
       return newKey;
@@ -176,8 +181,8 @@ export function useApiKeys() {
 
   const revokeApiKey = async (keyId: string): Promise<boolean> => {
     try {
-      const updatedKeys = apiKeys.map(key =>
-        key.id === keyId ? { ...key, status: "revoked" as const } : key
+      const updatedKeys = apiKeys.map((key) =>
+        key.id === keyId ? { ...key, status: "revoked" as const } : key,
       );
 
       updateDatabase(updatedKeys);
@@ -203,8 +208,8 @@ export function useApiKeys() {
   const regenerateApiKey = async (keyId: string): Promise<ApiKey | null> => {
     try {
       const newKeyValue = generateApiKey();
-      const updatedKeys = apiKeys.map(key =>
-        key.id === keyId ? { ...key, key: newKeyValue } : key
+      const updatedKeys = apiKeys.map((key) =>
+        key.id === keyId ? { ...key, key: newKeyValue } : key,
       );
 
       updateDatabase(updatedKeys);
@@ -214,7 +219,7 @@ export function useApiKeys() {
         description: "Uma nova chave foi gerada e salva no arquivo JSON.",
       });
 
-      const updatedKey = updatedKeys.find(k => k.id === keyId);
+      const updatedKey = updatedKeys.find((k) => k.id === keyId);
       console.log("Chave regenerada:", keyId, "Nova chave gerada");
 
       return updatedKey || null;
@@ -237,7 +242,7 @@ export function useApiKeys() {
     revokeApiKey,
     regenerateApiKey,
     reload: loadApiKeys,
-    exportJson: () => database ? JSON.stringify(database, null, 2) : null,
+    exportJson: () => (database ? JSON.stringify(database, null, 2) : null),
   };
 }
 
