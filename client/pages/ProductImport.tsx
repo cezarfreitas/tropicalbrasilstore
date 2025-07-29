@@ -582,7 +582,17 @@ export default function ProductImport() {
         "HAV001",
         "Chinelo clássico Havaianas Top",
         "35.90",
-        "100",
+        "grade", // Tipo de Estoque
+        "30", // Estoque por Grade (diferente da primeira cor)
+        "", // Tam 37 (vazio para estoque por grade)
+        "", // Tam 38
+        "", // Tam 39
+        "", // Tam 40
+        "", // Tam 41
+        "", // Tam 42
+        "", // Tam 43
+        "", // Tam 44
+        "", // Stock per variant (deprecated)
       ],
     ];
 
