@@ -630,14 +630,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                       }`}
                     />
                   </button>
-                  {selectedColorFilter && (
-                    <button
-                      onClick={() => handleColorFilter(null)}
-                      className="text-xs text-white/70 hover:text-white bg-white/10 hover:bg-white/20 px-2 py-1 rounded-full transition-all duration-300"
-                    >
-                      Limpar
-                    </button>
-                  )}
+
                 </div>
 
                 {colorFilterOpen && (
