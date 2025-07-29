@@ -366,6 +366,45 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Get product variants by codigo
+router.get("/:codigo/variants", async (req, res) => {
+  try {
+    const { codigo } = req.params;
+
+    const [rows] = await db.execute(`
+      SELECT
+        pcg.id,
+        c.name as cor,
+        p.base_price as preco,
+        g.id as grade_id,
+        g.name as grade_nome,
+        NULL as foto,
+        COALESCE(SUM(gt.required_quantity), 0) as estoque_total
+      FROM products p
+      JOIN product_color_grades pcg ON p.id = pcg.product_id
+      JOIN colors c ON pcg.color_id = c.id
+      JOIN grade_vendida g ON pcg.grade_id = g.id
+      LEFT JOIN grade_templates gt ON g.id = gt.grade_id
+      WHERE p.sku = ? AND p.active = true
+      GROUP BY pcg.id, c.name, p.base_price, g.id, g.name
+      ORDER BY c.name
+    `, [codigo]);
+
+    if ((rows as any[]).length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: "Produto não encontrado",
+        message: `Nenhum produto encontrado com código '${codigo}'`
+      });
+    }
+
+    res.json(rows);
+  } catch (error) {
+    console.error("Error fetching product variants:", error);
+    res.status(500).json({ error: "Failed to fetch product variants" });
+  }
+});
+
 // Get product by ID
 router.get("/:id", async (req, res) => {
   try {
