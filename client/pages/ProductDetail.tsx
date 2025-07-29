@@ -440,11 +440,6 @@ export default function ProductDetail() {
         unitPrice,
         photo: selectedVariantImage || product.photo,
       });
-
-      toast({
-        title: "✓ Adicionado ao carrinho",
-        description: `${selectedColorData?.name}`,
-      });
     } else {
       toast({
         title: "Erro",
