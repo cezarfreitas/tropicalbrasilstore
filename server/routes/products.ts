@@ -618,7 +618,7 @@ router.post("/single", validateApiKey, async (req, res) => {
 
     // Criar produto
     const [productResult] = await db.execute(
-      "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, suggested_price, sell_without_stock, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, suggested_price, sell_without_stock, stock_type, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         nome,
         descricao || null,
@@ -629,6 +629,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         preco,
         preco_sugerido || null,
         vender_infinito || false,
+        'grade', // default para grade
         true,
       ],
     );
