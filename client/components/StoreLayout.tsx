@@ -642,45 +642,73 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                 {colorFilterOpen && (
                   <>
-                    <div className="grid grid-cols-5 gap-2 px-2">
+                    <div className="grid grid-cols-4 gap-3 px-2">
                       {availableColors.map((color) => (
-                        <button
-                          key={color.id}
-                          onClick={() => handleColorFilter(color.id)}
-                          className={`group relative w-9 h-9 rounded-xl border-2 transition-all duration-300 hover:scale-110 hover:shadow-xl ${
-                            selectedColorFilter === color.id
-                              ? "border-white shadow-2xl scale-110 ring-2 ring-white/30"
-                              : "border-white/40 hover:border-white/80"
-                          }`}
-                          title={color.name}
-                        >
-                          <div
-                            className="w-full h-full rounded-xl shadow-inner"
-                            style={{
-                              backgroundColor: color.hex_code || "#E5E7EB",
-                            }}
+                        <div key={color.id} className="flex flex-col items-center gap-1">
+                          <button
+                            onClick={() => handleColorFilter(color.id)}
+                            className={`group relative w-12 h-12 rounded-2xl border-3 transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-black/30 ${
+                              selectedColorFilter === color.id
+                                ? "border-white shadow-2xl scale-110 ring-3 ring-white/40 shadow-white/20"
+                                : "border-white/50 hover:border-white shadow-lg"
+                            }`}
+                            title={`Filtrar por ${color.name}`}
                           >
-                            {!color.hex_code && (
-                              <div className="w-full h-full flex items-center justify-center text-xs font-bold text-gray-700 rounded-xl bg-gray-200">
-                                {color.name?.charAt(0)?.toUpperCase()}
+                            <div
+                              className="w-full h-full rounded-2xl shadow-inner relative overflow-hidden"
+                              style={{
+                                backgroundColor: color.hex_code || "#E5E7EB",
+                                background: color.hex_code ? `linear-gradient(135deg, ${color.hex_code}, ${color.hex_code}dd)` : "#E5E7EB",
+                              }}
+                            >
+                              {!color.hex_code && (
+                                <div className="w-full h-full flex items-center justify-center text-sm font-bold text-gray-700 rounded-2xl bg-gradient-to-br from-gray-200 to-gray-300">
+                                  {color.name?.charAt(0)?.toUpperCase()}
+                                </div>
+                              )}
+
+                              {/* Efeito de brilho no hover */}
+                              <div className="absolute inset-0 bg-white/0 group-hover:bg-white/20 transition-all duration-300 rounded-2xl"></div>
+                            </div>
+
+                            {selectedColorFilter === color.id && (
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-5 h-5 bg-white rounded-full shadow-2xl border-2 border-gray-300 flex items-center justify-center">
+                                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                                </div>
                               </div>
                             )}
-                          </div>
+                          </button>
 
-                          {selectedColorFilter === color.id && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="w-4 h-4 bg-white rounded-full shadow-2xl border-2 border-gray-300"></div>
-                            </div>
-                          )}
-                        </button>
+                          {/* Nome da cor */}
+                          <span className={`text-xs font-medium text-center leading-tight transition-all duration-300 ${
+                            selectedColorFilter === color.id
+                              ? "text-white font-bold"
+                              : "text-white/80 group-hover:text-white"
+                          }`}>
+                            {color.name}
+                          </span>
+                        </div>
                       ))}
                     </div>
 
+                    {/* Botão para limpar filtro - mais visível */}
+                    {selectedColorFilter && (
+                      <div className="px-2 mt-3">
+                        <button
+                          onClick={() => handleColorFilter(null)}
+                          className="w-full text-xs text-white/80 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl transition-all duration-300 border border-white/20 hover:border-white/40"
+                        >
+                          ✕ Remover filtro de cor
+                        </button>
+                      </div>
+                    )}
+
                     {availableColors.length === 0 && (
-                      <div className="text-center py-6 px-4">
-                        <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-2"></div>
-                        <p className="text-sm text-white/70 font-medium">
-                          Carregando cores...
+                      <div className="text-center py-8 px-4">
+                        <div className="w-10 h-10 border-3 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-3"></div>
+                        <p className="text-sm text-white/80 font-medium">
+                          Carregando paleta de cores...
                         </p>
                       </div>
                     )}
