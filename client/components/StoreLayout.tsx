@@ -16,6 +16,9 @@ import {
   Trash2,
   Search,
   ChevronDown,
+  CheckCircle2,
+  MessageCircle,
+  Grid3x3,
 } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
