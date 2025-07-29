@@ -33,6 +33,7 @@ import Store from "./pages/Store";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import CustomerOrders from "./pages/CustomerOrders";
 import ProductImport from "./pages/ProductImport";
 import NotFound from "./pages/NotFound";
 import { GlobalCartModal } from "./components/GlobalCartModal";
