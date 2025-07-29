@@ -29,7 +29,10 @@ import { LoginModal } from "@/components/LoginModal";
 import { RegisterModal } from "@/components/RegisterModal";
 import { ThemeIndicator } from "@/components/ThemeIndicator";
 import { ProductImage } from "@/components/ProductImage";
-import { useGlobalStoreSettings, getGlobalStoreSettings } from "@/hooks/use-global-store-settings";
+import {
+  useGlobalStoreSettings,
+  getGlobalStoreSettings,
+} from "@/hooks/use-global-store-settings";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,7 +52,14 @@ interface StoreLayoutProps {
 }
 
 export function StoreLayout({ children }: StoreLayoutProps) {
-  const { items, totalItems, updateQuantity, removeItem, totalPrice, clearCart } = useCart();
+  const {
+    items,
+    totalItems,
+    updateQuantity,
+    removeItem,
+    totalPrice,
+    clearCart,
+  } = useCart();
   const { isAuthenticated, isApproved, customer, logout } = useCustomerAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -62,11 +72,17 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [availableColors, setAvailableColors] = useState<any[]>([]);
-  const [selectedColorFilter, setSelectedColorFilter] = useState<number | null>(null);
+  const [selectedColorFilter, setSelectedColorFilter] = useState<number | null>(
+    null,
+  );
   const [availableGenders, setAvailableGenders] = useState<any[]>([]);
-  const [selectedGenderFilter, setSelectedGenderFilter] = useState<number | null>(null);
+  const [selectedGenderFilter, setSelectedGenderFilter] = useState<
+    number | null
+  >(null);
   const [availableTypes, setAvailableTypes] = useState<any[]>([]);
-  const [selectedTypeFilter, setSelectedTypeFilter] = useState<number | null>(null);
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState<number | null>(
+    null,
+  );
 
   // Accordion states for filter sections
   const [colorFilterOpen, setColorFilterOpen] = useState(false);
@@ -107,21 +123,24 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   }, [searchParams]);
 
   // Search functionality - memoized
-  const handleSearch = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/loja?busca=${encodeURIComponent(searchTerm.trim())}`);
-    }
-  }, [searchTerm, navigate]);
+  const handleSearch = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (searchTerm.trim()) {
+        navigate(`/loja?busca=${encodeURIComponent(searchTerm.trim())}`);
+      }
+    },
+    [searchTerm, navigate],
+  );
 
   const handleColorFilter = (colorId: number | null) => {
     setSelectedColorFilter(colorId);
     const currentParams = new URLSearchParams(searchParams);
 
     if (colorId === null) {
-      currentParams.delete('cor');
+      currentParams.delete("cor");
     } else {
-      currentParams.set('cor', colorId.toString());
+      currentParams.set("cor", colorId.toString());
     }
 
     navigate(`/loja?${currentParams.toString()}`);
@@ -132,9 +151,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     const currentParams = new URLSearchParams(searchParams);
 
     if (genderId === null) {
-      currentParams.delete('genero');
+      currentParams.delete("genero");
     } else {
-      currentParams.set('genero', genderId.toString());
+      currentParams.set("genero", genderId.toString());
     }
 
     navigate(`/loja?${currentParams.toString()}`);
@@ -145,9 +164,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     const currentParams = new URLSearchParams(searchParams);
 
     if (typeId === null) {
-      currentParams.delete('tipo');
+      currentParams.delete("tipo");
     } else {
-      currentParams.set('tipo', typeId.toString());
+      currentParams.set("tipo", typeId.toString());
     }
 
     navigate(`/loja?${currentParams.toString()}`);
@@ -162,7 +181,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       if (category.id !== "all") {
         links.push({
           to: `/loja?categoria=${encodeURIComponent(category.name.toLowerCase())}`,
-          label: category.name
+          label: category.name,
         });
       }
     });
@@ -171,21 +190,22 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   }, [categories]);
 
   // Memoized cart aria label
-  const cartAriaLabel = useMemo(() => 
-    `Carrinho com ${totalItems} ${totalItems === 1 ? 'item' : 'itens'}`,
-    [totalItems]
+  const cartAriaLabel = useMemo(
+    () => `Carrinho com ${totalItems} ${totalItems === 1 ? "item" : "itens"}`,
+    [totalItems],
   );
 
   // Logo component that shows only custom logo with immediate global loading
   const LogoDisplay = ({
     size = "h-6 w-6",
-    className = ""
+    className = "",
   }: {
     size?: string;
     className?: string;
   }) => {
     // Try to get logo from current settings or global settings immediately
-    const logoUrl = storeSettings?.logo_url || getGlobalStoreSettings()?.logo_url;
+    const logoUrl =
+      storeSettings?.logo_url || getGlobalStoreSettings()?.logo_url;
 
     if (logoUrl) {
       return (
@@ -195,14 +215,29 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             alt="Logo da Loja"
             className="transition-opacity duration-200 hover:opacity-90"
             onError={(e) => {
-              e.currentTarget.style.display = 'none';
+              // Show fallback when image fails to load
+              const fallback = document.createElement("div");
+              fallback.className = `${size} bg-primary rounded-lg flex items-center justify-center text-white font-bold text-sm`;
+              fallback.textContent = "LOGO";
+              e.currentTarget.parentNode?.replaceChild(
+                fallback,
+                e.currentTarget,
+              );
             }}
             loading="eager"
           />
         </div>
       );
     }
-    return null;
+
+    // Fallback logo when no logo is configured
+    return (
+      <div
+        className={`logo-fallback ${size} ${className} bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xs`}
+      >
+        <Package2 className="h-full w-full p-1" />
+      </div>
+    );
   };
 
   // Fetch categories for mobile menu
@@ -242,8 +277,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         if (response.ok) {
           const data = await response.json();
           // Filter categories to only show those with show_in_menu = true
-          const visibleCategories = data.filter((cat: any) => cat.show_in_menu !== false);
-          setCategories([{ id: "all", name: "Todas as Categorias" }, ...visibleCategories]);
+          const visibleCategories = data.filter(
+            (cat: any) => cat.show_in_menu !== false,
+          );
+          setCategories([
+            { id: "all", name: "Todas as Categorias" },
+            ...visibleCategories,
+          ]);
         }
       } catch (error) {
         console.warn("Failed to fetch categories:", error);
@@ -409,7 +449,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       <aside className="hidden lg:flex flex-col bg-gradient-to-b from-primary to-primary/95 border-r border-primary/20 shadow-xl w-64 min-h-screen">
         {/* Sidebar Header */}
         <div className="border-b border-white/10 bg-gradient-to-r from-primary to-primary/90 p-3">
-          <Link to="/loja" className="flex items-center justify-center group" aria-label="Ir para página inicial">
+          <Link
+            to="/loja"
+            className="flex items-center justify-center group"
+            aria-label="Ir para página inicial"
+          >
             <LogoDisplay
               size="w-44 h-24"
               className="flex-shrink-0 transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
@@ -433,42 +477,47 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                         <User className="h-5 w-5 text-white" />
                       </Button>
                     </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuLabel>
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {customer?.name || "Cliente"}
-                      </p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {customer?.whatsapp}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-xs">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          isApproved ? "bg-green-500" : "bg-yellow-500"
-                        }`}
-                      />
-                      {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/loja/pedidos" className="flex items-center cursor-pointer">
-                      <Package2 className="h-4 w-4 mr-2" />
-                      Meus Pedidos
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout}>
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Sair
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuLabel>
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-medium leading-none">
+                            {customer?.name || "Cliente"}
+                          </p>
+                          <p className="text-xs leading-none text-muted-foreground">
+                            {customer?.whatsapp}
+                          </p>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="text-xs">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              isApproved ? "bg-green-500" : "bg-yellow-500"
+                            }`}
+                          />
+                          {isApproved
+                            ? "Conta aprovada"
+                            : "Aguardando aprovação"}
+                        </div>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link
+                          to="/loja/pedidos"
+                          className="flex items-center cursor-pointer"
+                        >
+                          <Package2 className="h-4 w-4 mr-2" />
+                          Meus Pedidos
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={logout}>
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Sair
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 ) : (
                   <Button
                     variant="ghost"
@@ -496,11 +545,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 </Button>
                 {totalItems > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 text-white animate-pulse border-2 border-white shadow-xl font-bold">
-                    {totalItems > 99 ? '99+' : totalItems}
+                    {totalItems > 99 ? "99+" : totalItems}
                   </Badge>
                 )}
               </div>
-              <span className="text-xs text-white/80 font-medium">Carrinho</span>
+              <span className="text-xs text-white/80 font-medium">
+                Carrinho
+              </span>
             </div>
 
             {/* Search */}
@@ -520,7 +571,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-3 overflow-y-auto" role="navigation" aria-label="Categorias principais">
+        <nav
+          className="flex-1 px-4 py-3 overflow-y-auto"
+          role="navigation"
+          aria-label="Categorias principais"
+        >
           <div className="space-y-1">
             <div className="px-2 mb-3">
               <h3 className="text-sm font-bold text-white/90 uppercase tracking-wider">
@@ -552,7 +607,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     <span>Filtrar por Cor</span>
                     <ChevronDown
                       className={`h-4 w-4 transition-all duration-300 ${
-                        colorFilterOpen ? 'rotate-180 text-white' : 'text-white/70'
+                        colorFilterOpen
+                          ? "rotate-180 text-white"
+                          : "text-white/70"
                       }`}
                     />
                   </button>
@@ -575,15 +632,15 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                           onClick={() => handleColorFilter(color.id)}
                           className={`group relative w-9 h-9 rounded-xl border-2 transition-all duration-300 hover:scale-110 hover:shadow-xl ${
                             selectedColorFilter === color.id
-                              ? 'border-white shadow-2xl scale-110 ring-2 ring-white/30'
-                              : 'border-white/40 hover:border-white/80'
+                              ? "border-white shadow-2xl scale-110 ring-2 ring-white/30"
+                              : "border-white/40 hover:border-white/80"
                           }`}
                           title={color.name}
                         >
                           <div
                             className="w-full h-full rounded-xl shadow-inner"
                             style={{
-                              backgroundColor: color.hex_code || '#E5E7EB'
+                              backgroundColor: color.hex_code || "#E5E7EB",
                             }}
                           >
                             {!color.hex_code && (
@@ -605,7 +662,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     {availableColors.length === 0 && (
                       <div className="text-center py-6 px-4">
                         <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-2"></div>
-                        <p className="text-sm text-white/70 font-medium">Carregando cores...</p>
+                        <p className="text-sm text-white/70 font-medium">
+                          Carregando cores...
+                        </p>
                       </div>
                     )}
                   </>
@@ -625,7 +684,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     <span>Filtrar por Gênero</span>
                     <ChevronDown
                       className={`h-4 w-4 transition-all duration-300 ${
-                        genderFilterOpen ? 'rotate-180 text-white' : 'text-white/70'
+                        genderFilterOpen
+                          ? "rotate-180 text-white"
+                          : "text-white/70"
                       }`}
                     />
                   </button>
@@ -648,8 +709,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                           onClick={() => handleGenderFilter(gender.id)}
                           className={`w-full text-left p-2 rounded-lg text-xs transition-all duration-200 ${
                             selectedGenderFilter === gender.id
-                              ? 'bg-white/20 text-white font-medium'
-                              : 'text-white/80 hover:bg-white/10 hover:text-white'
+                              ? "bg-white/20 text-white font-medium"
+                              : "text-white/80 hover:bg-white/10 hover:text-white"
                           }`}
                           title={gender.description}
                         >
@@ -660,7 +721,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                     {availableGenders.length === 0 && (
                       <div className="text-center py-4 px-3">
-                        <p className="text-xs text-white/60">Carregando gêneros...</p>
+                        <p className="text-xs text-white/60">
+                          Carregando gêneros...
+                        </p>
                       </div>
                     )}
                   </>
@@ -680,7 +743,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     <span>Filtrar por Tipo</span>
                     <ChevronDown
                       className={`h-4 w-4 transition-all duration-300 ${
-                        typeFilterOpen ? 'rotate-180 text-white' : 'text-white/70'
+                        typeFilterOpen
+                          ? "rotate-180 text-white"
+                          : "text-white/70"
                       }`}
                     />
                   </button>
@@ -703,8 +768,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                           onClick={() => handleTypeFilter(type.id)}
                           className={`w-full text-left p-2 rounded-xl text-xs transition-all duration-300 group ${
                             selectedTypeFilter === type.id
-                              ? 'bg-white/20 text-white font-bold shadow-lg border border-white/30'
-                              : 'text-white/80 hover:bg-white/15 hover:text-white border border-transparent hover:border-white/20'
+                              ? "bg-white/20 text-white font-bold shadow-lg border border-white/30"
+                              : "text-white/80 hover:bg-white/15 hover:text-white border border-transparent hover:border-white/20"
                           }`}
                           title={type.description}
                         >
@@ -717,7 +782,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                     {availableTypes.length === 0 && (
                       <div className="text-center py-4 px-3">
-                        <p className="text-xs text-white/60">Carregando tipos...</p>
+                        <p className="text-xs text-white/60">
+                          Carregando tipos...
+                        </p>
                       </div>
                     )}
                   </>
@@ -726,7 +793,6 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             </div>
           </div>
         </nav>
-
       </aside>
 
       {/* Main Content Area */}
@@ -748,11 +814,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               </Button>
 
               {/* Mobile Logo */}
-              <Link to="/loja" className="flex items-center bg-primary rounded-lg" aria-label="Ir para página inicial">
-                <LogoDisplay
-                  size="w-32 h-32"
-                  className="flex-shrink-0"
-                />
+              <Link
+                to="/loja"
+                className="flex items-center bg-primary rounded-lg"
+                aria-label="Ir para página inicial"
+              >
+                <LogoDisplay size="w-32 h-32" className="flex-shrink-0" />
               </Link>
 
               {/* Mobile Actions */}
@@ -761,7 +828,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 {isAuthenticated ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-10 w-10 p-0" aria-label="Menu do usuário">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-10 w-10 p-0"
+                        aria-label="Menu do usuário"
+                      >
                         <User className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -784,12 +856,17 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                               isApproved ? "bg-green-500" : "bg-yellow-500"
                             }`}
                           />
-                          {isApproved ? "Conta aprovada" : "Aguardando aprovação"}
+                          {isApproved
+                            ? "Conta aprovada"
+                            : "Aguardando aprovação"}
                         </div>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
-                        <Link to="/loja/pedidos" className="flex items-center cursor-pointer">
+                        <Link
+                          to="/loja/pedidos"
+                          className="flex items-center cursor-pointer"
+                        >
                           <Package2 className="h-4 w-4 mr-2" />
                           Meus Pedidos
                         </Link>
@@ -857,9 +934,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         </header>
 
         {/* Main content */}
-        <main className="flex-1 lg:p-6">
-          {children}
-        </main>
+        <main className="flex-1 lg:p-6">{children}</main>
 
         {/* Footer */}
         <footer className="border-t bg-card">
@@ -910,7 +985,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-lg shadow-xl z-50 animate-in zoom-in-95 duration-300">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-foreground">Buscar Produtos</h2>
+                <h2 className="text-lg font-semibold text-foreground">
+                  Buscar Produtos
+                </h2>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -921,10 +998,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 </Button>
               </div>
 
-              <form onSubmit={(e) => {
-                handleSearch(e);
-                setSearchModalOpen(false);
-              }} className="space-y-4">
+              <form
+                onSubmit={(e) => {
+                  handleSearch(e);
+                  setSearchModalOpen(false);
+                }}
+                className="space-y-4"
+              >
                 <div className="relative">
                   <Input
                     type="text"
@@ -1079,7 +1159,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <h2 className="text-lg font-bold text-gray-900">Carrinho</h2>
                   {totalItems > 0 && (
                     <p className="text-sm text-gray-600">
-                      {items.length} {items.length === 1 ? 'produto' : 'produtos'} • {totalItems} {totalItems === 1 ? 'item' : 'itens'}
+                      {items.length}{" "}
+                      {items.length === 1 ? "produto" : "produtos"} •{" "}
+                      {totalItems} {totalItems === 1 ? "item" : "itens"}
                     </p>
                   )}
                 </div>
@@ -1118,7 +1200,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 ) : (
                   <div className="p-4 space-y-4">
                     {items.map((item, index) => (
-                      <div key={item.id} className="group bg-gray-50 hover:bg-gray-100 rounded-xl p-4 transition-all duration-200 border border-gray-100 hover:border-gray-200">
+                      <div
+                        key={item.id}
+                        className="group bg-gray-50 hover:bg-gray-100 rounded-xl p-4 transition-all duration-200 border border-gray-100 hover:border-gray-200"
+                      >
                         <div className="flex items-start gap-4">
                           {/* Product Image */}
                           <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-100">
@@ -1143,7 +1228,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                             </h4>
 
                             {/* Grade Info */}
-                            {item.type === 'grade' && (
+                            {item.type === "grade" && (
                               <div className="space-y-1 mb-3">
                                 <div className="flex items-center gap-2">
                                   <Grid3x3 className="h-3 w-3 text-primary" />
@@ -1152,7 +1237,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                                   </span>
                                 </div>
                                 <p className="text-xs text-gray-600">
-                                  Cor: {item.colorName} • {item.piecesPerGrade || 0} itens por grade
+                                  Cor: {item.colorName} •{" "}
+                                  {item.piecesPerGrade || 0} itens por grade
                                 </p>
                               </div>
                             )}
@@ -1165,7 +1251,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                                 </p>
                                 {item.quantity > 1 && (
                                   <p className="text-xs text-gray-500">
-                                    {item.quantity} × R$ {item.unitPrice.toFixed(2)}
+                                    {item.quantity} × R${" "}
+                                    {item.unitPrice.toFixed(2)}
                                   </p>
                                 )}
                               </div>
@@ -1176,7 +1263,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                                   variant="outline"
                                   size="sm"
                                   onClick={() =>
-                                    updateQuantity(item.id, Math.max(1, item.quantity - 1))
+                                    updateQuantity(
+                                      item.id,
+                                      Math.max(1, item.quantity - 1),
+                                    )
                                   }
                                   className="h-7 w-7 p-0 hover:bg-primary hover:text-white border-gray-300"
                                   disabled={item.quantity <= 1}
@@ -1190,7 +1280,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                                   variant="outline"
                                   size="sm"
                                   onClick={() =>
-                                    updateQuantity(item.id, Math.min(99, item.quantity + 1))
+                                    updateQuantity(
+                                      item.id,
+                                      Math.min(99, item.quantity + 1),
+                                    )
                                   }
                                   className="h-7 w-7 p-0 hover:bg-primary hover:text-white border-gray-300"
                                   disabled={item.quantity >= 99}
@@ -1221,7 +1314,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                           variant="outline"
                           size="sm"
                           onClick={() => {
-                            if (confirm('Tem certeza que deseja limpar todo o carrinho?')) {
+                            if (
+                              confirm(
+                                "Tem certeza que deseja limpar todo o carrinho?",
+                              )
+                            ) {
                               clearCart();
                             }
                           }}
@@ -1243,15 +1340,21 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-gray-600">Subtotal</span>
-                      <span className="font-medium">R$ {totalPrice.toFixed(2)}</span>
+                      <span className="font-medium">
+                        R$ {totalPrice.toFixed(2)}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-gray-600">Frete</span>
-                      <span className="font-medium text-blue-600">A calcular</span>
+                      <span className="font-medium text-blue-600">
+                        A calcular
+                      </span>
                     </div>
                     <div className="border-t pt-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-lg font-bold text-gray-900">Total</span>
+                        <span className="text-lg font-bold text-gray-900">
+                          Total
+                        </span>
                         <span className="text-xl font-bold text-primary">
                           R$ {totalPrice.toFixed(2)}
                         </span>

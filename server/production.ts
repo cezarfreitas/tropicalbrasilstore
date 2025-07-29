@@ -1,5 +1,6 @@
 import path from "path";
 import * as express from "express";
+import fs from "fs";
 import { createServer } from "./index";
 import { fileURLToPath } from "url";
 
@@ -22,6 +23,19 @@ const __dirname = path.dirname(__filename);
 
 // Create Express app
 const app = createServer();
+
+// Ensure uploads directory exists in production
+const uploadsPath = path.join(process.cwd(), "public", "uploads");
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true });
+  fs.mkdirSync(path.join(uploadsPath, "logos"), { recursive: true });
+  fs.mkdirSync(path.join(uploadsPath, "products"), { recursive: true });
+  console.log("📁 Created uploads directories in production");
+}
+
+// Serve uploads directory (must be before SPA static files)
+app.use("/uploads", express.static(uploadsPath));
+console.log("📁 Serving uploads from:", uploadsPath);
 
 // Serve static files from the dist/spa directory
 const staticPath = path.join(__dirname, "../spa");

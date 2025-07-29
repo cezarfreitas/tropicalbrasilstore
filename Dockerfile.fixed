@@ -16,8 +16,12 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Ensure uploads directories exist
+# Create uploads directory structure if it doesn't exist
 RUN mkdir -p public/uploads/logos public/uploads/products
+
+# Copy existing uploads to ensure they're preserved
+# This ensures any logo/files uploaded during development are included
+COPY public/uploads/ public/uploads/ 2>/dev/null || echo "No uploads directory found, creating empty one"
 
 # Expose port
 EXPOSE 3000
