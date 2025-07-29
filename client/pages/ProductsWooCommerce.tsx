@@ -879,6 +879,16 @@ export default function ProductsWooCommerce() {
                     />
                     <Label htmlFor="active">Produto Ativo</Label>
                   </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="sell_without_stock"
+                      checked={formData.sell_without_stock}
+                      onCheckedChange={(checked) =>
+                        setFormData({ ...formData, sell_without_stock: checked })
+                      }
+                    />
+                    <Label htmlFor="sell_without_stock">Vender Infinito</Label>
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="variants" className="space-y-6">
