@@ -242,8 +242,6 @@ export function useCart() {
   const { state, dispatch } = context;
 
   const addItem = (item: Omit<CartItem, "id" | "totalPrice">) => {
-    console.log("🛒 useCart addItem called with:", item);
-
     let id: string;
 
     switch (item.type) {
@@ -260,8 +258,6 @@ export function useCart() {
         id = `item-${item.productId}-${Date.now()}`;
     }
 
-    console.log("🛒 Generated item id:", id);
-
     // Add item to cart
     dispatch({
       type: "ADD_ITEM",
@@ -271,8 +267,6 @@ export function useCart() {
         totalPrice: item.quantity * item.unitPrice,
       },
     });
-
-    console.log("🛒 Item dispatched to cart");
 
     // Prepare modal product data
     let variant = "";
@@ -285,23 +279,16 @@ export function useCart() {
     }
 
     // Show confirmation modal
-    const modalData = {
-      name: item.productName,
-      photo: item.photo,
-      variant: variant || undefined,
-      quantity: item.quantity,
-      unitPrice: item.unitPrice,
-    };
-
-    console.log("🛒 Setting modal product:", modalData);
-    console.log("🛒 Current isModalOpen before setting:", state.isModalOpen);
-
     dispatch({
       type: "SHOW_MODAL",
-      product: modalData,
+      product: {
+        name: item.productName,
+        photo: item.photo,
+        variant: variant || undefined,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+      },
     });
-
-    console.log("🛒 Modal dispatch sent");
   };
 
   const removeItem = (id: string) => {
