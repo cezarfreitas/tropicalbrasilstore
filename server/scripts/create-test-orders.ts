@@ -128,15 +128,13 @@ async function createTestOrders() {
   }
 }
 
-// Executar se chamado diretamente
-if (require.main === module) {
-  createTestOrders().then(() => {
-    console.log("🏁 Script finalizado");
-    process.exit(0);
-  }).catch((error) => {
-    console.error("💥 Erro fatal:", error);
-    process.exit(1);
-  });
-}
+// Executar diretamente
+createTestOrders().then(() => {
+  console.log("🏁 Script finalizado");
+  process.exit(0);
+}).catch((error) => {
+  console.error("💥 Erro fatal:", error);
+  process.exit(1);
+});
 
 export { createTestOrders };
