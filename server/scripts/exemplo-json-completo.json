@@ -63,6 +63,7 @@
       "tipo": "Esportivo",
       "genero": "Infantil",
       "descricao": "Tênis colorido e divertido para crianças",
+      "preco_sugerido": 179.90,
       "vender_infinito": false,
       "variantes": [
         {
