@@ -15,6 +15,7 @@ import {
   Plus,
   Trash2,
   Search,
+  ChevronDown,
 } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
