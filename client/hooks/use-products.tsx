@@ -50,8 +50,18 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 // HMR guard to prevent connection issues
 if (typeof window !== 'undefined' && import.meta.hot) {
   import.meta.hot.accept(() => {
+    // Mark HMR as in progress
+    if (import.meta.hot?.data) {
+      import.meta.hot.data.hmrInvalidated = true;
+    }
     // Clear cache on HMR to prevent stale data
     globalCache.clear();
+    // Reset flag after a short delay
+    setTimeout(() => {
+      if (import.meta.hot?.data) {
+        import.meta.hot.data.hmrInvalidated = false;
+      }
+    }, 100);
   });
 }
 
