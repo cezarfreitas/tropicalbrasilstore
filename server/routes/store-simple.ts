@@ -157,7 +157,7 @@ router.get("/products-paginated", async (req, res) => {
     const typeFilter = req.query.tipo ? parseInt(req.query.tipo as string) : null;
 
     console.log(
-      `Getting products - page: ${page}, limit: ${limit}, category: ${category || "all"}, search: "${searchTerm || "none"}", color: ${colorFilter || "none"}"`,
+      `Getting products - page: ${page}, limit: ${limit}, category: ${category || "all"}, search: "${searchTerm || "none"}", color: ${colorFilter || "none"}, gender: ${genderFilter || "none"}, type: ${typeFilter || "none"}"`,
     );
 
     const offset = (page - 1) * limit;
