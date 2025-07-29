@@ -354,11 +354,13 @@ router.post("/single", validateApiKey, async (req, res) => {
       nome,
       categoria,
       tipo,
+      genero,
       descricao,
       cor,
       preco,
       grade,
       foto,
+      vender_infinito,
     } = req.body;
 
     // Validações básicas
@@ -391,10 +393,16 @@ router.post("/single", validateApiKey, async (req, res) => {
     const colorId = await getOrCreateColor(cor);
     const gradeId = await getOrCreateGrade(grade);
 
+    // Criar ou buscar gênero se fornecido
+    let genderId = null;
+    if (genero) {
+      genderId = await getOrCreateGender(genero);
+    }
+
     // Criar produto
     const [productResult] = await db.execute(
-      "INSERT INTO products (name, description, category_id, sku, base_price, active) VALUES (?, ?, ?, ?, ?, ?)",
-      [nome, descricao || null, categoryId, codigo, preco, true],
+      "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, sell_without_stock, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [nome, descricao || null, categoryId, typeId, genderId, codigo, preco, vender_infinito || false, true],
     );
 
     const productId = (productResult as any).insertId;
@@ -404,6 +412,15 @@ router.post("/single", validateApiKey, async (req, res) => {
       "INSERT INTO product_color_grades (product_id, color_id, grade_id) VALUES (?, ?, ?)",
       [productId, colorId, gradeId],
     );
+
+    // Criar variante física do produto
+    const variantSku = `${codigo}-${cor.toUpperCase().replace(/\s+/g, "-")}`;
+    await db.execute(
+      "INSERT INTO product_variants (product_id, color_id, sku, price_override, created_at) VALUES (?, ?, ?, ?, NOW())",
+      [productId, colorId, variantSku, preco],
+    );
+
+    console.log(`✅ Produto e variante criados: ${nome} - ${cor}`);
 
     // Resposta de sucesso
     res.status(201).json({
@@ -415,9 +432,12 @@ router.post("/single", validateApiKey, async (req, res) => {
         nome,
         categoria,
         tipo,
+        genero,
         cor,
         grade,
         preco,
+        vender_infinito: vender_infinito || false,
+        variant_sku: variantSku,
       },
     });
   } catch (error: any) {
