@@ -253,7 +253,7 @@ export default function ApiDocs() {
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li>• <strong>Agrupamento por código:</strong> Produtos são agrupados por código único</li>
                   <li>• <strong>Variantes obrigatórias:</strong> Todo produto deve ter pelo menos uma variante (cor)</li>
-                  <li>• <strong>Grades automáticas:</strong> Tamanhos são criados automaticamente com base na grade enviada</li>
+                  <li>• <strong>Grades inteligentes:</strong> Apenas o nome da grade é necessário - os tamanhos são criados automaticamente baseado no padrão da grade</li>
                   <li>• <strong>Auto-cadastro:</strong> Categorias, tipos e cores são criados automaticamente se não existirem</li>
                 </ul>
               </div>
