@@ -5,11 +5,11 @@ import { validateApiKey } from "../lib/api-auth";
 import { downloadAndSaveImage, isValidImageUrl } from "../lib/image-uploader";
 
 interface BulkProductVariant {
-  cor: string;
-  preco: number;
-  grade: string;
-  foto?: string;
-  sku?: string;
+  cor: string; // Cor da variante
+  preco: number; // Preço da variante
+  grade: string; // Grade/tamanho
+  foto?: string; // URL da foto (opcional)
+  sku?: string; // SKU específico (opcional)
 }
 
 interface BulkProduct {
