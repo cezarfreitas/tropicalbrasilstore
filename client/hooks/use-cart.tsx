@@ -297,6 +297,13 @@ export function useCart() {
   }, [state, isAuthenticated, customer, cartLoaded]);
 
   const addItem = (item: Omit<CartItem, "id" | "totalPrice">) => {
+    // Only allow adding items if user is authenticated
+    if (!isAuthenticated || !customer) {
+      // Show a message or redirect to login instead of adding to cart
+      console.warn("Usuário deve estar logado para adicionar itens ao carrinho");
+      return;
+    }
+
     let id: string;
 
     switch (item.type) {
@@ -347,15 +354,21 @@ export function useCart() {
   };
 
   const removeItem = (id: string) => {
+    if (!isAuthenticated) return;
     dispatch({ type: "REMOVE_ITEM", id });
   };
 
   const updateQuantity = (id: string, quantity: number) => {
+    if (!isAuthenticated) return;
     dispatch({ type: "UPDATE_QUANTITY", id, quantity });
   };
 
   const clearCart = () => {
+    if (!isAuthenticated) return;
     dispatch({ type: "CLEAR_CART" });
+    if (customer) {
+      clearUserCartFromStorage(customer.id);
+    }
   };
 
   const closeModal = () => {
