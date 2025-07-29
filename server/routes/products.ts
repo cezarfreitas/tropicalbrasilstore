@@ -136,7 +136,7 @@ async function getOrCreateGrade(name: string): Promise<number> {
 }
 
 // Bulk create products with variants and grades
-router.post("/bulk", async (req, res) => {
+router.post("/bulk", validateApiKey, async (req, res) => {
   try {
     const { products }: BulkProductsRequest = req.body;
 
