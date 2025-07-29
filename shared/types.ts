@@ -42,6 +42,8 @@ export interface Product {
   name: string;
   description?: string;
   category_id?: number;
+  gender_id?: number;
+  type_id?: number;
   base_price?: number;
   suggested_price?: number;
   sku?: string;
@@ -51,6 +53,8 @@ export interface Product {
   created_at: string;
   updated_at: string;
   category?: Category;
+  gender?: Gender;
+  type?: Type;
 }
 
 export interface GradeVendida {
