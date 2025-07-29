@@ -379,22 +379,15 @@ export default function ProductDetail() {
     const selectedColorData = getAvailableColors().find(
       (c) => c.id === selectedColor,
     );
-    console.log("selectedColorData:", selectedColorData);
 
     if (hasGrades() && selectedGrade) {
-      console.log("Has grades and selectedGrade");
       const grade = getAvailableGradesForColor().find(
         (g) => g.id === selectedGrade,
       );
-      console.log("Found grade:", grade);
 
-      if (!grade) {
-        console.log("No grade found, returning");
-        return;
-      }
+      if (!grade) return;
 
       if (!canAddGradeToCart(grade)) {
-        console.log("Cannot add grade to cart");
         toast({
           title: "Erro",
           description: "Estoque insuficiente para esta grade",
@@ -406,20 +399,6 @@ export default function ProductDetail() {
       const gradePrice = product.base_price
         ? product.base_price * grade.total_quantity
         : 0;
-
-      console.log("About to call addItem with:", {
-        type: "grade",
-        productId: product.id,
-        productName: product.name,
-        colorId: selectedColor,
-        colorName: selectedColorData?.name || "",
-        gradeId: grade.id,
-        gradeName: grade.name,
-        quantity,
-        unitPrice: gradePrice,
-        photo: selectedVariantImage || product.photo,
-        piecesPerGrade: grade.total_quantity,
-      });
 
       addItem({
         type: "grade",
@@ -434,8 +413,6 @@ export default function ProductDetail() {
         photo: selectedVariantImage || product.photo,
         piecesPerGrade: grade.total_quantity,
       });
-
-      console.log("addItem called successfully");
     } else if (!hasGrades() && selectedSize) {
       const variant = product.variants.find(
         (v) => v.color_id === selectedColor && v.size_id === selectedSize,
