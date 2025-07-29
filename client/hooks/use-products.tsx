@@ -32,7 +32,7 @@ interface UseProductsResult {
   pagination: PaginationInfo | null;
   loading: boolean;
   error: string | null;
-  fetchProducts: (page?: number, searchTerm?: string, colorFilter?: number | null) => Promise<void>;
+  fetchProducts: (page?: number, searchTerm?: string, colorFilter?: number | null, categoryFilter?: string | null) => Promise<void>;
   currentPage: number;
 }
 
