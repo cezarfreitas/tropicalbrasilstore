@@ -92,7 +92,7 @@ interface ApiKeysDatabase {
 export function useApiKeys() {
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [loading, setLoading] = useState(true);
-  const [usingMockData, setUsingMockData] = useState(false);
+  const [database, setDatabase] = useState<ApiKeysDatabase | null>(null);
   const { toast } = useToast();
 
   // Load API keys on mount
@@ -103,85 +103,38 @@ export function useApiKeys() {
   const loadApiKeys = async () => {
     try {
       setLoading(true);
-      const response = await new Promise<Response>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "/api/admin/api-keys", true);
-        xhr.setRequestHeader("Accept", "application/json");
 
-        xhr.onload = () => {
-          const headers = new Headers();
-          xhr
-            .getAllResponseHeaders()
-            .split("\r\n")
-            .forEach((line) => {
-              const [key, value] = line.split(": ");
-              if (key && value) headers.set(key, value);
-            });
+      // Primeiro, tenta carregar do JSON local
+      const localDatabase = loadApiKeysFromJson();
+      setDatabase(localDatabase);
+      setApiKeys(localDatabase.api_keys);
 
-          const response = new Response(xhr.responseText, {
-            status: xhr.status,
-            statusText: xhr.statusText,
-            headers: headers,
-          });
-          resolve(response);
-        };
-
-        xhr.onerror = () => reject(new Error("Network error"));
-        xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 10000;
-
-        xhr.send();
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setApiKeys(data.api_keys || []);
-        setUsingMockData(false);
-      } else {
-        console.warn("Backend API não disponível, usando dados mock");
-        setUsingMockData(true);
-        // Set mock data for development
-        setApiKeys([
-          {
-            id: "1",
-            name: "Chave Principal",
-            key: "sk_live_abcd1234567890abcdef1234567890abcdef12",
-            created_at: new Date().toISOString(),
-            last_used: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-            status: "active"
-          },
-          {
-            id: "2",
-            name: "Integração Mobile",
-            key: "sk_live_xyz9876543210xyz9876543210xyz987654321",
-            created_at: new Date(Date.now() - 7 * 86400000).toISOString(), // 7 days ago
-            status: "active"
-          }
-        ]);
-      }
+      console.log("Chaves de API carregadas do arquivo JSON:", API_KEYS_STORAGE_KEY);
+      console.log("Database version:", localDatabase.version);
+      console.log("Total de chaves:", localDatabase.api_keys.length);
     } catch (error) {
-      console.warn("Erro ao conectar com API, usando dados mock:", error);
-      setUsingMockData(true);
-      // Set mock data for development
-      setApiKeys([
-        {
-          id: "1",
-          name: "Chave Principal",
-          key: "sk_live_abcd1234567890abcdef1234567890abcdef12",
-          created_at: new Date().toISOString(),
-          last_used: new Date(Date.now() - 86400000).toISOString(),
-          status: "active"
-        },
-        {
-          id: "2",
-          name: "Integração Mobile",
-          key: "sk_live_xyz9876543210xyz9876543210xyz987654321",
-          created_at: new Date(Date.now() - 7 * 86400000).toISOString(),
-          status: "active"
-        }
-      ]);
+      console.error("Erro ao carregar chaves de API:", error);
+
+      // Fallback: cria banco padrão
+      const defaultDb = createDefaultApiKeysDatabase();
+      setDatabase(defaultDb);
+      setApiKeys(defaultDb.api_keys);
+      saveApiKeysToJson(defaultDb);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const updateDatabase = (updatedKeys: ApiKey[]) => {
+    if (database) {
+      const updatedDatabase = {
+        ...database,
+        api_keys: updatedKeys,
+        updated_at: new Date().toISOString()
+      };
+      setDatabase(updatedDatabase);
+      setApiKeys(updatedKeys);
+      saveApiKeysToJson(updatedDatabase);
     }
   };
 
