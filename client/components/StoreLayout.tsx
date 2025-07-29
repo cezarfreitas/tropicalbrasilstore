@@ -340,7 +340,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         {/* Navigation */}
         <nav className="flex-1 px-4 py-4" role="navigation" aria-label="Categorias principais">
           <div className="space-y-1">
-            <h3 className="px-3 mb-4 text-xs font-semibold text-muted-foreground/80 uppercase tracking-wider">
+            <h3 className="px-3 mb-2 text-xs font-semibold text-muted-foreground/80 uppercase tracking-wider">
               Categorias
             </h3>
             {navigationLinks.map((link, index) => {
@@ -348,7 +348,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="group flex items-center text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 rounded-xl px-3 py-3 transition-all duration-200 hover:shadow-sm border border-transparent hover:border-white/20"
+                  className="group flex items-center text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 rounded-xl px-3 py-2 transition-all duration-200 hover:shadow-sm border border-transparent hover:border-white/20"
                 >
                   <span className="group-hover:translate-x-1 transition-transform duration-200">{link.label}</span>
                 </Link>
