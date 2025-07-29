@@ -512,10 +512,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-5 py-5 overflow-y-auto" role="navigation" aria-label="Categorias principais">
+        <nav className="flex-1 px-4 py-3 overflow-y-auto" role="navigation" aria-label="Categorias principais">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 px-3 mb-4">
-              <div className="w-1 h-4 bg-white/60 rounded-full"></div>
+            <div className="px-2 mb-3">
               <h3 className="text-sm font-bold text-white/90 uppercase tracking-wider">
                 Categorias
               </h3>
