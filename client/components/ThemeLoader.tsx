@@ -45,7 +45,39 @@ export function ThemeLoader() {
   const fetchThemeColors = async () => {
     try {
       console.log("🎨 Fetching theme colors from server...");
-      const response = await fetch("/api/settings");
+
+      // Use XMLHttpRequest to avoid FullStory conflicts
+      const response = await new Promise<Response>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/settings", true);
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onload = () => {
+          const headers = new Headers();
+          xhr
+            .getAllResponseHeaders()
+            .split("\r\n")
+            .forEach((line) => {
+              const [key, value] = line.split(": ");
+              if (key && value) headers.set(key, value);
+            });
+
+          const response = new Response(xhr.responseText, {
+            status: xhr.status,
+            statusText: xhr.statusText,
+            headers: headers,
+          });
+          resolve(response);
+        };
+
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.ontimeout = () => reject(new Error("Request timeout"));
+        xhr.timeout = 8000; // 8 second timeout
+
+        xhr.send();
+      });
+
       if (response.ok) {
         const settings = await response.json();
         const themeColors = {
