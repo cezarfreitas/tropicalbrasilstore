@@ -1212,7 +1212,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
               {/* Cart Footer - Fixed at bottom */}
               {items.length > 0 && (
-                <div className="border-t bg-white p-4 pb-6 space-y-4">
+                <div className="border-t bg-white p-4 pb-16 space-y-4">
                   {/* Summary */}
                   <div className="space-y-2">
                     <div className="flex justify-between items-center text-sm">
