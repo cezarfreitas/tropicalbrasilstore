@@ -169,17 +169,16 @@ router.get("/categories", async (req, res) => {
 router.get("/products", async (req, res) => {
   try {
     const [products] = await db.execute(`
-      SELECT 
+      SELECT
         p.id,
         p.name,
         p.description,
         p.base_price,
-        
-        
+        p.sell_without_stock,
         p.active,
         c.name as category_name,
         COUNT(DISTINCT pv.id) as variant_count,
-                COALESCE(SUM(pv.stock), 0) as total_stock
+        COALESCE(SUM(pv.stock), 0) as total_stock
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
       LEFT JOIN product_variants pv ON p.id = pv.product_id
