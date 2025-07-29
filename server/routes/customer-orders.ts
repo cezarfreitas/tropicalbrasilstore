@@ -36,8 +36,6 @@ router.get("/:customerId", async (req, res) => {
       ORDER BY o.created_at DESC
     `, [customerEmail]);
 
-    console.log(`📦 API: Pedidos encontrados: ${(orderRows as any[]).length}`);
-
     const orders = [];
     
     // For each order, get the detailed items
