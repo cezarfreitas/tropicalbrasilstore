@@ -685,7 +685,7 @@ export default function ProductDetail() {
 
                 <div className="space-y-1.5">
                   {hasGrades() ? (
-                    getAvailableGradesForColor().map((grade) => {
+                    getAvailableGradesForColor().map((grade, gradeIndex) => {
                       const canAdd = canAddGradeToCart(grade);
                       const sortedTemplates = [...grade.templates].sort(
                         (a, b) => a.display_order - b.display_order,
@@ -693,7 +693,7 @@ export default function ProductDetail() {
 
                       return (
                         <div
-                          key={grade.id}
+                          key={grade.id || `grade-${gradeIndex}`}
                           className={`inline-block rounded-lg border-2 transition-all ${
                             !canAdd
                               ? "border-gray-200 bg-gray-50 opacity-50"
