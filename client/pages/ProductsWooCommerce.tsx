@@ -1211,98 +1211,121 @@ export default function ProductsWooCommerce() {
                                     />
                                   </div>
 
-                                  <div>
-                                    <Label className="text-sm font-medium mb-3 block">
-                                      Estoque por Tamanho
-                                    </Label>
-                                    {!variant.grade_ids ||
-                                    variant.grade_ids.length === 0 ? (
-                                      <div className="text-center py-4 text-muted-foreground text-sm">
-                                        Selecione pelo menos uma grade vendida
-                                        primeiro
-                                      </div>
-                                    ) : (
-                                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                                        {(() => {
-                                          const selectedGrades = grades.filter(
-                                            (g) =>
-                                              variant.grade_ids?.includes(
-                                                g.id,
-                                              ) || false,
-                                          );
-                                          const allSizeIds =
-                                            selectedGrades.reduce(
-                                              (acc, grade) => {
-                                                if (grade.templates) {
-                                                  grade.templates.forEach(
-                                                    (template: any) => {
-                                                      if (
-                                                        template.size_id &&
-                                                        !acc.includes(
-                                                          template.size_id,
-                                                        )
-                                                      ) {
-                                                        acc.push(
-                                                          template.size_id,
-                                                        );
-                                                      }
-                                                    },
-                                                  );
-                                                }
-                                                return acc;
-                                              },
-                                              [] as number[],
-                                            );
+                                  {/* Controle de Estoque - Baseado no tipo selecionado */}
+                                  {(formData as any).stock_type === 'grade' ? (
+                                    /* ESTOQUE POR GRADE */
+                                    <div>
+                                      <Label className="text-sm font-medium mb-3 block">
+                                        🎯 Estoque por Grade
+                                      </Label>
+                                      {!variant.grade_ids || variant.grade_ids.length === 0 ? (
+                                        <div className="text-center py-4 text-muted-foreground text-sm">
+                                          Selecione pelo menos uma grade vendida primeiro
+                                        </div>
+                                      ) : (
+                                        <div className="space-y-3">
+                                          {variant.grade_ids.map((gradeId) => {
+                                            const grade = grades.find(g => g.id === gradeId);
+                                            if (!grade) return null;
 
-                                          const availableSizes = sizes.filter(
-                                            (size) =>
-                                              allSizeIds.includes(size.id),
-                                          );
-
-                                          return availableSizes
-                                            .sort(
-                                              (a, b) =>
-                                                a.display_order -
-                                                b.display_order,
-                                            )
-                                            .map((size) => {
-                                              const sizeStock =
-                                                variant.size_stocks.find(
-                                                  (ss) =>
-                                                    ss.size_id === size.id,
-                                                );
-                                              return (
-                                                <div
-                                                  key={size.id}
-                                                  className="text-center"
-                                                >
-                                                  <Label className="text-xs block mb-1">
-                                                    {size.size}
-                                                  </Label>
+                                            return (
+                                              <div key={gradeId} className="flex items-center justify-between p-3 border rounded-lg bg-blue-50">
+                                                <div>
+                                                  <span className="font-medium">{grade.name}</span>
+                                                  <div className="text-sm text-muted-foreground">
+                                                    Cor: {colors.find(c => c.id === variant.color_id)?.name}
+                                                  </div>
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                  <Label className="text-sm">Quantidade:</Label>
                                                   <Input
                                                     type="number"
                                                     min="0"
-                                                    value={
-                                                      sizeStock?.stock || 0
-                                                    }
-                                                    onChange={(e) =>
-                                                      updateSizeStock(
-                                                        variantIndex,
-                                                        size.id,
-                                                        parseInt(
-                                                          e.target.value,
-                                                        ) || 0,
-                                                      )
-                                                    }
-                                                    className="h-8 text-center"
+                                                    placeholder="25"
+                                                    className="w-20 text-center"
+                                                    onChange={(e) => {
+                                                      console.log('Estoque grade:', gradeId, variant.color_id, e.target.value);
+                                                    }}
                                                   />
                                                 </div>
-                                              );
-                                            });
-                                        })()}
+                                              </div>
+                                            );
+                                          })}
+                                          <div className="text-xs text-blue-600 italic p-2 bg-blue-50 rounded">
+                                            💡 Cada grade tem uma quantidade total (ex: 25 pares) independente dos tamanhos
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    /* ESTOQUE POR TAMANHO */
+                                    <div>
+                                      <Label className="text-sm font-medium mb-3 block">
+                                        📏 Estoque por Tamanho
+                                      </Label>
+                                      {!variant.grade_ids || variant.grade_ids.length === 0 ? (
+                                        <div className="text-center py-4 text-muted-foreground text-sm">
+                                          Selecione pelo menos uma grade vendida primeiro
+                                        </div>
+                                      ) : (
+                                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                                          {(() => {
+                                            const selectedGrades = grades.filter(
+                                              (g) => variant.grade_ids?.includes(g.id) || false
+                                            );
+                                            const allSizeIds = selectedGrades.reduce(
+                                              (acc, grade) => {
+                                                if (grade.templates) {
+                                                  grade.templates.forEach((template: any) => {
+                                                    if (template.size_id && !acc.includes(template.size_id)) {
+                                                      acc.push(template.size_id);
+                                                    }
+                                                  });
+                                                }
+                                                return acc;
+                                              },
+                                              [] as number[]
+                                            );
+
+                                            const availableSizes = sizes.filter(
+                                              (size) => allSizeIds.includes(size.id)
+                                            );
+
+                                            return availableSizes
+                                              .sort((a, b) => a.display_order - b.display_order)
+                                              .map((size) => {
+                                                const sizeStock = variant.size_stocks.find(
+                                                  (ss) => ss.size_id === size.id
+                                                );
+                                                return (
+                                                  <div key={size.id} className="text-center">
+                                                    <Label className="text-xs block mb-1">
+                                                      {size.size}
+                                                    </Label>
+                                                    <Input
+                                                      type="number"
+                                                      min="0"
+                                                      value={sizeStock?.stock || 0}
+                                                      onChange={(e) =>
+                                                        updateSizeStock(
+                                                          variantIndex,
+                                                          size.id,
+                                                          parseInt(e.target.value) || 0
+                                                        )
+                                                      }
+                                                      className="h-8 text-center"
+                                                    />
+                                                  </div>
+                                                );
+                                              });
+                                          })()}
+                                        </div>
+                                      )}
+                                      <div className="text-xs text-green-600 italic p-2 bg-green-50 rounded mt-3">
+                                        💡 Cada tamanho/cor tem estoque individual (ex: 5 tam 38, 3 tam 39)
                                       </div>
-                                    )}
-                                  </div>
+                                    </div>
+                                  )}
                                 </CardContent>
                               </Card>
                             );
