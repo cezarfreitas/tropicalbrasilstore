@@ -47,6 +47,21 @@ interface UseProductsResult {
 const globalCache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
+// Utility to check if HMR WebSocket is ready
+const isHMRReady = () => {
+  if (typeof window === 'undefined' || !import.meta.hot) {
+    return true; // No HMR in production
+  }
+
+  try {
+    // Check if HMR client is properly connected
+    const hmrClient = (window as any).__vite_hmr_client;
+    return hmrClient?.ws?.readyState === WebSocket.OPEN;
+  } catch {
+    return false;
+  }
+};
+
 // HMR guard to prevent connection issues
 if (typeof window !== 'undefined' && import.meta.hot) {
   import.meta.hot.accept(() => {
