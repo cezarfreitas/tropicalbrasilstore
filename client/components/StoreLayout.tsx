@@ -458,44 +458,48 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   )}
                 </div>
 
-                <div className="grid grid-cols-4 gap-2 px-3">
-                  {availableColors.map((color) => (
-                    <button
-                      key={color.id}
-                      onClick={() => handleColorFilter(color.id)}
-                      className={`group relative w-10 h-10 rounded-lg border-2 transition-all duration-200 hover:scale-110 ${
-                        selectedColorFilter === color.id
-                          ? 'border-white shadow-lg scale-110'
-                          : 'border-white/30 hover:border-white/60'
-                      }`}
-                      title={color.name}
-                    >
-                      <div
-                        className="w-full h-full rounded-md"
-                        style={{
-                          backgroundColor: color.hex_code || '#E5E7EB'
-                        }}
-                      >
-                        {!color.hex_code && (
-                          <div className="w-full h-full flex items-center justify-center text-xs font-bold text-gray-700 rounded-md bg-gray-200">
-                            {color.name?.charAt(0)?.toUpperCase()}
+                {colorFilterOpen && (
+                  <>
+                    <div className="grid grid-cols-4 gap-2 px-3">
+                      {availableColors.map((color) => (
+                        <button
+                          key={color.id}
+                          onClick={() => handleColorFilter(color.id)}
+                          className={`group relative w-10 h-10 rounded-lg border-2 transition-all duration-200 hover:scale-110 ${
+                            selectedColorFilter === color.id
+                              ? 'border-white shadow-lg scale-110'
+                              : 'border-white/30 hover:border-white/60'
+                          }`}
+                          title={color.name}
+                        >
+                          <div
+                            className="w-full h-full rounded-md"
+                            style={{
+                              backgroundColor: color.hex_code || '#E5E7EB'
+                            }}
+                          >
+                            {!color.hex_code && (
+                              <div className="w-full h-full flex items-center justify-center text-xs font-bold text-gray-700 rounded-md bg-gray-200">
+                                {color.name?.charAt(0)?.toUpperCase()}
+                              </div>
+                            )}
                           </div>
-                        )}
+
+                          {selectedColorFilter === color.id && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-3 h-3 bg-white rounded-full shadow-lg"></div>
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+
+                    {availableColors.length === 0 && (
+                      <div className="text-center py-4 px-3">
+                        <p className="text-xs text-white/60">Carregando cores...</p>
                       </div>
-
-                      {selectedColorFilter === color.id && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-3 h-3 bg-white rounded-full shadow-lg"></div>
-                        </div>
-                      )}
-                    </button>
-                  ))}
-                </div>
-
-                {availableColors.length === 0 && (
-                  <div className="text-center py-4 px-3">
-                    <p className="text-xs text-white/60">Carregando cores...</p>
-                  </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
