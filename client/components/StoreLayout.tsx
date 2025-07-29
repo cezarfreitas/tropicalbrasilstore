@@ -471,7 +471,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   </Button>
                 )}
               </div>
-              <span className="text-xs text-white/90 font-medium tracking-wide">
+              <span className="text-xs text-white/80 font-medium">
                 {isAuthenticated ? "Perfil" : "Entrar"}
               </span>
             </div>
