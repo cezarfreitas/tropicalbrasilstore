@@ -39,6 +39,7 @@
       "tipo": "Feminino",
       "genero": "Feminino",
       "descricao": "Sandália confortável para uso diário",
+      "preco_sugerido": 119.90,
       "vender_infinito": false,
       "variantes": [
         {
