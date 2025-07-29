@@ -315,35 +315,27 @@ router.get("/products-paginated", async (req, res) => {
           WHERE pcg.product_id = ? AND gv.active = 1`,
           [product.id],
         );
+        available_grades_count = (availableGrades as any)[0].available_count;
 
-        const hasAvailableGrades =
-          (availableGrades as any)[0].available_count > 0;
-
-        // Skip products with grades but no available grades
-        if (!hasAvailableGrades) {
-          continue;
-        }
+      } else if (product.stock_type === 'size') {
+        // Para produtos com estoque por tamanho
+        const [sizeColors] = await db.execute(
+          `SELECT DISTINCT
+            co.id,
+            co.name,
+            co.hex_code
+          FROM product_variants pv
+          INNER JOIN colors co ON pv.color_id = co.id
+          WHERE pv.product_id = ? AND (pv.stock > 0 OR ? = 1)
+          ORDER BY co.name`,
+          [product.id, product.sell_without_stock],
+        );
+        available_colors = sizeColors;
       }
 
-      // Get available colors from product_color_grades table with variant images
-      const [colorRows] = await db.execute(
-        `SELECT DISTINCT
-          co.id,
-          co.name,
-          co.hex_code,
-          pcv.image_url
-        FROM product_color_grades pcg
-        LEFT JOIN colors co ON pcg.color_id = co.id
-        LEFT JOIN product_color_variants pcv ON pcv.product_id = pcg.product_id AND pcv.color_id = co.id
-        WHERE pcg.product_id = ? AND co.id IS NOT NULL
-        GROUP BY co.id, co.name, co.hex_code, pcv.image_url
-        LIMIT 5`,
-        [product.id],
-      );
-
-      // Get variant count and stock
+      // Get variant count and stock info
       const [stockInfo] = await db.execute(
-        `SELECT 
+        `SELECT
           COUNT(DISTINCT pv.id) as variant_count,
           COALESCE(SUM(pv.stock), 0) as total_stock
         FROM product_variants pv
