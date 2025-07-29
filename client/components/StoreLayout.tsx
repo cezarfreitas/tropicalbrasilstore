@@ -427,9 +427,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="ghost"
-                        className="w-14 h-14 p-0 rounded-2xl bg-white/10 hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-lg border border-white/20 hover:border-white/40 backdrop-blur-sm"
+                        className="w-12 h-12 p-0 rounded-xl bg-white/10 hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-lg border border-white/20 hover:border-white/40 backdrop-blur-sm"
                       >
-                        <User className="h-7 w-7 text-white" />
+                        <User className="h-5 w-5 text-white" />
                       </Button>
                     </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
