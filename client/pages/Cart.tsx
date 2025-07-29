@@ -112,22 +112,25 @@ export default function Cart() {
                           </h3>
                           
                           {/* Grade and Color Info */}
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            {item.gradeName && (
-                              <Badge variant="secondary" className="text-xs">
-                                <Grid3x3 className="h-3 w-3 mr-1" />
-                                {item.gradeName}
-                              </Badge>
+                          <div className="mb-3">
+                            {item.type === 'grade' && (
+                              <div className="text-sm text-gray-600 font-medium">
+                                Grade Vendida | Cor: {item.colorName} | Grade: {item.gradeName} | Itens: {item.piecesPerGrade || 0}
+                              </div>
                             )}
-                            {item.colorName && (
-                              <Badge variant="outline" className="text-xs">
-                                {item.colorName}
-                              </Badge>
-                            )}
-                            {item.piecesPerGrade && (
-                              <Badge variant="outline" className="text-xs">
-                                {item.piecesPerGrade} peças
-                              </Badge>
+                            {item.type === 'variant' && (
+                              <div className="flex flex-wrap gap-2">
+                                {item.colorName && (
+                                  <Badge variant="outline" className="text-xs">
+                                    {item.colorName}
+                                  </Badge>
+                                )}
+                                {item.sizeName && (
+                                  <Badge variant="outline" className="text-xs">
+                                    {item.sizeName}
+                                  </Badge>
+                                )}
+                              </div>
                             )}
                           </div>
 
