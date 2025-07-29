@@ -18,24 +18,24 @@ async function testCHN001() {
         variantes: [
           {
             cor: "Preto",
-            preco: 29.90,
+            preco: 29.9,
             grade: "Padrão",
-            foto: "https://images.tcdn.com.br/img/img_prod/699671/chinelo_havaianas_top_masculino_preto_24851_1_da2ff112816d222cd40bc1e93a37953a_20250313182035.jpg"
+            foto: "https://images.tcdn.com.br/img/img_prod/699671/chinelo_havaianas_top_masculino_preto_24851_1_da2ff112816d222cd40bc1e93a37953a_20250313182035.jpg",
           },
           {
             cor: "Azul Marinho",
-            preco: 29.90,
+            preco: 29.9,
             grade: "Padrão",
-            foto: "https://static1.efacil.com.br/wcsstore/ExtendedSitesCatalogAssetStore/Imagens/360/1204119_01.jpg"
-          }
-        ]
-      }
-    ]
+            foto: "https://static1.efacil.com.br/wcsstore/ExtendedSitesCatalogAssetStore/Imagens/360/1204119_01.jpg",
+          },
+        ],
+      },
+    ],
   };
 
   try {
     console.log("📤 Enviando requisição para /api/products/bulk...");
-    
+
     const response = await axios.post(`${API_BASE}/products/bulk`, testData, {
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +54,6 @@ async function testCHN001() {
     );
     console.log("✅ Variantes encontradas:");
     console.log(JSON.stringify(variantsResponse.data, null, 2));
-
   } catch (error: any) {
     console.log("❌ Erro na requisição:");
     if (error.response) {

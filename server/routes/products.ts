@@ -330,7 +330,13 @@ router.post("/bulk", validateApiKey, async (req, res) => {
               `INSERT INTO product_variants
                (product_id, color_id, size_id, price_override, image_url, created_at)
                VALUES (?, ?, ?, ?, ?, NOW())`,
-              [productId, colorId, sizeId, variante.preco, variante.foto || null],
+              [
+                productId,
+                colorId,
+                sizeId,
+                variante.preco,
+                variante.foto || null,
+              ],
             );
           }
 
@@ -345,10 +351,10 @@ router.post("/bulk", validateApiKey, async (req, res) => {
 
         // Salvar foto do produto se fornecida (na primeira variante)
         if (variante.foto && variants.length === 0) {
-          await db.execute(
-            "UPDATE products SET photo = ? WHERE id = ?",
-            [variante.foto, productId],
-          );
+          await db.execute("UPDATE products SET photo = ? WHERE id = ?", [
+            variante.foto,
+            productId,
+          ]);
         }
 
         variants.push({
