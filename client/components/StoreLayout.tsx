@@ -246,7 +246,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         <div className="px-4 py-4 border-b border-primary/20 bg-primary">
           <div className="grid grid-cols-3 gap-3">
             {/* User Menu */}
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-2">
               <div className="relative">
                 {isAuthenticated ? (
                   <DropdownMenu>
@@ -303,7 +303,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             </div>
 
             {/* Cart */}
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-2">
               <div className="relative">
                 <Button
                   variant="ghost"
@@ -322,7 +322,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             </div>
 
             {/* Search */}
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-2">
               <div className="relative">
                 <Button
                   variant="ghost"
