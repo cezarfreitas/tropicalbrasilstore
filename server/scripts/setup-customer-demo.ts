@@ -36,8 +36,8 @@ async function setupCustomerDemo() {
       const hashedPassword = await bcrypt.hash(password, 10);
       
       await db.execute(
-        `UPDATE customer_auth SET password = ?, status = 'approved' WHERE email = ?`,
-        [hashedPassword, "maria.silva@email.com"]
+        `UPDATE customer_auth SET password = ?, status = 'approved', whatsapp = ? WHERE email = ?`,
+        [hashedPassword, "11999991111", "maria.silva@email.com"]
       );
       
       console.log("✅ Senha do cliente demo atualizada:");
