@@ -346,10 +346,7 @@ Authorization: Bearer your_api_key
         {
           "cor": "Nude",
           "preco": 89.90,
-          "grade": {
-            "nome": "Grade Feminina",
-            "tamanhos": ["34", "35", "36", "37", "38", "39", "40"]
-          }
+          "grade": "Grade Feminina"
         }
       ]
     }
