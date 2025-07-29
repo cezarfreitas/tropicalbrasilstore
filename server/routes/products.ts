@@ -245,17 +245,25 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         // Verificar se as novas informações são diferentes e atualizar se necessário
         const existing = (existingProduct as any[])[0];
 
-        // Criar ou buscar entidades apenas se necessário
-        const categoryId = await getOrCreateCategory(product.categoria);
-        const typeId = await getOrCreateType(product.tipo);
-        let genderId = null;
+        // Criar ou buscar entidades apenas se fornecidas
+        let categoryId = existing.category_id;
+        let typeId = existing.type_id;
+        let genderId = existing.gender_id;
+
+        if (product.categoria) {
+          categoryId = await getOrCreateCategory(product.categoria);
+          categoriesCreated.add(product.categoria);
+        }
+        if (product.tipo) {
+          typeId = await getOrCreateType(product.tipo);
+          typesCreated.add(product.tipo);
+        }
         if (product.genero) {
           genderId = await getOrCreateGender(product.genero);
         }
 
         // Atualizar informações do produto se fornecidas
-        if (product.nome || product.descricao || categoryId !== existing.category_id ||
-            typeId !== existing.type_id || genderId !== existing.gender_id) {
+        if (product.nome || product.descricao || product.categoria || product.tipo || product.genero) {
           await db.execute(
             "UPDATE products SET name = COALESCE(?, name), description = COALESCE(?, description), category_id = ?, type_id = ?, gender_id = ? WHERE id = ?",
             [
