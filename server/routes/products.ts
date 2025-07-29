@@ -162,7 +162,7 @@ async function getOrCreateGrade(name: string): Promise<number> {
   // Inserir os tamanhos da grade
   for (const size of sizes) {
     await db.execute(
-      "INSERT INTO grade_items (grade_id, size, price, position) VALUES (?, ?, ?, ?)",
+      "INSERT INTO grade_templates (grade_id, size, required_quantity, position) VALUES (?, ?, ?, ?)",
       [gradeId, size, 0, sizes.indexOf(size) + 1],
     );
   }
@@ -286,15 +286,27 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           [productId, colorId, gradeId],
         );
 
-        // Criar variante física do produto (product_variants)
-        const [physicalVariantResult] = await db.execute(
-          `INSERT INTO product_variants
-           (product_id, color_id, sku, price_override, created_at)
-           VALUES (?, ?, ?, ?, NOW())`,
-          [productId, colorId, variantSku, variante.preco],
+        // Buscar o primeiro tamanho da grade para criar a variante padrão
+        const [gradeTemplates] = await db.execute(
+          "SELECT id FROM grade_templates WHERE grade_id = ? ORDER BY position LIMIT 1",
+          [gradeId],
         );
 
-        console.log(`  ✅ Variante criada: ${variante.cor} - SKU: ${variantSku}`);
+        if ((gradeTemplates as any[]).length > 0) {
+          const sizeId = (gradeTemplates as any[])[0].id;
+
+          // Criar variante física do produto (product_variants)
+          const [physicalVariantResult] = await db.execute(
+            `INSERT INTO product_variants
+             (product_id, color_id, size_id, price_override, created_at)
+             VALUES (?, ?, ?, ?, NOW())`,
+            [productId, colorId, sizeId, variante.preco],
+          );
+
+          console.log(`  ✅ Variante criada: ${variante.cor} - SKU: ${variantSku}`);
+        } else {
+          console.log(`  ⚠️ Não foi possível criar variante física para ${variante.cor} - grade sem tamanhos`);
+        }
 
         // Atualizar preço base do produto se necessário
         await db.execute(
@@ -303,8 +315,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         );
 
         variants.push({
-          id: (physicalVariantResult as any).insertId,
-          variant_relation_id: (variantResult as any).insertId,
+          id: (variantResult as any).insertId,
           cor: variante.cor,
           sku: variantSku,
           grade: variante.grade,
@@ -413,14 +424,27 @@ router.post("/single", validateApiKey, async (req, res) => {
       [productId, colorId, gradeId],
     );
 
-    // Criar variante física do produto
-    const variantSku = `${codigo}-${cor.toUpperCase().replace(/\s+/g, "-")}`;
-    await db.execute(
-      "INSERT INTO product_variants (product_id, color_id, sku, price_override, created_at) VALUES (?, ?, ?, ?, NOW())",
-      [productId, colorId, variantSku, preco],
+    // Buscar o primeiro tamanho da grade para criar a variante padrão
+    const [gradeTemplates] = await db.execute(
+      "SELECT id FROM grade_templates WHERE grade_id = ? ORDER BY position LIMIT 1",
+      [gradeId],
     );
 
-    console.log(`✅ Produto e variante criados: ${nome} - ${cor}`);
+    const variantSku = `${codigo}-${cor.toUpperCase().replace(/\s+/g, "-")}`;
+
+    if ((gradeTemplates as any[]).length > 0) {
+      const sizeId = (gradeTemplates as any[])[0].id;
+
+      // Criar variante física do produto
+      await db.execute(
+        "INSERT INTO product_variants (product_id, color_id, size_id, price_override, created_at) VALUES (?, ?, ?, ?, NOW())",
+        [productId, colorId, sizeId, preco],
+      );
+
+      console.log(`✅ Produto e variante criados: ${nome} - ${cor}`);
+    } else {
+      console.log(`⚠️ Produto criado mas sem variante física - grade sem tamanhos`);
+    }
 
     // Resposta de sucesso
     res.status(201).json({
