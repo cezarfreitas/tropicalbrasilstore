@@ -805,6 +805,17 @@ Authorization: Bearer YOUR_API_KEY`}
   -H "Content-Type: application/json"`}
                 </pre>
               </div>
+
+              {usingMockData && (
+                <div className="bg-gray-50 border border-gray-200 rounded-md p-4">
+                  <h5 className="font-medium text-gray-800 mb-2">🔧 Status do Backend</h5>
+                  <p className="text-sm text-gray-600">
+                    O sistema de chaves de API está funcionando em modo desenvolvimento.
+                    Quando o backend for implementado, as chaves serão persistidas no banco de dados
+                    e as operações serão totalmente funcionais.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
