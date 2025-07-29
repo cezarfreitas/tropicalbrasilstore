@@ -1234,7 +1234,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <Link
                       to="/loja/checkout"
                       onClick={() => setCartOpen(false)}
