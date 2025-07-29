@@ -83,7 +83,17 @@ const REQUIRED_FIELDS = [
   { key: "parent_sku", label: "SKU Pai", required: false },
   { key: "description", label: "Descrição", required: false },
   { key: "suggested_price", label: "Preço Sugerido", required: false },
-  { key: "stock_per_variant", label: "Estoque por Variante", required: false },
+  { key: "stock_type", label: "Tipo de Estoque (grade/size)", required: false },
+  { key: "grade_stock", label: "Estoque por Grade", required: false },
+  { key: "size_37", label: "Estoque Tam 37", required: false },
+  { key: "size_38", label: "Estoque Tam 38", required: false },
+  { key: "size_39", label: "Estoque Tam 39", required: false },
+  { key: "size_40", label: "Estoque Tam 40", required: false },
+  { key: "size_41", label: "Estoque Tam 41", required: false },
+  { key: "size_42", label: "Estoque Tam 42", required: false },
+  { key: "size_43", label: "Estoque Tam 43", required: false },
+  { key: "size_44", label: "Estoque Tam 44", required: false },
+  { key: "stock_per_variant", label: "Estoque por Variante (DEPRECATED)", required: false },
 ];
 
 // Custom fetch function to avoid conflicts with external libraries
@@ -901,7 +911,7 @@ export default function ProductImport() {
                       • <strong>Nome:</strong> Nome do produto
                     </li>
                     <li>
-                      • <strong>Categoria:</strong> ID ou nome da categoria
+                      �� <strong>Categoria:</strong> ID ou nome da categoria
                     </li>
                     <li>
                       • <strong>Preço Base:</strong> Preço de custo/base do
