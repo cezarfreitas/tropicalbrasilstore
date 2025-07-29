@@ -397,13 +397,27 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           );
         }
 
-        // Inserir relação produto-cor-grade
-        const [variantResult] = await db.execute(
-          `INSERT INTO product_color_grades
-           (product_id, color_id, grade_id)
-           VALUES (?, ?, ?)`,
+        // Verificar se a relação produto-cor-grade já existe
+        const [existingRelation] = await db.execute(
+          `SELECT id FROM product_color_grades
+           WHERE product_id = ? AND color_id = ? AND grade_id = ?`,
           [productId, colorId, gradeId],
         );
+
+        let variantResult;
+        if ((existingRelation as any[]).length === 0) {
+          // Inserir relação produto-cor-grade apenas se não existir
+          [variantResult] = await db.execute(
+            `INSERT INTO product_color_grades
+             (product_id, color_id, grade_id)
+             VALUES (?, ?, ?)`,
+            [productId, colorId, gradeId],
+          );
+          console.log(`  ✅ Nova relação produto-cor-grade criada`);
+        } else {
+          console.log(`  ⚠️ Relação produto-cor-grade já existe, reutilizando`);
+          variantResult = { insertId: (existingRelation as any[])[0].id };
+        }
 
         // Criar entrada na tabela product_color_variants para compatibilidade com admin WooCommerce
         const [colorVariantResult] = await db.execute(
