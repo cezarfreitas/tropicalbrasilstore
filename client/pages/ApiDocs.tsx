@@ -204,13 +204,48 @@ export default function ApiDocs() {
     });
   };
 
-  const generateNewApiKey = () => {
-    const newKey = `sk_live_${Math.random().toString(36).substring(2, 15)}_${Date.now()}`;
-    setApiKey(newKey);
-    toast({
-      title: "Nova chave gerada",
-      description: "Uma nova chave de API foi gerada com sucesso.",
+  const toggleShowKey = (keyId: string) => {
+    setShowKeys(prev => ({ ...prev, [keyId]: !prev[keyId] }));
+  };
+
+  const handleCreateKey = async () => {
+    if (!newKeyName.trim()) {
+      toast({
+        title: "Nome obrigatório",
+        description: "Por favor, informe um nome para a chave de API.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newKey = await createApiKey({
+      name: newKeyName.trim(),
+      description: newKeyDescription.trim() || undefined,
     });
+
+    if (newKey) {
+      setCreateDialogOpen(false);
+      setNewKeyName("");
+      setNewKeyDescription("");
+      // Auto-show the new key
+      setShowKeys(prev => ({ ...prev, [newKey.id]: true }));
+    }
+  };
+
+  const handleRevokeKey = async (keyId: string, keyName: string) => {
+    if (confirm(`Tem certeza que deseja revogar a chave "${keyName}"? Esta ação não pode ser desfeita.`)) {
+      await revokeApiKey(keyId);
+    }
+  };
+
+  const handleRegenerateKey = async (keyId: string, keyName: string) => {
+    if (confirm(`Tem certeza que deseja regenerar a chave "${keyName}"? A chave atual será invalidada.`)) {
+      const updatedKey = await regenerateApiKey(keyId);
+      if (updatedKey) {
+        // Auto-show the regenerated key
+        setShowKeys(prev => ({ ...prev, [keyId]: true }));
+      }
+    }
   };
 
   const MethodBadge = ({ method }: { method: string }) => {
