@@ -317,8 +317,7 @@ export function useCart() {
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
-    setModalProduct(null);
+    dispatch({ type: "HIDE_MODAL" });
   };
 
   return {
@@ -330,8 +329,8 @@ export function useCart() {
     updateQuantity,
     clearCart,
     // Modal state and controls
-    isModalOpen,
-    modalProduct,
+    isModalOpen: state.isModalOpen,
+    modalProduct: state.modalProduct,
     closeModal,
   };
 }
