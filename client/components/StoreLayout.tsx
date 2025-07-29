@@ -606,14 +606,14 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             </div>
 
             {/* Gender Filter Section */}
-            <div className="mt-6 pt-4 border-t border-white/20">
+            <div className="mt-4 pt-3 border-t border-white/20">
               <div className="space-y-4">
-                <div className="flex items-center justify-between px-4">
+                <div className="flex items-center justify-between px-2">
                   <button
                     onClick={() => setGenderFilterOpen(!genderFilterOpen)}
-                    className="flex items-center gap-3 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
+                    className="flex items-center gap-2 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
                   >
-                    <Users className="h-4 w-4 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
+                    <Users className="h-3 w-3 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
                     <span>Filtrar por Gênero</span>
                     <ChevronDown
                       className={`h-4 w-4 transition-all duration-300 ${
