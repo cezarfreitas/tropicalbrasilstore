@@ -1042,9 +1042,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           />
 
           {/* Cart Drawer - from right side */}
-          <div className="fixed top-0 right-0 h-full w-96 max-w-[90vw] bg-white z-50 shadow-2xl animate-in slide-in-from-right duration-300 border-l border-gray-200">
+          <div className="fixed top-0 right-0 h-screen w-96 max-w-[90vw] bg-white z-50 shadow-2xl animate-in slide-in-from-right duration-300 border-l border-gray-200 flex flex-col">
             {/* Drawer Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/5 to-primary/10">
+            <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/5 to-primary/10 flex-shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                   <ShoppingCart className="h-5 w-5 text-primary" />
@@ -1068,8 +1068,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               </Button>
             </div>
 
-            {/* Cart Content */}
-            <div className="flex flex-col h-full">
+            {/* Cart Content - Scrollable Middle Section */}
+            <div className="flex-1 overflow-y-auto min-h-0">
               <div className="flex-1 overflow-y-auto">
                 {items.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
