@@ -277,7 +277,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
 });
 
 // Single product create with one variant
-router.post("/single", async (req, res) => {
+router.post("/single", validateApiKey, async (req, res) => {
   try {
     const { codigo, nome, categoria, tipo, descricao, cor, preco, grade, foto } = req.body;
 
