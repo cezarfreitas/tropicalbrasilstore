@@ -394,7 +394,7 @@ export default function ApiDocs() {
   "variantes": [                  // Array de variantes (obrigatório, mín: 1)
     {
       "cor": "Preto",             // Cor (criada automaticamente se não existir)
-      "preco": 29.90,             // Preço da variante (obrigatório)
+      "preco": 29.90,             // Pre��o da variante (obrigatório)
       "grade": "Grade Unissex",   // Nome da grade (tamanhos criados automaticamente)
       "foto": "https://...",      // URL da foto (opcional)
       "sku": "CHN001-PRETO"       // SKU específico (opcional, gerado automaticamente)
@@ -424,7 +424,7 @@ export default function ApiDocs() {
                       ⚠️ Validações
                     </h5>
                     <ul className="text-sm text-yellow-700 space-y-1">
-                      <li>• Código deve ser único</li>
+                      <li>• C��digo deve ser único</li>
                       <li>• Mínimo 1 variante por produto</li>
                       <li>• Preço deve ser maior que 0</li>
                       <li>• Nome da grade é obrigatório</li>
@@ -995,6 +995,17 @@ Authorization: Bearer YOUR_API_KEY`}
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json"`}
                 </pre>
+              </div>
+
+              <div className="bg-green-50 border border-green-200 rounded-md p-4">
+                <h5 className="font-medium text-green-800 mb-2">
+                  🚀 APIs Implementadas
+                </h5>
+                <p className="text-sm text-green-600">
+                  As APIs de cadastro de produtos estão funcionais e implementadas no backend!
+                  Use suas chaves de API para testar os endpoints <code>/api/products/bulk</code> e
+                  <code>/api/products/single</code>. A autenticação por Bearer token está ativa.
+                </p>
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
