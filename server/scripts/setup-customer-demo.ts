@@ -42,7 +42,7 @@ async function setupCustomerDemo() {
       
       console.log("✅ Senha do cliente demo atualizada:");
       console.log("   📧 Email: maria.silva@email.com");
-      console.log("   📱 WhatsApp: 5511999991111");
+      console.log("   📱 WhatsApp: 11999991111");
       console.log("   🔑 Senha: demo123");
     }
 
