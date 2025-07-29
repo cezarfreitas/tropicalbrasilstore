@@ -191,6 +191,14 @@ const App = () => (
                     </AdminLayout>
                   }
                 />
+                <Route
+                  path="/admin/api"
+                  element={
+                    <AdminLayout>
+                      <ApiDocs />
+                    </AdminLayout>
+                  }
+                />
 
                 {/* Legacy admin routes (backward compatibility) */}
                 <Route
