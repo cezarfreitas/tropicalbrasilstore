@@ -41,6 +41,205 @@ import { GlobalCartModal } from "./components/GlobalCartModal";
 
 const queryClient = new QueryClient();
 
+// Componente interno que usa os contexts
+const AppContent = () => (
+  <BrowserRouter>
+    <GlobalCartModal />
+    <Routes>
+      {/* Store Routes (Public) */}
+      <Route path="/" element={<Store />} />
+      <Route path="/loja" element={<Store />} />
+      <Route path="/loja/produto/:id" element={<ProductDetail />} />
+      <Route path="/loja/carrinho" element={<Cart />} />
+      <Route path="/loja/checkout" element={<Checkout />} />
+      <Route path="/loja/pedidos" element={<CustomerOrders />} />
+
+      {/* Customer Authentication Routes */}
+      <Route path="/login" element={<CustomerLogin />} />
+      <Route path="/cadastro" element={<CustomerRegister />} />
+      <Route
+        path="/change-password"
+        element={<CustomerChangePassword />}
+      />
+
+      {/* Admin Login Route (Public) */}
+      <Route path="/admin/login" element={<Login />} />
+
+      {/* Admin Routes (Protected) */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <Dashboard />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/orders"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <Orders />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/customers"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <Customers />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/products"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <ProductsEnhanced />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/products-v2"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <ProductsWooCommerce />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/products/import"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <ProductImport />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/categories"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <Categories />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/sizes"
+        element={
+          <AdminLayout>
+            <Sizes />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/admin/colors"
+        element={
+          <AdminLayout>
+            <Colors />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/admin/attributes"
+        element={
+          <AdminLayout>
+            <Attributes />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/admin/grades"
+        element={
+          <AdminLayout>
+            <GradesRedesigned />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/admin/settings"
+        element={
+          <AdminLayout>
+            <Settings />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/admin/notifications"
+        element={
+          <AdminLayout>
+            <Notifications />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/admin/api"
+        element={
+          <AdminLayout>
+            <ApiDocs />
+          </AdminLayout>
+        }
+      />
+
+      {/* Legacy admin routes (backward compatibility) */}
+      <Route
+        path="/products"
+        element={
+          <AdminLayout>
+            <ProductsEnhanced />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/categories"
+        element={
+          <AdminLayout>
+            <Categories />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/sizes"
+        element={
+          <AdminLayout>
+            <Sizes />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/colors"
+        element={
+          <AdminLayout>
+            <Colors />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/grades"
+        element={
+          <AdminLayout>
+            <GradesRedesigned />
+          </AdminLayout>
+        }
+      />
+      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </BrowserRouter>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
