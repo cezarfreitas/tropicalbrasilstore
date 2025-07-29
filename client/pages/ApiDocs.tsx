@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Code, Copy, Eye, EyeOff, RefreshCw, Plus, Trash2, AlertTriangle } from "lucide-react";
+import { Code, Copy, Eye, EyeOff, RefreshCw, Plus, Trash2, AlertTriangle, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useApiKeys } from "@/hooks/use-api-keys";
 
@@ -331,7 +331,7 @@ export default function ApiDocs() {
   "descricao": "Descrição...",    // Descrição do produto (opcional)
   "variantes": [                  // Array de variantes (obrigatório, mín: 1)
     {
-      "cor": "Preto",             // Cor (criada automaticamente se n��o existir)
+      "cor": "Preto",             // Cor (criada automaticamente se não existir)
       "preco": 29.90,             // Preço da variante (obrigatório)
       "grade": "Grade Unissex",   // Nome da grade (tamanhos criados automaticamente)
       "foto": "https://...",      // URL da foto (opcional)
