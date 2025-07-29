@@ -434,7 +434,7 @@ export default function ApiDocs() {
                       ⚠️ Validações
                     </h5>
                     <ul className="text-sm text-yellow-700 space-y-1">
-                      <li>• C��digo deve ser único</li>
+                      <li>• C��digo deve ser ��nico</li>
                       <li>• Mínimo 1 variante por produto</li>
                       <li>• Preço deve ser maior que 0</li>
                       <li>• Nome da grade é obrigatório</li>
@@ -1037,7 +1037,350 @@ Authorization: Bearer YOUR_API_KEY`}
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="logs" className="space-y-4">
+          <ApiLogsInterface />
+        </TabsContent>
       </Tabs>
+    </div>
+  );
+}
+
+// Componente para interface de logs da API
+function ApiLogsInterface() {
+  const [logs, setLogs] = useState<any[]>([]);
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState({
+    method: '',
+    endpoint: '',
+    status: '',
+    from_date: '',
+    to_date: ''
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Carregar logs
+  const fetchLogs = async (page = 1) => {
+    setLoading(true);
+    try {
+      const queryParams = new URLSearchParams({
+        page: page.toString(),
+        limit: '20',
+        ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v))
+      });
+
+      const response = await fetch(`/api/admin/logs?${queryParams}`);
+      if (response.ok) {
+        const data = await response.json();
+        setLogs(data.logs);
+        setCurrentPage(page);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar logs:', error);
+    }
+    setLoading(false);
+  };
+
+  // Carregar estatísticas
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('/api/admin/logs/stats');
+      if (response.ok) {
+        const data = await response.json();
+        setStats(data);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar estatísticas:', error);
+    }
+  };
+
+  // Carregar dados iniciais
+  useEffect(() => {
+    fetchLogs();
+    fetchStats();
+  }, []);
+
+  // Aplicar filtros
+  const applyFilters = () => {
+    setCurrentPage(1);
+    fetchLogs(1);
+  };
+
+  // Limpar filtros
+  const clearFilters = () => {
+    setFilters({
+      method: '',
+      endpoint: '',
+      status: '',
+      from_date: '',
+      to_date: ''
+    });
+    setCurrentPage(1);
+    fetchLogs(1);
+  };
+
+  // Formatar status
+  const getStatusBadge = (status: number) => {
+    if (status >= 200 && status < 300) {
+      return <Badge className="bg-green-500">Sucesso</Badge>;
+    } else if (status >= 400 && status < 500) {
+      return <Badge variant="destructive">Erro Cliente</Badge>;
+    } else if (status >= 500) {
+      return <Badge variant="destructive">Erro Servidor</Badge>;
+    }
+    return <Badge variant="secondary">{status}</Badge>;
+  };
+
+  // Formatar método HTTP
+  const getMethodBadge = (method: string) => {
+    const colors: any = {
+      GET: 'bg-blue-500',
+      POST: 'bg-green-500',
+      PUT: 'bg-yellow-500',
+      DELETE: 'bg-red-500'
+    };
+    return <Badge className={colors[method] || 'bg-gray-500'}>{method}</Badge>;
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Estatísticas */}
+      {stats && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Total de Requisições</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.overview.total_requests}</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Taxa de Sucesso</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                {stats.overview.total_requests > 0
+                  ? Math.round((stats.overview.success_requests / stats.overview.total_requests) * 100)
+                  : 0}%
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Tempo Médio</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {stats.overview.avg_response_time ? Math.round(stats.overview.avg_response_time) : 0}ms
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Erros</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-600">
+                {stats.overview.error_requests}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Filtros */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="h-5 w-5" />
+              Logs de Requisições API
+            </CardTitle>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                <Filter className="h-4 w-4 mr-2" />
+                Filtros
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => fetchLogs(currentPage)}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Atualizar
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+
+        {showFilters && (
+          <CardContent className="border-t">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+              <div>
+                <Label htmlFor="method">Método</Label>
+                <select
+                  id="method"
+                  className="w-full px-3 py-2 border rounded-md"
+                  value={filters.method}
+                  onChange={(e) => setFilters({...filters, method: e.target.value})}
+                >
+                  <option value="">Todos</option>
+                  <option value="GET">GET</option>
+                  <option value="POST">POST</option>
+                  <option value="PUT">PUT</option>
+                  <option value="DELETE">DELETE</option>
+                </select>
+              </div>
+
+              <div>
+                <Label htmlFor="endpoint">Endpoint</Label>
+                <Input
+                  id="endpoint"
+                  placeholder="/admin/..."
+                  value={filters.endpoint}
+                  onChange={(e) => setFilters({...filters, endpoint: e.target.value})}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="status">Status</Label>
+                <select
+                  id="status"
+                  className="w-full px-3 py-2 border rounded-md"
+                  value={filters.status}
+                  onChange={(e) => setFilters({...filters, status: e.target.value})}
+                >
+                  <option value="">Todos</option>
+                  <option value="200">200 - OK</option>
+                  <option value="400">400 - Bad Request</option>
+                  <option value="401">401 - Unauthorized</option>
+                  <option value="404">404 - Not Found</option>
+                  <option value="500">500 - Server Error</option>
+                </select>
+              </div>
+
+              <div>
+                <Label htmlFor="from_date">Data Inicial</Label>
+                <Input
+                  id="from_date"
+                  type="datetime-local"
+                  value={filters.from_date}
+                  onChange={(e) => setFilters({...filters, from_date: e.target.value})}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="to_date">Data Final</Label>
+                <Input
+                  id="to_date"
+                  type="datetime-local"
+                  value={filters.to_date}
+                  onChange={(e) => setFilters({...filters, to_date: e.target.value})}
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <Button onClick={applyFilters}>Aplicar Filtros</Button>
+              <Button variant="outline" onClick={clearFilters}>Limpar</Button>
+            </div>
+          </CardContent>
+        )}
+      </Card>
+
+      {/* Lista de Logs */}
+      <Card>
+        <CardContent className="p-0">
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mr-3"></div>
+              <span>Carregando logs...</span>
+            </div>
+          ) : logs.length === 0 ? (
+            <div className="text-center py-8">
+              <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Nenhum log encontrado
+              </h3>
+              <p className="text-gray-600">
+                Não há registros de requisições com os filtros aplicados.
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y">
+              {logs.map((log: any) => (
+                <div key={log.id} className="p-4 hover:bg-gray-50">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      {getMethodBadge(log.method)}
+                      <span className="font-mono text-sm">{log.endpoint}</span>
+                      {getStatusBadge(log.response_status)}
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        {log.response_time_ms}ms
+                      </div>
+                      <span>
+                        {new Date(log.created_at).toLocaleString('pt-BR')}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-sm text-gray-600">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <span className="font-medium">IP:</span> {log.ip_address}
+                      </div>
+                      <div className="truncate">
+                        <span className="font-medium">User Agent:</span> {log.user_agent}
+                      </div>
+                    </div>
+
+                    {log.error_message && (
+                      <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-red-700">
+                        <span className="font-medium">Erro:</span> {log.error_message}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Paginação */}
+      <div className="flex justify-center gap-2">
+        <Button
+          variant="outline"
+          onClick={() => fetchLogs(currentPage - 1)}
+          disabled={currentPage <= 1}
+        >
+          Anterior
+        </Button>
+        <span className="flex items-center px-4">
+          Página {currentPage}
+        </span>
+        <Button
+          variant="outline"
+          onClick={() => fetchLogs(currentPage + 1)}
+          disabled={logs.length < 20}
+        >
+          Próxima
+        </Button>
+      </div>
     </div>
   );
 }
