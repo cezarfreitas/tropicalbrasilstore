@@ -57,6 +57,7 @@
             "codigo": "CHN001",
             "nome": "Chinelo Havaianas Top Premium",
             "descricao": "O chinelo mais famoso do Brasil - versão premium",
+            "preco_sugerido": 49.90,
             "variantes": [
               {
                 "cor": "Branco",
