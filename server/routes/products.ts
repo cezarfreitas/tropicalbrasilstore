@@ -211,7 +211,11 @@ router.post("/bulk", validateApiKey, async (req, res) => {
     // Processar cada produto
     for (const product of products) {
       // Validações básicas
-      if (!product.codigo || !product.variantes || product.variantes.length === 0) {
+      if (
+        !product.codigo ||
+        !product.variantes ||
+        product.variantes.length === 0
+      ) {
         return res.status(422).json({
           success: false,
           error: "Dados inválidos",
@@ -240,7 +244,9 @@ router.post("/bulk", validateApiKey, async (req, res) => {
       if ((existingProduct as any[]).length > 0) {
         // Produto já existe - usar o ID existente
         productId = (existingProduct as any[])[0].id;
-        console.log(`📝 Produto existente encontrado: ${product.nome} (ID: ${productId})`);
+        console.log(
+          `📝 Produto existente encontrado: ${product.nome} (ID: ${productId})`,
+        );
 
         // Verificar se as novas informações são diferentes e atualizar se necessário
         const existing = (existingProduct as any[])[0];
@@ -263,7 +269,13 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         }
 
         // Atualizar informações do produto se fornecidas
-        if (product.nome || product.descricao || product.categoria || product.tipo || product.genero) {
+        if (
+          product.nome ||
+          product.descricao ||
+          product.categoria ||
+          product.tipo ||
+          product.genero
+        ) {
           await db.execute(
             "UPDATE products SET name = COALESCE(?, name), description = COALESCE(?, description), category_id = ?, type_id = ?, gender_id = ? WHERE id = ?",
             [
@@ -272,7 +284,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
               categoryId,
               typeId,
               genderId,
-              productId
+              productId,
             ],
           );
           console.log(`📝 Informações do produto atualizadas`);
@@ -341,16 +353,20 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         );
 
         if ((existingColorVariant as any[]).length > 0) {
-          console.log(`⚠️ Variante de cor ${variante.cor} já existe para o produto ${product.codigo} - pulando...`);
+          console.log(
+            `⚠️ Variante de cor ${variante.cor} já existe para o produto ${product.codigo} - pulando...`,
+          );
 
           // Adicionar à lista de variantes retornadas (mesmo que não criada)
           variants.push({
             id: (existingColorVariant as any[])[0].id,
             cor: variante.cor,
-            sku: variante.sku || `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}`,
+            sku:
+              variante.sku ||
+              `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}`,
             grade: variante.grade,
             preco: variante.preco,
-            status: "existing"
+            status: "existing",
           });
           continue;
         }
@@ -370,9 +386,11 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           localImageUrl = await downloadAndSaveImage(
             variante.foto,
             product.codigo,
-            variante.cor
+            variante.cor,
           );
-          console.log(`  📷 Imagem processada para ${variante.cor}: ${localImageUrl || 'falhou'}`);
+          console.log(
+            `  📷 Imagem processada para ${variante.cor}: ${localImageUrl || "falhou"}`,
+          );
         }
 
         // Inserir relação produto-cor-grade
@@ -396,7 +414,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             variante.preco,
             localImageUrl,
             0, // stock_total inicial
-            true
+            true,
           ],
         );
 
@@ -420,13 +438,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
               `INSERT INTO product_variants
                (product_id, color_id, size_id, price_override, image_url, created_at)
                VALUES (?, ?, ?, ?, ?, NOW())`,
-              [
-                productId,
-                colorId,
-                sizeId,
-                variante.preco,
-                localImageUrl,
-              ],
+              [productId, colorId, sizeId, variante.preco, localImageUrl],
             );
           }
 
@@ -453,7 +465,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           sku: variantSku,
           grade: variante.grade,
           preco: variante.preco,
-          status: "created"
+          status: "created",
         });
 
         variantesCreadas++;
@@ -469,10 +481,18 @@ router.post("/bulk", validateApiKey, async (req, res) => {
     }
 
     // Calcular estatísticas detalhadas
-    const variantesNovas = createdProducts.flatMap(p => p.variantes).filter(v => v.status === "created").length;
-    const variantesExistentes = createdProducts.flatMap(p => p.variantes).filter(v => v.status === "existing").length;
-    const produtosNovos = createdProducts.filter(p => p.status === "created").length;
-    const produtosAtualizados = createdProducts.filter(p => p.status === "updated").length;
+    const variantesNovas = createdProducts
+      .flatMap((p) => p.variantes)
+      .filter((v) => v.status === "created").length;
+    const variantesExistentes = createdProducts
+      .flatMap((p) => p.variantes)
+      .filter((v) => v.status === "existing").length;
+    const produtosNovos = createdProducts.filter(
+      (p) => p.status === "created",
+    ).length;
+    const produtosAtualizados = createdProducts.filter(
+      (p) => p.status === "updated",
+    ).length;
 
     // Resposta de sucesso
     res.status(201).json({
@@ -585,7 +605,9 @@ router.post("/single", validateApiKey, async (req, res) => {
     let localImageUrl = null;
     if (foto && isValidImageUrl(foto)) {
       localImageUrl = await downloadAndSaveImage(foto, codigo, cor);
-      console.log(`📷 Imagem processada para ${cor}: ${localImageUrl || 'falhou'}`);
+      console.log(
+        `📷 Imagem processada para ${cor}: ${localImageUrl || "falhou"}`,
+      );
     }
 
     // Criar entrada na tabela product_color_variants para compatibilidade com admin WooCommerce
@@ -601,7 +623,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         preco,
         localImageUrl,
         0, // stock_total inicial
-        true
+        true,
       ],
     );
 
