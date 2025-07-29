@@ -457,6 +457,7 @@ Authorization: Bearer your_api_key
       "tipo": "Casual",
       "genero": "Unissex",
       "descricao": "O chinelo mais famoso do Brasil",
+      "preco_sugerido": 39.90,
       "vender_infinito": true,
       "variantes": [
         {
