@@ -852,7 +852,7 @@ export default function ProductsWooCommerce() {
                           type="number"
                           step="0.01"
                           min="0"
-                          value={formData.base_price || ""}
+                          value={formData.base_price != null ? formData.base_price.toString() : ""}
                           onChange={(e) =>
                             setFormData({
                               ...formData,
@@ -872,7 +872,7 @@ export default function ProductsWooCommerce() {
                           type="number"
                           step="0.01"
                           min="0"
-                          value={formData.suggested_price || ""}
+                          value={formData.suggested_price != null ? formData.suggested_price.toString() : ""}
                           onChange={(e) =>
                             setFormData({
                               ...formData,
