@@ -75,6 +75,22 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     } else {
       setSelectedColorFilter(null);
     }
+
+    // Sync gender filter with URL params
+    const genderParam = searchParams.get("genero");
+    if (genderParam) {
+      setSelectedGenderFilter(parseInt(genderParam));
+    } else {
+      setSelectedGenderFilter(null);
+    }
+
+    // Sync type filter with URL params
+    const typeParam = searchParams.get("tipo");
+    if (typeParam) {
+      setSelectedTypeFilter(parseInt(typeParam));
+    } else {
+      setSelectedTypeFilter(null);
+    }
   }, [searchParams]);
 
   // Search functionality - memoized
