@@ -51,25 +51,33 @@ type CartAction =
   | { type: "SHOW_MODAL"; product: ModalProduct }
   | { type: "HIDE_MODAL" };
 
-const CART_STORAGE_KEY = "shopping-cart";
+const CART_STORAGE_PREFIX = "shopping-cart-user-";
 
 const CartContext = createContext<{
   state: CartState;
   dispatch: React.Dispatch<CartAction>;
 } | null>(null);
 
-function loadCartFromStorage(): CartState {
+function getCartStorageKey(userId?: number): string | null {
+  if (!userId) return null;
+  return `${CART_STORAGE_PREFIX}${userId}`;
+}
+
+function loadCartFromStorage(userId?: number): CartState {
   try {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem(CART_STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        // Add missing modal state for backwards compatibility
-        return {
-          ...parsed,
-          isModalOpen: false,
-          modalProduct: null,
-        };
+    if (typeof window !== "undefined" && userId) {
+      const storageKey = getCartStorageKey(userId);
+      if (storageKey) {
+        const stored = localStorage.getItem(storageKey);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          // Add missing modal state for backwards compatibility
+          return {
+            ...parsed,
+            isModalOpen: false,
+            modalProduct: null,
+          };
+        }
       }
     }
   } catch (error) {
@@ -85,13 +93,35 @@ function loadCartFromStorage(): CartState {
   };
 }
 
-function saveCartToStorage(state: CartState) {
+function saveCartToStorage(state: CartState, userId?: number) {
   try {
-    if (typeof window !== "undefined") {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state));
+    if (typeof window !== "undefined" && userId) {
+      const storageKey = getCartStorageKey(userId);
+      if (storageKey) {
+        // Only save cart data, not modal state
+        const cartData = {
+          items: state.items,
+          totalItems: state.totalItems,
+          totalPrice: state.totalPrice,
+        };
+        localStorage.setItem(storageKey, JSON.stringify(cartData));
+      }
     }
   } catch (error) {
     console.error("Erro ao salvar carrinho no localStorage:", error);
+  }
+}
+
+function clearUserCartFromStorage(userId?: number) {
+  try {
+    if (typeof window !== "undefined" && userId) {
+      const storageKey = getCartStorageKey(userId);
+      if (storageKey) {
+        localStorage.removeItem(storageKey);
+      }
+    }
+  } catch (error) {
+    console.error("Erro ao limpar carrinho do localStorage:", error);
   }
 }
 
