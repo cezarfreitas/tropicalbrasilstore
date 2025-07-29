@@ -677,13 +677,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
                   <button
-                    onClick={() => {
-                      const newState = !genderFilterOpen;
-                      setGenderFilterOpen(newState);
-                      try {
-                        localStorage.setItem('sidebar-gender-filter-open', newState.toString());
-                      } catch {}
-                    }}
+                    onClick={() => setGenderFilterOpen(!genderFilterOpen)}
                     className="flex items-center gap-2 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
                   >
                     <Users className="h-3 w-3 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
@@ -1020,7 +1014,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <div className="relative">
                   <Input
                     type="text"
-                    placeholder="Digite o que voc�� procura..."
+                    placeholder="Digite o que você procura..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full h-12 pl-12 pr-4 rounded-lg border-primary/20 focus:border-primary/40 focus:ring-primary/20"
