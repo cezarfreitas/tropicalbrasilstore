@@ -1,6 +1,7 @@
 import { Router } from "express";
 import db from "../lib/db";
 import { Product, CreateProductRequest } from "@shared/types";
+import { validateApiKey } from "../lib/api-auth";
 
 interface BulkProductVariant {
   cor: string;
