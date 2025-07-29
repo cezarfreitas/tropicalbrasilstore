@@ -257,10 +257,26 @@ router.get("/products-paginated", async (req, res) => {
         p.suggested_price,
         p.photo,
         p.active,
+        p.sell_without_stock,
+        p.stock_type,
         c.name as category_name
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
       ${whereClause}
+      AND (
+        CASE
+          WHEN p.stock_type = 'size' THEN EXISTS(
+            SELECT 1 FROM product_variants pv
+            WHERE pv.product_id = p.id AND (pv.stock > 0 OR p.sell_without_stock = 1)
+          )
+          WHEN p.stock_type = 'grade' THEN EXISTS(
+            SELECT 1 FROM product_color_grades pcg
+            INNER JOIN grade_vendida g ON pcg.grade_id = g.id
+            WHERE pcg.product_id = p.id AND (g.active = 1 OR p.sell_without_stock = 1)
+          )
+          ELSE FALSE
+        END
+      )
       ORDER BY p.name
       LIMIT ${limitNum} OFFSET ${offsetNum}
     `;
