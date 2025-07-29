@@ -1,5 +1,6 @@
 import path from "path";
 import * as express from "express";
+import fs from "fs";
 import { createServer } from "./index";
 import { fileURLToPath } from "url";
 
