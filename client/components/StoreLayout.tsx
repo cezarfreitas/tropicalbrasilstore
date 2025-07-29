@@ -46,7 +46,7 @@ interface StoreLayoutProps {
 }
 
 export function StoreLayout({ children }: StoreLayoutProps) {
-  const { items, totalItems, updateQuantity, removeItem, totalPrice } = useCart();
+  const { items, totalItems, updateQuantity, removeItem, totalPrice, clearCart } = useCart();
   const { isAuthenticated, isApproved, customer, logout } = useCustomerAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
