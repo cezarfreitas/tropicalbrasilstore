@@ -13,15 +13,15 @@ interface BulkProductVariant {
 }
 
 interface BulkProduct {
-  codigo: string;
-  nome: string;
-  categoria: string;
-  tipo: string;
-  genero?: string;
-  descricao?: string;
-  preco_sugerido?: number;
-  vender_infinito?: boolean;
-  variantes: BulkProductVariant[];
+  codigo: string; // Código/SKU do produto
+  nome: string; // Nome do produto
+  categoria: string; // Categoria do produto
+  tipo: string; // Tipo do produto
+  genero?: string; // Gênero (opcional)
+  descricao?: string; // Descrição do produto (opcional)
+  preco_sugerido?: number; // Preço sugerido de venda (opcional)
+  vender_infinito?: boolean; // Venda sem controle de estoque
+  variantes: BulkProductVariant[]; // Lista de variantes
 }
 
 interface BulkProductsRequest {
