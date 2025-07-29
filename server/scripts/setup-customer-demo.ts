@@ -21,7 +21,7 @@ async function setupCustomerDemo() {
       // Inserir na tabela customer_auth
       await db.execute(
         `INSERT INTO customer_auth (name, email, whatsapp, password, status) VALUES (?, ?, ?, ?, ?)`,
-        ["Maria Silva Santos", "maria.silva@email.com", "5511999991111", hashedPassword, "approved"]
+        ["Maria Silva Santos", "maria.silva@email.com", "11999991111", hashedPassword, "approved"]
       );
       
       console.log("✅ Cliente demo criado:");
