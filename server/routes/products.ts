@@ -451,13 +451,31 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             // SKU específico para cada tamanho
             const sizeVariantSku = `${variantSku}-${sizeName}`;
 
-            // Criar variante física do produto (product_variants)
-            await db.execute(
-              `INSERT INTO product_variants
-               (product_id, color_id, size_id, price_override, image_url, created_at)
-               VALUES (?, ?, ?, ?, ?, NOW())`,
-              [productId, colorId, sizeId, variante.preco, localImageUrl],
+            // Verificar se a variante já existe
+            const [existingVariant] = await db.execute(
+              `SELECT id FROM product_variants
+               WHERE product_id = ? AND color_id = ? AND size_id = ?`,
+              [productId, colorId, sizeId],
             );
+
+            if ((existingVariant as any[]).length === 0) {
+              // Criar variante física do produto apenas se não existir
+              await db.execute(
+                `INSERT INTO product_variants
+                 (product_id, color_id, size_id, price_override, image_url, created_at)
+                 VALUES (?, ?, ?, ?, ?, NOW())`,
+                [productId, colorId, sizeId, variante.preco, localImageUrl],
+              );
+            } else {
+              console.log(`  ⚠️ Variante ${sizeName} já existe para ${variante.cor}, atualizando preço`);
+              // Atualizar preço se necessário
+              await db.execute(
+                `UPDATE product_variants
+                 SET price_override = ?, image_url = COALESCE(?, image_url)
+                 WHERE product_id = ? AND color_id = ? AND size_id = ?`,
+                [variante.preco, localImageUrl, productId, colorId, sizeId],
+              );
+            }
           }
 
           console.log(
