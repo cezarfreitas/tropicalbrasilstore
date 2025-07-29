@@ -57,10 +57,7 @@ const AppContent = () => (
       {/* Customer Authentication Routes */}
       <Route path="/login" element={<CustomerLogin />} />
       <Route path="/cadastro" element={<CustomerRegister />} />
-      <Route
-        path="/change-password"
-        element={<CustomerChangePassword />}
-      />
+      <Route path="/change-password" element={<CustomerChangePassword />} />
 
       {/* Admin Login Route (Public) */}
       <Route path="/admin/login" element={<Login />} />
@@ -260,7 +257,7 @@ const App = () => (
 const rootElement = document.getElementById("root")!;
 
 // Apenas renderiza uma vez - hot reload é gerenciado pelo Vite
-if (!rootElement.hasAttribute('data-react-root')) {
-  rootElement.setAttribute('data-react-root', 'true');
+if (!rootElement.hasAttribute("data-react-root")) {
+  rootElement.setAttribute("data-react-root", "true");
   createRoot(rootElement).render(<App />);
 }
