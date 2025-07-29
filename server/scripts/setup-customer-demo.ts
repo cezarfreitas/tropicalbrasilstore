@@ -26,7 +26,7 @@ async function setupCustomerDemo() {
       
       console.log("✅ Cliente demo criado:");
       console.log("   📧 Email: maria.silva@email.com");
-      console.log("   📱 WhatsApp: 5511999991111");  
+      console.log("   📱 WhatsApp: 11999991111");
       console.log("   🔑 Senha: demo123");
     } else {
       console.log("👤 Cliente demo já existe");
