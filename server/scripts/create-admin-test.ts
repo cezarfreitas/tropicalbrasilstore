@@ -19,49 +19,59 @@ async function createProductForAdmin() {
         variantes: [
           {
             cor: "Vermelho",
-            preco: 29.90,
+            preco: 29.9,
             grade: "Padrão",
-            foto: "https://example.com/vermelho.jpg"
+            foto: "https://example.com/vermelho.jpg",
           },
           {
             cor: "Azul",
-            preco: 29.90,
-            grade: "Padrão", 
-            foto: "https://example.com/azul.jpg"
-          }
-        ]
-      }
-    ]
+            preco: 29.9,
+            grade: "Padrão",
+            foto: "https://example.com/azul.jpg",
+          },
+        ],
+      },
+    ],
   };
 
   try {
     console.log("📤 Criando produto via API bulk...");
-    
-    const createResponse = await axios.post(`${API_BASE}/products/bulk`, testData, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
+
+    const createResponse = await axios.post(
+      `${API_BASE}/products/bulk`,
+      testData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${API_KEY}`,
+        },
       },
-    });
+    );
 
     console.log("✅ Produto criado via API!");
     console.log("Resposta:", JSON.stringify(createResponse.data, null, 2));
 
     // Verificar se o produto aparece na lista de produtos (endpoint que o admin usa)
     console.log("\n📤 Testando endpoint /api/products que o admin usa...");
-    
+
     const listResponse = await axios.get(`${API_BASE}/products`);
-    console.log("✅ Produtos retornados pelo endpoint:", listResponse.data.length);
-    
+    console.log(
+      "✅ Produtos retornados pelo endpoint:",
+      listResponse.data.length,
+    );
+
     if (listResponse.data.length > 0) {
-      console.log("Primeiro produto:", JSON.stringify(listResponse.data[0], null, 2));
+      console.log(
+        "Primeiro produto:",
+        JSON.stringify(listResponse.data[0], null, 2),
+      );
     }
 
     // Verificar diretamente no banco
     console.log("\n🔍 Verificação direta no banco de dados...");
-    
+
     const [dbProducts] = await db.execute(
-      "SELECT id, sku, name, base_price, active FROM products WHERE sku = 'ADMIN001'"
+      "SELECT id, sku, name, base_price, active FROM products WHERE sku = 'ADMIN001'",
     );
     console.log("Produto no banco:", dbProducts);
 
@@ -78,14 +88,18 @@ async function createProductForAdmin() {
 
     // Testar endpoint de variantes
     console.log("\n📤 Testando endpoint de variantes...");
-    
-    const variantsResponse = await axios.get(`${API_BASE}/products/ADMIN001/variants`);
-    console.log("✅ Variantes retornadas:", variantsResponse.data.length);
-    
-    if (variantsResponse.data.length > 0) {
-      console.log("Primeira variante:", JSON.stringify(variantsResponse.data[0], null, 2));
-    }
 
+    const variantsResponse = await axios.get(
+      `${API_BASE}/products/ADMIN001/variants`,
+    );
+    console.log("✅ Variantes retornadas:", variantsResponse.data.length);
+
+    if (variantsResponse.data.length > 0) {
+      console.log(
+        "Primeira variante:",
+        JSON.stringify(variantsResponse.data[0], null, 2),
+      );
+    }
   } catch (error: any) {
     console.log("❌ Erro:", error.message);
     if (error.response) {
@@ -93,7 +107,7 @@ async function createProductForAdmin() {
       console.log("Dados:", JSON.stringify(error.response.data, null, 2));
     }
   }
-  
+
   process.exit(0);
 }
 

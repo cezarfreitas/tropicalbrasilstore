@@ -323,7 +323,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             variante.preco,
             variante.foto || null,
             0, // stock_total inicial
-            true
+            true,
           ],
         );
 
@@ -509,7 +509,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         preco,
         foto || null,
         0, // stock_total inicial
-        true
+        true,
       ],
     );
 
