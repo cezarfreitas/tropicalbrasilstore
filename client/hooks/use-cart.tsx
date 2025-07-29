@@ -271,6 +271,11 @@ export function useCart() {
     dispatch({ type: "CLEAR_CART" });
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalProduct(null);
+  };
+
   return {
     items: state.items,
     totalItems: state.totalItems,
@@ -279,6 +284,10 @@ export function useCart() {
     removeItem,
     updateQuantity,
     clearCart,
+    // Modal state and controls
+    isModalOpen,
+    modalProduct,
+    closeModal,
   };
 }
 
