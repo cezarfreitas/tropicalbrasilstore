@@ -226,57 +226,85 @@ router.post("/bulk", validateApiKey, async (req, res) => {
 
       // Verificar se produto com código já existe
       const [existingProduct] = await db.execute(
-        "SELECT id FROM products WHERE sku = ?",
+        "SELECT id, name, category_id, type_id, gender_id FROM products WHERE sku = ?",
         [product.codigo],
       );
 
+      let productId;
+      let isNewProduct = false;
+
       if ((existingProduct as any[]).length > 0) {
-        return res.status(400).json({
-          success: false,
-          error: "Código já existe",
-          message: `O produto com código '${product.codigo}' já está cadastrado`,
-          code: "DUPLICATE_CODE",
-        });
+        // Produto já existe - usar o ID existente
+        productId = (existingProduct as any[])[0].id;
+        console.log(`📝 Produto existente encontrado: ${product.nome} (ID: ${productId})`);
+
+        // Verificar se as novas informações são diferentes e atualizar se necessário
+        const existing = (existingProduct as any[])[0];
+
+        // Criar ou buscar entidades apenas se necessário
+        const categoryId = await getOrCreateCategory(product.categoria);
+        const typeId = await getOrCreateType(product.tipo);
+        let genderId = null;
+        if (product.genero) {
+          genderId = await getOrCreateGender(product.genero);
+        }
+
+        // Atualizar informações do produto se fornecidas
+        if (product.nome || product.descricao || categoryId !== existing.category_id ||
+            typeId !== existing.type_id || genderId !== existing.gender_id) {
+          await db.execute(
+            "UPDATE products SET name = COALESCE(?, name), description = COALESCE(?, description), category_id = ?, type_id = ?, gender_id = ? WHERE id = ?",
+            [
+              product.nome || null,
+              product.descricao || null,
+              categoryId,
+              typeId,
+              genderId,
+              productId
+            ],
+          );
+          console.log(`📝 Informações do produto atualizadas`);
+        }
+      } else {
+        // Produto não existe - criar novo
+        isNewProduct = true;
+
+        // Criar ou buscar categoria
+        const categoryId = await getOrCreateCategory(product.categoria);
+        categoriesCreated.add(product.categoria);
+
+        // Criar ou buscar tipo
+        const typeId = await getOrCreateType(product.tipo);
+        typesCreated.add(product.tipo);
+
+        // Criar ou buscar gênero se fornecido
+        let genderId = null;
+        if (product.genero) {
+          genderId = await getOrCreateGender(product.genero);
+        }
+
+        // Calcular preço base a partir da primeira variante
+        const basePrice = product.variantes[0].preco;
+
+        // Criar produto principal
+        const [productResult] = await db.execute(
+          "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, sell_without_stock, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          [
+            product.nome,
+            product.descricao || null,
+            categoryId,
+            typeId,
+            genderId,
+            product.codigo,
+            basePrice,
+            product.vender_infinito || false,
+            true,
+          ],
+        );
+
+        productId = (productResult as any).insertId;
+        console.log(`✅ Produto criado: ${product.nome} (ID: ${productId})`);
       }
-
-      // Criar ou buscar categoria
-      const categoryId = await getOrCreateCategory(product.categoria);
-      categoriesCreated.add(product.categoria);
-
-      // Criar ou buscar tipo
-      const typeId = await getOrCreateType(product.tipo);
-      typesCreated.add(product.tipo);
-
-      // Criar ou buscar gênero se fornecido
-      let genderId = null;
-      if (product.genero) {
-        genderId = await getOrCreateGender(product.genero);
-      }
-
-      // Calcular preço base a partir da primeira variante
-      const basePrice = product.variantes[0].preco;
-
-      // Criar produto principal
-      const [productResult] = await db.execute(
-        "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, sell_without_stock, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [
-          product.nome,
-          product.descricao || null,
-          categoryId,
-          typeId,
-          genderId,
-          product.codigo,
-          basePrice,
-          product.vender_infinito || false,
-          true,
-        ],
-      );
-
-      console.log(
-        `✅ Produto criado: ${product.nome} (ID: ${(productResult as any).insertId})`,
-      );
-
-      const productId = (productResult as any).insertId;
       const variants = [];
 
       // Processar cada variante
