@@ -451,17 +451,28 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         id: productId,
         codigo: product.codigo,
         nome: product.nome,
+        status: isNewProduct ? "created" : "updated",
         variantes: variants,
       });
     }
 
+    // Calcular estatísticas detalhadas
+    const variantesNovas = createdProducts.flatMap(p => p.variantes).filter(v => v.status === "created").length;
+    const variantesExistentes = createdProducts.flatMap(p => p.variantes).filter(v => v.status === "existing").length;
+    const produtosNovos = createdProducts.filter(p => p.status === "created").length;
+    const produtosAtualizados = createdProducts.filter(p => p.status === "updated").length;
+
     // Resposta de sucesso
     res.status(201).json({
       success: true,
-      message: "Produtos cadastrados com sucesso",
+      message: "Processamento concluído com sucesso",
       data: {
-        produtos_criados: products.length,
-        variantes_criadas: variantesCreadas,
+        produtos_processados: products.length,
+        produtos_novos: produtosNovos,
+        produtos_atualizados: produtosAtualizados,
+        variantes_novas: variantesNovas,
+        variantes_existentes: variantesExistentes,
+        total_variantes: variantesNovas + variantesExistentes,
         categorias_criadas: Array.from(categoriesCreated),
         tipos_criados: Array.from(typesCreated),
         cores_criadas: Array.from(colorsCreated),
