@@ -150,7 +150,7 @@ router.get("/products-paginated", async (req, res) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
-    const category = req.query.category as string;
+    const category = req.query.categoria as string;
     const searchTerm = req.query.busca as string;
     const colorFilter = req.query.cor ? parseInt(req.query.cor as string) : null;
 
