@@ -508,6 +508,13 @@ router.post("/single", validateApiKey, async (req, res) => {
 
     const variantSku = `${codigo}-${cor.toUpperCase().replace(/\s+/g, "-")}`;
 
+    // Download e salvar imagem se fornecida
+    let localImageUrl = null;
+    if (foto && isValidImageUrl(foto)) {
+      localImageUrl = await downloadAndSaveImage(foto, codigo, cor);
+      console.log(`📷 Imagem processada para ${cor}: ${localImageUrl || 'falhou'}`);
+    }
+
     // Criar entrada na tabela product_color_variants para compatibilidade com admin WooCommerce
     await db.execute(
       `INSERT INTO product_color_variants
