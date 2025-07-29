@@ -560,12 +560,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                 {colorFilterOpen && (
                   <>
-                    <div className="grid grid-cols-4 gap-3 px-4">
+                    <div className="grid grid-cols-5 gap-2 px-2">
                       {availableColors.map((color) => (
                         <button
                           key={color.id}
                           onClick={() => handleColorFilter(color.id)}
-                          className={`group relative w-12 h-12 rounded-2xl border-2 transition-all duration-300 hover:scale-110 hover:shadow-xl ${
+                          className={`group relative w-9 h-9 rounded-xl border-2 transition-all duration-300 hover:scale-110 hover:shadow-xl ${
                             selectedColorFilter === color.id
                               ? 'border-white shadow-2xl scale-110 ring-2 ring-white/30'
                               : 'border-white/40 hover:border-white/80'
