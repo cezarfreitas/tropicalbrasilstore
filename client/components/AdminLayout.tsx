@@ -18,6 +18,7 @@ import {
   Bell,
   LogOut,
   Upload,
+  Tags,
 } from "lucide-react";
 import { useState } from "react";
 
