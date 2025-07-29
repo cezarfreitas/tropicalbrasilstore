@@ -19,6 +19,7 @@ interface BulkProduct {
   tipo: string;
   genero?: string;
   descricao?: string;
+  preco_sugerido?: number;
   vender_infinito?: boolean;
   variantes: BulkProductVariant[];
 }
