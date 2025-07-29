@@ -8,19 +8,23 @@ async function testSimple() {
 
   // 1. Primeira requisição - criar produto
   console.log("📤 1. Criando produto com variante Azul...");
-  
+
   const request1 = {
-    products: [{
-      codigo: "TEST123",
-      nome: "Produto Teste Incremental",
-      categoria: "Teste",
-      tipo: "Casual",
-      variantes: [{
-        cor: "Azul",
-        preco: 29.90,
-        grade: "Padrão"
-      }]
-    }]
+    products: [
+      {
+        codigo: "TEST123",
+        nome: "Produto Teste Incremental",
+        categoria: "Teste",
+        tipo: "Casual",
+        variantes: [
+          {
+            cor: "Azul",
+            preco: 29.9,
+            grade: "Padrão",
+          },
+        ],
+      },
+    ],
   };
 
   try {
@@ -34,21 +38,25 @@ async function testSimple() {
     console.log("✅ Resposta 1:", {
       produtos_novos: response1.data.data.produtos_novos,
       variantes_novas: response1.data.data.variantes_novas,
-      message: response1.data.message
+      message: response1.data.message,
     });
 
     // 2. Segunda requisição - adicionar variante
     console.log("\n📤 2. Adicionando variante Vermelho ao mesmo produto...");
-    
+
     const request2 = {
-      products: [{
-        codigo: "TEST123", // Mesmo código
-        variantes: [{
-          cor: "Vermelho",
-          preco: 32.90,
-          grade: "Padrão"
-        }]
-      }]
+      products: [
+        {
+          codigo: "TEST123", // Mesmo código
+          variantes: [
+            {
+              cor: "Vermelho",
+              preco: 32.9,
+              grade: "Padrão",
+            },
+          ],
+        },
+      ],
     };
 
     const response2 = await axios.post(`${API_BASE}/products/bulk`, request2, {
@@ -63,16 +71,15 @@ async function testSimple() {
       produtos_atualizados: response2.data.data.produtos_atualizados,
       variantes_novas: response2.data.data.variantes_novas,
       variantes_existentes: response2.data.data.variantes_existentes,
-      message: response2.data.message
+      message: response2.data.message,
     });
-
   } catch (error: any) {
     console.log("❌ Erro:", error.message);
     if (error.response) {
       console.log("Dados:", error.response.data);
     }
   }
-  
+
   process.exit(0);
 }
 
