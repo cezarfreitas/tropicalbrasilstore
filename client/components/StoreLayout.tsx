@@ -280,9 +280,25 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           const visibleCategories = data.filter(
             (cat: any) => cat.show_in_menu !== false,
           );
+
+          // Remove duplicates by name and clean up encoding issues
+          const uniqueCategories = visibleCategories.reduce((acc: any[], cat: any) => {
+            // Skip if name contains encoding issues
+            if (cat.name && cat.name.includes('�')) {
+              return acc;
+            }
+
+            // Check if category name already exists
+            const exists = acc.some(existing => existing.name === cat.name);
+            if (!exists) {
+              acc.push(cat);
+            }
+            return acc;
+          }, []);
+
           setCategories([
-            { id: "all", name: "Todas as Categorias" },
-            ...visibleCategories,
+            { id: "all", name: "Todos" },
+            ...uniqueCategories,
           ]);
         }
       } catch (error) {
