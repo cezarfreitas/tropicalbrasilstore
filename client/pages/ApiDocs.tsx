@@ -30,6 +30,10 @@ import {
   Trash2,
   AlertTriangle,
   Download,
+  Activity,
+  Clock,
+  TrendingUp,
+  Filter,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useApiKeys } from "@/hooks/use-api-keys";
