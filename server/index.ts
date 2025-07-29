@@ -7,6 +7,8 @@ import { categoriesRouter } from "./routes/categories";
 import { sizesRouter } from "./routes/sizes";
 import { sizeGroupsRouter } from "./routes/size-groups";
 import { colorsRouter } from "./routes/colors";
+import { gendersRouter } from "./routes/genders";
+import { typesRouter } from "./routes/types";
 import { productsRouter } from "./routes/products";
 import { seedRouter } from "./routes/seed";
 import { statsRouter } from "./routes/stats";
