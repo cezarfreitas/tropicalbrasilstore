@@ -343,7 +343,7 @@ export default function ProductDetail() {
         return matchesColor && (hasStock || allowedWithoutStock);
       })
       .forEach((variant) => {
-        if (!sizeMap.has(variant.size_id)) {
+        if (variant.size_id && !sizeMap.has(variant.size_id)) {
           sizeMap.set(variant.size_id, {
             id: variant.size_id,
             name: variant.size,
