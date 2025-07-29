@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -25,20 +25,7 @@ import {
 } from "@/components/ui/table";
 import { Plus, Edit2, Trash2, Tags, Users, Package } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-interface Gender {
-  id: number;
-  name: string;
-  description?: string;
-  created_at: string;
-}
-
-interface Type {
-  id: number;
-  name: string;
-  description?: string;
-  created_at: string;
-}
+import { Gender, Type, CreateGenderRequest, CreateTypeRequest } from "@shared/types";
 
 export default function Attributes() {
   const [activeTab, setActiveTab] = useState("genders");
@@ -52,6 +39,11 @@ export default function Attributes() {
     description: "",
   });
   const { toast } = useToast();
+
+  useEffect(() => {
+    fetchGenders();
+    fetchTypes();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
