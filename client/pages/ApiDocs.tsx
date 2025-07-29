@@ -290,7 +290,7 @@ export default function ApiDocs() {
                       <li>• Criação automática de tipos</li>
                       <li>• Criação automática de cores</li>
                       <li>• Geração automática de SKUs</li>
-                      <li>• Criação de grades de tamanhos</li>
+                      <li>• Criação de grades com tamanhos automáticos</li>
                     </ul>
                   </div>
                   <div className="bg-yellow-50 p-4 rounded-lg">
