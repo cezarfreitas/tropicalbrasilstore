@@ -1028,86 +1028,147 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         </>
       )}
 
-      {/* Mobile Cart Drawer */}
+      {/* Cart Drawer */}
       {cartOpen && (
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 z-50 animate-in fade-in duration-300"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 animate-in fade-in duration-300"
             onClick={() => setCartOpen(false)}
           />
 
           {/* Cart Drawer - from right side */}
-          <div className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl animate-in slide-in-from-right duration-300">
+          <div className="fixed top-0 right-0 h-full w-96 max-w-[90vw] bg-white z-50 shadow-2xl animate-in slide-in-from-right duration-300 border-l border-gray-200">
             {/* Drawer Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/10 to-secondary/10">
-              <div>
-                <h2 className="text-lg font-semibold text-primary">Carrinho</h2>
-                {totalItems > 0 && (
-                  <div className="text-xs text-gray-600 mt-1 space-y-1">
-                    <p>Total: {totalItems} {totalItems === 1 ? 'peça' : 'peças'}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {items.map((item) => (
-                        <span key={item.id} className="bg-gray-100 px-2 py-0.5 rounded text-[10px]">
-                          {item.gradeName || item.sizeName || 'Individual'}: {item.quantity} {item.quantity === 1 ? 'peça' : 'peças'}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+            <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/5 to-primary/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                  <ShoppingCart className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900">Carrinho</h2>
+                  {totalItems > 0 && (
+                    <p className="text-sm text-gray-600">
+                      {items.length} {items.length === 1 ? 'produto' : 'produtos'} • {totalItems} {totalItems === 1 ? 'item' : 'itens'}
+                    </p>
+                  )}
+                </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setCartOpen(false)}
-                className="h-8 w-8 p-0 hover:bg-primary/10"
+                className="h-9 w-9 p-0 rounded-full hover:bg-gray-100 transition-colors"
               >
-                <X className="h-4 w-4" />
+                <X className="h-5 w-5" />
               </Button>
             </div>
 
             {/* Cart Content */}
             <div className="flex flex-col h-full">
-              <div className="flex-1 overflow-y-auto p-3 sm:p-4 pb-2">
+              <div className="flex-1 overflow-y-auto">
                 {items.length === 0 ? (
-                  <div className="text-center py-8">
-                    <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                      Carrinho vazio
+                  <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
+                    <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                      <ShoppingCart className="h-10 w-10 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Seu carrinho está vazio
                     </h3>
-                    <p className="text-gray-500 text-sm">
-                      Adicione produtos para começar
+                    <p className="text-gray-500 text-sm mb-6">
+                      Explore nossa loja e adicione produtos incríveis
                     </p>
+                    <Button
+                      onClick={() => setCartOpen(false)}
+                      className="bg-primary hover:bg-primary/90 text-white"
+                    >
+                      Continuar Comprando
+                    </Button>
                   </div>
                 ) : (
-                  <div className="space-y-3">
-                    {items.map((item) => (
-                      <div key={item.id} className="bg-gray-50 rounded-lg p-3">
-                        <div className="flex items-start gap-3">
+                  <div className="p-4 space-y-4">
+                    {items.map((item, index) => (
+                      <div key={item.id} className="group bg-gray-50 hover:bg-gray-100 rounded-xl p-4 transition-all duration-200 border border-gray-100 hover:border-gray-200">
+                        <div className="flex items-start gap-4">
                           {/* Product Image */}
-                          <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-100">
                             {item.photo ? (
-                              <img
+                              <ProductImage
                                 src={item.photo}
                                 alt={item.productName}
-                                className="w-full h-full object-cover rounded-lg"
+                                className="w-full h-full object-contain"
+                                loading="lazy"
+                                sizes="64px"
+                                fallbackIconSize="sm"
                               />
                             ) : (
-                              <Package className="h-6 w-6 text-gray-400" />
+                              <Package className="h-8 w-8 text-gray-400" />
                             )}
                           </div>
 
                           {/* Product Info */}
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-sm text-gray-900 truncate">
+                            <h4 className="font-semibold text-sm text-gray-900 line-clamp-2 leading-tight mb-2">
                               {item.productName}
                             </h4>
-                            <p className="text-xs text-gray-600 mt-1">
-                              {item.gradeName} - {item.colorName}
-                            </p>
-                            <p className="text-sm font-bold text-primary mt-1">
-                              R$ {item.totalPrice.toFixed(2)}
-                            </p>
+
+                            {/* Grade Info */}
+                            {item.type === 'grade' && (
+                              <div className="space-y-1 mb-3">
+                                <div className="flex items-center gap-2">
+                                  <Grid3x3 className="h-3 w-3 text-primary" />
+                                  <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                                    {item.gradeName}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-gray-600">
+                                  Cor: {item.colorName} • {item.piecesPerGrade || 0} itens por grade
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Price and Quantity */}
+                            <div className="flex items-center justify-between">
+                              <div className="space-y-1">
+                                <p className="text-lg font-bold text-primary">
+                                  R$ {item.totalPrice.toFixed(2)}
+                                </p>
+                                {item.quantity > 1 && (
+                                  <p className="text-xs text-gray-500">
+                                    {item.quantity} × R$ {item.unitPrice.toFixed(2)}
+                                  </p>
+                                )}
+                              </div>
+
+                              {/* Quantity Controls */}
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() =>
+                                    updateQuantity(item.id, Math.max(1, item.quantity - 1))
+                                  }
+                                  className="h-7 w-7 p-0 hover:bg-primary hover:text-white border-gray-300"
+                                  disabled={item.quantity <= 1}
+                                >
+                                  <Minus className="h-3 w-3" />
+                                </Button>
+                                <span className="text-sm font-semibold w-8 text-center bg-white px-2 py-1 rounded border">
+                                  {item.quantity}
+                                </span>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() =>
+                                    updateQuantity(item.id, Math.min(99, item.quantity + 1))
+                                  }
+                                  className="h-7 w-7 p-0 hover:bg-primary hover:text-white border-gray-300"
+                                  disabled={item.quantity >= 99}
+                                >
+                                  <Plus className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
                           </div>
 
                           {/* Remove Button */}
@@ -1115,69 +1176,67 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                             variant="ghost"
                             size="sm"
                             onClick={() => removeItem(item.id)}
-                            className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                            className="h-7 w-7 p-0 text-gray-400 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all duration-200"
                           >
-                            <Trash2 className="h-3 w-3" />
+                            <Trash2 className="h-4 w-4" />
                           </Button>
-                        </div>
-
-                        {/* Quantity Controls */}
-                        <div className="flex items-center justify-between mt-3">
-                          <span className="text-xs text-gray-600">
-                            Quantidade:
-                          </span>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() =>
-                                updateQuantity(item.id, item.quantity - 1)
-                              }
-                              className="h-6 w-6 p-0"
-                            >
-                              <Minus className="h-3 w-3" />
-                            </Button>
-                            <span className="text-sm font-medium w-8 text-center">
-                              {item.quantity}
-                            </span>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() =>
-                                updateQuantity(item.id, item.quantity + 1)
-                              }
-                              className="h-6 w-6 p-0"
-                            >
-                              <Plus className="h-3 w-3" />
-                            </Button>
-                          </div>
                         </div>
                       </div>
                     ))}
+
+                    {/* Quick Actions */}
+                    {items.length > 1 && (
+                      <div className="border-t pt-4 mt-6">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            if (confirm('Tem certeza que deseja limpar todo o carrinho?')) {
+                              clearCart();
+                            }
+                          }}
+                          className="w-full text-gray-600 hover:text-red-600 hover:border-red-200 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Limpar Carrinho
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
 
               {/* Cart Footer - Fixed at bottom */}
               {items.length > 0 && (
-                <div className="border-t bg-white p-3 sm:p-4 space-y-3 sm:space-y-4 safe-area-inset">
-                  {/* Total */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-base sm:text-lg font-semibold">
-                      Total:
-                    </span>
-                    <span className="text-lg sm:text-xl font-bold text-primary">
-                      R$ {totalPrice.toFixed(2)}
-                    </span>
+                <div className="border-t bg-white p-4 space-y-4">
+                  {/* Summary */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-600">Subtotal</span>
+                      <span className="font-medium">R$ {totalPrice.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-600">Frete</span>
+                      <span className="font-medium text-blue-600">A calcular</span>
+                    </div>
+                    <div className="border-t pt-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-lg font-bold text-gray-900">Total</span>
+                        <span className="text-xl font-bold text-primary">
+                          R$ {totalPrice.toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Link
                       to="/loja/checkout"
                       onClick={() => setCartOpen(false)}
                     >
-                      <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-11 sm:h-10 text-sm sm:text-base font-medium transition-all duration-200 hover:shadow-lg">
+                      <Button className="w-full bg-primary hover:bg-primary/90 text-white h-12 text-base font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200">
+                        <CheckCircle2 className="h-5 w-5 mr-2" />
                         Finalizar Compra
                       </Button>
                     </Link>
@@ -1187,16 +1246,24 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     >
                       <Button
                         variant="outline"
-                        className="w-full h-9 sm:h-10 text-xs sm:text-sm"
+                        className="w-full h-10 text-sm font-medium border-gray-200 hover:bg-gray-50"
                       >
+                        <ShoppingCart className="h-4 w-4 mr-2" />
                         Ver Carrinho Completo
                       </Button>
                     </Link>
                   </div>
 
-                  <div className="text-[10px] sm:text-xs text-gray-500 text-center">
-                    <p>• Compras por grades (kits)</p>
-                    <p>• Confirmação via WhatsApp</p>
+                  {/* Trust indicators */}
+                  <div className="flex items-center justify-center gap-4 text-xs text-gray-500 pt-2 border-t">
+                    <div className="flex items-center gap-1">
+                      <Grid3x3 className="h-3 w-3" />
+                      <span>Venda por grades</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <MessageCircle className="h-3 w-3" />
+                      <span>Confirmação via WhatsApp</span>
+                    </div>
                   </div>
                 </div>
               )}
