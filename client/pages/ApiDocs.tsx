@@ -299,7 +299,7 @@ export default function ApiDocs() {
                       <li>• Código deve ser único</li>
                       <li>• Mínimo 1 variante por produto</li>
                       <li>• Preço deve ser maior que 0</li>
-                      <li>• Grade deve ter pelo menos 1 tamanho</li>
+                      <li>• Nome da grade é obrigatório</li>
                       <li>• Nome da cor não pode ser vazio</li>
                     </ul>
                   </div>
