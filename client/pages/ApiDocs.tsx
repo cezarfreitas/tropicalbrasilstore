@@ -248,6 +248,174 @@ export default function ApiDocs() {
           <TabsTrigger value="authentication">Autenticação</TabsTrigger>
         </TabsList>
 
+        <TabsContent value="products" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>API de Cadastro de Produtos</CardTitle>
+              <CardDescription>
+                Sistema automatizado para cadastro de produtos com variantes e grades
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold">Características Principais</h4>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li>• <strong>Agrupamento por código:</strong> Produtos são agrupados por código único</li>
+                  <li>• <strong>Variantes obrigatórias:</strong> Todo produto deve ter pelo menos uma variante (cor)</li>
+                  <li>• <strong>Grades automáticas:</strong> Tamanhos são criados automaticamente com base na grade enviada</li>
+                  <li>• <strong>Auto-cadastro:</strong> Categorias, tipos e cores são criados automaticamente se não existirem</li>
+                </ul>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold">Estrutura do Produto</h4>
+                <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+{`{
+  "codigo": "CHN001",              // Código único do produto (obrigatório)
+  "nome": "Chinelo Havaianas Top", // Nome do produto (obrigatório)
+  "categoria": "Chinelos",         // Categoria (criada automaticamente se não existir)
+  "tipo": "Casual",               // Tipo (criado automaticamente se não existir)
+  "descricao": "Descrição...",    // Descrição do produto (opcional)
+  "variantes": [                  // Array de variantes (obrigatório, mín: 1)
+    {
+      "cor": "Preto",             // Cor (criada automaticamente se não existir)
+      "preco": 29.90,             // Preço da variante (obrigatório)
+      "grade": {                  // Grade de tamanhos (obrigatório)
+        "nome": "Grade Unissex",  // Nome da grade
+        "tamanhos": ["35", "36", "37", "38", "39", "40", "41", "42"]
+      },
+      "foto": "https://...",      // URL da foto (opcional)
+      "sku": "CHN001-PRETO"       // SKU específico (opcional, gerado automaticamente)
+    }
+  ]
+}`}
+                </pre>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold">Regras de Negócio</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h5 className="font-semibold text-blue-800 mb-2">✓ Comportamentos Automáticos</h5>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      <li>• Criação automática de categorias</li>
+                      <li>• Criação automática de tipos</li>
+                      <li>• Criação automática de cores</li>
+                      <li>• Geração automática de SKUs</li>
+                      <li>• Criação de grades de tamanhos</li>
+                    </ul>
+                  </div>
+                  <div className="bg-yellow-50 p-4 rounded-lg">
+                    <h5 className="font-semibold text-yellow-800 mb-2">⚠️ Validações</h5>
+                    <ul className="text-sm text-yellow-700 space-y-1">
+                      <li>• Código deve ser único</li>
+                      <li>• Mínimo 1 variante por produto</li>
+                      <li>• Preço deve ser maior que 0</li>
+                      <li>• Grade deve ter pelo menos 1 tamanho</li>
+                      <li>• Nome da cor não pode ser vazio</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold">Exemplo de Requisição Completa</h4>
+                <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+{`POST /api/products/bulk
+Content-Type: application/json
+Authorization: Bearer your_api_key
+
+{
+  "products": [
+    {
+      "codigo": "CHN001",
+      "nome": "Chinelo Havaianas Top",
+      "categoria": "Chinelos",
+      "tipo": "Casual",
+      "descricao": "O chinelo mais famoso do Brasil",
+      "variantes": [
+        {
+          "cor": "Preto",
+          "preco": 29.90,
+          "grade": {
+            "nome": "Grade Unissex",
+            "tamanhos": ["35", "36", "37", "38", "39", "40", "41", "42"]
+          },
+          "foto": "https://exemplo.com/chinelo-preto.jpg"
+        },
+        {
+          "cor": "Azul Marinho",
+          "preco": 29.90,
+          "grade": {
+            "nome": "Grade Unissex",
+            "tamanhos": ["35", "36", "37", "38", "39", "40", "41", "42"]
+          },
+          "foto": "https://exemplo.com/chinelo-azul.jpg"
+        }
+      ]
+    },
+    {
+      "codigo": "SND001",
+      "nome": "Sandália Feminina Elegante",
+      "categoria": "Sandálias",
+      "tipo": "Feminino",
+      "descricao": "Sandália para ocasiões especiais",
+      "variantes": [
+        {
+          "cor": "Nude",
+          "preco": 89.90,
+          "grade": {
+            "nome": "Grade Feminina",
+            "tamanhos": ["34", "35", "36", "37", "38", "39", "40"]
+          }
+        }
+      ]
+    }
+  ]
+}`}
+                </pre>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold">Resposta de Sucesso</h4>
+                <pre className="bg-green-50 p-4 rounded text-sm overflow-x-auto border border-green-200">
+{`{
+  "success": true,
+  "message": "Produtos cadastrados com sucesso",
+  "data": {
+    "produtos_criados": 2,
+    "variantes_criadas": 3,
+    "categorias_criadas": ["Chinelos", "Sandálias"],
+    "tipos_criados": ["Casual", "Feminino"],
+    "cores_criadas": ["Preto", "Azul Marinho", "Nude"],
+    "grades_criadas": ["Grade Unissex", "Grade Feminina"],
+    "produtos": [
+      {
+        "id": 1,
+        "codigo": "CHN001",
+        "nome": "Chinelo Havaianas Top",
+        "variantes": [
+          { "id": 1, "cor": "Preto", "sku": "CHN001-PRETO" },
+          { "id": 2, "cor": "Azul Marinho", "sku": "CHN001-AZUL-MARINHO" }
+        ]
+      },
+      {
+        "id": 2,
+        "codigo": "SND001",
+        "nome": "Sandália Feminina Elegante",
+        "variantes": [
+          { "id": 3, "cor": "Nude", "sku": "SND001-NUDE" }
+        ]
+      }
+    ]
+  }
+}`}
+                </pre>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="overview" className="space-y-4">
           <Card>
             <CardHeader>
