@@ -510,19 +510,24 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-4" role="navigation" aria-label="Categorias principais">
-          <div className="space-y-0.5">
-            <h3 className="px-3 mb-2 text-xs font-semibold text-muted-foreground/80 uppercase tracking-wider">
-              Categorias
-            </h3>
+        <nav className="flex-1 px-5 py-5 overflow-y-auto" role="navigation" aria-label="Categorias principais">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 px-3 mb-4">
+              <div className="w-1 h-4 bg-white/60 rounded-full"></div>
+              <h3 className="text-sm font-bold text-white/90 uppercase tracking-wider">
+                Categorias
+              </h3>
+            </div>
             {navigationLinks.map((link, index) => {
               return (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="group flex items-center text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 rounded-xl px-3 py-2 transition-all duration-200 hover:shadow-sm border border-transparent hover:border-white/20"
+                  className="group flex items-center text-sm font-medium text-white/80 hover:text-white hover:bg-white/15 rounded-2xl px-4 py-3 transition-all duration-300 hover:shadow-lg border border-transparent hover:border-white/20 backdrop-blur-sm hover:backdrop-blur-md"
                 >
-                  <span className="group-hover:translate-x-1 transition-transform duration-200">{link.label}</span>
+                  <div className="w-2 h-2 bg-white/40 rounded-full mr-3 group-hover:bg-white group-hover:scale-125 transition-all duration-300"></div>
+                  <span className="group-hover:translate-x-1 transition-transform duration-300 flex-1">{link.label}</span>
+                  <ChevronDown className="h-4 w-4 text-white/40 group-hover:text-white/80 rotate-[-90deg] transition-all duration-300" />
                 </Link>
               );
             })}
