@@ -72,6 +72,7 @@ router.get("/products", async (req, res) => {
         p.suggested_price,
         p.photo,
         p.active,
+        p.sell_without_stock,
         c.name as category_name,
         COUNT(DISTINCT pv.id) as variant_count,
         SUM(pv.stock) as total_stock
