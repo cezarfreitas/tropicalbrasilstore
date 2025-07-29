@@ -1329,6 +1329,9 @@ export default function ProductsWooCommerce() {
                       <div className="h-6 w-12 bg-gray-200 rounded mx-auto"></div>
                     </TableCell>
                     <TableCell className="p-3 text-center">
+                      <div className="h-6 w-10 bg-gray-200 rounded mx-auto"></div>
+                    </TableCell>
+                    <TableCell className="p-3 text-center">
                       <div className="h-6 w-14 bg-gray-200 rounded mx-auto"></div>
                     </TableCell>
                     <TableCell className="p-3">
