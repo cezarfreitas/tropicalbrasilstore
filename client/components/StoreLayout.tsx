@@ -246,6 +246,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
     fetchCategories();
     fetchAvailableColors();
+    fetchAvailableGenders();
+    fetchAvailableTypes();
   }, []);
 
   const fetchAvailableColors = async () => {
@@ -257,6 +259,30 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       }
     } catch (error) {
       console.error("Error fetching colors:", error);
+    }
+  };
+
+  const fetchAvailableGenders = async () => {
+    try {
+      const response = await fetch('/api/genders');
+      if (response.ok) {
+        const genders = await response.json();
+        setAvailableGenders(genders);
+      }
+    } catch (error) {
+      console.error("Error fetching genders:", error);
+    }
+  };
+
+  const fetchAvailableTypes = async () => {
+    try {
+      const response = await fetch('/api/types');
+      if (response.ok) {
+        const types = await response.json();
+        setAvailableTypes(types);
+      }
+    } catch (error) {
+      console.error("Error fetching types:", error);
     }
   };
 
