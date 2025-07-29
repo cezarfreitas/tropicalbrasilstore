@@ -506,7 +506,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <Search className="h-5 w-5 text-white" />
                 </Button>
               </div>
-              <span className="text-xs text-white/90 font-medium tracking-wide">Buscar</span>
+              <span className="text-xs text-white/80 font-medium">Buscar</span>
             </div>
           </div>
         </div>
