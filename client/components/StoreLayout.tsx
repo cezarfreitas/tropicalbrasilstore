@@ -84,10 +84,28 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     null,
   );
 
-  // Accordion states for filter sections
-  const [colorFilterOpen, setColorFilterOpen] = useState(false);
-  const [genderFilterOpen, setGenderFilterOpen] = useState(false);
-  const [typeFilterOpen, setTypeFilterOpen] = useState(false);
+  // Accordion states for filter sections - persist in localStorage
+  const [colorFilterOpen, setColorFilterOpen] = useState(() => {
+    try {
+      return localStorage.getItem('sidebar-color-filter-open') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [genderFilterOpen, setGenderFilterOpen] = useState(() => {
+    try {
+      return localStorage.getItem('sidebar-gender-filter-open') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [typeFilterOpen, setTypeFilterOpen] = useState(() => {
+    try {
+      return localStorage.getItem('sidebar-type-filter-open') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   // Use global store settings for instant loading
   const storeSettings = useGlobalStoreSettings();
@@ -600,7 +618,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
                   <button
-                    onClick={() => setColorFilterOpen(!colorFilterOpen)}
+                    onClick={() => {
+                      const newState = !colorFilterOpen;
+                      setColorFilterOpen(newState);
+                      try {
+                        localStorage.setItem('sidebar-color-filter-open', newState.toString());
+                      } catch {}
+                    }}
                     className="flex items-center gap-2 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
                   >
                     <div className="w-2 h-2 bg-gradient-to-br from-red-400 to-blue-400 rounded-full group-hover:scale-110 transition-transform duration-300"></div>
@@ -677,7 +701,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
                   <button
-                    onClick={() => setGenderFilterOpen(!genderFilterOpen)}
+                    onClick={() => {
+                      const newState = !genderFilterOpen;
+                      setGenderFilterOpen(newState);
+                      try {
+                        localStorage.setItem('sidebar-gender-filter-open', newState.toString());
+                      } catch {}
+                    }}
                     className="flex items-center gap-2 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
                   >
                     <Users className="h-3 w-3 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
@@ -736,7 +766,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
                   <button
-                    onClick={() => setTypeFilterOpen(!typeFilterOpen)}
+                    onClick={() => {
+                      const newState = !typeFilterOpen;
+                      setTypeFilterOpen(newState);
+                      try {
+                        localStorage.setItem('sidebar-type-filter-open', newState.toString());
+                      } catch {}
+                    }}
                     className="flex items-center gap-2 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
                   >
                     <Tag className="h-3 w-3 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
