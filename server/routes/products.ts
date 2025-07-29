@@ -333,7 +333,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             `${product.nome} - ${variante.cor}`,
             variantSku,
             variante.preco,
-            variante.foto || null,
+            localImageUrl,
             0, // stock_total inicial
             true
           ],
