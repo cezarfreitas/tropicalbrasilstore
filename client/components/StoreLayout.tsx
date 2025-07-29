@@ -405,7 +405,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col bg-gradient-to-b from-primary to-primary/95 border-r border-primary/20 shadow-xl w-72 min-h-screen">
+      <aside className="hidden lg:flex flex-col bg-gradient-to-b from-primary to-primary/95 border-r border-primary/20 shadow-xl w-64 min-h-screen">
         {/* Sidebar Header */}
         <div className="border-b border-white/10 bg-gradient-to-r from-primary to-primary/90 p-4">
           <Link to="/loja" className="flex items-center justify-center group" aria-label="Ir para página inicial">
