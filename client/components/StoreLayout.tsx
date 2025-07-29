@@ -403,20 +403,20 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col bg-primary border-r border-primary/20 shadow-lg w-64 min-h-screen">
+      <aside className="hidden lg:flex flex-col bg-gradient-to-b from-primary to-primary/95 border-r border-primary/20 shadow-xl w-72 min-h-screen">
         {/* Sidebar Header */}
-        <div className="border-b border-primary/10 bg-primary">
-          <Link to="/loja" className="flex items-center justify-center" aria-label="Ir para página inicial">
+        <div className="border-b border-white/10 bg-gradient-to-r from-primary to-primary/90 p-4">
+          <Link to="/loja" className="flex items-center justify-center group" aria-label="Ir para página inicial">
             <LogoDisplay
-              size="w-48 h-26"
-              className="flex-shrink-0 transition-transform hover:scale-105"
+              size="w-52 h-28"
+              className="flex-shrink-0 transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
             />
           </Link>
         </div>
 
         {/* Quick Actions */}
-        <div className="px-4 py-4 border-b border-primary/20 bg-primary">
-          <div className="grid grid-cols-3 gap-3">
+        <div className="px-5 py-5 border-b border-white/10 bg-white/5">
+          <div className="grid grid-cols-3 gap-4">
             {/* User Menu */}
             <div className="flex flex-col items-center gap-2">
               <div className="relative">
