@@ -241,10 +241,6 @@ export function useCart() {
 
   const { state, dispatch } = context;
 
-  // Modal state for add to cart confirmation
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalProduct, setModalProduct] = useState<ModalProduct | null>(null);
-
   const addItem = (item: Omit<CartItem, "id" | "totalPrice">) => {
     console.log("🛒 useCart addItem called with:", item);
 
