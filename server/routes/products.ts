@@ -526,7 +526,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         `${nome} - ${cor}`,
         variantSku,
         preco,
-        foto || null,
+        localImageUrl,
         0, // stock_total inicial
         true
       ],
