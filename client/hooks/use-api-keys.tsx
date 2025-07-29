@@ -176,66 +176,27 @@ export function useApiKeys() {
 
   const revokeApiKey = async (keyId: string): Promise<boolean> => {
     try {
-      const response = await new Promise<Response>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("DELETE", `/api/admin/api-keys/${keyId}`, true);
-        xhr.setRequestHeader("Accept", "application/json");
-
-        xhr.onload = () => {
-          const headers = new Headers();
-          xhr
-            .getAllResponseHeaders()
-            .split("\r\n")
-            .forEach((line) => {
-              const [key, value] = line.split(": ");
-              if (key && value) headers.set(key, value);
-            });
-
-          const response = new Response(xhr.responseText, {
-            status: xhr.status,
-            statusText: xhr.statusText,
-            headers: headers,
-          });
-          resolve(response);
-        };
-
-        xhr.onerror = () => reject(new Error("Network error"));
-        xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 10000;
-
-        xhr.send();
-      });
-
-      if (response.ok) {
-        setApiKeys(prev => prev.map(key => 
-          key.id === keyId ? { ...key, status: "revoked" as const } : key
-        ));
-        toast({
-          title: "Chave revogada",
-          description: "A chave de API foi revogada com sucesso.",
-        });
-        return true;
-      } else {
-        const error = await response.json();
-        toast({
-          title: "Erro ao revogar chave",
-          description: error.message || "Não foi possível revogar a chave de API.",
-          variant: "destructive",
-        });
-        return false;
-      }
-    } catch (error) {
-      console.error("Error revoking API key:", error);
-      
-      // Mock revocation for development
-      setApiKeys(prev => prev.map(key => 
+      const updatedKeys = apiKeys.map(key =>
         key.id === keyId ? { ...key, status: "revoked" as const } : key
-      ));
+      );
+
+      updateDatabase(updatedKeys);
+
       toast({
         title: "Chave revogada",
-        description: "A chave de API foi revogada com sucesso.",
+        description: "A chave de API foi revogada e salva no arquivo JSON.",
       });
+
+      console.log("Chave revogada:", keyId);
       return true;
+    } catch (error) {
+      console.error("Erro ao revogar chave de API:", error);
+      toast({
+        title: "Erro ao revogar chave",
+        description: "Não foi possível revogar a chave de API.",
+        variant: "destructive",
+      });
+      return false;
     }
   };
 
