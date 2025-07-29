@@ -519,8 +519,6 @@ router.post("/single", validateApiKey, async (req, res) => {
       [gradeId],
     );
 
-    const variantSku = `${codigo}-${cor.toUpperCase().replace(/\s+/g, "-")}`;
-
     if ((gradeTemplates as any[]).length > 0) {
       const sizeId = (gradeTemplates as any[])[0].size_id;
 
