@@ -788,6 +788,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                         </div>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/loja/pedidos" className="flex items-center cursor-pointer">
+                          <Package2 className="h-4 w-4 mr-2" />
+                          Meus Pedidos
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={logout}>
                         <LogOut className="h-4 w-4 mr-2" />
                         Sair
