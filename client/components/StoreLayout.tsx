@@ -55,6 +55,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [availableColors, setAvailableColors] = useState<any[]>([]);
   const [selectedColorFilter, setSelectedColorFilter] = useState<number | null>(null);
+  const [availableGenders, setAvailableGenders] = useState<any[]>([]);
+  const [selectedGenderFilter, setSelectedGenderFilter] = useState<number | null>(null);
+  const [availableTypes, setAvailableTypes] = useState<any[]>([]);
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState<number | null>(null);
 
   // Use global store settings for instant loading
   const storeSettings = useGlobalStoreSettings();
