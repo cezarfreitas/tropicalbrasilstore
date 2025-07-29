@@ -62,7 +62,13 @@ function loadCartFromStorage(): CartState {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem(CART_STORAGE_KEY);
       if (stored) {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        // Add missing modal state for backwards compatibility
+        return {
+          ...parsed,
+          isModalOpen: false,
+          modalProduct: null,
+        };
       }
     }
   } catch (error) {
@@ -73,6 +79,8 @@ function loadCartFromStorage(): CartState {
     items: [],
     totalItems: 0,
     totalPrice: 0,
+    isModalOpen: false,
+    modalProduct: null,
   };
 }
 
@@ -168,10 +176,30 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         items: [],
         totalItems: 0,
         totalPrice: 0,
+        isModalOpen: state.isModalOpen,
+        modalProduct: state.modalProduct,
       };
 
     case "LOAD_CART":
-      return action.state;
+      return {
+        ...action.state,
+        isModalOpen: false,
+        modalProduct: null,
+      };
+
+    case "SHOW_MODAL":
+      return {
+        ...state,
+        isModalOpen: true,
+        modalProduct: action.product,
+      };
+
+    case "HIDE_MODAL":
+      return {
+        ...state,
+        isModalOpen: false,
+        modalProduct: null,
+      };
 
     default:
       return state;
