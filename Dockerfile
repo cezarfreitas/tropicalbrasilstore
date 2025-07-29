@@ -16,6 +16,9 @@ COPY . .
 # Build the application
 RUN npm run build
 
+# Ensure uploads directories exist
+RUN mkdir -p public/uploads/logos public/uploads/products
+
 # Expose port
 EXPOSE 3000
 
