@@ -68,7 +68,7 @@ export default function Cart() {
               Carrinho de Compras
             </h1>
             <p className="text-gray-600 mt-1">
-              {totalItems} {totalItems === 1 ? 'item' : 'itens'} no seu carrinho
+              {items.length} {items.length === 1 ? 'produto' : 'produtos'} • {totalItems} {totalItems === 1 ? 'item' : 'itens'} no total
             </p>
           </div>
           <Link to="/loja">
