@@ -1042,7 +1042,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           />
 
           {/* Cart Drawer - from right side */}
-          <div className="fixed top-0 right-0 h-full w-96 max-w-[90vw] bg-white z-50 shadow-2xl animate-in slide-in-from-right duration-300 border-l border-gray-200">
+          <div className="fixed top-0 right-0 h-screen w-96 max-w-[90vw] bg-white z-50 shadow-2xl animate-in slide-in-from-right duration-300 border-l border-gray-200">
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/5 to-primary/10">
               <div className="flex items-center gap-3">
