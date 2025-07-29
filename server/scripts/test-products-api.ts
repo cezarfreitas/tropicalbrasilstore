@@ -3,7 +3,7 @@ import db from "../lib/db";
 async function testProductsAPI() {
   try {
     console.log("🔍 Testando consulta de produtos...");
-    
+
     // Testar consulta básica
     const [products] = await db.execute(`
       SELECT p.id, p.name, p.photo, p.base_price
@@ -64,7 +64,7 @@ async function testProductsAPI() {
     if ((mainResult as any[]).length > 0) {
       const product = (mainResult as any[])[0];
       console.log(`🔍 Testando cores para produto ${product.id}...`);
-      
+
       const [wooColorRows] = await db.execute(
         `
         SELECT DISTINCT
@@ -77,11 +77,11 @@ async function testProductsAPI() {
         WHERE pcv.product_id = ? AND pcv.active = true AND co.id IS NOT NULL
         ORDER BY co.name
       `,
-        [product.id]
+        [product.id],
       );
-      
+
       console.log("✅ Busca de cores WooCommerce funcionou:", wooColorRows);
-      
+
       // Testar busca de cores individuais
       const [individualColorRows] = await db.execute(
         `
@@ -94,12 +94,14 @@ async function testProductsAPI() {
         WHERE pv.product_id = ? AND pv.active = true AND co.id IS NOT NULL
         ORDER BY co.name
       `,
-        [product.id]
+        [product.id],
       );
-      
-      console.log("✅ Busca de cores individuais funcionou:", individualColorRows);
-    }
 
+      console.log(
+        "✅ Busca de cores individuais funcionou:",
+        individualColorRows,
+      );
+    }
   } catch (error) {
     console.error("❌ Erro durante o teste:", error);
     console.error("Stack:", error.stack);

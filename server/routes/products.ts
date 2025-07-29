@@ -467,7 +467,9 @@ router.post("/bulk", validateApiKey, async (req, res) => {
                 [productId, colorId, sizeId, variante.preco, localImageUrl],
               );
             } else {
-              console.log(`  ⚠️ Variante ${sizeName} já existe para ${variante.cor}, atualizando preço`);
+              console.log(
+                `  ⚠️ Variante ${sizeName} já existe para ${variante.cor}, atualizando preço`,
+              );
               // Atualizar preço se necessário
               await db.execute(
                 `UPDATE product_variants

@@ -3,7 +3,7 @@ import db from "../lib/db";
 async function checkStoreProducts() {
   try {
     console.log("🔍 Verificando produtos na loja...");
-    
+
     // Verificar produtos ativos
     const [products] = await db.execute(`
       SELECT 
@@ -23,16 +23,17 @@ async function checkStoreProducts() {
       WHERE p.active = true
       GROUP BY p.id
     `);
-    
+
     console.log("📦 Produtos encontrados:");
     console.table(products);
-    
+
     // Verificar grades disponíveis para produto 150
     if ((products as any[]).length > 0) {
       const productId = (products as any[])[0].id;
       console.log(`\n🎯 Verificando grades para produto ${productId}...`);
-      
-      const [grades] = await db.execute(`
+
+      const [grades] = await db.execute(
+        `
         SELECT DISTINCT
           g.id,
           g.name,
@@ -49,13 +50,16 @@ async function checkStoreProducts() {
         INNER JOIN product_color_grades pcg ON g.id = pcg.grade_id
         INNER JOIN colors c ON pcg.color_id = c.id
         WHERE pcg.product_id = ? AND g.active = true
-      `, [productId]);
-      
+      `,
+        [productId],
+      );
+
       console.log("📊 Grades disponíveis:");
       console.table(grades);
-      
+
       // Verificar cores disponíveis
-      const [colors] = await db.execute(`
+      const [colors] = await db.execute(
+        `
         SELECT DISTINCT
           co.id,
           co.name,
@@ -64,13 +68,16 @@ async function checkStoreProducts() {
         LEFT JOIN colors co ON pv.color_id = co.id
         WHERE pv.product_id = ? AND co.id IS NOT NULL
         ORDER BY co.name
-      `, [productId]);
-      
+      `,
+        [productId],
+      );
+
       console.log("🎨 Cores disponíveis:");
       console.table(colors);
-      
+
       // Verificar variantes WooCommerce
-      const [wooVariants] = await db.execute(`
+      const [wooVariants] = await db.execute(
+        `
         SELECT
           pcv.id,
           pcv.color_id,
@@ -81,12 +88,13 @@ async function checkStoreProducts() {
         FROM product_color_variants pcv
         LEFT JOIN colors c ON pcv.color_id = c.id
         WHERE pcv.product_id = ? AND pcv.active = true
-      `, [productId]);
-      
+      `,
+        [productId],
+      );
+
       console.log("🔄 Variantes WooCommerce:");
       console.table(wooVariants);
     }
-    
   } catch (error) {
     console.error("❌ Erro:", error);
   } finally {
