@@ -562,9 +562,17 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             <div className="mt-4 pt-3 border-t border-white/20">
               <div className="space-y-3">
                 <div className="flex items-center justify-between px-3">
-                  <h3 className="text-xs font-semibold text-white/80 uppercase tracking-wider">
-                    Filtrar por Tipo
-                  </h3>
+                  <button
+                    onClick={() => setTypeFilterOpen(!typeFilterOpen)}
+                    className="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wider hover:text-white transition-colors"
+                  >
+                    <span>Filtrar por Tipo</span>
+                    <ChevronDown
+                      className={`h-3 w-3 transition-transform duration-200 ${
+                        typeFilterOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
                   {selectedTypeFilter && (
                     <button
                       onClick={() => handleTypeFilter(null)}
@@ -575,27 +583,31 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   )}
                 </div>
 
-                <div className="space-y-1 px-3">
-                  {availableTypes.map((type) => (
-                    <button
-                      key={type.id}
-                      onClick={() => handleTypeFilter(type.id)}
-                      className={`w-full text-left p-2 rounded-lg text-sm transition-all duration-200 ${
-                        selectedTypeFilter === type.id
-                          ? 'bg-white/20 text-white font-medium'
-                          : 'text-white/80 hover:bg-white/10 hover:text-white'
-                      }`}
-                      title={type.description}
-                    >
-                      {type.name}
-                    </button>
-                  ))}
-                </div>
+                {typeFilterOpen && (
+                  <>
+                    <div className="space-y-1 px-3">
+                      {availableTypes.map((type) => (
+                        <button
+                          key={type.id}
+                          onClick={() => handleTypeFilter(type.id)}
+                          className={`w-full text-left p-2 rounded-lg text-sm transition-all duration-200 ${
+                            selectedTypeFilter === type.id
+                              ? 'bg-white/20 text-white font-medium'
+                              : 'text-white/80 hover:bg-white/10 hover:text-white'
+                          }`}
+                          title={type.description}
+                        >
+                          {type.name}
+                        </button>
+                      ))}
+                    </div>
 
-                {availableTypes.length === 0 && (
-                  <div className="text-center py-4 px-3">
-                    <p className="text-xs text-white/60">Carregando tipos...</p>
-                  </div>
+                    {availableTypes.length === 0 && (
+                      <div className="text-center py-4 px-3">
+                        <p className="text-xs text-white/60">Carregando tipos...</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
