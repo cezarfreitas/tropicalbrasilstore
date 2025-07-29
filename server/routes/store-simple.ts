@@ -113,23 +113,43 @@ router.get("/products", async (req, res) => {
         [product.id],
       );
 
-      // Fallback to old system if no WooCommerce variants found
+      // Fallback to system based on stock type
       let colorRows = wooColorRows;
       if ((wooColorRows as any[]).length === 0) {
-        const [oldColorRows] = await db.execute(
-          `
-          SELECT DISTINCT
-            co.id,
-            co.name,
-            co.hex_code
-          FROM product_variants pv
-          LEFT JOIN colors co ON pv.color_id = co.id
-          WHERE pv.product_id = ? AND pv.stock > 0 AND co.id IS NOT NULL
-          ORDER BY co.name
-        `,
-          [product.id],
-        );
-        colorRows = oldColorRows;
+        if (product.stock_type === 'size') {
+          // Estoque por tamanho: mostrar cores com estoque individual
+          const [sizeColorRows] = await db.execute(
+            `
+            SELECT DISTINCT
+              co.id,
+              co.name,
+              co.hex_code
+            FROM product_variants pv
+            LEFT JOIN colors co ON pv.color_id = co.id
+            WHERE pv.product_id = ? AND (pv.stock > 0 OR ? = 1) AND co.id IS NOT NULL
+            ORDER BY co.name
+          `,
+            [product.id, product.sell_without_stock],
+          );
+          colorRows = sizeColorRows;
+        } else if (product.stock_type === 'grade') {
+          // Estoque por grade: mostrar cores que têm grades ativas
+          const [gradeColorRows] = await db.execute(
+            `
+            SELECT DISTINCT
+              co.id,
+              co.name,
+              co.hex_code
+            FROM product_color_grades pcg
+            INNER JOIN colors co ON pcg.color_id = co.id
+            INNER JOIN grade_vendida g ON pcg.grade_id = g.id
+            WHERE pcg.product_id = ? AND g.active = 1 AND co.id IS NOT NULL
+            ORDER BY co.name
+          `,
+            [product.id],
+          );
+          colorRows = gradeColorRows;
+        }
       }
 
       productsWithColors.push({
