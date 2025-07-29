@@ -48,8 +48,8 @@ const App = () => (
             <ThemeLoader />
             <Toaster />
             <Sonner />
-            <GlobalCartModal />
             <BrowserRouter>
+              <GlobalCartModal />
               <Routes>
                 {/* Store Routes (Public) */}
                 <Route path="/" element={<Store />} />
