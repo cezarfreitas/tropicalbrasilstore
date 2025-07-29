@@ -278,7 +278,7 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
       )) {
         console.log(`🔄 Retrying fetch... (attempt ${retryCount + 1}/3)`);
         setTimeout(() => {
-          fetchProducts(page, retryCount + 1, searchTerm, colorFilter, categoryFilter);
+          fetchProducts(page, retryCount + 1, searchTerm, colorFilter, categoryFilter, genderFilter, typeFilter);
         }, 1000 * (retryCount + 1)); // Exponential backoff
         return;
       }
