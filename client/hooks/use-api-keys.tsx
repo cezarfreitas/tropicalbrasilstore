@@ -87,6 +87,7 @@ export function useApiKeys() {
       }
     } catch (error) {
       console.warn("Erro ao conectar com API, usando dados mock:", error);
+      setUsingMockData(true);
       // Set mock data for development
       setApiKeys([
         {
