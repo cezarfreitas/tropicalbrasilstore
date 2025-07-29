@@ -1294,6 +1294,7 @@ export default function ProductsWooCommerce() {
                 <TableHead className="w-[140px] p-3 font-semibold text-center">Variantes</TableHead>
                 <TableHead className="w-[100px] p-3 font-semibold text-center">Grades</TableHead>
                 <TableHead className="w-[100px] p-3 font-semibold text-center">Estoque</TableHead>
+                <TableHead className="w-[90px] p-3 font-semibold text-center">Infinito</TableHead>
                 <TableHead className="w-[80px] p-3 font-semibold text-center">Status</TableHead>
                 <TableHead className="w-[100px] p-3 font-semibold text-right">Ações</TableHead>
               </TableRow>
