@@ -227,6 +227,8 @@ export function useCart() {
       default:
         id = `item-${item.productId}-${Date.now()}`;
     }
+
+    // Add item to cart
     dispatch({
       type: "ADD_ITEM",
       item: {
@@ -235,6 +237,26 @@ export function useCart() {
         totalPrice: item.quantity * item.unitPrice,
       },
     });
+
+    // Prepare modal product data
+    let variant = "";
+    if (item.type === "grade" && item.gradeName) {
+      variant = `${item.gradeName}${item.colorName ? ` - ${item.colorName}` : ""}`;
+    } else if (item.type === "variant" && (item.sizeName || item.colorName)) {
+      variant = [item.colorName, item.sizeName].filter(Boolean).join(" - ");
+    } else if (item.colorName) {
+      variant = item.colorName;
+    }
+
+    // Show confirmation modal
+    setModalProduct({
+      name: item.productName,
+      photo: item.photo,
+      variant: variant || undefined,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+    });
+    setIsModalOpen(true);
   };
 
   const removeItem = (id: string) => {
