@@ -356,8 +356,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             })}
 
             {/* Color Filter Section */}
-            <div className="mt-6 pt-4 border-t border-white/20">
-              <div className="space-y-4">
+            <div className="mt-4 pt-3 border-t border-white/20">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between px-3">
                   <h3 className="text-xs font-semibold text-white/80 uppercase tracking-wider">
                     Filtrar por Cor
