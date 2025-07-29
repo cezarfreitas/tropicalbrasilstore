@@ -391,7 +391,7 @@ export default function ApiDocs() {
                 <h4 className="text-lg font-semibold">Estrutura do Produto</h4>
                 <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
                   {`{
-  "codigo": "CHN001",              // Código único do produto (obrigatório)
+  "codigo": "CHN001",              // C��digo único do produto (obrigatório)
   "nome": "Chinelo Havaianas Top", // Nome do produto (obrigatório)
   "categoria": "Chinelos",         // Categoria (criada automaticamente se não existir)
   "tipo": "Casual",               // Tipo (criado automaticamente se não existir)
@@ -481,6 +481,66 @@ export default function ApiDocs() {
                       <li>• Nome da grade é obrigatório</li>
                       <li>• Nome da cor não pode ser vazio</li>
                     </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold">
+                  Como Configurar Cada Tipo de Estoque
+                </h4>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <h5 className="font-semibold text-blue-800">🎯 Estoque por Grade</h5>
+                    <pre className="bg-blue-50 p-3 rounded text-xs overflow-x-auto border border-blue-200">
+{`{
+  "codigo": "CHN001",
+  "nome": "Chinelo Havaianas",
+  "tipo_estoque": "grade",
+  "variantes": [
+    {
+      "cor": "Preto",
+      "preco": 29.90,
+      "grade": "Grade Unissex",
+      "estoque_grade": 25
+    }
+  ]
+}`}
+                    </pre>
+                    <p className="text-sm text-blue-700">
+                      ✓ Cada grade/cor tem quantidade fixa<br/>
+                      ✓ Independente dos tamanhos<br/>
+                      ✓ Ideal para produtos com grades padronizadas
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h5 className="font-semibold text-green-800">📏 Estoque por Tamanho</h5>
+                    <pre className="bg-green-50 p-3 rounded text-xs overflow-x-auto border border-green-200">
+{`{
+  "codigo": "TNS001",
+  "nome": "Tênis Nike Air Max",
+  "tipo_estoque": "size",
+  "variantes": [
+    {
+      "cor": "Preto",
+      "preco": 349.90,
+      "grade": "Grade Adulto",
+      "estoque_tamanhos": {
+        "37": 5,
+        "38": 8,
+        "39": 12
+      }
+    }
+  ]
+}`}
+                    </pre>
+                    <p className="text-sm text-green-700">
+                      ✓ Estoque específico por tamanho/cor<br/>
+                      ✓ Controle granular de cada variante<br/>
+                      ✓ Ideal para produtos com estoque diferenciado
+                    </p>
                   </div>
                 </div>
               </div>
@@ -636,7 +696,7 @@ Authorization: Bearer your_api_key
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h5 className="font-semibold text-blue-800 mb-2">
-                  💡 Dicas de Implementação
+                  �� Dicas de Implementação
                 </h5>
                 <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Use códigos alfanuméricos únicos para cada produto</li>
