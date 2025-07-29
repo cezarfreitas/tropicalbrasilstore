@@ -3,6 +3,71 @@ import { useToast } from "@/hooks/use-toast";
 
 const API_KEYS_STORAGE_KEY = "api-keys-database.json";
 
+// Funções para gerenciar o arquivo JSON das chaves
+function loadApiKeysFromJson(): ApiKeysDatabase {
+  try {
+    const jsonData = localStorage.getItem(API_KEYS_STORAGE_KEY);
+    if (jsonData) {
+      const parsed = JSON.parse(jsonData) as ApiKeysDatabase;
+      // Validar estrutura básica
+      if (parsed.version && parsed.api_keys && Array.isArray(parsed.api_keys)) {
+        return parsed;
+      }
+    }
+  } catch (error) {
+    console.warn("Erro ao carregar arquivo JSON de chaves:", error);
+  }
+
+  // Retorna estrutura padrão se não existir ou estiver corrompida
+  return createDefaultApiKeysDatabase();
+}
+
+function saveApiKeysToJson(database: ApiKeysDatabase): void {
+  try {
+    database.updated_at = new Date().toISOString();
+    const jsonData = JSON.stringify(database, null, 2);
+    localStorage.setItem(API_KEYS_STORAGE_KEY, jsonData);
+    console.log("Chaves de API salvas em:", API_KEYS_STORAGE_KEY);
+  } catch (error) {
+    console.error("Erro ao salvar arquivo JSON de chaves:", error);
+  }
+}
+
+function createDefaultApiKeysDatabase(): ApiKeysDatabase {
+  const now = new Date().toISOString();
+  return {
+    version: "1.0.0",
+    created_at: now,
+    updated_at: now,
+    api_keys: [
+      {
+        id: "1",
+        name: "Chave Principal",
+        key: "sk_live_abcd1234567890abcdef1234567890abcdef12",
+        created_at: now,
+        last_used: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+        status: "active"
+      },
+      {
+        id: "2",
+        name: "Integração Mobile",
+        key: "sk_live_xyz9876543210xyz9876543210xyz987654321",
+        created_at: new Date(Date.now() - 7 * 86400000).toISOString(), // 7 days ago
+        status: "active"
+      }
+    ]
+  };
+}
+
+function generateApiKey(): string {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let result = 'sk_live_';
+  for (let i = 0; i < 32; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 interface ApiKey {
   id: string;
   name: string;
