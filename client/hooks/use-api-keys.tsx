@@ -17,6 +17,13 @@ interface CreateApiKeyRequest {
   description?: string;
 }
 
+interface ApiKeysDatabase {
+  version: string;
+  created_at: string;
+  updated_at: string;
+  api_keys: ApiKey[];
+}
+
 export function useApiKeys() {
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [loading, setLoading] = useState(true);
