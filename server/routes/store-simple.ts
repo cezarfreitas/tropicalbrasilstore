@@ -153,6 +153,8 @@ router.get("/products-paginated", async (req, res) => {
     const category = req.query.categoria as string;
     const searchTerm = req.query.busca as string;
     const colorFilter = req.query.cor ? parseInt(req.query.cor as string) : null;
+    const genderFilter = req.query.genero ? parseInt(req.query.genero as string) : null;
+    const typeFilter = req.query.tipo ? parseInt(req.query.tipo as string) : null;
 
     console.log(
       `Getting products - page: ${page}, limit: ${limit}, category: ${category || "all"}, search: "${searchTerm || "none"}", color: ${colorFilter || "none"}"`,
