@@ -25,7 +25,7 @@ interface BulkProductsRequest {
 
 const router = Router();
 
-// Função auxiliar para criar ou buscar categoria
+// Funç��o auxiliar para criar ou buscar categoria
 async function getOrCreateCategory(name: string): Promise<number> {
   // Buscar categoria existente
   const [existing] = await db.execute(
@@ -217,12 +217,18 @@ router.post("/bulk", async (req, res) => {
         // Gerar SKU para variante se não fornecido
         const variantSku = variante.sku || `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, '-')}`;
 
-        // Inserir variante do produto
+        // Inserir relação produto-cor-grade
         const [variantResult] = await db.execute(
-          `INSERT INTO product_variants
-           (product_id, color_id, grade_id, price, sku, photo, active)
-           VALUES (?, ?, ?, ?, ?, ?, ?)`,
-          [productId, colorId, gradeId, variante.preco, variantSku, variante.foto || null, true]
+          `INSERT INTO product_color_grades
+           (product_id, color_id, grade_id)
+           VALUES (?, ?, ?)`,
+          [productId, colorId, gradeId]
+        );
+
+        // Atualizar preço base do produto se necessário
+        await db.execute(
+          "UPDATE products SET base_price = ? WHERE id = ? AND base_price IS NULL",
+          [variante.preco, productId]
         );
 
         variants.push({
