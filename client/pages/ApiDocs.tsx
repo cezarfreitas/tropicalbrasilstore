@@ -830,16 +830,14 @@ Authorization: Bearer YOUR_API_KEY`}
                 </pre>
               </div>
 
-              {usingMockData && (
-                <div className="bg-gray-50 border border-gray-200 rounded-md p-4">
-                  <h5 className="font-medium text-gray-800 mb-2">🔧 Status do Backend</h5>
-                  <p className="text-sm text-gray-600">
-                    O sistema de chaves de API está funcionando em modo desenvolvimento.
-                    Quando o backend for implementado, as chaves serão persistidas no banco de dados
-                    e as operações serão totalmente funcionais.
-                  </p>
-                </div>
-              )}
+              <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+                <h5 className="font-medium text-blue-800 mb-2">💾 Sistema de Persistência</h5>
+                <p className="text-sm text-blue-600">
+                  As chaves de API são salvas automaticamente em um arquivo JSON estruturado no localStorage.
+                  Todas as operações (criar, revogar, regenerar) são persistidas imediatamente.
+                  Use o botão "Exportar JSON" para ver a estrutura completa dos dados.
+                </p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
