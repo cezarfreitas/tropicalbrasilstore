@@ -26,6 +26,8 @@ interface AddToCartModalProps {
 export function AddToCartModal({ isOpen, onClose, product }: AddToCartModalProps) {
   const navigate = useNavigate();
 
+  console.log("AddToCartModal render - isOpen:", isOpen, "product:", product);
+
   const handleContinueShopping = () => {
     onClose();
   };
