@@ -553,21 +553,22 @@ router.get("/:codigo/variants", async (req, res) => {
     const [rows] = await db.execute(
       `
       SELECT
-        pcg.id,
+        pv.id,
         c.name as cor,
-        p.base_price as preco,
+        s.size as tamanho,
+        pv.price_override as preco,
+        pv.image_url as foto,
+        pv.stock as estoque,
         g.id as grade_id,
-        g.name as grade_nome,
-        NULL as foto,
-        COALESCE(SUM(gt.required_quantity), 0) as estoque_total
+        g.name as grade_nome
       FROM products p
-      JOIN product_color_grades pcg ON p.id = pcg.product_id
-      JOIN colors c ON pcg.color_id = c.id
-      JOIN grade_vendida g ON pcg.grade_id = g.id
-      LEFT JOIN grade_templates gt ON g.id = gt.grade_id
+      JOIN product_variants pv ON p.id = pv.product_id
+      JOIN colors c ON pv.color_id = c.id
+      JOIN sizes s ON pv.size_id = s.id
+      LEFT JOIN product_color_grades pcg ON (p.id = pcg.product_id AND pv.color_id = pcg.color_id)
+      LEFT JOIN grade_vendida g ON pcg.grade_id = g.id
       WHERE p.sku = ? AND p.active = true
-      GROUP BY pcg.id, c.name, p.base_price, g.id, g.name
-      ORDER BY c.name
+      ORDER BY c.name, s.display_order
     `,
       [codigo],
     );
