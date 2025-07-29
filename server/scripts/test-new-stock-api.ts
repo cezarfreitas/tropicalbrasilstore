@@ -1,8 +1,5 @@
-import { config } from "dotenv";
-config();
-
 const API_BASE_URL = "http://localhost:8080";
-const API_KEY = process.env.API_KEY || "your_api_key_here";
+const API_KEY = "your_api_key_here";
 
 const testData = {
   products: [
