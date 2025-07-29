@@ -1002,9 +1002,11 @@ Authorization: Bearer YOUR_API_KEY`}
                   🚀 APIs Implementadas
                 </h5>
                 <p className="text-sm text-green-600">
-                  As APIs de cadastro de produtos estão funcionais e implementadas no backend!
-                  Use suas chaves de API para testar os endpoints <code>/api/products/bulk</code> e
-                  <code>/api/products/single</code>. A autenticação por Bearer token está ativa.
+                  As APIs de cadastro de produtos estão funcionais e
+                  implementadas no backend! Use suas chaves de API para testar
+                  os endpoints <code>/api/products/bulk</code> e
+                  <code>/api/products/single</code>. A autenticação por Bearer
+                  token está ativa.
                 </p>
               </div>
 

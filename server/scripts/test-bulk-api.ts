@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE = 'http://localhost:5000/api';
-const API_KEY = 'sk_live_abcd1234567890abcdef1234567890abcdef12';
+const API_BASE = "http://localhost:5000/api";
+const API_KEY = "sk_live_abcd1234567890abcdef1234567890abcdef12";
 
 async function testBulkAPI() {
-  console.log('🧪 Testando API de Bulk Products...\n');
-  
+  console.log("🧪 Testando API de Bulk Products...\n");
+
   const testData = {
     products: [
       {
@@ -17,17 +17,17 @@ async function testBulkAPI() {
         variantes: [
           {
             cor: "Preto",
-            preco: 29.90,
+            preco: 29.9,
             grade: "Grade Unissex",
-            foto: "https://exemplo.com/chinelo-preto.jpg"
+            foto: "https://exemplo.com/chinelo-preto.jpg",
           },
           {
             cor: "Azul",
-            preco: 29.90,
+            preco: 29.9,
             grade: "Grade Unissex",
-            foto: "https://exemplo.com/chinelo-azul.jpg"
-          }
-        ]
+            foto: "https://exemplo.com/chinelo-azul.jpg",
+          },
+        ],
       },
       {
         codigo: "TEST002",
@@ -38,47 +38,48 @@ async function testBulkAPI() {
         variantes: [
           {
             cor: "Rosa",
-            preco: 89.90,
-            grade: "Grade Feminina"
-          }
-        ]
-      }
-    ]
+            preco: 89.9,
+            grade: "Grade Feminina",
+          },
+        ],
+      },
+    ],
   };
-  
+
   try {
-    console.log('📤 Enviando requisição para /api/products/bulk...');
+    console.log("📤 Enviando requisição para /api/products/bulk...");
     const response = await axios.post(`${API_BASE}/products/bulk`, testData, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`
-      }
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${API_KEY}`,
+      },
     });
-    
-    console.log('✅ Sucesso!');
-    console.log('Status:', response.status);
-    console.log('Resposta:', JSON.stringify(response.data, null, 2));
-    
+
+    console.log("✅ Sucesso!");
+    console.log("Status:", response.status);
+    console.log("Resposta:", JSON.stringify(response.data, null, 2));
+
     // Testar listagem de variantes
-    console.log('\n📤 Testando listagem de variantes...');
-    const variantsResponse = await axios.get(`${API_BASE}/products/TEST001/variants`);
-    console.log('✅ Variantes encontradas:');
+    console.log("\n📤 Testando listagem de variantes...");
+    const variantsResponse = await axios.get(
+      `${API_BASE}/products/TEST001/variants`,
+    );
+    console.log("✅ Variantes encontradas:");
     console.log(JSON.stringify(variantsResponse.data, null, 2));
-    
   } catch (error: any) {
-    console.log('�� Erro na requisição:');
+    console.log("�� Erro na requisição:");
     if (error.response) {
-      console.log('Status:', error.response.status);
-      console.log('Dados:', JSON.stringify(error.response.data, null, 2));
+      console.log("Status:", error.response.status);
+      console.log("Dados:", JSON.stringify(error.response.data, null, 2));
     } else {
-      console.log('Erro:', error.message);
+      console.log("Erro:", error.message);
     }
   }
 }
 
 async function testSingleAPI() {
-  console.log('\n🧪 Testando API de Single Product...\n');
-  
+  console.log("\n🧪 Testando API de Single Product...\n");
+
   const testData = {
     codigo: "SINGLE001",
     nome: "Produto Individual",
@@ -86,31 +87,30 @@ async function testSingleAPI() {
     tipo: "Esportivo",
     descricao: "Produto criado individualmente",
     cor: "Branco",
-    preco: 149.90,
+    preco: 149.9,
     grade: "Grade Esportiva",
-    foto: "https://exemplo.com/tenis-branco.jpg"
+    foto: "https://exemplo.com/tenis-branco.jpg",
   };
-  
+
   try {
-    console.log('📤 Enviando requisição para /api/products/single...');
+    console.log("📤 Enviando requisição para /api/products/single...");
     const response = await axios.post(`${API_BASE}/products/single`, testData, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`
-      }
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${API_KEY}`,
+      },
     });
-    
-    console.log('✅ Sucesso!');
-    console.log('Status:', response.status);
-    console.log('Resposta:', JSON.stringify(response.data, null, 2));
-    
+
+    console.log("✅ Sucesso!");
+    console.log("Status:", response.status);
+    console.log("Resposta:", JSON.stringify(response.data, null, 2));
   } catch (error: any) {
-    console.log('❌ Erro na requisição:');
+    console.log("❌ Erro na requisição:");
     if (error.response) {
-      console.log('Status:', error.response.status);
-      console.log('Dados:', JSON.stringify(error.response.data, null, 2));
+      console.log("Status:", error.response.status);
+      console.log("Dados:", JSON.stringify(error.response.data, null, 2));
     } else {
-      console.log('Erro:', error.message);
+      console.log("Erro:", error.message);
     }
   }
 }

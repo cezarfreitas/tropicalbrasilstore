@@ -31,7 +31,7 @@ async function getOrCreateCategory(name: string): Promise<number> {
   // Buscar categoria existente
   const [existing] = await db.execute(
     "SELECT id FROM categories WHERE name = ?",
-    [name]
+    [name],
   );
 
   if ((existing as any[]).length > 0) {
@@ -41,7 +41,7 @@ async function getOrCreateCategory(name: string): Promise<number> {
   // Criar nova categoria
   const [result] = await db.execute(
     "INSERT INTO categories (name, show_in_menu) VALUES (?, ?)",
-    [name, true]
+    [name, true],
   );
 
   return (result as any).insertId;
@@ -50,10 +50,9 @@ async function getOrCreateCategory(name: string): Promise<number> {
 // Função auxiliar para criar ou buscar tipo
 async function getOrCreateType(name: string): Promise<number> {
   // Buscar tipo existente
-  const [existing] = await db.execute(
-    "SELECT id FROM types WHERE name = ?",
-    [name]
-  );
+  const [existing] = await db.execute("SELECT id FROM types WHERE name = ?", [
+    name,
+  ]);
 
   if ((existing as any[]).length > 0) {
     return (existing as any[])[0].id;
@@ -62,7 +61,7 @@ async function getOrCreateType(name: string): Promise<number> {
   // Criar novo tipo
   const [result] = await db.execute(
     "INSERT INTO types (name, description) VALUES (?, ?)",
-    [name, `Tipo ${name} criado automaticamente`]
+    [name, `Tipo ${name} criado automaticamente`],
   );
 
   return (result as any).insertId;
@@ -71,20 +70,18 @@ async function getOrCreateType(name: string): Promise<number> {
 // Função auxiliar para criar ou buscar cor
 async function getOrCreateColor(name: string): Promise<number> {
   // Buscar cor existente
-  const [existing] = await db.execute(
-    "SELECT id FROM colors WHERE name = ?",
-    [name]
-  );
+  const [existing] = await db.execute("SELECT id FROM colors WHERE name = ?", [
+    name,
+  ]);
 
   if ((existing as any[]).length > 0) {
     return (existing as any[])[0].id;
   }
 
   // Criar nova cor
-  const [result] = await db.execute(
-    "INSERT INTO colors (name) VALUES (?)",
-    [name]
-  );
+  const [result] = await db.execute("INSERT INTO colors (name) VALUES (?)", [
+    name,
+  ]);
 
   return (result as any).insertId;
 }
@@ -94,7 +91,7 @@ async function getOrCreateGrade(name: string): Promise<number> {
   // Buscar grade existente
   const [existing] = await db.execute(
     "SELECT id FROM grade_vendida WHERE name = ?",
-    [name]
+    [name],
   );
 
   if ((existing as any[]).length > 0) {
@@ -104,7 +101,7 @@ async function getOrCreateGrade(name: string): Promise<number> {
   // Criar nova grade com tamanhos automáticos baseados no nome
   const [result] = await db.execute(
     "INSERT INTO grade_vendida (name, description) VALUES (?, ?)",
-    [name, `Grade ${name} criada automaticamente`]
+    [name, `Grade ${name} criada automaticamente`],
   );
 
   const gradeId = (result as any).insertId;
@@ -113,22 +110,37 @@ async function getOrCreateGrade(name: string): Promise<number> {
   let sizes: string[] = [];
   const lowerName = name.toLowerCase();
 
-  if (lowerName.includes('feminina') || lowerName.includes('fem')) {
-    sizes = ['34', '35', '36', '37', '38', '39', '40'];
-  } else if (lowerName.includes('masculina') || lowerName.includes('masc')) {
-    sizes = ['38', '39', '40', '41', '42', '43', '44'];
-  } else if (lowerName.includes('infantil') || lowerName.includes('criança')) {
-    sizes = ['20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33'];
+  if (lowerName.includes("feminina") || lowerName.includes("fem")) {
+    sizes = ["34", "35", "36", "37", "38", "39", "40"];
+  } else if (lowerName.includes("masculina") || lowerName.includes("masc")) {
+    sizes = ["38", "39", "40", "41", "42", "43", "44"];
+  } else if (lowerName.includes("infantil") || lowerName.includes("criança")) {
+    sizes = [
+      "20",
+      "21",
+      "22",
+      "23",
+      "24",
+      "25",
+      "26",
+      "27",
+      "28",
+      "29",
+      "30",
+      "31",
+      "32",
+      "33",
+    ];
   } else {
     // Grade unissex padrão
-    sizes = ['35', '36', '37', '38', '39', '40', '41', '42'];
+    sizes = ["35", "36", "37", "38", "39", "40", "41", "42"];
   }
 
   // Inserir os tamanhos da grade
   for (const size of sizes) {
     await db.execute(
       "INSERT INTO grade_items (grade_id, size, price, position) VALUES (?, ?, ?, ?)",
-      [gradeId, size, 0, sizes.indexOf(size) + 1]
+      [gradeId, size, 0, sizes.indexOf(size) + 1],
     );
   }
 
@@ -143,7 +155,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
     if (!products || !Array.isArray(products) || products.length === 0) {
       return res.status(400).json({
         success: false,
-        error: "Products array is required"
+        error: "Products array is required",
       });
     }
 
@@ -157,18 +169,23 @@ router.post("/bulk", validateApiKey, async (req, res) => {
     // Processar cada produto
     for (const product of products) {
       // Validações básicas
-      if (!product.codigo || !product.nome || !product.variantes || product.variantes.length === 0) {
+      if (
+        !product.codigo ||
+        !product.nome ||
+        !product.variantes ||
+        product.variantes.length === 0
+      ) {
         return res.status(422).json({
           success: false,
           error: "Dados inválidos",
-          message: "Código, nome e pelo menos uma variante são obrigatórios"
+          message: "Código, nome e pelo menos uma variante são obrigatórios",
         });
       }
 
       // Verificar se produto com código já existe
       const [existingProduct] = await db.execute(
         "SELECT id FROM products WHERE sku = ?",
-        [product.codigo]
+        [product.codigo],
       );
 
       if ((existingProduct as any[]).length > 0) {
@@ -176,7 +193,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           success: false,
           error: "Código já existe",
           message: `O produto com código '${product.codigo}' já está cadastrado`,
-          code: "DUPLICATE_CODE"
+          code: "DUPLICATE_CODE",
         });
       }
 
@@ -191,7 +208,13 @@ router.post("/bulk", validateApiKey, async (req, res) => {
       // Criar produto principal
       const [productResult] = await db.execute(
         "INSERT INTO products (name, description, category_id, sku, active) VALUES (?, ?, ?, ?, ?)",
-        [product.nome, product.descricao || null, categoryId, product.codigo, true]
+        [
+          product.nome,
+          product.descricao || null,
+          categoryId,
+          product.codigo,
+          true,
+        ],
       );
 
       const productId = (productResult as any).insertId;
@@ -203,7 +226,8 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           return res.status(422).json({
             success: false,
             error: "Dados inválidos",
-            message: "Cor, preço > 0 e grade são obrigatórios para cada variante"
+            message:
+              "Cor, preço > 0 e grade são obrigatórios para cada variante",
           });
         }
 
@@ -216,20 +240,22 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         gradesCreated.add(variante.grade);
 
         // Gerar SKU para variante se não fornecido
-        const variantSku = variante.sku || `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, '-')}`;
+        const variantSku =
+          variante.sku ||
+          `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}`;
 
         // Inserir relação produto-cor-grade
         const [variantResult] = await db.execute(
           `INSERT INTO product_color_grades
            (product_id, color_id, grade_id)
            VALUES (?, ?, ?)`,
-          [productId, colorId, gradeId]
+          [productId, colorId, gradeId],
         );
 
         // Atualizar preço base do produto se necessário
         await db.execute(
           "UPDATE products SET base_price = ? WHERE id = ? AND base_price IS NULL",
-          [variante.preco, productId]
+          [variante.preco, productId],
         );
 
         variants.push({
@@ -237,7 +263,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           cor: variante.cor,
           sku: variantSku,
           grade: variante.grade,
-          preco: variante.preco
+          preco: variante.preco,
         });
 
         variantesCreadas++;
@@ -247,7 +273,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         id: productId,
         codigo: product.codigo,
         nome: product.nome,
-        variantes: variants
+        variantes: variants,
       });
     }
 
@@ -262,16 +288,15 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         tipos_criados: Array.from(typesCreated),
         cores_criadas: Array.from(colorsCreated),
         grades_criadas: Array.from(gradesCreated),
-        produtos: createdProducts
-      }
+        produtos: createdProducts,
+      },
     });
-
   } catch (error: any) {
     console.error("Error in bulk product creation:", error);
     res.status(500).json({
       success: false,
       error: "Erro interno do servidor",
-      message: "Não foi possível processar os produtos"
+      message: "Não foi possível processar os produtos",
     });
   }
 });
@@ -279,21 +304,31 @@ router.post("/bulk", validateApiKey, async (req, res) => {
 // Single product create with one variant
 router.post("/single", validateApiKey, async (req, res) => {
   try {
-    const { codigo, nome, categoria, tipo, descricao, cor, preco, grade, foto } = req.body;
+    const {
+      codigo,
+      nome,
+      categoria,
+      tipo,
+      descricao,
+      cor,
+      preco,
+      grade,
+      foto,
+    } = req.body;
 
     // Validações básicas
     if (!codigo || !nome || !cor || !preco || preco <= 0 || !grade) {
       return res.status(422).json({
         success: false,
         error: "Dados inválidos",
-        message: "Código, nome, cor, preço > 0 e grade são obrigatórios"
+        message: "Código, nome, cor, preço > 0 e grade são obrigatórios",
       });
     }
 
     // Verificar se produto com código já existe
     const [existingProduct] = await db.execute(
       "SELECT id FROM products WHERE sku = ?",
-      [codigo]
+      [codigo],
     );
 
     if ((existingProduct as any[]).length > 0) {
@@ -301,7 +336,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         success: false,
         error: "Código já existe",
         message: `O produto com código '${codigo}' já está cadastrado`,
-        code: "DUPLICATE_CODE"
+        code: "DUPLICATE_CODE",
       });
     }
 
@@ -314,7 +349,7 @@ router.post("/single", validateApiKey, async (req, res) => {
     // Criar produto
     const [productResult] = await db.execute(
       "INSERT INTO products (name, description, category_id, sku, base_price, active) VALUES (?, ?, ?, ?, ?, ?)",
-      [nome, descricao || null, categoryId, codigo, preco, true]
+      [nome, descricao || null, categoryId, codigo, preco, true],
     );
 
     const productId = (productResult as any).insertId;
@@ -322,7 +357,7 @@ router.post("/single", validateApiKey, async (req, res) => {
     // Criar relação produto-cor-grade
     await db.execute(
       "INSERT INTO product_color_grades (product_id, color_id, grade_id) VALUES (?, ?, ?)",
-      [productId, colorId, gradeId]
+      [productId, colorId, gradeId],
     );
 
     // Resposta de sucesso
@@ -337,16 +372,15 @@ router.post("/single", validateApiKey, async (req, res) => {
         tipo,
         cor,
         grade,
-        preco
-      }
+        preco,
+      },
     });
-
   } catch (error: any) {
     console.error("Error creating single product:", error);
     res.status(500).json({
       success: false,
       error: "Erro interno do servidor",
-      message: "Não foi possível criar o produto"
+      message: "Não foi possível criar o produto",
     });
   }
 });
@@ -372,7 +406,8 @@ router.get("/:codigo/variants", async (req, res) => {
   try {
     const { codigo } = req.params;
 
-    const [rows] = await db.execute(`
+    const [rows] = await db.execute(
+      `
       SELECT
         pcg.id,
         c.name as cor,
@@ -389,13 +424,15 @@ router.get("/:codigo/variants", async (req, res) => {
       WHERE p.sku = ? AND p.active = true
       GROUP BY pcg.id, c.name, p.base_price, g.id, g.name
       ORDER BY c.name
-    `, [codigo]);
+    `,
+      [codigo],
+    );
 
     if ((rows as any[]).length === 0) {
       return res.status(404).json({
         success: false,
         error: "Produto não encontrado",
-        message: `Nenhum produto encontrado com código '${codigo}'`
+        message: `Nenhum produto encontrado com código '${codigo}'`,
       });
     }
 
