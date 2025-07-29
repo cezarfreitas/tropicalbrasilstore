@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "http://localhost:8080/api";
 const API_KEY = "sk_live_abcd1234567890abcdef1234567890abcdef12";
 
 async function testBulkAPI() {
