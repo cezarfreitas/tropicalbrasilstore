@@ -78,6 +78,7 @@ interface ColorVariant {
   image_url?: string;
   stock_total: number;
   active: boolean;
+  is_main_catalog?: boolean; // Indica se é a variante principal do catálogo
   grade_ids: number[]; // Multiple grades per variant
   size_stocks: SizeStock[];
   color_name?: string;
@@ -903,16 +904,7 @@ export default function ProductsWooCommerce() {
                         rows={3}
                       />
                     </div>
-                    <div>
-                      <CompactImageUpload
-                        value={formData.photo || ""}
-                        onChange={(url) =>
-                          setFormData({ ...formData, photo: url })
-                        }
-                        label="Foto Principal"
-                        placeholder="URL da foto ou carregar arquivo"
-                      />
-                    </div>
+                
                     <div className="flex items-center space-x-2">
                       <Switch
                         id="active"
@@ -1585,7 +1577,7 @@ export default function ProductsWooCommerce() {
                           <div className="flex items-center gap-4">
                             <div className="w-16 h-16 rounded-lg border overflow-hidden flex-shrink-0 shadow-sm">
                               <ProductImage
-                                src={product.photo || ""}
+                                src={getMainVariantImage(product) || ""}
                                 alt={product.name}
                                 className="w-full h-full object-cover"
                               />
