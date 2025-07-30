@@ -41,6 +41,7 @@ import { vendorsRouter } from "./routes/vendors";
 import vendorAuthRouter from "./routes/vendor-auth";
 import vendorDashboardRouter from "./routes/vendor-dashboard";
 import vendorReferralRouter from "./routes/vendor-referral";
+import testVendorAssignmentRouter from "./routes/test-vendor-assignment";
 import { createStoreSchema } from "./lib/store-schema";
 import { fixOrdersTable } from "./lib/fix-orders-table";
 import { checkAndFixTables } from "./lib/check-tables";
