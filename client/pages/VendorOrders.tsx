@@ -138,7 +138,6 @@ export default function VendorOrders() {
                       <TableHead>ID</TableHead>
                       <TableHead>Cliente</TableHead>
                       <TableHead>Total</TableHead>
-                      <TableHead>Comissão</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Data</TableHead>
                     </TableRow>
