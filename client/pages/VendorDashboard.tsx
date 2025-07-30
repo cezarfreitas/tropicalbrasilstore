@@ -86,6 +86,75 @@ export default function VendorDashboard() {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
+  const copyReferralLink = () => {
+    const link = `${window.location.origin}/cadastro/vendedor/${vendor?.id}`;
+
+    // Função para fallback com textarea
+    const fallbackCopy = () => {
+      const textArea = document.createElement('textarea');
+      textArea.value = link;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+
+        if (successful) {
+          toast({
+            title: "Link copiado!",
+            description: "Link de referência copiado para a área de transferência.",
+          });
+        } else {
+          throw new Error('document.execCommand falhou');
+        }
+      } catch (err) {
+        document.body.removeChild(textArea);
+        throw err;
+      }
+    };
+
+    // Tentar Clipboard API primeiro, mas com fallback imediato se falhar
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(link)
+        .then(() => {
+          toast({
+            title: "Link copiado!",
+            description: "Link de referência copiado para a área de transferência.",
+          });
+        })
+        .catch(() => {
+          // Se Clipboard API falhar por qualquer motivo, usar fallback
+          try {
+            fallbackCopy();
+          } catch (error) {
+            console.error('Erro ao copiar link:', error);
+            toast({
+              title: "Erro ao copiar",
+              description: "Não foi possível copiar o link. Tente selecionar e copiar manualmente.",
+              variant: "destructive",
+            });
+          }
+        });
+    } else {
+      // Se Clipboard API não estiver disponível, usar fallback diretamente
+      try {
+        fallbackCopy();
+      } catch (error) {
+        console.error('Erro ao copiar link:', error);
+        toast({
+          title: "Erro ao copiar",
+          description: "Não foi possível copiar o link. Tente selecionar e copiar manualmente.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     const statusMap = {
       pending: { label: 'Pendente', variant: 'secondary' as const },
@@ -95,7 +164,7 @@ export default function VendorDashboard() {
       cancelled: { label: 'Cancelado', variant: 'destructive' as const }
     };
 
-    const statusInfo = statusMap[status as keyof typeof statusMap] || 
+    const statusInfo = statusMap[status as keyof typeof statusMap] ||
       { label: status, variant: 'secondary' as const };
 
     return (
