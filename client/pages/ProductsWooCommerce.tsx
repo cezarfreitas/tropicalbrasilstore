@@ -165,7 +165,6 @@ export default function ProductsWooCommerce() {
     suggested_price: undefined,
     sku: "",
     parent_sku: "",
-    photo: "",
     active: true,
     sell_without_stock: false,
     color_variants: [],
