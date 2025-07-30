@@ -40,6 +40,39 @@ export default function VendorProfile() {
   });
   const [loadingStats, setLoadingStats] = useState(true);
 
+  useEffect(() => {
+    if (vendor?.id) {
+      loadReferralStats();
+    }
+  }, [vendor?.id]);
+
+  const loadReferralStats = async () => {
+    try {
+      const response = await fetch(`/api/vendor/referral/stats/${vendor?.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        setReferralStats(data);
+      }
+    } catch (error) {
+      console.error('Error loading referral stats:', error);
+    } finally {
+      setLoadingStats(false);
+    }
+  };
+
+  const copyReferralLink = async () => {
+    const link = `${window.location.origin}/cadastro/vendedor/${vendor?.id}`;
+    try {
+      await navigator.clipboard.writeText(link);
+      setMessage('Link copiado para a área de transferência!');
+      setMessageType('success');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      setMessage('Erro ao copiar link');
+      setMessageType('error');
+    }
+  };
+
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
