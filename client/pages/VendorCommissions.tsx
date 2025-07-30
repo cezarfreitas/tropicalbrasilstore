@@ -228,7 +228,7 @@ export default function VendorCommissions() {
             <div className="text-center py-8">
               <DollarSign className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <p className="text-muted-foreground">
-                {selectedMonth ? 'Nenhuma comissão encontrada para este mês' : 'Nenhuma comissão registrada'}
+                {selectedMonth !== 'all' ? 'Nenhuma comissão encontrada para este mês' : 'Nenhuma comissão registrada'}
               </p>
             </div>
           ) : (
