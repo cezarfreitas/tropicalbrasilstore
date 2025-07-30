@@ -478,6 +478,7 @@ export default function ProductsWooCommerce() {
       price: undefined,
       sale_price: undefined,
       image_url: "",
+      images: [],
       stock_total: 0,
       active: true,
       grade_ids: [], // Start with no grades selected
