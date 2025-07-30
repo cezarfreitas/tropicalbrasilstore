@@ -184,6 +184,32 @@ export default function ProductsWooCommerce() {
 
   const { toast } = useToast();
 
+  // Função para obter a imagem da variante principal ou a primeira disponível
+  const getMainVariantImage = (product: WooCommerceProduct): string => {
+    // Primeiro tenta encontrar a variante marcada como principal
+    const mainVariant = product.color_variants?.find(v => v.is_main_catalog);
+    if (mainVariant?.image_url) {
+      return mainVariant.image_url;
+    }
+
+    // Se não houver principal marcada, usa a primeira variante com imagem
+    const firstVariantWithImage = product.color_variants?.find(v => v.image_url);
+    return firstVariantWithImage?.image_url || "";
+  };
+
+  // Função para marcar uma variante como principal do catálogo
+  const setMainVariant = (variantIndex: number) => {
+    const updatedVariants = formData.color_variants.map((variant, index) => ({
+      ...variant,
+      is_main_catalog: index === variantIndex
+    }));
+
+    setFormData({
+      ...formData,
+      color_variants: updatedVariants
+    });
+  };
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
