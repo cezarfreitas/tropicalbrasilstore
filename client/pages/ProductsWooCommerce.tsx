@@ -96,7 +96,6 @@ interface WooCommerceProduct {
   suggested_price?: number;
   sku?: string;
   parent_sku?: string;
-  photo?: string;
   active?: boolean;
   sell_without_stock?: boolean;
   color_variants: ColorVariant[];
