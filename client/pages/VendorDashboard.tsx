@@ -268,7 +268,7 @@ export default function VendorDashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Comissões Mensais</CardTitle>
+                <CardTitle>Vendas Mensais</CardTitle>
                 <CardDescription>
                   Últimos 6 meses
                 </CardDescription>
