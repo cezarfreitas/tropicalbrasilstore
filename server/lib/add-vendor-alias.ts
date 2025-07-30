@@ -72,7 +72,9 @@ async function addVendorAlias() {
   }
 }
 
-if (require.main === module) {
+// Run migration if called directly
+const isMainModule = import.meta.url === `file://${process.argv[1]}`;
+if (isMainModule) {
   addVendorAlias().catch(console.error);
 }
 
