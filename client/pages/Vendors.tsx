@@ -79,14 +79,10 @@ interface VendorStats {
     total_vendors: number;
     active_vendors: number;
     inactive_vendors: number;
-    avg_commission: number;
   };
   sales: {
     total_orders_with_vendors: number;
     total_sales_with_vendors: number;
-    total_commissions: number;
-    pending_commissions: number;
-    paid_commissions: number;
   };
   customers: {
     total_customers: number;
@@ -969,7 +965,7 @@ export default function Vendors() {
                       <div>
                         <div className="font-medium">{customer.name}</div>
                         <div className="text-sm text-muted-foreground">
-                          {customer.email} • {formatCurrency(customer.total_spent)}
+                          {customer.email} �� {formatCurrency(customer.total_spent)}
                         </div>
                       </div>
                       <Button
