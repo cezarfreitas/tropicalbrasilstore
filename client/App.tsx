@@ -68,6 +68,21 @@ const AppContent = () => (
       {/* Admin Login Route (Public) */}
       <Route path="/admin/login" element={<Login />} />
 
+      {/* Vendor Login Route (Public) */}
+      <Route path="/vendor/login" element={<VendorLogin />} />
+
+      {/* Vendor Routes (Protected) */}
+      <Route
+        path="/vendor"
+        element={
+          <VendorProtectedRoute>
+            <VendorLayout>
+              <VendorDashboard />
+            </VendorLayout>
+          </VendorProtectedRoute>
+        }
+      />
+
       {/* Admin Routes (Protected) */}
       <Route
         path="/admin"
