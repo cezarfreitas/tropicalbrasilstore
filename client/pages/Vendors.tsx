@@ -61,8 +61,6 @@ interface Vendor {
   created_at: string;
   total_orders: number;
   total_sales: number;
-  total_commissions: number;
-  pending_commissions: number;
 }
 
 interface Customer {
