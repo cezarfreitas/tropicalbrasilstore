@@ -7,15 +7,22 @@ const router = Router();
 router.get("/", async (req, res) => {
   try {
     const [customers] = await db.execute(`
-      SELECT 
+      SELECT
         c.*,
+        v.id as vendor_id,
+        v.name as vendor_name,
+        v.email as vendor_email,
+        v.commission_percentage as vendor_commission,
+        c.vendor_assigned_at,
+        c.vendor_assigned_by,
         COUNT(o.id) as total_orders,
-                SUM(o.total_amount) as total_spent,
+        SUM(o.total_amount) as total_spent,
         MAX(o.created_at) as last_order_date,
         COUNT(CASE WHEN o.status = 'delivered' THEN 1 END) as completed_orders
-            FROM customers c
+      FROM customers c
+      LEFT JOIN vendors v ON c.vendor_id = v.id
       LEFT JOIN orders o ON c.email COLLATE utf8mb4_unicode_ci = o.customer_email COLLATE utf8mb4_unicode_ci
-      GROUP BY c.email
+      GROUP BY c.email, v.id
       ORDER BY c.created_at DESC
     `);
 
