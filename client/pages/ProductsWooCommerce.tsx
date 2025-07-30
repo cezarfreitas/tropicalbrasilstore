@@ -1538,9 +1538,6 @@ export default function ProductsWooCommerce() {
         </div>
       </div>
 
-      {/* Guia de Configuração */}
-      <StockConfigurationGuide />
-
       {/* Filters */}
       <Card>
         <CardContent className="pt-6">
