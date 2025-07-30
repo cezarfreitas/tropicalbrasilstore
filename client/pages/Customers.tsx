@@ -159,6 +159,8 @@ export default function Customers() {
   const [approvingCustomer, setApprovingCustomer] = useState<number | null>(
     null,
   );
+  const [vendorFilter, setVendorFilter] = useState<string>("all");
+  const [vendors, setVendors] = useState<any[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -958,7 +960,7 @@ export default function Customers() {
                                     </AlertDialogTitle>
                                     <AlertDialogDescription>
                                       Tem certeza que deseja deletar o cliente{" "}
-                                      {customer.name}? Esta ação não pode ser
+                                      {customer.name}? Esta ação n��o pode ser
                                       desfeita e todos os dados do cliente serão
                                       perdidos.
                                     </AlertDialogDescription>
