@@ -238,7 +238,7 @@ export default function Vendors() {
       name: vendor.name,
       email: vendor.email,
       phone: vendor.phone || "",
-      commission_percentage: vendor.commission_percentage,
+
       active: vendor.active,
       avatar_url: vendor.avatar_url || "",
       bio: vendor.bio || "",
@@ -554,9 +554,7 @@ export default function Vendors() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="secondary">
-                          {vendor.commission_percentage}%
-                        </Badge>
+
                       </TableCell>
                       <TableCell>
                         <div className="space-y-1">
@@ -946,7 +944,7 @@ export default function Vendors() {
                 <SelectContent>
                   {vendors.filter(v => v.active).map((vendor) => (
                     <SelectItem key={vendor.id} value={vendor.id.toString()}>
-                      {vendor.name} ({vendor.commission_percentage}%)
+                      {vendor.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
