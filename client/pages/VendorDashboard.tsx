@@ -12,7 +12,8 @@ import {
   Calendar,
   Eye,
   RefreshCw,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Copy
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
