@@ -321,11 +321,205 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// Obter clientes de um vendedor
+router.get("/:id/customers", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const search = req.query.search as string || "";
+
+    const offset = (page - 1) * limit;
+
+    let whereClause = "WHERE c.vendor_id = ?";
+    const params: any[] = [req.params.id];
+
+    if (search) {
+      whereClause += " AND (c.name LIKE ? OR c.email LIKE ?)";
+      params.push(`%${search}%`, `%${search}%`);
+    }
+
+    // Contar total
+    const [countResult] = await db.execute(
+      `SELECT COUNT(*) as total FROM customers c ${whereClause}`,
+      params
+    );
+    const total = (countResult as any[])[0].total;
+
+    // Buscar clientes com estatísticas
+    const [customers] = await db.execute(`
+      SELECT
+        c.*,
+        COUNT(DISTINCT o.id) as total_orders,
+        COALESCE(SUM(o.total_amount), 0) as total_spent,
+        MAX(o.created_at) as last_order_date
+      FROM customers c
+      LEFT JOIN orders o ON c.email = o.customer_email
+      ${whereClause}
+      GROUP BY c.id
+      ORDER BY c.created_at DESC
+      LIMIT ${limit} OFFSET ${offset}
+    `, params);
+
+    res.json({
+      customers,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasNextPage: page < Math.ceil(total / limit),
+        hasPrevPage: page > 1,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching vendor customers:", error);
+    res.status(500).json({ error: "Failed to fetch vendor customers" });
+  }
+});
+
+// Atribuir cliente a vendedor
+router.post("/:vendorId/customers/:customerId", async (req, res) => {
+  try {
+    const { vendorId, customerId } = req.params;
+    const { assigned_by } = req.body;
+
+    // Verificar se vendedor existe
+    const [vendor] = await db.execute(
+      "SELECT id, name FROM vendors WHERE id = ? AND active = 1",
+      [vendorId]
+    );
+
+    if ((vendor as any[]).length === 0) {
+      return res.status(404).json({ error: "Vendor not found or inactive" });
+    }
+
+    // Verificar se cliente existe
+    const [customer] = await db.execute(
+      "SELECT id, name FROM customers WHERE id = ?",
+      [customerId]
+    );
+
+    if ((customer as any[]).length === 0) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
+    // Atribuir cliente ao vendedor
+    await db.execute(`
+      UPDATE customers
+      SET vendor_id = ?,
+          vendor_assigned_at = NOW(),
+          vendor_assigned_by = ?
+      WHERE id = ?
+    `, [vendorId, assigned_by || 'System', customerId]);
+
+    res.json({
+      message: "Customer assigned to vendor successfully",
+      vendor: (vendor as any[])[0],
+      customer: (customer as any[])[0]
+    });
+
+  } catch (error) {
+    console.error("Error assigning customer to vendor:", error);
+    res.status(500).json({ error: "Failed to assign customer to vendor" });
+  }
+});
+
+// Remover cliente de vendedor
+router.delete("/:vendorId/customers/:customerId", async (req, res) => {
+  try {
+    const { customerId } = req.params;
+
+    // Verificar se cliente existe e está atribuído ao vendedor
+    const [customer] = await db.execute(
+      "SELECT id, name, vendor_id FROM customers WHERE id = ?",
+      [customerId]
+    );
+
+    if ((customer as any[]).length === 0) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
+    // Remover atribuição do vendedor
+    await db.execute(`
+      UPDATE customers
+      SET vendor_id = NULL,
+          vendor_assigned_at = NULL,
+          vendor_assigned_by = NULL
+      WHERE id = ?
+    `, [customerId]);
+
+    res.json({
+      message: "Customer removed from vendor successfully",
+      customer: (customer as any[])[0]
+    });
+
+  } catch (error) {
+    console.error("Error removing customer from vendor:", error);
+    res.status(500).json({ error: "Failed to remove customer from vendor" });
+  }
+});
+
+// Listar clientes sem vendedor atribuído
+router.get("/unassigned/customers", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const search = req.query.search as string || "";
+
+    const offset = (page - 1) * limit;
+
+    let whereClause = "WHERE c.vendor_id IS NULL";
+    const params: any[] = [];
+
+    if (search) {
+      whereClause += " AND (c.name LIKE ? OR c.email LIKE ?)";
+      params.push(`%${search}%`, `%${search}%`);
+    }
+
+    // Contar total
+    const [countResult] = await db.execute(
+      `SELECT COUNT(*) as total FROM customers c ${whereClause}`,
+      params
+    );
+    const total = (countResult as any[])[0].total;
+
+    // Buscar clientes sem vendedor
+    const [customers] = await db.execute(`
+      SELECT
+        c.*,
+        COUNT(DISTINCT o.id) as total_orders,
+        COALESCE(SUM(o.total_amount), 0) as total_spent,
+        MAX(o.created_at) as last_order_date
+      FROM customers c
+      LEFT JOIN orders o ON c.email = o.customer_email
+      ${whereClause}
+      GROUP BY c.id
+      ORDER BY c.created_at DESC
+      LIMIT ${limit} OFFSET ${offset}
+    `, params);
+
+    res.json({
+      customers,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasNextPage: page < Math.ceil(total / limit),
+        hasPrevPage: page > 1,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching unassigned customers:", error);
+    res.status(500).json({ error: "Failed to fetch unassigned customers" });
+  }
+});
+
 // Estatísticas de vendedores
 router.get("/stats/overview", async (req, res) => {
   try {
     const [stats] = await db.execute(`
-      SELECT 
+      SELECT
         COUNT(*) as total_vendors,
         COUNT(CASE WHEN active = 1 THEN 1 END) as active_vendors,
         COUNT(CASE WHEN active = 0 THEN 1 END) as inactive_vendors,
@@ -334,7 +528,7 @@ router.get("/stats/overview", async (req, res) => {
     `);
 
     const [salesStats] = await db.execute(`
-      SELECT 
+      SELECT
         COUNT(DISTINCT o.id) as total_orders_with_vendors,
         COALESCE(SUM(o.total_amount), 0) as total_sales_with_vendors,
         COALESCE(SUM(vc.commission_amount), 0) as total_commissions,
@@ -345,9 +539,18 @@ router.get("/stats/overview", async (req, res) => {
       WHERE o.vendor_id IS NOT NULL
     `);
 
+    const [customerStats] = await db.execute(`
+      SELECT
+        COUNT(*) as total_customers,
+        COUNT(CASE WHEN vendor_id IS NOT NULL THEN 1 END) as assigned_customers,
+        COUNT(CASE WHEN vendor_id IS NULL THEN 1 END) as unassigned_customers
+      FROM customers
+    `);
+
     res.json({
       vendors: (stats as any[])[0],
       sales: (salesStats as any[])[0],
+      customers: (customerStats as any[])[0],
     });
 
   } catch (error) {
