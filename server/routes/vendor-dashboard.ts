@@ -64,7 +64,7 @@ router.get("/stats", authenticateVendor, async (req: any, res) => {
 
     // Valor total de vendas
     const [salesResult] = await db.execute(
-      "SELECT SUM(total) as total FROM orders WHERE vendor_id = ? AND status IN ('completed', 'shipped')",
+      "SELECT SUM(total_amount) as total FROM orders WHERE vendor_id = ? AND status IN ('completed', 'shipped')",
       [vendorId]
     );
     const totalSales = (salesResult as any[])[0].total || 0;
