@@ -452,6 +452,7 @@ export default function ProductsWooCommerce() {
             variant_name: variant.variant_name || "",
             variant_sku: variant.variant_sku || "",
             image_url: variant.image_url || "",
+            images: variant.images || (variant.image_url ? [variant.image_url] : []),
             grade_ids: variant.grade_ids || [],
             size_stocks: variant.size_stocks || [],
           }))
