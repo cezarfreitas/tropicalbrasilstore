@@ -476,10 +476,7 @@ export default function VendorProfile() {
               <span className="text-sm font-medium">Status da Conta</span>
               <Badge variant="default">Ativo</Badge>
             </div>
-            <div className="flex justify-between">
-              <span className="text-sm font-medium">Percentual de Comissão</span>
-              <span className="text-sm">{vendor?.commission_percentage}%</span>
-            </div>
+
             <div className="flex justify-between">
               <span className="text-sm font-medium">Data de Cadastro</span>
               <span className="text-sm text-muted-foreground">
