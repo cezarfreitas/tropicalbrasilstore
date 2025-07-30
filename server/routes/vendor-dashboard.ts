@@ -212,17 +212,17 @@ router.get("/commissions", authenticateVendor, async (req: any, res) => {
   }
 });
 
-// Resumo mensal de comissões
+// Resumo mensal de vendas (substituindo comissões)
 router.get("/commissions/monthly", authenticateVendor, async (req: any, res) => {
   try {
     const vendorId = req.vendorId;
 
     const [monthlyCommissions] = await db.execute(
-      `SELECT 
+      `SELECT
         DATE_FORMAT(created_at, '%Y-%m') as month,
         COUNT(*) as total_commissions,
-        SUM(commission_amount) as total_amount
-      FROM vendor_commissions 
+        SUM(total_amount) as total_amount
+      FROM orders
       WHERE vendor_id = ?
       GROUP BY DATE_FORMAT(created_at, '%Y-%m')
       ORDER BY month DESC
