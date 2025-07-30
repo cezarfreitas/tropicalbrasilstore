@@ -16,7 +16,7 @@ export default function VendorCommissions() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('all');
 
   useEffect(() => {
     loadCommissions();
