@@ -175,6 +175,8 @@ export function createServer() {
   app.use("/api/admin/logs", apiLogsRouter);
   app.use("/api", stockManagementRouter);
   app.use("/api/vendors", vendorsRouter);
+  app.use("/api/vendor/auth", vendorAuthRouter);
+  app.use("/api/vendor/dashboard", vendorDashboardRouter);
 
   return app;
 }
