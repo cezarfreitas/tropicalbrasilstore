@@ -1,16 +1,8 @@
-import mysql from 'mysql2/promise';
-
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'ecommerce'
-});
+import db from './db';
 
 async function addVendorAlias() {
   try {
-    await connection.connect();
-    console.log('Connected to database');
+    console.log('Adding vendor alias system...');
 
     // Add alias column to vendors table
     const addAliasColumn = `
