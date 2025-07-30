@@ -30,6 +30,7 @@ export default function VendorDashboard() {
   useEffect(() => {
     loadRecentOrders();
     loadMonthlyCommissions();
+    loadReferralStats();
   }, []);
 
   const loadRecentOrders = async () => {
