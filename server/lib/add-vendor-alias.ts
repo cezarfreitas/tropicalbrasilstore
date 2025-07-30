@@ -11,11 +11,11 @@ async function addVendorAlias() {
       AFTER name
     `;
 
-    await connection.execute(addAliasColumn);
+    await db.execute(addAliasColumn);
     console.log('✓ Added alias column to vendors table');
 
     // Generate aliases for existing vendors based on their names
-    const vendors = await connection.execute('SELECT id, name FROM vendors');
+    const vendors = await db.execute('SELECT id, name FROM vendors');
     const vendorRows = vendors[0] as any[];
 
     for (const vendor of vendorRows) {
@@ -30,27 +30,27 @@ async function addVendorAlias() {
       // Ensure alias is unique by adding number if needed
       let finalAlias = alias;
       let counter = 1;
-      
+
       while (true) {
-        const existingAlias = await connection.execute(
+        const existingAlias = await db.execute(
           'SELECT id FROM vendors WHERE alias = ?',
           [finalAlias]
         );
-        
+
         if ((existingAlias[0] as any[]).length === 0) {
           break;
         }
-        
+
         finalAlias = `${alias}-${counter}`;
         counter++;
       }
 
       // Update vendor with the generated alias
-      await connection.execute(
+      await db.execute(
         'UPDATE vendors SET alias = ? WHERE id = ?',
         [finalAlias, vendor.id]
       );
-      
+
       console.log(`✓ Generated alias "${finalAlias}" for vendor: ${vendor.name}`);
     }
 
@@ -59,8 +59,6 @@ async function addVendorAlias() {
   } catch (error) {
     console.error('Error adding vendor alias:', error);
     throw error;
-  } finally {
-    await connection.end();
   }
 }
 
