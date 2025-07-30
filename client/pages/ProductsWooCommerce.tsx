@@ -75,7 +75,8 @@ interface ColorVariant {
   variant_sku?: string;
   price?: number;
   sale_price?: number;
-  image_url?: string;
+  image_url?: string; // Manter para compatibilidade
+  images?: string[]; // Array de até 5 imagens
   stock_total: number;
   active: boolean;
   is_main_catalog?: boolean; // Indica se é a variante principal do catálogo
@@ -753,7 +754,7 @@ export default function ProductsWooCommerce() {
 
                 <Tabs defaultValue="basic" className="py-4">
                   <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="basic">Informações Básicas</TabsTrigger>
+                    <TabsTrigger value="basic">Informações B��sicas</TabsTrigger>
                     <TabsTrigger value="variants">
                       Variantes de Cor ({formData.color_variants.length})
                     </TabsTrigger>
