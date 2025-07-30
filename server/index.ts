@@ -114,6 +114,7 @@ export function createServer() {
       await addGendersTypesTable(); // Add genders and types tables
       await createApiLogsTable(); // Create API logs table
       await createVendorsSystem(); // Create vendors system tables
+      await addVendorPassword(); // Add password column to vendors
       await fixOrdersTable(); // Fix any missing columns
       await checkAndFixTables(); // Final table structure checks
       console.log("✅ All database initialization completed successfully");
