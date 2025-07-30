@@ -180,6 +180,7 @@ export function createServer() {
   app.use("/api/vendors", vendorsRouter);
   app.use("/api/vendor/auth", vendorAuthRouter);
   app.use("/api/vendor/dashboard", vendorDashboardRouter);
+  app.use("/api/fix-vendor-password", fixVendorPasswordRouter);
 
   return app;
 }
