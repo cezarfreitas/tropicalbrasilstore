@@ -114,11 +114,9 @@ router.get("/orders", authenticateVendor, async (req: any, res) => {
       `SELECT
         o.*,
         c.name as customer_name,
-        o.customer_email,
-        vc.commission_amount
+        o.customer_email
       FROM orders o
       LEFT JOIN customers c ON o.customer_email = c.email
-      LEFT JOIN vendor_commissions vc ON o.id = vc.order_id
       ${whereClause}
       ORDER BY o.created_at DESC
       LIMIT ? OFFSET ?`,
