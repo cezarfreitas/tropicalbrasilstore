@@ -49,6 +49,20 @@ export default function VendorDashboard() {
     }
   };
 
+  const loadReferralStats = async () => {
+    try {
+      const response = await fetch(`/api/vendor/referral/stats/${vendor?.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        setReferralStats(data);
+      }
+    } catch (error) {
+      console.error('Error loading referral stats:', error);
+    } finally {
+      setLoadingReferrals(false);
+    }
+  };
+
   const handleRefresh = async () => {
     await fetchStats();
     await loadRecentOrders();
