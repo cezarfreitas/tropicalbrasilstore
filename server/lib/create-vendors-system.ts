@@ -35,18 +35,18 @@ export async function createVendorsSystem() {
     console.log("✅ Tabela vendors criada");
 
     // Verificar se a coluna vendor_id já existe na tabela orders
-    const [columns] = await db.execute(`
-      SELECT COLUMN_NAME 
-      FROM INFORMATION_SCHEMA.COLUMNS 
-      WHERE TABLE_SCHEMA = DATABASE() 
-        AND TABLE_NAME = 'orders' 
+    const [ordersColumns] = await db.execute(`
+      SELECT COLUMN_NAME
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE()
+        AND TABLE_NAME = 'orders'
         AND COLUMN_NAME = 'vendor_id'
     `);
 
-    if ((columns as any[]).length === 0) {
+    if ((ordersColumns as any[]).length === 0) {
       // Adicionar coluna vendor_id à tabela orders
       await db.execute(`
-        ALTER TABLE orders 
+        ALTER TABLE orders
         ADD COLUMN vendor_id INT NULL,
         ADD COLUMN assigned_at TIMESTAMP NULL,
         ADD COLUMN assigned_by VARCHAR(255) NULL COMMENT 'Quem atribuiu o pedido ao vendedor',
@@ -56,6 +56,30 @@ export async function createVendorsSystem() {
       console.log("✅ Coluna vendor_id adicionada à tabela orders");
     } else {
       console.log("ℹ️ Coluna vendor_id já existe na tabela orders");
+    }
+
+    // Verificar se a coluna vendor_id já existe na tabela customers (para vendedor padrão)
+    const [customersColumns] = await db.execute(`
+      SELECT COLUMN_NAME
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE()
+        AND TABLE_NAME = 'customers'
+        AND COLUMN_NAME = 'vendor_id'
+    `);
+
+    if ((customersColumns as any[]).length === 0) {
+      // Adicionar coluna vendor_id à tabela customers
+      await db.execute(`
+        ALTER TABLE customers
+        ADD COLUMN vendor_id INT NULL COMMENT 'Vendedor padrão do cliente',
+        ADD COLUMN vendor_assigned_at TIMESTAMP NULL,
+        ADD COLUMN vendor_assigned_by VARCHAR(255) NULL COMMENT 'Quem atribuiu o vendedor ao cliente',
+        ADD INDEX idx_customer_vendor_id (vendor_id),
+        ADD FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE SET NULL
+      `);
+      console.log("✅ Coluna vendor_id adicionada à tabela customers");
+    } else {
+      console.log("ℹ️ Coluna vendor_id já existe na tabela customers");
     }
 
     // Criar tabela de comissões
