@@ -203,6 +203,18 @@ export default function Customers() {
     }
   };
 
+  const fetchVendors = async () => {
+    try {
+      const response = await fetch("/api/vendors");
+      if (response.ok) {
+        const data = await response.json();
+        setVendors(data.vendors || []);
+      }
+    } catch (error) {
+      console.error("Error fetching vendors:", error);
+    }
+  };
+
   const fetchStats = async () => {
     try {
       const response = await fetch("/api/admin/customers/stats/summary");
