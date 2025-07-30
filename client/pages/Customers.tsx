@@ -1003,7 +1003,7 @@ export default function Customers() {
                                   ) : selectedCustomer ? (
                                     <div className="space-y-6">
                                       {/* Customer Info */}
-                                      <div className="grid grid-cols-2 gap-4">
+                                      <div className="grid grid-cols-3 gap-4">
                                         <div>
                                           <h4 className="font-semibold mb-2">
                                             Informações de Contato
