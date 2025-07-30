@@ -22,6 +22,7 @@ import { Link } from 'react-router-dom';
 export default function VendorDashboard() {
   const { vendor } = useVendorAuth();
   const { stats, loading, fetchStats, fetchOrders, fetchMonthlyCommissions } = useVendorDashboard();
+  const { toast } = useToast();
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [monthlyData, setMonthlyData] = useState<any[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
