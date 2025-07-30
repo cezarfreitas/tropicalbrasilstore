@@ -872,9 +872,6 @@ export default function Customers() {
                         {customer.vendor_id ? (
                           <div className="space-y-1">
                             <div className="font-medium text-sm">{customer.vendor_name}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {customer.vendor_commission}% comissão
-                            </div>
                             {customer.vendor_assigned_by === 'auto_referral' && (
                               <Badge variant="outline" className="text-xs">
                                 Indicação
