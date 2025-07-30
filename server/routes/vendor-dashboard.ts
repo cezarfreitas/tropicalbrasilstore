@@ -189,55 +189,20 @@ router.get("/customers", authenticateVendor, async (req: any, res) => {
   }
 });
 
-// Comissões do vendedor
+// Comissões do vendedor (removido - retorna vazio)
 router.get("/commissions", authenticateVendor, async (req: any, res) => {
   try {
-    const vendorId = req.vendorId;
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
-    const month = req.query.month as string;
 
-    const offset = (page - 1) * limit;
-
-    let whereClause = "WHERE vc.vendor_id = ?";
-    const params: any[] = [vendorId];
-
-    if (month) {
-      whereClause += " AND DATE_FORMAT(vc.created_at, '%Y-%m') = ?";
-      params.push(month);
-    }
-
-    // Contar total
-    const [countResult] = await db.execute(
-      `SELECT COUNT(*) as total FROM vendor_commissions vc ${whereClause}`,
-      params
-    );
-    const total = (countResult as any[])[0].total;
-
-    // Buscar comissões
-    const [commissions] = await db.execute(
-      `SELECT
-        vc.*,
-        o.id as order_id,
-        o.total_amount as order_total,
-        o.status as order_status,
-        c.name as customer_name
-      FROM vendor_commissions vc
-      LEFT JOIN orders o ON vc.order_id = o.id
-      LEFT JOIN customers c ON o.customer_email = c.email
-      ${whereClause}
-      ORDER BY vc.created_at DESC
-      LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
-    );
-
+    // Retorna resposta vazia já que comissões foram removidas
     res.json({
-      commissions,
+      commissions: [],
       pagination: {
         page,
         limit,
-        total,
-        pages: Math.ceil(total / limit)
+        total: 0,
+        pages: 0
       }
     });
 
