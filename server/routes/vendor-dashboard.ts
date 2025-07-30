@@ -155,34 +155,27 @@ router.get("/customers", authenticateVendor, async (req: any, res) => {
       return res.status(400).json({ error: "ID do vendedor inválido" });
     }
 
-    // Simplified query first
-    let countParams = [vendorId];
-    let queryParams = [vendorId];
-
-    let countQuery = "SELECT COUNT(*) as total FROM customers WHERE vendor_id = ?";
-    let query = "SELECT * FROM customers WHERE vendor_id = ?";
+    // Try using query instead of execute to avoid prepared statement issues
+    let countQuery = `SELECT COUNT(*) as total FROM customers WHERE vendor_id = ${vendorId}`;
+    let query = `SELECT * FROM customers WHERE vendor_id = ${vendorId}`;
 
     if (search) {
-      countQuery += " AND (name LIKE ? OR email LIKE ?)";
-      query += " AND (name LIKE ? OR email LIKE ?)";
-      countParams.push(`%${search}%`, `%${search}%`);
-      queryParams.push(`%${search}%`, `%${search}%`);
+      const searchEscaped = search.replace(/'/g, "''"); // Basic SQL escape
+      countQuery += ` AND (name LIKE '%${searchEscaped}%' OR email LIKE '%${searchEscaped}%')`;
+      query += ` AND (name LIKE '%${searchEscaped}%' OR email LIKE '%${searchEscaped}%')`;
     }
 
-    query += " ORDER BY created_at DESC LIMIT ? OFFSET ?";
-    queryParams.push(limit, offset);
+    query += ` ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`;
 
     console.log("Count query:", countQuery);
-    console.log("Count params:", countParams);
     console.log("Query:", query);
-    console.log("Query params:", queryParams);
 
     // Contar total
-    const [countResult] = await db.execute(countQuery, countParams);
+    const [countResult] = await db.query(countQuery);
     const total = (countResult as any[])[0].total;
 
     // Buscar clientes
-    const [customers] = await db.execute(query, queryParams);
+    const [customers] = await db.query(query);
 
     console.log("Found customers:", (customers as any[]).length);
 
