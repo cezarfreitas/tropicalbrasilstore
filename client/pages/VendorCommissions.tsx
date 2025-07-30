@@ -25,7 +25,7 @@ export default function VendorCommissions() {
 
   const loadCommissions = async () => {
     setLoading(true);
-    const data = await fetchCommissions(page, 20, selectedMonth || undefined);
+    const data = await fetchCommissions(page, 20, selectedMonth === 'all' ? undefined : selectedMonth);
     if (data) {
       setCommissions(data.commissions);
       setTotalPages(data.pagination.pages);
