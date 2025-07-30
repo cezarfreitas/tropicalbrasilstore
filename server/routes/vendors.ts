@@ -1,6 +1,6 @@
 import { Router } from "express";
 import db from "../lib/db";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/auth-utils";
 
 const router = Router();
