@@ -86,6 +86,46 @@ const AppContent = () => (
           </VendorProtectedRoute>
         }
       />
+      <Route
+        path="/vendor/orders"
+        element={
+          <VendorProtectedRoute>
+            <VendorLayout>
+              <VendorOrders />
+            </VendorLayout>
+          </VendorProtectedRoute>
+        }
+      />
+      <Route
+        path="/vendor/customers"
+        element={
+          <VendorProtectedRoute>
+            <VendorLayout>
+              <VendorCustomers />
+            </VendorLayout>
+          </VendorProtectedRoute>
+        }
+      />
+      <Route
+        path="/vendor/commissions"
+        element={
+          <VendorProtectedRoute>
+            <VendorLayout>
+              <VendorCommissions />
+            </VendorLayout>
+          </VendorProtectedRoute>
+        }
+      />
+      <Route
+        path="/vendor/profile"
+        element={
+          <VendorProtectedRoute>
+            <VendorLayout>
+              <VendorProfile />
+            </VendorLayout>
+          </VendorProtectedRoute>
+        }
+      />
 
       {/* Admin Routes (Protected) */}
       <Route
