@@ -160,15 +160,6 @@ export default function VendorOrders() {
                           {formatCurrency(order.total_amount)}
                         </TableCell>
                         <TableCell>
-                          {order.commission_amount ? (
-                            <span className="text-green-600 font-medium">
-                              {formatCurrency(order.commission_amount)}
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground">-</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
                           {getStatusBadge(order.status)}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
