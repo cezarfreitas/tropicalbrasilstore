@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
         v.id as vendor_id,
         v.name as vendor_name,
         v.email as vendor_email,
-        v.commission_percentage as vendor_commission,
+
         c.vendor_assigned_at,
         c.vendor_assigned_by,
         COUNT(o.id) as total_orders,
@@ -44,7 +44,7 @@ router.get("/:email", async (req, res) => {
         v.id as vendor_id,
         v.name as vendor_name,
         v.email as vendor_email,
-        v.commission_percentage as vendor_commission,
+
         c.vendor_assigned_at,
         c.vendor_assigned_by,
         COUNT(o.id) as total_orders,
