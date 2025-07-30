@@ -142,34 +142,47 @@ router.get("/orders", authenticateVendor, async (req: any, res) => {
 // Clientes do vendedor
 router.get("/customers", authenticateVendor, async (req: any, res) => {
   try {
-    const vendorId = req.vendorId;
+    const vendorId = parseInt(req.vendorId);
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
     const search = req.query.search as string || "";
 
     const offset = (page - 1) * limit;
 
-    console.log("Vendor ID:", vendorId, "Page:", page, "Limit:", limit, "Search:", search);
+    console.log("Vendor ID:", vendorId, "Type:", typeof vendorId, "Page:", page, "Limit:", limit, "Search:", search);
+
+    if (!vendorId || isNaN(vendorId)) {
+      return res.status(400).json({ error: "ID do vendedor inválido" });
+    }
 
     // Simplified query first
-    let query = "SELECT * FROM customers WHERE vendor_id = ?";
-    let countQuery = "SELECT COUNT(*) as total FROM customers WHERE vendor_id = ?";
+    let countParams = [vendorId];
     let queryParams = [vendorId];
 
+    let countQuery = "SELECT COUNT(*) as total FROM customers WHERE vendor_id = ?";
+    let query = "SELECT * FROM customers WHERE vendor_id = ?";
+
     if (search) {
-      query += " AND (name LIKE ? OR email LIKE ?)";
       countQuery += " AND (name LIKE ? OR email LIKE ?)";
+      query += " AND (name LIKE ? OR email LIKE ?)";
+      countParams.push(`%${search}%`, `%${search}%`);
       queryParams.push(`%${search}%`, `%${search}%`);
     }
 
     query += " ORDER BY created_at DESC LIMIT ? OFFSET ?";
+    queryParams.push(limit, offset);
+
+    console.log("Count query:", countQuery);
+    console.log("Count params:", countParams);
+    console.log("Query:", query);
+    console.log("Query params:", queryParams);
 
     // Contar total
-    const [countResult] = await db.execute(countQuery, queryParams.slice(0, search ? 3 : 1));
+    const [countResult] = await db.execute(countQuery, countParams);
     const total = (countResult as any[])[0].total;
 
     // Buscar clientes
-    const [customers] = await db.execute(query, [...queryParams, limit, offset]);
+    const [customers] = await db.execute(query, queryParams);
 
     console.log("Found customers:", (customers as any[]).length);
 
