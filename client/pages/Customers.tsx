@@ -708,6 +708,25 @@ export default function Customers() {
               </p>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Com Vendedores
+              </CardTitle>
+              <UserCheck className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {customers.filter(c => c.vendor_id).length}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {customers.length > 0
+                  ? Math.round((customers.filter(c => c.vendor_id).length / customers.length) * 100)
+                  : 0}% dos clientes
+              </p>
+            </CardContent>
+          </Card>
         </div>
       )}
 
