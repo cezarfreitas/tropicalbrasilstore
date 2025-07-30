@@ -158,7 +158,7 @@ export default function VendorOrders() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          {formatCurrency(order.total)}
+                          {formatCurrency(order.total_amount)}
                         </TableCell>
                         <TableCell>
                           {order.commission_amount ? (
