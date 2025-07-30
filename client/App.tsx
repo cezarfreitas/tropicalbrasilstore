@@ -273,12 +273,14 @@ const App = () => (
     <TooltipProvider>
       <AuthProvider>
         <CustomerAuthProvider>
-          <CartProvider>
-            <ThemeLoader />
-            <Toaster />
-            <Sonner />
-            <AppContent />
-          </CartProvider>
+          <VendorAuthProvider>
+            <CartProvider>
+              <ThemeLoader />
+              <Toaster />
+              <Sonner />
+              <AppContent />
+            </CartProvider>
+          </VendorAuthProvider>
         </CustomerAuthProvider>
       </AuthProvider>
     </TooltipProvider>
