@@ -78,7 +78,7 @@ interface Customer {
   vendor_id?: number;
   vendor_name?: string;
   vendor_email?: string;
-  vendor_commission?: number;
+
   vendor_assigned_at?: string;
   vendor_assigned_by?: string;
 }
