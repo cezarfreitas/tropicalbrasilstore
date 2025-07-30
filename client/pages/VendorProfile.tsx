@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useVendorAuth } from '@/hooks/use-vendor-auth';
-import { User, Mail, Phone, FileText, Lock, Save, CheckCircle, AlertCircle } from 'lucide-react';
+import { User, Mail, Phone, FileText, Lock, Save, CheckCircle, AlertCircle, Link, Copy, Users, TrendingUp } from 'lucide-react';
 
 export default function VendorProfile() {
   const { vendor, updateProfile, changePassword } = useVendorAuth();
