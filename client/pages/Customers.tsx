@@ -715,7 +715,7 @@ export default function Customers() {
               <CardTitle className="text-sm font-medium">
                 Com Vendedores
               </CardTitle>
-              <UserCheck className="h-4 w-4 text-muted-foreground" />
+              <Store className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
