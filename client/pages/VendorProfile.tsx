@@ -291,7 +291,7 @@ export default function VendorProfile() {
 
                 <div className="flex items-center gap-3">
                   <Badge variant="outline">
-                    {vendor?.commission_percentage}% comissão
+                    Ativo
                   </Badge>
                 </div>
               </div>
