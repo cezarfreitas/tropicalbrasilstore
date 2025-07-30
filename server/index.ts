@@ -38,6 +38,8 @@ import { seedChinelosRouter } from "./routes/seed-chinelos";
 import { apiLogsRouter } from "./routes/api-logs";
 import { stockManagementRouter } from "./routes/stock-management";
 import { vendorsRouter } from "./routes/vendors";
+import vendorAuthRouter from "./routes/vendor-auth";
+import vendorDashboardRouter from "./routes/vendor-dashboard";
 import { createStoreSchema } from "./lib/store-schema";
 import { fixOrdersTable } from "./lib/fix-orders-table";
 import { checkAndFixTables } from "./lib/check-tables";
