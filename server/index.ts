@@ -181,7 +181,6 @@ export function createServer() {
   app.use("/api/vendor/auth", vendorAuthRouter);
   app.use("/api/vendor/dashboard", vendorDashboardRouter);
   app.use("/api/vendor/referral", vendorReferralRouter);
-  app.use("/api/test-vendor-assignment", testVendorAssignmentRouter);
 
   return app;
 }
