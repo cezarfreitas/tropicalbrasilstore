@@ -74,6 +74,12 @@ interface Customer {
   status?: "pending" | "approved" | "rejected";
   id?: number;
   minimum_order?: number;
+  vendor_id?: number;
+  vendor_name?: string;
+  vendor_email?: string;
+  vendor_commission?: number;
+  vendor_assigned_at?: string;
+  vendor_assigned_by?: string;
 }
 
 interface CustomerOrder {
