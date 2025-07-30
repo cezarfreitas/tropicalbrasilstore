@@ -111,13 +111,13 @@ router.get("/orders", authenticateVendor, async (req: any, res) => {
 
     // Buscar pedidos
     const [orders] = await db.execute(
-      `SELECT 
+      `SELECT
         o.*,
         c.name as customer_name,
-        c.email as customer_email,
+        o.customer_email,
         vc.commission_amount
       FROM orders o
-      LEFT JOIN customers c ON o.customer_id = c.id
+      LEFT JOIN customers c ON o.customer_email = c.email
       LEFT JOIN vendor_commissions vc ON o.id = vc.order_id
       ${whereClause}
       ORDER BY o.created_at DESC
