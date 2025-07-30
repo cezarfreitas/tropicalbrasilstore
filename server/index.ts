@@ -62,6 +62,7 @@ import { addGendersTypesTable } from "./lib/add-genders-types-tables";
 import { createApiLogsTable } from "./lib/create-api-logs-table";
 import { createApiLogger } from "./lib/api-logger";
 import { injectStoreSettings } from "./lib/inject-store-settings";
+import { createVendorsSystem } from "./lib/create-vendors-system";
 
 export function createServer() {
   const app = express();
