@@ -290,6 +290,17 @@ router.post("/", async (req, res) => {
               );
             }
           }
+
+          // Save variant images
+          if (variant.images && variant.images.length > 0) {
+            for (let i = 0; i < variant.images.length; i++) {
+              await connection.execute(
+                `INSERT INTO variant_images (color_variant_id, image_url, display_order)
+                 VALUES (?, ?, ?)`,
+                [colorVariantId, variant.images[i], i],
+              );
+            }
+          }
         }
       }
     }
