@@ -38,11 +38,6 @@ const menuItems = [
     icon: Users,
   },
   {
-    title: 'Comissões',
-    href: '/vendor/commissions',
-    icon: DollarSign,
-  },
-  {
     title: 'Perfil',
     href: '/vendor/profile',
     icon: Settings,
