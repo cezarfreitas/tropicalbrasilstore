@@ -102,26 +102,29 @@ router.get("/orders", authenticateVendor, async (req: any, res) => {
       params.push(status);
     }
 
-    // Contar total
-    const [countResult] = await db.execute(
-      `SELECT COUNT(*) as total FROM orders o ${whereClause}`,
-      params
-    );
-    const total = (countResult as any[])[0].total;
-
-    // Buscar pedidos
-    const [orders] = await db.execute(
-      `SELECT
+    // Use direct query instead of prepared statement
+    let countQuery = `SELECT COUNT(*) as total FROM orders o WHERE o.vendor_id = ${vendorId}`;
+    let ordersQuery = `SELECT
         o.*,
         c.name as customer_name,
         o.customer_email
       FROM orders o
       LEFT JOIN customers c ON o.customer_email = c.email
-      ${whereClause}
-      ORDER BY o.created_at DESC
-      LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
-    );
+      WHERE o.vendor_id = ${vendorId}`;
+
+    if (status !== "all") {
+      countQuery += ` AND o.status = '${status}'`;
+      ordersQuery += ` AND o.status = '${status}'`;
+    }
+
+    ordersQuery += ` ORDER BY o.created_at DESC LIMIT ${limit} OFFSET ${offset}`;
+
+    // Contar total
+    const [countResult] = await db.query(countQuery);
+    const total = (countResult as any[])[0].total;
+
+    // Buscar pedidos
+    const [orders] = await db.query(ordersQuery);
 
     res.json({
       orders,
