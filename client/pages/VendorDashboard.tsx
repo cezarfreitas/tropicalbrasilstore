@@ -200,7 +200,7 @@ export default function VendorDashboard() {
                     </div>
                     <div className="text-right space-y-1">
                       <p className="text-sm font-medium">
-                        {formatCurrency(order.total)}
+                        {formatCurrency(order.total_amount)}
                       </p>
                       {getStatusBadge(order.status)}
                     </div>
