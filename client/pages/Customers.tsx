@@ -735,6 +735,25 @@ export default function Customers() {
               <CardTitle>Lista de Clientes Aprovados</CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="vendor-filter">Filtrar por vendedor:</Label>
+                  <Select value={vendorFilter} onValueChange={setVendorFilter}>
+                    <SelectTrigger id="vendor-filter" className="w-[200px]">
+                      <SelectValue placeholder="Todos os vendedores" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos os vendedores</SelectItem>
+                      <SelectItem value="unassigned">Sem vendedor</SelectItem>
+                      {vendors.map((vendor) => (
+                        <SelectItem key={vendor.id} value={vendor.id.toString()}>
+                          {vendor.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
               <Table>
                 <TableHeader>
                   <TableRow>
