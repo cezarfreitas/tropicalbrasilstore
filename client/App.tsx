@@ -36,6 +36,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import CustomerOrders from "./pages/CustomerOrders";
 import ProductImport from "./pages/ProductImport";
+import Vendors from "./pages/Vendors";
 import NotFound from "./pages/NotFound";
 import { GlobalCartModal } from "./components/GlobalCartModal";
 
