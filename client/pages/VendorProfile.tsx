@@ -60,20 +60,11 @@ export default function VendorProfile() {
     }
   };
 
-  const copyReferralLink = async () => {
+  const copyReferralLink = () => {
     const link = `${window.location.origin}/cadastro/vendedor/${vendor?.id}`;
 
-    try {
-      // Primeira tentativa: usar a API moderna do Clipboard
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(link);
-        setMessage('Link copiado para a área de transferência!');
-        setMessageType('success');
-        setTimeout(() => setMessage(''), 3000);
-        return;
-      }
-
-      // Fallback: usar o método tradicional
+    // Função para fallback com textarea
+    const fallbackCopy = () => {
       const textArea = document.createElement('textarea');
       textArea.value = link;
       textArea.style.position = 'fixed';
@@ -83,21 +74,52 @@ export default function VendorProfile() {
       textArea.focus();
       textArea.select();
 
-      const successful = document.execCommand('copy');
-      document.body.removeChild(textArea);
+      try {
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
 
-      if (successful) {
-        setMessage('Link copiado para a área de transferência!');
-        setMessageType('success');
-        setTimeout(() => setMessage(''), 3000);
-      } else {
-        throw new Error('Falha ao copiar');
+        if (successful) {
+          setMessage('Link copiado para a área de transferência!');
+          setMessageType('success');
+          setTimeout(() => setMessage(''), 3000);
+        } else {
+          throw new Error('document.execCommand falhou');
+        }
+      } catch (err) {
+        document.body.removeChild(textArea);
+        throw err;
       }
-    } catch (error) {
-      console.error('Erro ao copiar link:', error);
-      setMessage('Erro ao copiar link. Tente selecionar e copiar manualmente.');
-      setMessageType('error');
-      setTimeout(() => setMessage(''), 5000);
+    };
+
+    // Tentar Clipboard API primeiro, mas com fallback imediato se falhar
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(link)
+        .then(() => {
+          setMessage('Link copiado para a área de transferência!');
+          setMessageType('success');
+          setTimeout(() => setMessage(''), 3000);
+        })
+        .catch(() => {
+          // Se Clipboard API falhar por qualquer motivo, usar fallback
+          try {
+            fallbackCopy();
+          } catch (error) {
+            console.error('Erro ao copiar link:', error);
+            setMessage('Erro ao copiar link. Tente selecionar e copiar manualmente.');
+            setMessageType('error');
+            setTimeout(() => setMessage(''), 5000);
+          }
+        });
+    } else {
+      // Se Clipboard API não estiver disponível, usar fallback diretamente
+      try {
+        fallbackCopy();
+      } catch (error) {
+        console.error('Erro ao copiar link:', error);
+        setMessage('Erro ao copiar link. Tente selecionar e copiar manualmente.');
+        setMessageType('error');
+        setTimeout(() => setMessage(''), 5000);
+      }
     }
   };
 
