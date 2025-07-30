@@ -7,7 +7,7 @@ const router = Router();
 // Customer registration
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, whatsapp } = req.body;
+    const { name, email, whatsapp, vendor_ref } = req.body;
 
     if (!name || !email || !whatsapp) {
       return res.status(400).json({ error: "Nome, email e WhatsApp são obrigatórios" });
@@ -15,7 +15,7 @@ router.post("/register", async (req, res) => {
 
     // Remove formatting from WhatsApp (keep only digits)
     const cleanWhatsapp = whatsapp.replace(/\D/g, '');
-    
+
     if (cleanWhatsapp.length !== 11) {
       return res.status(400).json({ error: "WhatsApp deve ter 11 dígitos" });
     }
@@ -27,21 +27,57 @@ router.post("/register", async (req, res) => {
     );
 
     if ((existingCustomer as any[]).length > 0) {
-      return res.status(409).json({ 
-        error: "Já existe um cadastro com este email ou WhatsApp" 
+      return res.status(409).json({
+        error: "Já existe um cadastro com este email ou WhatsApp"
       });
     }
 
-    // Insert new customer with pending status
+    let vendorId = null;
+    let status = 'pending';
+    let message = "Cadastro realizado! Aguarde aprovação do administrador.";
+
+    // Check if vendor reference is provided
+    if (vendor_ref) {
+      const [vendor] = await db.execute(
+        "SELECT id, name FROM vendors WHERE id = ? AND active = 1",
+        [vendor_ref]
+      );
+
+      if ((vendor as any[]).length > 0) {
+        vendorId = vendor_ref;
+        status = 'approved'; // Auto-approve customers from vendor links
+        message = `Cadastro realizado e aprovado automaticamente! Você foi atribuído ao vendedor ${(vendor as any[])[0].name}.`;
+      }
+    }
+
+    // Insert new customer
     const [result] = await db.execute(
       `INSERT INTO customer_auth (name, email, whatsapp, status, is_first_login, created_at, updated_at)
-       VALUES (?, ?, ?, 'pending', TRUE, NOW(), NOW())`,
-      [name, email, cleanWhatsapp]
+       VALUES (?, ?, ?, ?, TRUE, NOW(), NOW())`,
+      [name, email, cleanWhatsapp, status]
     );
 
-    res.status(201).json({ 
-      message: "Cadastro realizado! Aguarde aprovação do administrador.",
-      customerId: (result as any).insertId
+    const customerId = (result as any).insertId;
+
+    // If vendor reference is valid, also create entry in customers table for vendor assignment
+    if (vendorId && status === 'approved') {
+      await db.execute(
+        `INSERT INTO customers (name, email, whatsapp, vendor_id, vendor_assigned_at, vendor_assigned_by, created_at, updated_at)
+         VALUES (?, ?, ?, ?, NOW(), 'auto_referral', NOW(), NOW())
+         ON DUPLICATE KEY UPDATE
+         vendor_id = VALUES(vendor_id),
+         vendor_assigned_at = VALUES(vendor_assigned_at),
+         vendor_assigned_by = VALUES(vendor_assigned_by),
+         updated_at = NOW()`,
+        [name, email, cleanWhatsapp, vendorId]
+      );
+    }
+
+    res.status(201).json({
+      message,
+      customerId,
+      vendor_assigned: !!vendorId,
+      auto_approved: status === 'approved'
     });
 
   } catch (error) {
