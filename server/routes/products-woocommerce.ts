@@ -373,9 +373,9 @@ router.put("/:id", async (req, res) => {
         if (variant.color_id) {
           // Create color variant
           const [variantResult] = await connection.execute(
-            `INSERT INTO product_color_variants 
-             (product_id, color_id, variant_name, variant_sku, price, sale_price, image_url, stock_total, active)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO product_color_variants
+             (product_id, color_id, variant_name, variant_sku, price, sale_price, image_url, stock_total, active, is_main_catalog)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
               req.params.id,
               variant.color_id,
@@ -386,6 +386,7 @@ router.put("/:id", async (req, res) => {
               variant.image_url || null,
               variant.stock_total || 0,
               variant.active !== false,
+              variant.is_main_catalog || false,
             ],
           );
 
