@@ -68,6 +68,7 @@ const AppContent = () => (
       {/* Customer Authentication Routes */}
       <Route path="/login" element={<CustomerLogin />} />
       <Route path="/cadastro" element={<CustomerRegister />} />
+      <Route path="/cadastro/vendedor/:vendorId" element={<VendorReferralRegister />} />
       <Route path="/change-password" element={<CustomerChangePassword />} />
 
       {/* Admin Login Route (Public) */}
