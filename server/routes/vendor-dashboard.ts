@@ -217,15 +217,15 @@ router.get("/commissions", authenticateVendor, async (req: any, res) => {
 
     // Buscar comissões
     const [commissions] = await db.execute(
-      `SELECT 
+      `SELECT
         vc.*,
         o.id as order_id,
-        o.total as order_total,
+        o.total_amount as order_total,
         o.status as order_status,
         c.name as customer_name
       FROM vendor_commissions vc
       LEFT JOIN orders o ON vc.order_id = o.id
-      LEFT JOIN customers c ON o.customer_id = c.id
+      LEFT JOIN customers c ON o.customer_email = c.email
       ${whereClause}
       ORDER BY vc.created_at DESC
       LIMIT ? OFFSET ?`,
