@@ -52,7 +52,7 @@ interface Vendor {
   name: string;
   email: string;
   phone?: string;
-  commission_percentage: number;
+
   active: boolean;
   avatar_url?: string;
   bio?: string;
