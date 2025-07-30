@@ -1215,7 +1215,7 @@ export default function ProductsWooCommerce() {
                                     </div>
                                   </div>
 
-                                  <div>
+                                  <div className="space-y-3">
                                     <CompactImageUpload
                                       value={variant.image_url || ""}
                                       onChange={(url) =>
@@ -1228,6 +1228,27 @@ export default function ProductsWooCommerce() {
                                       label="Imagem da Variante"
                                       placeholder="URL da imagem ou carregar arquivo"
                                     />
+
+                                    {variant.image_url && (
+                                      <div className="flex items-center gap-2">
+                                        <Switch
+                                          id={`main-catalog-${variantIndex}`}
+                                          checked={variant.is_main_catalog || false}
+                                          onCheckedChange={() => setMainVariant(variantIndex)}
+                                        />
+                                        <Label
+                                          htmlFor={`main-catalog-${variantIndex}`}
+                                          className="text-sm font-medium"
+                                        >
+                                          Usar como foto principal do catálogo
+                                        </Label>
+                                        {variant.is_main_catalog && (
+                                          <Badge variant="default" className="ml-2">
+                                            Principal
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    )}
                                   </div>
 
                                   {/* Controle de Estoque - Baseado no tipo selecionado */}
