@@ -225,6 +225,69 @@ export default function ProductsWooCommerce() {
     });
   };
 
+  // Função para adicionar imagem ao array da variante
+  const addImageToVariant = (variantIndex: number, imageUrl: string) => {
+    const updatedVariants = [...formData.color_variants];
+    const variant = updatedVariants[variantIndex];
+
+    if (!variant.images) {
+      variant.images = [];
+    }
+
+    // Máximo de 5 imagens
+    if (variant.images.length < 5) {
+      variant.images.push(imageUrl);
+      // Manter image_url como primeira imagem para compatibilidade
+      if (!variant.image_url) {
+        variant.image_url = imageUrl;
+      }
+    }
+
+    setFormData({
+      ...formData,
+      color_variants: updatedVariants
+    });
+  };
+
+  // Função para remover imagem do array da variante
+  const removeImageFromVariant = (variantIndex: number, imageIndex: number) => {
+    const updatedVariants = [...formData.color_variants];
+    const variant = updatedVariants[variantIndex];
+
+    if (variant.images && variant.images.length > imageIndex) {
+      variant.images.splice(imageIndex, 1);
+
+      // Atualizar image_url se removeu a primeira imagem
+      if (imageIndex === 0) {
+        variant.image_url = variant.images.length > 0 ? variant.images[0] : "";
+      }
+    }
+
+    setFormData({
+      ...formData,
+      color_variants: updatedVariants
+    });
+  };
+
+  // Função para reordenar imagens
+  const reorderVariantImages = (variantIndex: number, fromIndex: number, toIndex: number) => {
+    const updatedVariants = [...formData.color_variants];
+    const variant = updatedVariants[variantIndex];
+
+    if (variant.images && variant.images.length > Math.max(fromIndex, toIndex)) {
+      const [removed] = variant.images.splice(fromIndex, 1);
+      variant.images.splice(toIndex, 0, removed);
+
+      // Atualizar image_url se mudou a primeira posição
+      variant.image_url = variant.images[0] || "";
+    }
+
+    setFormData({
+      ...formData,
+      color_variants: updatedVariants
+    });
+  };
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
