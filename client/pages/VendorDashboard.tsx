@@ -21,6 +21,11 @@ export default function VendorDashboard() {
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [monthlyData, setMonthlyData] = useState<any[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
+  const [referralStats, setReferralStats] = useState({
+    totalReferrals: 0,
+    monthlyReferrals: 0
+  });
+  const [loadingReferrals, setLoadingReferrals] = useState(true);
 
   useEffect(() => {
     loadRecentOrders();
