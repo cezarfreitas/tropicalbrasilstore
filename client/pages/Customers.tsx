@@ -167,6 +167,7 @@ export default function Customers() {
     fetchCustomers();
     fetchStats();
     fetchPendingCustomers();
+    fetchVendors();
   }, []);
 
   const fetchCustomers = async () => {
@@ -960,7 +961,7 @@ export default function Customers() {
                                     </AlertDialogTitle>
                                     <AlertDialogDescription>
                                       Tem certeza que deseja deletar o cliente{" "}
-                                      {customer.name}? Esta ação n��o pode ser
+                                      {customer.name}? Esta ação não pode ser
                                       desfeita e todos os dados do cliente serão
                                       perdidos.
                                     </AlertDialogDescription>
