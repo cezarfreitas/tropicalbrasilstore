@@ -208,7 +208,7 @@ export default function VendorCommissions() {
                 <SelectValue placeholder="Filtrar por mês" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os meses</SelectItem>
+                <SelectItem value="all">Todos os meses</SelectItem>
                 {getMonthOptions().map((month) => (
                   <SelectItem key={month.value} value={month.value}>
                     {month.label}
