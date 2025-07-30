@@ -368,7 +368,6 @@ export default function ProductsWooCommerce() {
           description: fullProduct.description || "",
           sku: fullProduct.sku || "",
           parent_sku: fullProduct.parent_sku || "",
-          photo: fullProduct.photo || "",
           color_variants: (fullProduct.color_variants || []).map((variant: ColorVariant) => ({
             ...variant,
             variant_name: variant.variant_name || "",
