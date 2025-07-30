@@ -152,13 +152,11 @@ router.get("/customers", authenticateVendor, async (req: any, res) => {
 
     const offset = (page - 1) * limit;
 
-    console.log("Vendor ID:", vendorId, "Type:", typeof vendorId, "Page:", page, "Limit:", limit, "Search:", search);
-
     if (!vendorId || isNaN(vendorId)) {
       return res.status(400).json({ error: "ID do vendedor inválido" });
     }
 
-    // Try using query instead of execute to avoid prepared statement issues
+    // Use direct query instead of prepared statement to avoid MySQL2 issues
     let countQuery = `SELECT COUNT(*) as total FROM customers WHERE vendor_id = ${vendorId}`;
     let query = `SELECT * FROM customers WHERE vendor_id = ${vendorId}`;
 
@@ -170,17 +168,12 @@ router.get("/customers", authenticateVendor, async (req: any, res) => {
 
     query += ` ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`;
 
-    console.log("Count query:", countQuery);
-    console.log("Query:", query);
-
     // Contar total
     const [countResult] = await db.query(countQuery);
     const total = (countResult as any[])[0].total;
 
     // Buscar clientes
     const [customers] = await db.query(query);
-
-    console.log("Found customers:", (customers as any[]).length);
 
     res.json({
       customers,
