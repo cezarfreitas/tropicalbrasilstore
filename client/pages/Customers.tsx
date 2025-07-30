@@ -58,6 +58,7 @@ import {
   Key,
   Trash2,
   Shield,
+  Store,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
