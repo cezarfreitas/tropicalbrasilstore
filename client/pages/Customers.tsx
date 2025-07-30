@@ -770,7 +770,13 @@ export default function Customers() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {customers.map((customer) => (
+                  {customers
+                    .filter((customer) => {
+                      if (vendorFilter === "all") return true;
+                      if (vendorFilter === "unassigned") return !customer.vendor_id;
+                      return customer.vendor_id === parseInt(vendorFilter);
+                    })
+                    .map((customer) => (
                     <TableRow key={customer.email}>
                       <TableCell>
                         {editingCustomer === customer.email ? (
