@@ -38,6 +38,10 @@ import Checkout from "./pages/Checkout";
 import CustomerOrders from "./pages/CustomerOrders";
 import ProductImport from "./pages/ProductImport";
 import Vendors from "./pages/Vendors";
+import VendorLogin from "./pages/VendorLogin";
+import VendorDashboard from "./pages/VendorDashboard";
+import { VendorLayout } from "./components/VendorLayout";
+import { VendorProtectedRoute } from "./components/VendorProtectedRoute";
 import NotFound from "./pages/NotFound";
 import { GlobalCartModal } from "./components/GlobalCartModal";
 
