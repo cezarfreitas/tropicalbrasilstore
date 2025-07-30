@@ -304,7 +304,7 @@ export default function VendorDashboard() {
                         {formatCurrency(month.total_amount)}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {month.total_commissions} comissão(ões)
+                        em vendas
                       </p>
                     </div>
                   </div>
