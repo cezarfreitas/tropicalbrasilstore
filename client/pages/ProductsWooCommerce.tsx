@@ -1291,21 +1291,82 @@ export default function ProductsWooCommerce() {
                                     </div>
                                   </div>
 
-                                  <div className="space-y-3">
-                                    <CompactImageUpload
-                                      value={variant.image_url || ""}
-                                      onChange={(url) =>
-                                        updateColorVariant(
-                                          variantIndex,
-                                          "image_url",
-                                          url,
-                                        )
-                                      }
-                                      label="Imagem da Variante"
-                                      placeholder="URL da imagem ou carregar arquivo"
-                                    />
+                                  <div className="space-y-4">
+                                    <div>
+                                      <Label className="text-sm font-medium">
+                                        Imagens da Variante (até 5 fotos)
+                                      </Label>
+                                      <p className="text-xs text-muted-foreground mb-3">
+                                        A primeira imagem será usada como principal
+                                      </p>
 
-                                    {variant.image_url && (
+                                      {/* Galeria de imagens existentes */}
+                                      {variant.images && variant.images.length > 0 && (
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
+                                          {variant.images.map((imageUrl, imageIndex) => (
+                                            <div key={imageIndex} className="relative group">
+                                              <div className="aspect-square rounded-lg border overflow-hidden bg-gray-50">
+                                                <img
+                                                  src={imageUrl}
+                                                  alt={`Imagem ${imageIndex + 1}`}
+                                                  className="w-full h-full object-cover"
+                                                />
+                                              </div>
+                                              {imageIndex === 0 && (
+                                                <Badge
+                                                  variant="default"
+                                                  className="absolute top-1 left-1 text-xs"
+                                                >
+                                                  Principal
+                                                </Badge>
+                                              )}
+                                              <div className="absolute top-1 right-1 flex gap-1">
+                                                {imageIndex > 0 && (
+                                                  <Button
+                                                    type="button"
+                                                    size="icon"
+                                                    variant="secondary"
+                                                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    onClick={() => reorderVariantImages(variantIndex, imageIndex, 0)}
+                                                    title="Tornar principal"
+                                                  >
+                                                    <TrendingUp className="h-3 w-3" />
+                                                  </Button>
+                                                )}
+                                                <Button
+                                                  type="button"
+                                                  size="icon"
+                                                  variant="destructive"
+                                                  className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                  onClick={() => removeImageFromVariant(variantIndex, imageIndex)}
+                                                >
+                                                  <X className="h-3 w-3" />
+                                                </Button>
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+
+                                      {/* Upload de nova imagem */}
+                                      {(!variant.images || variant.images.length < 5) && (
+                                        <CompactImageUpload
+                                          value=""
+                                          onChange={(url) => addImageToVariant(variantIndex, url)}
+                                          label={variant.images && variant.images.length > 0 ? "Adicionar mais uma imagem" : "Primeira imagem"}
+                                          placeholder="URL da imagem ou carregar arquivo"
+                                        />
+                                      )}
+
+                                      {variant.images && variant.images.length >= 5 && (
+                                        <p className="text-xs text-muted-foreground text-center py-2 bg-gray-50 rounded-lg">
+                                          Máximo de 5 imagens atingido
+                                        </p>
+                                      )}
+                                    </div>
+
+                                    {/* Switch para variante principal do catálogo */}
+                                    {((variant.images && variant.images.length > 0) || variant.image_url) && (
                                       <div className="flex items-center gap-2">
                                         <Switch
                                           id={`main-catalog-${variantIndex}`}
