@@ -40,6 +40,7 @@ import { stockManagementRouter } from "./routes/stock-management";
 import { vendorsRouter } from "./routes/vendors";
 import vendorAuthRouter from "./routes/vendor-auth";
 import vendorDashboardRouter from "./routes/vendor-dashboard";
+import fixVendorPasswordRouter from "./routes/fix-vendor-password";
 import { createStoreSchema } from "./lib/store-schema";
 import { fixOrdersTable } from "./lib/fix-orders-table";
 import { checkAndFixTables } from "./lib/check-tables";
