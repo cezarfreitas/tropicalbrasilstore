@@ -322,10 +322,7 @@ export default function VendorDashboard() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Percentual de Comissão</p>
-              <p className="text-2xl font-bold">{vendor?.commission_percentage}%</p>
-            </div>
+
             <div>
               <p className="text-sm font-medium text-muted-foreground">Email</p>
               <p className="text-sm">{vendor?.email}</p>
