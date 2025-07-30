@@ -62,14 +62,42 @@ export default function VendorProfile() {
 
   const copyReferralLink = async () => {
     const link = `${window.location.origin}/cadastro/vendedor/${vendor?.id}`;
+
     try {
-      await navigator.clipboard.writeText(link);
-      setMessage('Link copiado para a área de transferência!');
-      setMessageType('success');
-      setTimeout(() => setMessage(''), 3000);
+      // Primeira tentativa: usar a API moderna do Clipboard
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(link);
+        setMessage('Link copiado para a área de transferência!');
+        setMessageType('success');
+        setTimeout(() => setMessage(''), 3000);
+        return;
+      }
+
+      // Fallback: usar o método tradicional
+      const textArea = document.createElement('textarea');
+      textArea.value = link;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+
+      if (successful) {
+        setMessage('Link copiado para a área de transferência!');
+        setMessageType('success');
+        setTimeout(() => setMessage(''), 3000);
+      } else {
+        throw new Error('Falha ao copiar');
+      }
     } catch (error) {
-      setMessage('Erro ao copiar link');
+      console.error('Erro ao copiar link:', error);
+      setMessage('Erro ao copiar link. Tente selecionar e copiar manualmente.');
       setMessageType('error');
+      setTimeout(() => setMessage(''), 5000);
     }
   };
 
