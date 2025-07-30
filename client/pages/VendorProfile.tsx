@@ -32,6 +32,14 @@ export default function VendorProfile() {
   });
   const [showPasswordForm, setShowPasswordForm] = useState(false);
 
+  // Referral stats state
+  const [referralStats, setReferralStats] = useState({
+    totalReferrals: 0,
+    monthlyReferrals: 0,
+    recentReferrals: []
+  });
+  const [loadingStats, setLoadingStats] = useState(true);
+
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
