@@ -151,28 +151,29 @@ router.get("/customers", authenticateVendor, async (req: any, res) => {
 
     const offset = (page - 1) * limit;
 
-    let whereClause = "WHERE vendor_id = ?";
-    const params: any[] = [vendorId];
+    console.log("Vendor ID:", vendorId, "Page:", page, "Limit:", limit, "Search:", search);
+
+    // Simplified query first
+    let query = "SELECT * FROM customers WHERE vendor_id = ?";
+    let countQuery = "SELECT COUNT(*) as total FROM customers WHERE vendor_id = ?";
+    let queryParams = [vendorId];
 
     if (search) {
-      whereClause += " AND (name LIKE ? OR email LIKE ?)";
-      params.push(`%${search}%`, `%${search}%`);
+      query += " AND (name LIKE ? OR email LIKE ?)";
+      countQuery += " AND (name LIKE ? OR email LIKE ?)";
+      queryParams.push(`%${search}%`, `%${search}%`);
     }
 
+    query += " ORDER BY created_at DESC LIMIT ? OFFSET ?";
+
     // Contar total
-    const [countResult] = await db.execute(
-      `SELECT COUNT(*) as total FROM customers ${whereClause}`,
-      params
-    );
+    const [countResult] = await db.execute(countQuery, queryParams.slice(0, search ? 3 : 1));
     const total = (countResult as any[])[0].total;
 
     // Buscar clientes
-    const [customers] = await db.execute(
-      `SELECT * FROM customers ${whereClause}
-       ORDER BY created_at DESC
-       LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
-    );
+    const [customers] = await db.execute(query, [...queryParams, limit, offset]);
+
+    console.log("Found customers:", (customers as any[]).length);
 
     res.json({
       customers,
