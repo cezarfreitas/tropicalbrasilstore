@@ -310,6 +310,65 @@ export default function VendorProfile() {
         </CardContent>
       </Card>
 
+      {/* Referral Link */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Link de Referência</CardTitle>
+          <CardDescription>
+            Compartilhe este link para que clientes se cadastrem automaticamente como seus
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex gap-2">
+              <Input
+                value={`${window.location.origin}/cadastro/vendedor/${vendor?.id}`}
+                readOnly
+                className="font-mono text-sm"
+              />
+              <Button onClick={copyReferralLink} variant="outline" size="icon">
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardContent className="pt-4">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">Total de Indicações</span>
+                  </div>
+                  <p className="text-2xl font-bold mt-1">
+                    {loadingStats ? '...' : referralStats.totalReferrals}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="pt-4">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">Este Mês</span>
+                  </div>
+                  <p className="text-2xl font-bold mt-1">
+                    {loadingStats ? '...' : referralStats.monthlyReferrals}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="text-sm text-muted-foreground bg-muted p-3 rounded-lg">
+              <p className="font-medium mb-1">Como funciona:</p>
+              <ul className="space-y-1 text-xs">
+                <li>• Clientes que se cadastrarem através deste link serão automaticamente atribuídos a você</li>
+                <li>• O cadastro será aprovado automaticamente</li>
+                <li>• Você receberá comissão de todos os pedidos destes clientes</li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Change Password */}
       <Card>
         <CardHeader>
