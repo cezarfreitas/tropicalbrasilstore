@@ -284,7 +284,7 @@ export default function VendorDashboard() {
           <CardContent>
             {monthlyData.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                Nenhuma comissão encontrada
+                Nenhuma venda encontrada
               </div>
             ) : (
               <div className="space-y-4">
