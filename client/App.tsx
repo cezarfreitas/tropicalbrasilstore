@@ -175,6 +175,16 @@ const AppContent = () => (
         }
       />
       <Route
+        path="/admin/vendors"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <Vendors />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/admin/notifications"
         element={
           <AdminLayout>
