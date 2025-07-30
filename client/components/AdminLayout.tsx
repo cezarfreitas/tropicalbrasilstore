@@ -39,6 +39,11 @@ const navigation = [
     icon: Users,
   },
   {
+    name: "Vendedores",
+    href: "/admin/vendors",
+    icon: UserCheck,
+  },
+  {
     name: "Produtos V2",
     href: "/admin/products-v2",
     icon: Package,
