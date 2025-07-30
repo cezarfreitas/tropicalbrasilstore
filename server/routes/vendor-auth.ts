@@ -47,9 +47,9 @@ router.post("/login", async (req, res) => {
     // Criar sessão
     const sessionId = generateSessionId();
     await db.execute(
-      `INSERT INTO vendor_sessions (vendor_id, session_id, expires_at) 
+      `INSERT INTO vendor_sessions (id, vendor_id, expires_at)
        VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 7 DAY))`,
-      [vendor.id, sessionId]
+      [sessionId, vendor.id]
     );
 
     // Atualizar último login
@@ -128,7 +128,7 @@ router.get("/me", async (req, res) => {
 
     const vendor = (vendors as any[])[0];
     if (!vendor) {
-      return res.status(404).json({ error: "Vendedor não encontrado" });
+      return res.status(404).json({ error: "Vendedor n��o encontrado" });
     }
 
     res.json({ vendor });
