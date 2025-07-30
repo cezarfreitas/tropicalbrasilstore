@@ -376,7 +376,11 @@ router.put("/:id", async (req, res) => {
       ],
     );
 
-    // Delete existing color variants, size stocks, and grades
+    // Delete existing variant images, color variants, size stocks, and grades
+    await connection.execute(
+      "DELETE FROM variant_images WHERE color_variant_id IN (SELECT id FROM product_color_variants WHERE product_id = ?)",
+      [req.params.id],
+    );
     await connection.execute(
       "DELETE FROM product_color_variants WHERE product_id = ?",
       [req.params.id],
