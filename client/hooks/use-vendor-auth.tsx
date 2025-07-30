@@ -5,7 +5,7 @@ interface Vendor {
   name: string;
   email: string;
   avatar_url?: string;
-  commission_percentage: number;
+
 }
 
 interface VendorAuthContextType {
