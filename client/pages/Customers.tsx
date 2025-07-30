@@ -1028,6 +1028,40 @@ export default function Customers() {
                                         </div>
                                         <div>
                                           <h4 className="font-semibold mb-2">
+                                            Vendedor Atribuído
+                                          </h4>
+                                          <div className="space-y-2 text-sm">
+                                            {selectedCustomer.vendor_id ? (
+                                              <>
+                                                <div className="font-medium">
+                                                  {selectedCustomer.vendor_name}
+                                                </div>
+                                                <div className="text-muted-foreground">
+                                                  {selectedCustomer.vendor_email}
+                                                </div>
+                                                <div className="text-muted-foreground">
+                                                  Comissão: {selectedCustomer.vendor_commission}%
+                                                </div>
+                                                {selectedCustomer.vendor_assigned_at && (
+                                                  <div className="text-muted-foreground">
+                                                    Atribuído em: {formatDate(selectedCustomer.vendor_assigned_at)}
+                                                  </div>
+                                                )}
+                                                {selectedCustomer.vendor_assigned_by && (
+                                                  <div className="text-muted-foreground">
+                                                    Por: {selectedCustomer.vendor_assigned_by === 'auto_referral' ? 'Link de indicação' : selectedCustomer.vendor_assigned_by}
+                                                  </div>
+                                                )}
+                                              </>
+                                            ) : (
+                                              <div className="text-muted-foreground">
+                                                Nenhum vendedor atribuído
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <h4 className="font-semibold mb-2">
                                             Estatísticas
                                           </h4>
                                           <div className="space-y-2 text-sm">
