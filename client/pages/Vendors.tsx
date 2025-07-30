@@ -719,23 +719,7 @@ export default function Vendors() {
                   }
                 />
               </div>
-              <div>
-                <Label htmlFor="commission">Comissão (%)</Label>
-                <Input
-                  id="commission"
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.01"
-                  value={formData.commission_percentage}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      commission_percentage: parseFloat(e.target.value) || 0,
-                    })
-                  }
-                />
-              </div>
+
             </div>
 
             <div>
