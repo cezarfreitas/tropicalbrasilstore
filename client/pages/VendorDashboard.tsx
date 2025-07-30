@@ -283,6 +283,66 @@ export default function VendorDashboard() {
         </Card>
       </div>
 
+      {/* Referral Link Section */}
+      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <LinkIcon className="h-5 w-5 text-blue-600" />
+            </div>
+            <div>
+              <CardTitle className="text-blue-900">Link de Referência</CardTitle>
+              <CardDescription className="text-blue-700">
+                Compartilhe este link para que clientes se cadastrem automaticamente como seus
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex gap-2">
+            <Input
+              value={`${window.location.origin}/cadastro/vendedor/${vendor?.id}`}
+              readOnly
+              className="font-mono text-sm bg-white"
+            />
+            <Button onClick={copyReferralLink} size="icon" className="shrink-0">
+              <Copy className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="bg-white p-3 rounded-lg border border-blue-200">
+              <div className="flex items-center gap-2 mb-1">
+                <Users className="h-4 w-4 text-blue-600" />
+                <span className="text-sm font-medium text-blue-900">Total de Indicações</span>
+              </div>
+              <p className="text-xl font-bold text-blue-800">
+                {loadingReferrals ? '...' : referralStats.totalReferrals}
+              </p>
+            </div>
+
+            <div className="bg-white p-3 rounded-lg border border-blue-200">
+              <div className="flex items-center gap-2 mb-1">
+                <TrendingUp className="h-4 w-4 text-blue-600" />
+                <span className="text-sm font-medium text-blue-900">Este Mês</span>
+              </div>
+              <p className="text-xl font-bold text-blue-800">
+                {loadingReferrals ? '...' : referralStats.monthlyReferrals}
+              </p>
+            </div>
+          </div>
+
+          <div className="text-sm text-blue-700 bg-white p-3 rounded-lg border border-blue-200">
+            <p className="font-medium mb-1">💡 Como funciona:</p>
+            <ul className="space-y-1 text-xs">
+              <li>• Clientes que se cadastrarem através deste link serão automaticamente atribuídos a você</li>
+              <li>• O cadastro será aprovado automaticamente</li>
+              <li>• Você pode acompanhar suas indicações na seção "Clientes"</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="grid gap-6 md:grid-cols-2">
         {/* Recent Orders */}
         <Card>
