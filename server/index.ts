@@ -109,6 +109,7 @@ export function createServer() {
       await addShowInMenuColumn(); // Add show_in_menu column to categories
       await addGendersTypesTable(); // Add genders and types tables
       await createApiLogsTable(); // Create API logs table
+      await createVendorsSystem(); // Create vendors system tables
       await fixOrdersTable(); // Fix any missing columns
       await checkAndFixTables(); // Final table structure checks
       console.log("✅ All database initialization completed successfully");
