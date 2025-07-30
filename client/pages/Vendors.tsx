@@ -437,10 +437,10 @@ export default function Vendors() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {formatCurrency(stats.sales.total_commissions)}
+                {formatCurrency(stats.sales.total_sales_with_vendors)}
               </div>
               <p className="text-xs text-muted-foreground">
-                {stats.sales.pending_commissions} pendentes
+                Via vendedores
               </p>
             </CardContent>
           </Card>
