@@ -170,6 +170,15 @@ router.get("/:id", async (req, res) => {
         [req.params.id, variant.color_id],
       );
       variant.grade_ids = (gradeRows as any[]).map(row => row.grade_id);
+
+      // Get images for this variant
+      const [imageRows] = await db.execute(
+        `SELECT image_url FROM variant_images
+         WHERE color_variant_id = ?
+         ORDER BY display_order`,
+        [variant.id],
+      );
+      variant.images = (imageRows as any[]).map(row => row.image_url);
     }
 
     product.color_variants = variantRows;
