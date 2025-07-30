@@ -44,6 +44,7 @@ import VendorOrders from "./pages/VendorOrders";
 import VendorCustomers from "./pages/VendorCustomers";
 import VendorCommissions from "./pages/VendorCommissions";
 import VendorProfile from "./pages/VendorProfile";
+import VendorReferralRegister from "./pages/VendorReferralRegister";
 import { VendorLayout } from "./components/VendorLayout";
 import { VendorProtectedRoute } from "./components/VendorProtectedRoute";
 import NotFound from "./pages/NotFound";
