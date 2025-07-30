@@ -4,14 +4,15 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useVendorDashboard } from '@/hooks/use-vendor-dashboard';
 import { useVendorAuth } from '@/hooks/use-vendor-auth';
-import { 
-  ShoppingBag, 
-  Users, 
-  DollarSign, 
+import {
+  ShoppingBag,
+  Users,
+  DollarSign,
   TrendingUp,
   Calendar,
   Eye,
-  RefreshCw
+  RefreshCw,
+  Link
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
