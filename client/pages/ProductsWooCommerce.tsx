@@ -187,13 +187,29 @@ export default function ProductsWooCommerce() {
   const getMainVariantImage = (product: WooCommerceProduct): string => {
     // Primeiro tenta encontrar a variante marcada como principal
     const mainVariant = product.color_variants?.find(v => v.is_main_catalog);
-    if (mainVariant?.image_url) {
-      return mainVariant.image_url;
+    if (mainVariant) {
+      // Prioriza array de imagens, depois image_url
+      if (mainVariant.images && mainVariant.images.length > 0) {
+        return mainVariant.images[0];
+      }
+      if (mainVariant.image_url) {
+        return mainVariant.image_url;
+      }
     }
 
     // Se não houver principal marcada, usa a primeira variante com imagem
-    const firstVariantWithImage = product.color_variants?.find(v => v.image_url);
-    return firstVariantWithImage?.image_url || "";
+    const firstVariantWithImage = product.color_variants?.find(v =>
+      (v.images && v.images.length > 0) || v.image_url
+    );
+
+    if (firstVariantWithImage) {
+      if (firstVariantWithImage.images && firstVariantWithImage.images.length > 0) {
+        return firstVariantWithImage.images[0];
+      }
+      return firstVariantWithImage.image_url || "";
+    }
+
+    return "";
   };
 
   // Função para marcar uma variante como principal do catálogo
@@ -754,7 +770,7 @@ export default function ProductsWooCommerce() {
 
                 <Tabs defaultValue="basic" className="py-4">
                   <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="basic">Informações B��sicas</TabsTrigger>
+                    <TabsTrigger value="basic">Informações Básicas</TabsTrigger>
                     <TabsTrigger value="variants">
                       Variantes de Cor ({formData.color_variants.length})
                     </TabsTrigger>
