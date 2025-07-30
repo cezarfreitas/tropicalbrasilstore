@@ -274,9 +274,9 @@ export default function VendorDashboard() {
                 </CardDescription>
               </div>
               <Button asChild variant="outline" size="sm">
-                <Link to="/vendor/commissions">
-                  <DollarSign className="h-4 w-4 mr-2" />
-                  Ver detalhes
+                <Link to="/vendor/orders">
+                  <ShoppingBag className="h-4 w-4 mr-2" />
+                  Ver pedidos
                 </Link>
               </Button>
             </div>
