@@ -1096,9 +1096,6 @@ export default function Customers() {
                                                 <div className="text-muted-foreground">
                                                   {selectedCustomer.vendor_email}
                                                 </div>
-                                                <div className="text-muted-foreground">
-                                                  Comissão: {selectedCustomer.vendor_commission}%
-                                                </div>
                                                 {selectedCustomer.vendor_assigned_at && (
                                                   <div className="text-muted-foreground">
                                                     Atribuído em: {formatDate(selectedCustomer.vendor_assigned_at)}
