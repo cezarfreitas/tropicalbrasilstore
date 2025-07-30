@@ -67,6 +67,7 @@ export default function VendorDashboard() {
     await fetchStats();
     await loadRecentOrders();
     await loadMonthlyCommissions();
+    await loadReferralStats();
   };
 
   const formatCurrency = (value: number) => {
