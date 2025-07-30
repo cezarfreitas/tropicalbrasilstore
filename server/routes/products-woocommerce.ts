@@ -11,6 +11,7 @@ interface ColorVariant {
   price?: number;
   sale_price?: number;
   image_url?: string;
+  images?: string[]; // Array de até 5 imagens
   stock_total: number;
   active: boolean;
   is_main_catalog?: boolean;
