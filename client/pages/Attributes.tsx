@@ -48,18 +48,35 @@ export default function Attributes() {
     fetchTypes();
   }, []);
 
-  const fetchGenders = async () => {
+  const fetchGenders = async (retryCount = 0) => {
     try {
-      const response = await fetch("/api/genders");
+      const response = await fetch("/api/genders", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-cache",
+      });
+
       if (response.ok) {
         const data = await response.json();
         setGenders(data);
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error("Error fetching genders:", error);
+
+      // Retry once if this is the first attempt
+      if (retryCount === 0) {
+        console.log("Retrying fetch genders...");
+        setTimeout(() => fetchGenders(1), 1000);
+        return;
+      }
+
       toast({
         title: "Erro",
-        description: "Não foi possível carregar os gêneros",
+        description: "Não foi possível carregar os gêneros. Verifique sua conexão.",
         variant: "destructive",
       });
     }
