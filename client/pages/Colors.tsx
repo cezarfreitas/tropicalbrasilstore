@@ -428,9 +428,13 @@ export default function Colors() {
                     <Input
                       id="hex_code"
                       value={formData.hex_code}
-                      onChange={(e) =>
-                        setFormData({ ...formData, hex_code: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setFormData({ ...formData, hex_code: e.target.value });
+                        // Limpar sugestão se usuário está editando manualmente
+                        if (e.target.value !== suggestedColor) {
+                          setSuggestedColor(null);
+                        }
+                      }}
                       placeholder="#FF0000 (será detectado automaticamente)"
                       pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
                     />
