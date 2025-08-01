@@ -390,12 +390,30 @@ export default function Colors() {
                   <Input
                     id="name"
                     value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
+                    onChange={(e) => handleNameChange(e.target.value)}
                     placeholder="Ex: Azul Marinho, Vermelho, Rosa"
                     required
                   />
+                  {suggestedColor && suggestedColor !== formData.hex_code && (
+                    <div className="flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded">
+                      <div
+                        className="w-4 h-4 rounded border"
+                        style={{ backgroundColor: suggestedColor }}
+                      ></div>
+                      <span className="text-sm text-blue-700">
+                        Cor detectada: {suggestedColor}
+                      </span>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={applySuggestedColor}
+                        className="ml-auto text-xs h-6"
+                      >
+                        Aplicar
+                      </Button>
+                    </div>
+                  )}
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="hex_code">Código da Cor (Opcional)</Label>
