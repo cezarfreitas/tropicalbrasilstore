@@ -345,6 +345,77 @@ export default function Colors() {
     }
   };
 
+  const handleBulkDetectColors = async () => {
+    const confirmMessage = `Aplicar detecção inteligente de cores para todas as ${colors.length} cores cadastradas?`;
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      setLoading(true);
+      const updates: { id: number, name: string, detectedColor: string }[] = [];
+
+      // Primeiro, analisa quais cores podem ser detectadas
+      for (const color of colors) {
+        const detectedColor = detectColorFromName(color.name);
+        if (detectedColor && detectedColor !== color.hex_code) {
+          updates.push({
+            id: color.id,
+            name: color.name,
+            detectedColor
+          });
+        }
+      }
+
+      if (updates.length === 0) {
+        toast({
+          title: "Informação",
+          description: "Nenhuma cor precisou ser atualizada. Todas já possuem códigos corretos ou não foram detectadas.",
+        });
+        return;
+      }
+
+      // Confirma as atualizações que serão feitas
+      const updateMessage = `Foram detectadas ${updates.length} cores que podem ser atualizadas:\n\n${updates.map(u => `• ${u.name}: ${u.detectedColor}`).join('\n')}\n\nDeseja continuar?`;
+
+      if (!confirm(updateMessage)) return;
+
+      // Aplica as atualizações
+      const updatePromises = updates.map(update =>
+        fetch(`/api/colors/${update.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: update.name,
+            hex_code: update.detectedColor
+          })
+        })
+      );
+
+      const results = await Promise.all(updatePromises);
+      const failed = results.filter(r => !r.ok);
+
+      if (failed.length === 0) {
+        toast({
+          title: "Sucesso",
+          description: `${updates.length} cor${updates.length !== 1 ? 'es' : ''} atualizada${updates.length !== 1 ? 's' : ''} com detecção inteligente!`,
+        });
+        fetchColors();
+      } else {
+        throw new Error(`${failed.length} cor${failed.length !== 1 ? 'es' : ''} não puderam ser atualizada${failed.length !== 1 ? 's' : ''}`);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
