@@ -551,52 +551,66 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         const colorId = await getOrCreateColor(variante.cor);
         colorsCreated.add(variante.cor);
 
-        // Verificar se já existe uma variante desta cor para este produto
-        const [existingColorVariant] = await db.execute(
-          "SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?",
-          [productId, colorId],
-        );
-
-        if ((existingColorVariant as any[]).length > 0) {
-          console.log(
-            `⚠️ Variante de cor ${variante.cor} já existe para o produto ${product.codigo} - pulando...`,
-          );
-
-          // Adicionar à lista de variantes retornadas (mesmo que não criada)
-          variants.push({
-            id: (existingColorVariant as any[])[0].id,
-            cor: variante.cor,
-            sku:
-              variante.sku ||
-              `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}`,
-            grade: variante.grade,
-            preco: variante.preco,
-            status: "existing",
-          });
-          continue;
+        // Processar grades - suporta string única, array ou string separada por vírgula
+        let gradesToProcess: string[] = [];
+        if (Array.isArray(variante.grade)) {
+          gradesToProcess = variante.grade;
+        } else if (typeof variante.grade === 'string') {
+          // Se contém vírgula, dividir em múltiplas grades
+          gradesToProcess = variante.grade.includes(',')
+            ? variante.grade.split(',').map(g => g.trim()).filter(g => g.length > 0)
+            : [variante.grade];
         }
 
-        // Criar ou buscar grade
-        const gradeId = await getOrCreateGrade(variante.grade);
-        gradesCreated.add(variante.grade);
+        // Processar cada grade
+        for (const gradeNome of gradesToProcess) {
+          // Verificar se já existe uma variante desta cor e grade para este produto
+          const gradeId = await getOrCreateGrade(gradeNome);
+          gradesCreated.add(gradeNome);
 
-        // Gerar SKU para variante se não fornecido
-        const variantSku =
-          variante.sku ||
-          `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}`;
+          const [existingColorVariant] = await db.execute(
+            "SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ? AND variant_name LIKE ?",
+            [productId, colorId, `%${gradeNome}%`],
+          );
 
-        // Download e salvar imagem se fornecida
-        let localImageUrl = null;
-        if (variante.foto && isValidImageUrl(variante.foto)) {
-          localImageUrl = await downloadAndSaveImage(
-            variante.foto,
-            product.codigo,
-            variante.cor,
-          );
-          console.log(
-            `  📷 Imagem processada para ${variante.cor}: ${localImageUrl || "falhou"}`,
-          );
-        }
+          if ((existingColorVariant as any[]).length > 0) {
+            console.log(
+              `⚠️ Variante de cor ${variante.cor} com grade ${gradeNome} já existe para o produto ${product.codigo} - pulando...`,
+            );
+
+            // Adicionar à lista de variantes retornadas (mesmo que não criada)
+            variants.push({
+              id: (existingColorVariant as any[])[0].id,
+              cor: variante.cor,
+              sku:
+                variante.sku ||
+                `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}-${gradeNome}`,
+              grade: gradeNome,
+              preco: variante.preco,
+              status: "existing",
+            });
+            continue;
+          }
+
+
+
+          // Gerar SKU para variante se não fornecido
+          const variantSku =
+            variante.sku ||
+            `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}-${gradeNome}`;
+
+          // Download e salvar imagem se fornecida
+          let localImageUrl = null;
+          if (variante.foto && isValidImageUrl(variante.foto)) {
+            localImageUrl = await downloadAndSaveImage(
+              variante.foto,
+              product.codigo,
+              variante.cor,
+            );
+            console.log(
+              `  📷 Imagem processada para ${variante.cor}: ${localImageUrl || "falhou"}`,
+            );
+          }
 
         // Verificar se a relação produto-cor-grade já existe
         const [existingRelation] = await db.execute(
@@ -730,17 +744,18 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           ]);
         }
 
-        variants.push({
-          id: (variantResult as any).insertId,
-          cor: variante.cor,
-          sku: variantSku,
-          grade: variante.grade,
-          preco: variante.preco,
-          status: "created",
-        });
+          variants.push({
+            id: (variantResult as any).insertId,
+            cor: variante.cor,
+            sku: variantSku,
+            grade: gradeNome,
+            preco: variante.preco,
+            status: "created",
+          });
 
-        variantesCreadas++;
-      }
+          variantesCreadas++;
+        } // fim do loop de grades
+      } // fim do loop de variantes
 
       createdProducts.push({
         id: productId,
