@@ -31,6 +31,115 @@ import { Plus, Edit2, Trash2, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Color, CreateColorRequest } from "@shared/types";
 
+// Mapeamento inteligente de nomes de cores para códigos hexadecimais
+const COLOR_MAPPINGS: Record<string, string> = {
+  // Cores básicas
+  "preto": "#000000",
+  "branco": "#FFFFFF",
+  "vermelho": "#FF0000",
+  "verde": "#008000",
+  "azul": "#0000FF",
+  "amarelo": "#FFFF00",
+  "rosa": "#FFC0CB",
+  "roxo": "#800080",
+  "laranja": "#FFA500",
+  "marrom": "#A52A2A",
+  "cinza": "#808080",
+  "dourado": "#FFD700",
+  "prata": "#C0C0C0",
+
+  // Tons de azul
+  "azul marinho": "#000080",
+  "azul royal": "#4169E1",
+  "azul claro": "#ADD8E6",
+  "azul escuro": "#00008B",
+  "azul turquesa": "#40E0D0",
+  "azul bebê": "#89CFF0",
+  "azul celeste": "#87CEEB",
+  "azul anil": "#4B0082",
+  "azul petróleo": "#4682B4",
+
+  // Tons de vermelho
+  "vermelho escuro": "#8B0000",
+  "vermelho claro": "#FFB6C1",
+  "bordô": "#800020",
+  "carmim": "#DC143C",
+  "coral": "#FF7F50",
+  "magenta": "#FF00FF",
+
+  // Tons de verde
+  "verde claro": "#90EE90",
+  "verde escuro": "#006400",
+  "verde água": "#00FFFF",
+  "verde lima": "#32CD32",
+  "verde oliva": "#808000",
+  "verde militar": "#4B5320",
+  "verde neon": "#39FF14",
+
+  // Tons de amarelo/laranja
+  "amarelo claro": "#FFFFE0",
+  "amarelo ouro": "#FFD700",
+  "laranja escuro": "#FF8C00",
+  "laranja claro": "#FFE4B5",
+  "pêssego": "#FFCBA4",
+  "salmão": "#FA8072",
+
+  // Tons de rosa/roxo
+  "rosa claro": "#FFB6C1",
+  "rosa escuro": "#C71585",
+  "rosa pink": "#FF1493",
+  "roxo claro": "#DDA0DD",
+  "roxo escuro": "#4B0082",
+  "violeta": "#8A2BE2",
+  "lilás": "#B19CD9",
+
+  // Tons neutros
+  "cinza claro": "#D3D3D3",
+  "cinza escuro": "#A9A9A9",
+  "bege": "#F5F5DC",
+  "creme": "#FFFDD0",
+  "nude": "#E3BC9A",
+  "terra": "#8B4513",
+  "chocolate": "#D2691E",
+
+  // Cores especiais
+  "transparente": "#FFFFFF00",
+  "neon": "#39FF14",
+  "metálico": "#B8860B",
+  "fosco": "#696969",
+};
+
+// Função para detectar cor inteligentemente
+const detectColorFromName = (name: string): string | null => {
+  const cleanName = name.toLowerCase().trim();
+
+  // Busca exata
+  if (COLOR_MAPPINGS[cleanName]) {
+    return COLOR_MAPPINGS[cleanName];
+  }
+
+  // Busca por palavras-chave
+  for (const [colorName, hexCode] of Object.entries(COLOR_MAPPINGS)) {
+    if (cleanName.includes(colorName) || colorName.includes(cleanName)) {
+      return hexCode;
+    }
+  }
+
+  // Busca por partes do nome
+  const words = cleanName.split(/[\s\-_]+/);
+  for (const word of words) {
+    if (word.length > 2) { // Ignore palavras muito curtas
+      for (const [colorName, hexCode] of Object.entries(COLOR_MAPPINGS)) {
+        if (colorName.includes(word) || word.includes(colorName)) {
+          return hexCode;
+        }
+      }
+    }
+  }
+
+  return null;
+};
+
 export default function Colors() {
   const [colors, setColors] = useState<Color[]>([]);
   const [loading, setLoading] = useState(true);
