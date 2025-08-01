@@ -35,19 +35,19 @@ import { Color, CreateColorRequest } from "@shared/types";
 // Mapeamento inteligente de nomes de cores para códigos hexadecimais
 const COLOR_MAPPINGS: Record<string, string> = {
   // Cores básicas
-  "preto": "#000000",
-  "branco": "#FFFFFF",
-  "vermelho": "#FF0000",
-  "verde": "#008000",
-  "azul": "#0000FF",
-  "amarelo": "#FFFF00",
-  "rosa": "#FFC0CB",
-  "roxo": "#800080",
-  "laranja": "#FFA500",
-  "marrom": "#A52A2A",
-  "cinza": "#808080",
-  "dourado": "#FFD700",
-  "prata": "#C0C0C0",
+  preto: "#000000",
+  branco: "#FFFFFF",
+  vermelho: "#FF0000",
+  verde: "#008000",
+  azul: "#0000FF",
+  amarelo: "#FFFF00",
+  rosa: "#FFC0CB",
+  roxo: "#800080",
+  laranja: "#FFA500",
+  marrom: "#A52A2A",
+  cinza: "#808080",
+  dourado: "#FFD700",
+  prata: "#C0C0C0",
 
   // Tons de azul
   "azul marinho": "#000080",
@@ -63,10 +63,10 @@ const COLOR_MAPPINGS: Record<string, string> = {
   // Tons de vermelho
   "vermelho escuro": "#8B0000",
   "vermelho claro": "#FFB6C1",
-  "bordô": "#800020",
-  "carmim": "#DC143C",
-  "coral": "#FF7F50",
-  "magenta": "#FF00FF",
+  bordô: "#800020",
+  carmim: "#DC143C",
+  coral: "#FF7F50",
+  magenta: "#FF00FF",
 
   // Tons de verde
   "verde claro": "#90EE90",
@@ -82,8 +82,8 @@ const COLOR_MAPPINGS: Record<string, string> = {
   "amarelo ouro": "#FFD700",
   "laranja escuro": "#FF8C00",
   "laranja claro": "#FFE4B5",
-  "pêssego": "#FFCBA4",
-  "salmão": "#FA8072",
+  pêssego: "#FFCBA4",
+  salmão: "#FA8072",
 
   // Tons de rosa/roxo
   "rosa claro": "#FFB6C1",
@@ -91,23 +91,23 @@ const COLOR_MAPPINGS: Record<string, string> = {
   "rosa pink": "#FF1493",
   "roxo claro": "#DDA0DD",
   "roxo escuro": "#4B0082",
-  "violeta": "#8A2BE2",
-  "lilás": "#B19CD9",
+  violeta: "#8A2BE2",
+  lilás: "#B19CD9",
 
   // Tons neutros
   "cinza claro": "#D3D3D3",
   "cinza escuro": "#A9A9A9",
-  "bege": "#F5F5DC",
-  "creme": "#FFFDD0",
-  "nude": "#E3BC9A",
-  "terra": "#8B4513",
-  "chocolate": "#D2691E",
+  bege: "#F5F5DC",
+  creme: "#FFFDD0",
+  nude: "#E3BC9A",
+  terra: "#8B4513",
+  chocolate: "#D2691E",
 
   // Cores especiais
-  "transparente": "#FFFFFF00",
-  "neon": "#39FF14",
-  "metálico": "#B8860B",
-  "fosco": "#696969",
+  transparente: "#FFFFFF00",
+  neon: "#39FF14",
+  metálico: "#B8860B",
+  fosco: "#696969",
 };
 
 // Função para detectar cor inteligentemente
@@ -129,7 +129,8 @@ const detectColorFromName = (name: string): string | null => {
   // Busca por partes do nome
   const words = cleanName.split(/[\s\-_]+/);
   for (const word of words) {
-    if (word.length > 2) { // Ignore palavras muito curtas
+    if (word.length > 2) {
+      // Ignore palavras muito curtas
       for (const [colorName, hexCode] of Object.entries(COLOR_MAPPINGS)) {
         if (colorName.includes(word) || word.includes(colorName)) {
           return hexCode;
@@ -286,22 +287,24 @@ export default function Colors() {
   };
 
   // Funções de seleção múltipla
-  const isAllSelected = colors.length > 0 && selectedColors.length === colors.length;
-  const isIndeterminate = selectedColors.length > 0 && selectedColors.length < colors.length;
+  const isAllSelected =
+    colors.length > 0 && selectedColors.length === colors.length;
+  const isIndeterminate =
+    selectedColors.length > 0 && selectedColors.length < colors.length;
 
   const toggleSelectAll = () => {
     if (isAllSelected) {
       setSelectedColors([]);
     } else {
-      setSelectedColors(colors.map(color => color.id));
+      setSelectedColors(colors.map((color) => color.id));
     }
   };
 
   const toggleColorSelection = (colorId: number) => {
-    setSelectedColors(prev =>
+    setSelectedColors((prev) =>
       prev.includes(colorId)
-        ? prev.filter(id => id !== colorId)
-        : [...prev, colorId]
+        ? prev.filter((id) => id !== colorId)
+        : [...prev, colorId],
     );
   };
 
@@ -312,29 +315,31 @@ export default function Colors() {
   const handleBulkDelete = async () => {
     if (selectedColors.length === 0) return;
 
-    const confirmMessage = `Tem certeza que deseja excluir ${selectedColors.length} cor${selectedColors.length !== 1 ? 'es' : ''}?`;
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedColors.length} cor${selectedColors.length !== 1 ? "es" : ""}?`;
 
     if (!confirm(confirmMessage)) return;
 
     try {
-      const deletePromises = selectedColors.map(id =>
+      const deletePromises = selectedColors.map((id) =>
         fetch(`/api/colors/${id}`, {
-          method: 'DELETE'
-        })
+          method: "DELETE",
+        }),
       );
 
       const results = await Promise.all(deletePromises);
-      const failed = results.filter(r => !r.ok);
+      const failed = results.filter((r) => !r.ok);
 
       if (failed.length === 0) {
         toast({
           title: "Sucesso",
-          description: `${selectedColors.length} cor${selectedColors.length !== 1 ? 'es' : ''} excluída${selectedColors.length !== 1 ? 's' : ''} com sucesso`,
+          description: `${selectedColors.length} cor${selectedColors.length !== 1 ? "es" : ""} excluída${selectedColors.length !== 1 ? "s" : ""} com sucesso`,
         });
         setSelectedColors([]);
         fetchColors();
       } else {
-        throw new Error(`${failed.length} cor${failed.length !== 1 ? 'es' : ''} não puderam ser excluída${failed.length !== 1 ? 's' : ''}`);
+        throw new Error(
+          `${failed.length} cor${failed.length !== 1 ? "es" : ""} não puderam ser excluída${failed.length !== 1 ? "s" : ""}`,
+        );
       }
     } catch (error: any) {
       toast({
@@ -347,12 +352,12 @@ export default function Colors() {
 
   const handleBulkDetectColors = async () => {
     const confirmMessage = `Aplicar detecção inteligente de cores para todas as ${colors.length} cores cadastradas?`;
-    
+
     if (!confirm(confirmMessage)) return;
 
     try {
       setLoading(true);
-      const updates: { id: number, name: string, detectedColor: string }[] = [];
+      const updates: { id: number; name: string; detectedColor: string }[] = [];
 
       // Primeiro, analisa quais cores podem ser detectadas
       for (const color of colors) {
@@ -361,7 +366,7 @@ export default function Colors() {
           updates.push({
             id: color.id,
             name: color.name,
-            detectedColor
+            detectedColor,
           });
         }
       }
@@ -369,41 +374,44 @@ export default function Colors() {
       if (updates.length === 0) {
         toast({
           title: "Informação",
-          description: "Nenhuma cor precisou ser atualizada. Todas já possuem códigos corretos ou não foram detectadas.",
+          description:
+            "Nenhuma cor precisou ser atualizada. Todas já possuem códigos corretos ou não foram detectadas.",
         });
         return;
       }
 
       // Confirma as atualizações que serão feitas
-      const updateMessage = `Foram detectadas ${updates.length} cores que podem ser atualizadas:\n\n${updates.map(u => `• ${u.name}: ${u.detectedColor}`).join('\n')}\n\nDeseja continuar?`;
-      
+      const updateMessage = `Foram detectadas ${updates.length} cores que podem ser atualizadas:\n\n${updates.map((u) => `• ${u.name}: ${u.detectedColor}`).join("\n")}\n\nDeseja continuar?`;
+
       if (!confirm(updateMessage)) return;
 
       // Aplica as atualizações
-      const updatePromises = updates.map(update =>
+      const updatePromises = updates.map((update) =>
         fetch(`/api/colors/${update.id}`, {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             name: update.name,
-            hex_code: update.detectedColor
-          })
-        })
+            hex_code: update.detectedColor,
+          }),
+        }),
       );
 
       const results = await Promise.all(updatePromises);
-      const failed = results.filter(r => !r.ok);
+      const failed = results.filter((r) => !r.ok);
 
       if (failed.length === 0) {
         toast({
           title: "Sucesso",
-          description: `${updates.length} cor${updates.length !== 1 ? 'es' : ''} atualizada${updates.length !== 1 ? 's' : ''} com detecção inteligente!`,
+          description: `${updates.length} cor${updates.length !== 1 ? "es" : ""} atualizada${updates.length !== 1 ? "s" : ""} com detecção inteligente!`,
         });
         fetchColors();
       } else {
-        throw new Error(`${failed.length} cor${failed.length !== 1 ? 'es' : ''} não puderam ser atualizada${failed.length !== 1 ? 's' : ''}`);
+        throw new Error(
+          `${failed.length} cor${failed.length !== 1 ? "es" : ""} não puderam ser atualizada${failed.length !== 1 ? "s" : ""}`,
+        );
       }
     } catch (error: any) {
       toast({
@@ -440,8 +448,8 @@ export default function Colors() {
         </div>
         <div className="flex items-center gap-2">
           {colors.length > 0 && (
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={handleBulkDetectColors}
               disabled={loading}
               className="flex items-center gap-2"
@@ -501,20 +509,27 @@ export default function Colors() {
                     )}
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="hex_code" className="flex items-center gap-2">
+                    <Label
+                      htmlFor="hex_code"
+                      className="flex items-center gap-2"
+                    >
                       Código da Cor
-                      {suggestedColor === formData.hex_code && formData.hex_code && (
-                        <Badge variant="secondary" className="text-xs">
-                          🤖 Detectado automaticamente
-                        </Badge>
-                      )}
+                      {suggestedColor === formData.hex_code &&
+                        formData.hex_code && (
+                          <Badge variant="secondary" className="text-xs">
+                            🤖 Detectado automaticamente
+                          </Badge>
+                        )}
                     </Label>
                     <div className="flex gap-2">
                       <Input
                         id="hex_code"
                         value={formData.hex_code}
                         onChange={(e) => {
-                          setFormData({ ...formData, hex_code: e.target.value });
+                          setFormData({
+                            ...formData,
+                            hex_code: e.target.value,
+                          });
                           // Limpar sugestão se usuário está editando manualmente
                           if (e.target.value !== suggestedColor) {
                             setSuggestedColor(null);
@@ -536,18 +551,26 @@ export default function Colors() {
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      💡 Digite o nome da cor e o código será detectado automaticamente!
+                      💡 Digite o nome da cor e o código será detectado
+                      automaticamente!
                     </p>
 
                     {/* Preview de cores disponíveis */}
                     {formData.name && !formData.hex_code && (
                       <div className="mt-2">
-                        <p className="text-xs font-medium mb-2">Cores disponíveis para detecção:</p>
+                        <p className="text-xs font-medium mb-2">
+                          Cores disponíveis para detecção:
+                        </p>
                         <div className="grid grid-cols-6 gap-1 max-h-20 overflow-y-auto">
                           {Object.entries(COLOR_MAPPINGS)
-                            .filter(([name]) =>
-                              name.toLowerCase().includes(formData.name.toLowerCase()) ||
-                              formData.name.toLowerCase().includes(name.toLowerCase())
+                            .filter(
+                              ([name]) =>
+                                name
+                                  .toLowerCase()
+                                  .includes(formData.name.toLowerCase()) ||
+                                formData.name
+                                  .toLowerCase()
+                                  .includes(name.toLowerCase()),
                             )
                             .slice(0, 12)
                             .map(([name, hex]) => (
@@ -561,8 +584,7 @@ export default function Colors() {
                                   setSuggestedColor(null);
                                 }}
                               />
-                            ))
-                          }
+                            ))}
                         </div>
                       </div>
                     )}
@@ -593,13 +615,11 @@ export default function Colors() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <span className="text-sm font-medium">
-                  {selectedColors.length} cor{selectedColors.length !== 1 ? 'es' : ''} selecionada{selectedColors.length !== 1 ? 's' : ''}
+                  {selectedColors.length} cor
+                  {selectedColors.length !== 1 ? "es" : ""} selecionada
+                  {selectedColors.length !== 1 ? "s" : ""}
                 </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={clearSelection}
-                >
+                <Button variant="outline" size="sm" onClick={clearSelection}>
                   Limpar seleção
                 </Button>
               </div>
@@ -631,7 +651,8 @@ export default function Colors() {
               : `${colors.length} cor${colors.length !== 1 ? "es" : ""} cadastrada${colors.length !== 1 ? "s" : ""}`}
             <br />
             <span className="text-blue-600 font-medium">
-              🤖 Sistema inteligente ativo - Digite o nome e a cor será detectada automaticamente!
+              🤖 Sistema inteligente ativo - Digite o nome e a cor será
+              detectada automaticamente!
             </span>
           </CardDescription>
         </CardHeader>
@@ -664,7 +685,11 @@ export default function Colors() {
                       }}
                       onCheckedChange={toggleSelectAll}
                       aria-label="Selecionar todas as cores"
-                      className={isIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                      className={
+                        isIndeterminate
+                          ? "data-[state=checked]:bg-blue-600"
+                          : ""
+                      }
                     />
                   </TableHead>
                   <TableHead>Cor</TableHead>
@@ -678,7 +703,9 @@ export default function Colors() {
                 {colors.map((color) => (
                   <TableRow
                     key={color.id}
-                    className={selectedColors.includes(color.id) ? "bg-blue-50" : ""}
+                    className={
+                      selectedColors.includes(color.id) ? "bg-blue-50" : ""
+                    }
                   >
                     <TableCell>
                       <Checkbox

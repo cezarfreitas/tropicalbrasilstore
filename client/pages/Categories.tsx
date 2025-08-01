@@ -170,7 +170,7 @@ export default function Categories() {
       if (response.ok) {
         toast({
           title: "Sucesso",
-          description: `Categoria ${newStatus ? 'adicionada ao' : 'removida do'} menu`,
+          description: `Categoria ${newStatus ? "adicionada ao" : "removida do"} menu`,
         });
         fetchCategories();
       } else {
@@ -186,22 +186,25 @@ export default function Categories() {
   };
 
   // Funções de seleção múltipla
-  const isAllSelected = categories.length > 0 && selectedCategories.length === categories.length;
-  const isIndeterminate = selectedCategories.length > 0 && selectedCategories.length < categories.length;
+  const isAllSelected =
+    categories.length > 0 && selectedCategories.length === categories.length;
+  const isIndeterminate =
+    selectedCategories.length > 0 &&
+    selectedCategories.length < categories.length;
 
   const toggleSelectAll = () => {
     if (isAllSelected) {
       setSelectedCategories([]);
     } else {
-      setSelectedCategories(categories.map(category => category.id));
+      setSelectedCategories(categories.map((category) => category.id));
     }
   };
 
   const toggleCategorySelection = (categoryId: number) => {
-    setSelectedCategories(prev =>
+    setSelectedCategories((prev) =>
       prev.includes(categoryId)
-        ? prev.filter(id => id !== categoryId)
-        : [...prev, categoryId]
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId],
     );
   };
 
@@ -212,29 +215,31 @@ export default function Categories() {
   const handleBulkDelete = async () => {
     if (selectedCategories.length === 0) return;
 
-    const confirmMessage = `Tem certeza que deseja excluir ${selectedCategories.length} categoria${selectedCategories.length !== 1 ? 's' : ''}?`;
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedCategories.length} categoria${selectedCategories.length !== 1 ? "s" : ""}?`;
 
     if (!confirm(confirmMessage)) return;
 
     try {
-      const deletePromises = selectedCategories.map(id =>
+      const deletePromises = selectedCategories.map((id) =>
         fetch(`/api/categories/${id}`, {
-          method: 'DELETE'
-        })
+          method: "DELETE",
+        }),
       );
 
       const results = await Promise.all(deletePromises);
-      const failed = results.filter(r => !r.ok);
+      const failed = results.filter((r) => !r.ok);
 
       if (failed.length === 0) {
         toast({
           title: "Sucesso",
-          description: `${selectedCategories.length} categoria${selectedCategories.length !== 1 ? 's' : ''} excluída${selectedCategories.length !== 1 ? 's' : ''} com sucesso`,
+          description: `${selectedCategories.length} categoria${selectedCategories.length !== 1 ? "s" : ""} excluída${selectedCategories.length !== 1 ? "s" : ""} com sucesso`,
         });
         setSelectedCategories([]);
         fetchCategories();
       } else {
-        throw new Error(`${failed.length} categoria${failed.length !== 1 ? 's' : ''} não puderam ser excluída${failed.length !== 1 ? 's' : ''}`);
+        throw new Error(
+          `${failed.length} categoria${failed.length !== 1 ? "s" : ""} não puderam ser excluída${failed.length !== 1 ? "s" : ""}`,
+        );
       }
     } catch (error: any) {
       toast({
@@ -316,7 +321,10 @@ export default function Categories() {
                     id="show_in_menu"
                     checked={formData.show_in_menu}
                     onCheckedChange={(checked) =>
-                      setFormData({ ...formData, show_in_menu: checked as boolean })
+                      setFormData({
+                        ...formData,
+                        show_in_menu: checked as boolean,
+                      })
                     }
                   />
                   <Label htmlFor="show_in_menu" className="text-sm font-normal">
@@ -348,13 +356,11 @@ export default function Categories() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <span className="text-sm font-medium">
-                  {selectedCategories.length} categoria{selectedCategories.length !== 1 ? 's' : ''} selecionada{selectedCategories.length !== 1 ? 's' : ''}
+                  {selectedCategories.length} categoria
+                  {selectedCategories.length !== 1 ? "s" : ""} selecionada
+                  {selectedCategories.length !== 1 ? "s" : ""}
                 </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={clearSelection}
-                >
+                <Button variant="outline" size="sm" onClick={clearSelection}>
                   Limpar seleção
                 </Button>
               </div>
@@ -415,7 +421,11 @@ export default function Categories() {
                       }}
                       onCheckedChange={toggleSelectAll}
                       aria-label="Selecionar todas as categorias"
-                      className={isIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                      className={
+                        isIndeterminate
+                          ? "data-[state=checked]:bg-blue-600"
+                          : ""
+                      }
                     />
                   </TableHead>
                   <TableHead>Nome</TableHead>
@@ -429,12 +439,18 @@ export default function Categories() {
                 {categories.map((category) => (
                   <TableRow
                     key={category.id}
-                    className={selectedCategories.includes(category.id) ? "bg-blue-50" : ""}
+                    className={
+                      selectedCategories.includes(category.id)
+                        ? "bg-blue-50"
+                        : ""
+                    }
                   >
                     <TableCell>
                       <Checkbox
                         checked={selectedCategories.includes(category.id)}
-                        onCheckedChange={() => toggleCategorySelection(category.id)}
+                        onCheckedChange={() =>
+                          toggleCategorySelection(category.id)
+                        }
                         aria-label={`Selecionar categoria ${category.name}`}
                       />
                     </TableCell>
@@ -446,10 +462,12 @@ export default function Categories() {
                     </TableCell>
                     <TableCell>
                       <Badge
-                        variant={category.show_in_menu ? "default" : "secondary"}
+                        variant={
+                          category.show_in_menu ? "default" : "secondary"
+                        }
                         className="cursor-pointer hover:opacity-80 transition-opacity"
                         onClick={() => toggleShowInMenu(category)}
-                        title={`Clique para ${category.show_in_menu ? 'remover do' : 'adicionar ao'} menu`}
+                        title={`Clique para ${category.show_in_menu ? "remover do" : "adicionar ao"} menu`}
                       >
                         {category.show_in_menu ? "Sim" : "Não"}
                       </Badge>

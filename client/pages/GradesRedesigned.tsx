@@ -215,22 +215,24 @@ export default function GradesRedesigned() {
   };
 
   // Funções de seleção múltipla
-  const isAllSelected = grades.length > 0 && selectedGrades.length === grades.length;
-  const isIndeterminate = selectedGrades.length > 0 && selectedGrades.length < grades.length;
+  const isAllSelected =
+    grades.length > 0 && selectedGrades.length === grades.length;
+  const isIndeterminate =
+    selectedGrades.length > 0 && selectedGrades.length < grades.length;
 
   const toggleSelectAll = () => {
     if (isAllSelected) {
       setSelectedGrades([]);
     } else {
-      setSelectedGrades(grades.map(grade => grade.id));
+      setSelectedGrades(grades.map((grade) => grade.id));
     }
   };
 
   const toggleGradeSelection = (gradeId: number) => {
-    setSelectedGrades(prev =>
+    setSelectedGrades((prev) =>
       prev.includes(gradeId)
-        ? prev.filter(id => id !== gradeId)
-        : [...prev, gradeId]
+        ? prev.filter((id) => id !== gradeId)
+        : [...prev, gradeId],
     );
   };
 
@@ -241,29 +243,31 @@ export default function GradesRedesigned() {
   const handleBulkDelete = async () => {
     if (selectedGrades.length === 0) return;
 
-    const confirmMessage = `Tem certeza que deseja excluir ${selectedGrades.length} grade${selectedGrades.length !== 1 ? 's' : ''}?`;
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedGrades.length} grade${selectedGrades.length !== 1 ? "s" : ""}?`;
 
     if (!confirm(confirmMessage)) return;
 
     try {
-      const deletePromises = selectedGrades.map(id =>
+      const deletePromises = selectedGrades.map((id) =>
         fetch(`/api/grades-redesigned/${id}`, {
-          method: 'DELETE'
-        })
+          method: "DELETE",
+        }),
       );
 
       const results = await Promise.all(deletePromises);
-      const failed = results.filter(r => !r.ok);
+      const failed = results.filter((r) => !r.ok);
 
       if (failed.length === 0) {
         toast({
           title: "Sucesso",
-          description: `${selectedGrades.length} grade${selectedGrades.length !== 1 ? 's' : ''} excluída${selectedGrades.length !== 1 ? 's' : ''} com sucesso`,
+          description: `${selectedGrades.length} grade${selectedGrades.length !== 1 ? "s" : ""} excluída${selectedGrades.length !== 1 ? "s" : ""} com sucesso`,
         });
         setSelectedGrades([]);
         fetchData();
       } else {
-        throw new Error(`${failed.length} grade${failed.length !== 1 ? 's' : ''} não puderam ser excluída${failed.length !== 1 ? 's' : ''}`);
+        throw new Error(
+          `${failed.length} grade${failed.length !== 1 ? "s" : ""} não puderam ser excluída${failed.length !== 1 ? "s" : ""}`,
+        );
       }
     } catch (error: any) {
       toast({
@@ -638,13 +642,11 @@ export default function GradesRedesigned() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <span className="text-sm font-medium">
-                  {selectedGrades.length} grade{selectedGrades.length !== 1 ? 's' : ''} selecionada{selectedGrades.length !== 1 ? 's' : ''}
+                  {selectedGrades.length} grade
+                  {selectedGrades.length !== 1 ? "s" : ""} selecionada
+                  {selectedGrades.length !== 1 ? "s" : ""}
                 </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={clearSelection}
-                >
+                <Button variant="outline" size="sm" onClick={clearSelection}>
                   Limpar seleção
                 </Button>
               </div>
@@ -686,7 +688,9 @@ export default function GradesRedesigned() {
                 }}
                 onCheckedChange={toggleSelectAll}
                 aria-label="Selecionar todas as grades"
-                className={isIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                className={
+                  isIndeterminate ? "data-[state=checked]:bg-blue-600" : ""
+                }
               />
             )}
           </div>
@@ -713,7 +717,11 @@ export default function GradesRedesigned() {
               {grades.map((grade) => (
                 <Card
                   key={grade.id}
-                  className={selectedGrades.includes(grade.id) ? "border-blue-200 bg-blue-50" : ""}
+                  className={
+                    selectedGrades.includes(grade.id)
+                      ? "border-blue-200 bg-blue-50"
+                      : ""
+                  }
                 >
                   <CardHeader>
                     <div className="flex items-center justify-between">
@@ -724,9 +732,13 @@ export default function GradesRedesigned() {
                           aria-label={`Selecionar grade ${grade.name}`}
                         />
                         <div>
-                          <CardTitle className="text-lg">{grade.name}</CardTitle>
+                          <CardTitle className="text-lg">
+                            {grade.name}
+                          </CardTitle>
                           {grade.description && (
-                            <CardDescription>{grade.description}</CardDescription>
+                            <CardDescription>
+                              {grade.description}
+                            </CardDescription>
                           )}
                         </div>
                       </div>

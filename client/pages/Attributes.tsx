@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,7 +32,12 @@ import {
 } from "@/components/ui/table";
 import { Plus, Edit2, Trash2, Tags, Users, Package } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Gender, Type, CreateGenderRequest, CreateTypeRequest } from "@shared/types";
+import {
+  Gender,
+  Type,
+  CreateGenderRequest,
+  CreateTypeRequest,
+} from "@shared/types";
 
 export default function Attributes() {
   const [activeTab, setActiveTab] = useState("genders");
@@ -80,7 +91,8 @@ export default function Attributes() {
 
       toast({
         title: "Erro",
-        description: "Não foi possível carregar os gêneros. Verifique sua conexão.",
+        description:
+          "Não foi possível carregar os gêneros. Verifique sua conexão.",
         variant: "destructive",
       });
     }
@@ -114,7 +126,8 @@ export default function Attributes() {
 
       toast({
         title: "Erro",
-        description: "Não foi possível carregar os tipos. Verifique sua conexão.",
+        description:
+          "Não foi possível carregar os tipos. Verifique sua conexão.",
         variant: "destructive",
       });
     }
@@ -197,7 +210,9 @@ export default function Attributes() {
           fetchTypes();
         }
       } else {
-        throw new Error(`Erro ao excluir ${activeTab === "genders" ? "gênero" : "tipo"}`);
+        throw new Error(
+          `Erro ao excluir ${activeTab === "genders" ? "gênero" : "tipo"}`,
+        );
       }
     } catch (error: any) {
       toast({
@@ -219,22 +234,24 @@ export default function Attributes() {
   };
 
   // Funções de seleção múltipla para Gêneros
-  const isAllGendersSelected = genders.length > 0 && selectedGenders.length === genders.length;
-  const isGendersIndeterminate = selectedGenders.length > 0 && selectedGenders.length < genders.length;
+  const isAllGendersSelected =
+    genders.length > 0 && selectedGenders.length === genders.length;
+  const isGendersIndeterminate =
+    selectedGenders.length > 0 && selectedGenders.length < genders.length;
 
   const toggleSelectAllGenders = () => {
     if (isAllGendersSelected) {
       setSelectedGenders([]);
     } else {
-      setSelectedGenders(genders.map(gender => gender.id));
+      setSelectedGenders(genders.map((gender) => gender.id));
     }
   };
 
   const toggleGenderSelection = (genderId: number) => {
-    setSelectedGenders(prev =>
+    setSelectedGenders((prev) =>
       prev.includes(genderId)
-        ? prev.filter(id => id !== genderId)
-        : [...prev, genderId]
+        ? prev.filter((id) => id !== genderId)
+        : [...prev, genderId],
     );
   };
 
@@ -245,29 +262,31 @@ export default function Attributes() {
   const handleBulkDeleteGenders = async () => {
     if (selectedGenders.length === 0) return;
 
-    const confirmMessage = `Tem certeza que deseja excluir ${selectedGenders.length} gênero${selectedGenders.length !== 1 ? 's' : ''}?`;
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedGenders.length} gênero${selectedGenders.length !== 1 ? "s" : ""}?`;
 
     if (!confirm(confirmMessage)) return;
 
     try {
-      const deletePromises = selectedGenders.map(id =>
+      const deletePromises = selectedGenders.map((id) =>
         fetch(`/api/genders/${id}`, {
-          method: 'DELETE'
-        })
+          method: "DELETE",
+        }),
       );
 
       const results = await Promise.all(deletePromises);
-      const failed = results.filter(r => !r.ok);
+      const failed = results.filter((r) => !r.ok);
 
       if (failed.length === 0) {
         toast({
           title: "Sucesso",
-          description: `${selectedGenders.length} gênero${selectedGenders.length !== 1 ? 's' : ''} excluído${selectedGenders.length !== 1 ? 's' : ''} com sucesso`,
+          description: `${selectedGenders.length} gênero${selectedGenders.length !== 1 ? "s" : ""} excluído${selectedGenders.length !== 1 ? "s" : ""} com sucesso`,
         });
         setSelectedGenders([]);
         fetchGenders();
       } else {
-        throw new Error(`${failed.length} gênero${failed.length !== 1 ? 's' : ''} não puderam ser excluído${failed.length !== 1 ? 's' : ''}`);
+        throw new Error(
+          `${failed.length} gênero${failed.length !== 1 ? "s" : ""} não puderam ser excluído${failed.length !== 1 ? "s" : ""}`,
+        );
       }
     } catch (error: any) {
       toast({
@@ -279,22 +298,24 @@ export default function Attributes() {
   };
 
   // Funções de seleção múltipla para Tipos
-  const isAllTypesSelected = types.length > 0 && selectedTypes.length === types.length;
-  const isTypesIndeterminate = selectedTypes.length > 0 && selectedTypes.length < types.length;
+  const isAllTypesSelected =
+    types.length > 0 && selectedTypes.length === types.length;
+  const isTypesIndeterminate =
+    selectedTypes.length > 0 && selectedTypes.length < types.length;
 
   const toggleSelectAllTypes = () => {
     if (isAllTypesSelected) {
       setSelectedTypes([]);
     } else {
-      setSelectedTypes(types.map(type => type.id));
+      setSelectedTypes(types.map((type) => type.id));
     }
   };
 
   const toggleTypeSelection = (typeId: number) => {
-    setSelectedTypes(prev =>
+    setSelectedTypes((prev) =>
       prev.includes(typeId)
-        ? prev.filter(id => id !== typeId)
-        : [...prev, typeId]
+        ? prev.filter((id) => id !== typeId)
+        : [...prev, typeId],
     );
   };
 
@@ -305,29 +326,31 @@ export default function Attributes() {
   const handleBulkDeleteTypes = async () => {
     if (selectedTypes.length === 0) return;
 
-    const confirmMessage = `Tem certeza que deseja excluir ${selectedTypes.length} tipo${selectedTypes.length !== 1 ? 's' : ''}?`;
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedTypes.length} tipo${selectedTypes.length !== 1 ? "s" : ""}?`;
 
     if (!confirm(confirmMessage)) return;
 
     try {
-      const deletePromises = selectedTypes.map(id =>
+      const deletePromises = selectedTypes.map((id) =>
         fetch(`/api/types/${id}`, {
-          method: 'DELETE'
-        })
+          method: "DELETE",
+        }),
       );
 
       const results = await Promise.all(deletePromises);
-      const failed = results.filter(r => !r.ok);
+      const failed = results.filter((r) => !r.ok);
 
       if (failed.length === 0) {
         toast({
           title: "Sucesso",
-          description: `${selectedTypes.length} tipo${selectedTypes.length !== 1 ? 's' : ''} excluído${selectedTypes.length !== 1 ? 's' : ''} com sucesso`,
+          description: `${selectedTypes.length} tipo${selectedTypes.length !== 1 ? "s" : ""} excluído${selectedTypes.length !== 1 ? "s" : ""} com sucesso`,
         });
         setSelectedTypes([]);
         fetchTypes();
       } else {
-        throw new Error(`${failed.length} tipo${failed.length !== 1 ? 's' : ''} não puderam ser excluído${failed.length !== 1 ? 's' : ''}`);
+        throw new Error(
+          `${failed.length} tipo${failed.length !== 1 ? "s" : ""} não puderam ser excluído${failed.length !== 1 ? "s" : ""}`,
+        );
       }
     } catch (error: any) {
       toast({
@@ -362,7 +385,11 @@ export default function Attributes() {
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-6"
+      >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="genders" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
@@ -385,7 +412,8 @@ export default function Attributes() {
                     Gêneros
                   </CardTitle>
                   <CardDescription>
-                    Gerencie os gêneros dos produtos (Ex: Masculino, Feminino, Unissex)
+                    Gerencie os gêneros dos produtos (Ex: Masculino, Feminino,
+                    Unissex)
                   </CardDescription>
                 </div>
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -426,7 +454,10 @@ export default function Attributes() {
                             id="description"
                             value={formData.description}
                             onChange={(e) =>
-                              setFormData({ ...formData, description: e.target.value })
+                              setFormData({
+                                ...formData,
+                                description: e.target.value,
+                              })
                             }
                             placeholder="Descrição do gênero (opcional)"
                             rows={3}
@@ -459,7 +490,9 @@ export default function Attributes() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <span className="text-sm font-medium">
-                          {selectedGenders.length} gênero{selectedGenders.length !== 1 ? 's' : ''} selecionado{selectedGenders.length !== 1 ? 's' : ''}
+                          {selectedGenders.length} gênero
+                          {selectedGenders.length !== 1 ? "s" : ""} selecionado
+                          {selectedGenders.length !== 1 ? "s" : ""}
                         </span>
                         <Button
                           variant="outline"
@@ -515,7 +548,11 @@ export default function Attributes() {
                           }}
                           onCheckedChange={toggleSelectAllGenders}
                           aria-label="Selecionar todos os gêneros"
-                          className={isGendersIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                          className={
+                            isGendersIndeterminate
+                              ? "data-[state=checked]:bg-blue-600"
+                              : ""
+                          }
                         />
                       </TableHead>
                       <TableHead>Nome</TableHead>
@@ -528,12 +565,18 @@ export default function Attributes() {
                     {genders.map((gender) => (
                       <TableRow
                         key={gender.id}
-                        className={selectedGenders.includes(gender.id) ? "bg-blue-50" : ""}
+                        className={
+                          selectedGenders.includes(gender.id)
+                            ? "bg-blue-50"
+                            : ""
+                        }
                       >
                         <TableCell>
                           <Checkbox
                             checked={selectedGenders.includes(gender.id)}
-                            onCheckedChange={() => toggleGenderSelection(gender.id)}
+                            onCheckedChange={() =>
+                              toggleGenderSelection(gender.id)
+                            }
                             aria-label={`Selecionar gênero ${gender.name}`}
                           />
                         </TableCell>
@@ -544,7 +587,9 @@ export default function Attributes() {
                           {gender.description || "—"}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
-                          {new Date(gender.created_at).toLocaleDateString("pt-BR")}
+                          {new Date(gender.created_at).toLocaleDateString(
+                            "pt-BR",
+                          )}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
@@ -584,7 +629,8 @@ export default function Attributes() {
                     Tipos
                   </CardTitle>
                   <CardDescription>
-                    Gerencie os tipos dos produtos (Ex: Chinelo, Sandália, Tênis)
+                    Gerencie os tipos dos produtos (Ex: Chinelo, Sandália,
+                    Tênis)
                   </CardDescription>
                 </div>
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -625,7 +671,10 @@ export default function Attributes() {
                             id="description"
                             value={formData.description}
                             onChange={(e) =>
-                              setFormData({ ...formData, description: e.target.value })
+                              setFormData({
+                                ...formData,
+                                description: e.target.value,
+                              })
                             }
                             placeholder="Descrição do tipo (opcional)"
                             rows={3}
@@ -658,7 +707,9 @@ export default function Attributes() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <span className="text-sm font-medium">
-                          {selectedTypes.length} tipo{selectedTypes.length !== 1 ? 's' : ''} selecionado{selectedTypes.length !== 1 ? 's' : ''}
+                          {selectedTypes.length} tipo
+                          {selectedTypes.length !== 1 ? "s" : ""} selecionado
+                          {selectedTypes.length !== 1 ? "s" : ""}
                         </span>
                         <Button
                           variant="outline"
@@ -714,7 +765,11 @@ export default function Attributes() {
                           }}
                           onCheckedChange={toggleSelectAllTypes}
                           aria-label="Selecionar todos os tipos"
-                          className={isTypesIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                          className={
+                            isTypesIndeterminate
+                              ? "data-[state=checked]:bg-blue-600"
+                              : ""
+                          }
                         />
                       </TableHead>
                       <TableHead>Nome</TableHead>
@@ -727,7 +782,9 @@ export default function Attributes() {
                     {types.map((type) => (
                       <TableRow
                         key={type.id}
-                        className={selectedTypes.includes(type.id) ? "bg-blue-50" : ""}
+                        className={
+                          selectedTypes.includes(type.id) ? "bg-blue-50" : ""
+                        }
                       >
                         <TableCell>
                           <Checkbox
@@ -743,7 +800,9 @@ export default function Attributes() {
                           {type.description || "—"}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
-                          {new Date(type.created_at).toLocaleDateString("pt-BR")}
+                          {new Date(type.created_at).toLocaleDateString(
+                            "pt-BR",
+                          )}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">

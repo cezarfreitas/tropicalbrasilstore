@@ -12,13 +12,13 @@
       "tipo": "Sandália",
       "genero": "Feminina",
       "descricao": "Chinelo Havaianas Top tradicional, confortável e durável. Material borracha de alta qualidade.",
-      "preco_sugerido": 13.60,
+      "preco_sugerido": 13.6,
       "vender_infinito": false,
       "tipo_estoque": "grade",
       "variantes": [
         {
           "cor": "AZUL ELEMENTAL",
-          "preco": 13.60,
+          "preco": 13.6,
           "grade": "2647, 2637",
           "foto": "",
           "sku": "TB1.2522-AZULELEMENTAL",
@@ -33,11 +33,13 @@
 ## ✅ Como Funciona
 
 **Correspondência Posicional:**
+
 - `"grade": "2647, 2637"` → grades nas posições `[0, 1]`
 - `"estoque_grade": [15, 20]` → estoques nas posições `[0, 1]`
 
 **Resultado:**
-- Grade `2647` (posição 0) = `15` unidades  
+
+- Grade `2647` (posição 0) = `15` unidades
 - Grade `2637` (posição 1) = `20` unidades
 - **Total**: 35 unidades
 
@@ -48,7 +50,7 @@
 📦 Usando estoque posicional [0] para grade 2647: 15
 ✅ Estoque configurado para grade 2647: 15 unidades
 
-🔄 Processando grade: 2637 para cor: AZUL ELEMENTAL  
+🔄 Processando grade: 2637 para cor: AZUL ELEMENTAL
 📦 Usando estoque posicional [1] para grade 2637: 20
 ✅ Estoque configurado para grade 2637: 20 unidades
 ```
@@ -72,9 +74,10 @@ O novo formato é **totalmente compatível** com os formatos anteriores:
 
 ```json
 {
-  "estoque_grade": 100,           // ✅ Funciona (todos = 100)
-  "estoque_grade": [15, 20],      // ✅ Funciona (posicional)
-  "estoque_grades": {             // ✅ Funciona (específico)
+  "estoque_grade": 100, // ✅ Funciona (todos = 100)
+  "estoque_grade": [15, 20], // ✅ Funciona (posicional)
+  "estoque_grades": {
+    // ✅ Funciona (específico)
     "2647": 15,
     "2637": 20
   }

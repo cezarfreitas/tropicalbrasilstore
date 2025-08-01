@@ -6,23 +6,28 @@ Quando você usa múltiplas grades na API `/api/products/bulk`, tem diferentes o
 
 ```json
 {
-  "products": [{
-    "codigo": "TB1.2522",
-    "nome": "LOGO FEMININA",
-    "categoria": "LOGO FEMININA",
-    "tipo": "Sandália",
-    "tipo_estoque": "grade",
-    "variantes": [{
-      "cor": "AZUL ELEMENTAL",
-      "preco": 13.60,
-      "grade": "2647, 2637",
-      "estoque_grade": [15, 20]
-    }]
-  }]
+  "products": [
+    {
+      "codigo": "TB1.2522",
+      "nome": "LOGO FEMININA",
+      "categoria": "LOGO FEMININA",
+      "tipo": "Sandália",
+      "tipo_estoque": "grade",
+      "variantes": [
+        {
+          "cor": "AZUL ELEMENTAL",
+          "preco": 13.6,
+          "grade": "2647, 2637",
+          "estoque_grade": [15, 20]
+        }
+      ]
+    }
+  ]
 }
 ```
 
 **Resultado:**
+
 - Grade 2647 (posição 0): 15 unidades
 - Grade 2637 (posição 1): 20 unidades
 - **Total**: 35 unidades
@@ -191,12 +196,14 @@ A API mostra nos logs qual estratégia está usando:
 ## Recomendação
 
 Use **Opção 1 (Array Posicional)** para maior simplicidade:
+
 - Formato mais limpo: `"estoque_grade": [15, 20]`
 - Correspondência direta com posição das grades
 - Mais fácil de ler e manter
 - Ideal quando você tem estoque específico para cada grade
 
 Use **Opção 4 (Combinação)** para máxima flexibilidade:
+
 - Define um estoque padrão com `estoque_grade`
 - Ajusta grades específicas com `estoque_grades`
 - Ideal para casos complexos

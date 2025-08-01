@@ -737,12 +737,16 @@ router.post("/bulk", validateApiKey, async (req, res) => {
               console.log(
                 `  📦 Usando estoque específico para grade ${gradeNome}: ${estoqueParaEstaGrade}`,
               );
-            } else if (Array.isArray(variante.estoque_grade) && gradeIndex >= 0 && gradeIndex < variante.estoque_grade.length) {
+            } else if (
+              Array.isArray(variante.estoque_grade) &&
+              gradeIndex >= 0 &&
+              gradeIndex < variante.estoque_grade.length
+            ) {
               estoqueParaEstaGrade = variante.estoque_grade[gradeIndex];
               console.log(
                 `  📦 Usando estoque posicional [${gradeIndex}] para grade ${gradeNome}: ${estoqueParaEstaGrade}`,
               );
-            } else if (typeof variante.estoque_grade === 'number') {
+            } else if (typeof variante.estoque_grade === "number") {
               estoqueParaEstaGrade = variante.estoque_grade;
               console.log(
                 `  📦 Usando estoque geral para grade ${gradeNome}: ${estoqueParaEstaGrade}`,
