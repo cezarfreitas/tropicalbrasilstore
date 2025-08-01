@@ -59,7 +59,7 @@ Quando você usa múltiplas grades na API `/api/products/bulk`, tem diferentes o
 - Grade 2637: 100 unidades
 - **Total**: 200 unidades
 
-## Opção 2: Estoque Específico por Grade
+## Opção 3: Estoque Específico por Grade
 
 ```json
 {
