@@ -772,7 +772,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           }
 
           variants.push({
-            id: (variantResult as any).insertId,
+            id: (colorVariantResult as any).insertId,
             cor: variante.cor,
             sku: variantSku,
             grade: gradeNome,
