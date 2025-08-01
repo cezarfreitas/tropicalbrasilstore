@@ -232,6 +232,43 @@ export default function Sizes() {
       </div>
 
       <div className="space-y-6">
+        {/* Bulk Actions Bar */}
+        {selectedSizes.length > 0 && (
+          <Card className="border-blue-200 bg-blue-50">
+            <CardContent className="py-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium">
+                    {selectedSizes.length} tamanho{selectedSizes.length !== 1 ? 's' : ''} selecionado{selectedSizes.length !== 1 ? 's' : ''}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={clearSelection}
+                  >
+                    Limpar seleção
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleBulkDelete}
+                    disabled={bulkActionLoading}
+                  >
+                    {bulkActionLoading ? (
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                    ) : (
+                      <Trash2 className="h-4 w-4 mr-2" />
+                    )}
+                    Excluir Selecionados
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-semibold">Lista de Tamanhos</h2>
