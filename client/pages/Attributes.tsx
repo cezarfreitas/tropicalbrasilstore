@@ -456,6 +456,17 @@ export default function Attributes() {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-[50px]">
+                        <Checkbox
+                          checked={isAllGendersSelected}
+                          ref={(el) => {
+                            if (el) el.indeterminate = isGendersIndeterminate;
+                          }}
+                          onCheckedChange={toggleSelectAllGenders}
+                          aria-label="Selecionar todos os gêneros"
+                          className={isGendersIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                        />
+                      </TableHead>
                       <TableHead>Nome</TableHead>
                       <TableHead>Descrição</TableHead>
                       <TableHead>Criado em</TableHead>
@@ -464,7 +475,17 @@ export default function Attributes() {
                   </TableHeader>
                   <TableBody>
                     {genders.map((gender) => (
-                      <TableRow key={gender.id}>
+                      <TableRow
+                        key={gender.id}
+                        className={selectedGenders.includes(gender.id) ? "bg-blue-50" : ""}
+                      >
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedGenders.includes(gender.id)}
+                            onCheckedChange={() => toggleGenderSelection(gender.id)}
+                            aria-label={`Selecionar gênero ${gender.name}`}
+                          />
+                        </TableCell>
                         <TableCell className="font-medium">
                           {gender.name}
                         </TableCell>
