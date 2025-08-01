@@ -50,7 +50,6 @@ export default function Attributes() {
 
   const fetchGenders = async (retryCount = 0) => {
     try {
-      setLoading(true);
       const response = await fetch("/api/genders", {
         method: "GET",
         headers: {
@@ -62,7 +61,6 @@ export default function Attributes() {
       if (response.ok) {
         const data = await response.json();
         setGenders(data);
-        setLoading(false);
       } else {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
@@ -76,7 +74,6 @@ export default function Attributes() {
         return;
       }
 
-      setLoading(false);
       toast({
         title: "Erro",
         description: "Não foi possível carregar os gêneros. Verifique sua conexão.",
