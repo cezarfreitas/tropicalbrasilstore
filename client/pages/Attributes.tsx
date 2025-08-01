@@ -44,8 +44,12 @@ export default function Attributes() {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchGenders();
-    fetchTypes();
+    const loadData = async () => {
+      setLoading(true);
+      await Promise.all([fetchGenders(), fetchTypes()]);
+      setLoading(false);
+    };
+    loadData();
   }, []);
 
   const fetchGenders = async (retryCount = 0) => {
