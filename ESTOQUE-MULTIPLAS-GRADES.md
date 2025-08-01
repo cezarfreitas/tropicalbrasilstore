@@ -190,8 +190,13 @@ A API mostra nos logs qual estratégia está usando:
 
 ## Recomendação
 
-Use **Opção 3 (Combinação)** para máxima flexibilidade:
+Use **Opção 1 (Array Posicional)** para maior simplicidade:
+- Formato mais limpo: `"estoque_grade": [15, 20]`
+- Correspondência direta com posição das grades
+- Mais fácil de ler e manter
+- Ideal quando você tem estoque específico para cada grade
 
+Use **Opção 4 (Combinação)** para máxima flexibilidade:
 - Define um estoque padrão com `estoque_grade`
 - Ajusta grades específicas com `estoque_grades`
-- Facilita manutenção e reduz repetição de código
+- Ideal para casos complexos
