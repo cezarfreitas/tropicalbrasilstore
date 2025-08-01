@@ -72,6 +72,7 @@ export default function Sizes() {
       if (response.ok) {
         const data = await response.json();
         setSizes(data);
+        setLoading(false);
       } else {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
@@ -91,11 +92,7 @@ export default function Sizes() {
           "Não foi possível carregar os tamanhos. Verifique sua conexão.",
         variant: "destructive",
       });
-    } finally {
-      // Only set loading to false if we're not retrying
-      if (retryCount > 0) {
-        setLoading(false);
-      }
+      setLoading(false);
     }
   };
 
