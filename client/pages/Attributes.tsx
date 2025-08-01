@@ -598,6 +598,42 @@ export default function Attributes() {
                 </Dialog>
               </div>
             </CardHeader>
+
+            {/* Barra de ações para seleção múltipla de tipos */}
+            {selectedTypes.length > 0 && (
+              <div className="mx-6 mb-4">
+                <Card className="border-blue-200 bg-blue-50">
+                  <CardContent className="pt-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm font-medium">
+                          {selectedTypes.length} tipo{selectedTypes.length !== 1 ? 's' : ''} selecionado{selectedTypes.length !== 1 ? 's' : ''}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={clearTypeSelection}
+                        >
+                          Limpar seleção
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={handleBulkDeleteTypes}
+                          className="flex items-center gap-2"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Excluir selecionados
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
             <CardContent>
               {types.length === 0 ? (
                 <div className="text-center py-8">
