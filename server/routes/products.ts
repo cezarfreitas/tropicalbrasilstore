@@ -583,9 +583,10 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           const gradeId = await getOrCreateGrade(gradeNome);
           gradesCreated.add(gradeNome);
 
+          // Verificar se já existe uma variante desta cor para este produto
           const [existingColorVariant] = await db.execute(
-            "SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ? AND variant_name LIKE ?",
-            [productId, colorId, `%${gradeNome}%`],
+            "SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?",
+            [productId, colorId],
           );
 
           if ((existingColorVariant as any[]).length > 0) {
