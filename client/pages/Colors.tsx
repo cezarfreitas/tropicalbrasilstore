@@ -223,6 +223,7 @@ export default function Colors() {
       name: color.name,
       hex_code: color.hex_code || "",
     });
+    setSuggestedColor(null); // Limpar sugestões ao editar
     setDialogOpen(true);
   };
 
