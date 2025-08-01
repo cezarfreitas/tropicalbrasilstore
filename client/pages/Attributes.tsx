@@ -655,6 +655,17 @@ export default function Attributes() {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-[50px]">
+                        <Checkbox
+                          checked={isAllTypesSelected}
+                          ref={(el) => {
+                            if (el) el.indeterminate = isTypesIndeterminate;
+                          }}
+                          onCheckedChange={toggleSelectAllTypes}
+                          aria-label="Selecionar todos os tipos"
+                          className={isTypesIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                        />
+                      </TableHead>
                       <TableHead>Nome</TableHead>
                       <TableHead>Descrição</TableHead>
                       <TableHead>Criado em</TableHead>
@@ -663,7 +674,17 @@ export default function Attributes() {
                   </TableHeader>
                   <TableBody>
                     {types.map((type) => (
-                      <TableRow key={type.id}>
+                      <TableRow
+                        key={type.id}
+                        className={selectedTypes.includes(type.id) ? "bg-blue-50" : ""}
+                      >
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedTypes.includes(type.id)}
+                            onCheckedChange={() => toggleTypeSelection(type.id)}
+                            aria-label={`Selecionar tipo ${type.name}`}
+                          />
+                        </TableCell>
                         <TableCell className="font-medium">
                           {type.name}
                         </TableCell>
