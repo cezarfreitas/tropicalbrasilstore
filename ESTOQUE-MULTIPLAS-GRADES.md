@@ -6,23 +6,28 @@ Quando você usa múltiplas grades na API `/api/products/bulk`, tem diferentes o
 
 ```json
 {
-  "products": [{
-    "codigo": "TB1.2522",
-    "nome": "LOGO FEMININA",
-    "categoria": "LOGO FEMININA",
-    "tipo": "Sandália",
-    "tipo_estoque": "grade",
-    "variantes": [{
-      "cor": "AZUL ELEMENTAL",
-      "preco": 13.60,
-      "grade": "2647, 2637",
-      "estoque_grade": 100
-    }]
-  }]
+  "products": [
+    {
+      "codigo": "TB1.2522",
+      "nome": "LOGO FEMININA",
+      "categoria": "LOGO FEMININA",
+      "tipo": "Sandália",
+      "tipo_estoque": "grade",
+      "variantes": [
+        {
+          "cor": "AZUL ELEMENTAL",
+          "preco": 13.6,
+          "grade": "2647, 2637",
+          "estoque_grade": 100
+        }
+      ]
+    }
+  ]
 }
 ```
 
 **Resultado:**
+
 - Grade 2647: 100 unidades
 - Grade 2637: 100 unidades
 - **Total**: 200 unidades
@@ -31,26 +36,31 @@ Quando você usa múltiplas grades na API `/api/products/bulk`, tem diferentes o
 
 ```json
 {
-  "products": [{
-    "codigo": "TB1.2522",
-    "nome": "LOGO FEMININA", 
-    "categoria": "LOGO FEMININA",
-    "tipo": "Sandália",
-    "tipo_estoque": "grade",
-    "variantes": [{
-      "cor": "AZUL ELEMENTAL",
-      "preco": 13.60,
-      "grade": "2647, 2637",
-      "estoque_grades": {
-        "2647": 50,
-        "2637": 75
-      }
-    }]
-  }]
+  "products": [
+    {
+      "codigo": "TB1.2522",
+      "nome": "LOGO FEMININA",
+      "categoria": "LOGO FEMININA",
+      "tipo": "Sandália",
+      "tipo_estoque": "grade",
+      "variantes": [
+        {
+          "cor": "AZUL ELEMENTAL",
+          "preco": 13.6,
+          "grade": "2647, 2637",
+          "estoque_grades": {
+            "2647": 50,
+            "2637": 75
+          }
+        }
+      ]
+    }
+  ]
 }
 ```
 
 **Resultado:**
+
 - Grade 2647: 50 unidades
 - Grade 2637: 75 unidades
 - **Total**: 125 unidades
@@ -59,26 +69,31 @@ Quando você usa múltiplas grades na API `/api/products/bulk`, tem diferentes o
 
 ```json
 {
-  "products": [{
-    "codigo": "TB1.2522",
-    "nome": "LOGO FEMININA",
-    "categoria": "LOGO FEMININA", 
-    "tipo": "Sandália",
-    "tipo_estoque": "grade",
-    "variantes": [{
-      "cor": "AZUL ELEMENTAL",
-      "preco": 13.60,
-      "grade": "2647, 2637, 2639",
-      "estoque_grade": 100,        // Default para todas
-      "estoque_grades": {
-        "2647": 200               // Override apenas para 2647
-      }
-    }]
-  }]
+  "products": [
+    {
+      "codigo": "TB1.2522",
+      "nome": "LOGO FEMININA",
+      "categoria": "LOGO FEMININA",
+      "tipo": "Sandália",
+      "tipo_estoque": "grade",
+      "variantes": [
+        {
+          "cor": "AZUL ELEMENTAL",
+          "preco": 13.6,
+          "grade": "2647, 2637, 2639",
+          "estoque_grade": 100, // Default para todas
+          "estoque_grades": {
+            "2647": 200 // Override apenas para 2647
+          }
+        }
+      ]
+    }
+  ]
 }
 ```
 
 **Resultado:**
+
 - Grade 2647: 200 unidades (específico tem prioridade)
 - Grade 2637: 100 unidades (usa default)
 - Grade 2639: 100 unidades (usa default)
@@ -95,39 +110,42 @@ Se ambos estiverem definidos, `estoque_grades` sempre tem prioridade para as gra
 
 ```json
 {
-  "products": [{
-    "codigo": "HAV001",
-    "nome": "Havaianas Top",
-    "categoria": "Chinelos",
-    "tipo": "Sandália",
-    "tipo_estoque": "grade",
-    "variantes": [
-      {
-        "cor": "PRETO",
-        "preco": 25.90,
-        "grade": "Feminina 34-40, Masculina 38-44",
-        "estoque_grade": 50,
-        "estoque_grades": {
-          "Feminina 34-40": 100    // Mais demanda feminina
+  "products": [
+    {
+      "codigo": "HAV001",
+      "nome": "Havaianas Top",
+      "categoria": "Chinelos",
+      "tipo": "Sandália",
+      "tipo_estoque": "grade",
+      "variantes": [
+        {
+          "cor": "PRETO",
+          "preco": 25.9,
+          "grade": "Feminina 34-40, Masculina 38-44",
+          "estoque_grade": 50,
+          "estoque_grades": {
+            "Feminina 34-40": 100 // Mais demanda feminina
+          }
+        },
+        {
+          "cor": "AZUL",
+          "preco": 25.9,
+          "grade": "Infantil 20-33, Feminina 34-40",
+          "estoque_grades": {
+            "Infantil 20-33": 30,
+            "Feminina 34-40": 80
+          }
         }
-      },
-      {
-        "cor": "AZUL",
-        "preco": 25.90, 
-        "grade": "Infantil 20-33, Feminina 34-40",
-        "estoque_grades": {
-          "Infantil 20-33": 30,
-          "Feminina 34-40": 80
-        }
-      }
-    ]
-  }]
+      ]
+    }
+  ]
 }
 ```
 
 **Resultado do Exemplo:**
+
 - PRETO Feminina: 100 unidades
-- PRETO Masculina: 50 unidades  
+- PRETO Masculina: 50 unidades
 - AZUL Infantil: 30 unidades
 - AZUL Feminina: 80 unidades
 
@@ -145,6 +163,7 @@ A API mostra nos logs qual estratégia está usando:
 ## Recomendação
 
 Use **Opção 3 (Combinação)** para máxima flexibilidade:
+
 - Define um estoque padrão com `estoque_grade`
 - Ajusta grades específicas com `estoque_grades`
 - Facilita manutenção e reduz repetição de código
