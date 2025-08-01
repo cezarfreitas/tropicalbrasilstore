@@ -193,6 +193,203 @@ async function getOrCreateGrade(name: string): Promise<number> {
   return gradeId;
 }
 
+// Create single product with variants (flexible format)
+router.post("/create", validateApiKey, async (req, res) => {
+  try {
+    const productData = req.body;
+
+    // Se foi enviado um array "products", processar como bulk
+    if (productData.products && Array.isArray(productData.products)) {
+      return res.status(400).json({
+        success: false,
+        error: "Use /bulk endpoint for multiple products",
+        message: "This endpoint accepts single product only"
+      });
+    }
+
+    // Validações básicas
+    if (!productData.codigo || !productData.nome || !productData.categoria ||
+        !productData.tipo || !productData.variantes || !Array.isArray(productData.variantes) ||
+        productData.variantes.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "Dados inválidos",
+        message: "Código, nome, categoria, tipo e pelo menos uma variante são obrigatórios",
+      });
+    }
+
+    // Verificar se produto com código já existe
+    const [existingProduct] = await db.execute(
+      "SELECT id FROM products WHERE sku = ? OR parent_sku = ?",
+      [productData.codigo, productData.codigo],
+    );
+
+    if ((existingProduct as any[]).length > 0) {
+      return res.status(400).json({
+        success: false,
+        error: "Código já existe",
+        message: `O produto com código '${productData.codigo}' já está cadastrado`,
+        code: "DUPLICATE_CODE",
+      });
+    }
+
+    // Processar o produto usando a mesma lógica do bulk
+    const products = [productData];
+    const createdProducts = [];
+    const categoriesCreated = new Set<string>();
+    const typesCreated = new Set<string>();
+    const colorsCreated = new Set<string>();
+    const gradesCreated = new Set<string>();
+    let variantesCreadas = 0;
+
+    // Usar a mesma lógica do bulk para processar o produto
+    for (const product of products) {
+      // Criar ou buscar entidades
+      const categoryId = await getOrCreateCategory(product.categoria);
+      const typeId = await getOrCreateType(product.tipo);
+
+      categoriesCreated.add(product.categoria);
+      typesCreated.add(product.tipo);
+
+      // Criar ou buscar gênero se fornecido
+      let genderId = null;
+      if (product.genero) {
+        genderId = await getOrCreateGender(product.genero);
+      }
+
+      // Criar produto principal
+      const [productResult] = await db.execute(
+        `INSERT INTO products
+         (name, sku, parent_sku, description, category_id, type_id, gender_id, suggested_price, active, sell_without_stock, stock_type)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          product.nome,
+          product.codigo,
+          product.codigo,
+          product.descricao || "",
+          categoryId,
+          typeId,
+          genderId,
+          product.preco_sugerido || null,
+          true,
+          product.vender_infinito || false,
+          product.tipo_estoque || 'grade'
+        ],
+      );
+
+      const productId = (productResult as any).insertId;
+
+      // Processar variantes
+      for (const variante of product.variantes) {
+        if (!variante.cor || !variante.preco || variante.preco <= 0 || !variante.grade) {
+          continue; // Pular variantes inválidas
+        }
+
+        // Criar ou buscar cor
+        const colorId = await getOrCreateColor(variante.cor);
+        colorsCreated.add(variante.cor);
+
+        // Criar ou buscar grade
+        const gradeId = await getOrCreateGrade(variante.grade);
+        gradesCreated.add(variante.grade);
+
+        // Processar foto se fornecida
+        let imageUrl = variante.foto;
+        if (imageUrl && isValidImageUrl(imageUrl)) {
+          try {
+            const savedImagePath = await downloadAndSaveImage(imageUrl);
+            imageUrl = savedImagePath;
+          } catch (error) {
+            console.error(`Erro ao baixar imagem: ${error}`);
+            // Continuar sem a imagem
+            imageUrl = null;
+          }
+        }
+
+        // Verificar se já existe uma variante para este produto e cor
+        const [existingColorVariant] = await db.execute(
+          "SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?",
+          [productId, colorId],
+        );
+
+        let colorVariantId;
+
+        if ((existingColorVariant as any[]).length > 0) {
+          // Atualizar variante existente
+          colorVariantId = (existingColorVariant as any[])[0].id;
+          await db.execute(
+            `UPDATE product_color_variants
+             SET variant_name = ?, price = ?, image_url = ?, stock_total = ?, active = ?
+             WHERE id = ?`,
+            [
+              variante.cor,
+              variante.preco,
+              imageUrl,
+              variante.estoque_grade || 0,
+              true,
+              colorVariantId,
+            ],
+          );
+        } else {
+          // Criar nova variante de cor
+          const [variantResult] = await db.execute(
+            `INSERT INTO product_color_variants
+             (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+              productId,
+              colorId,
+              variante.cor,
+              variante.sku || null,
+              variante.preco,
+              imageUrl,
+              variante.estoque_grade || 0,
+              true,
+            ],
+          );
+          colorVariantId = (variantResult as any).insertId;
+        }
+
+        // Associar grade ao produto-cor
+        await db.execute(
+          `INSERT IGNORE INTO product_color_grades (product_id, color_id, grade_id)
+           VALUES (?, ?, ?)`,
+          [productId, colorId, gradeId],
+        );
+
+        variantesCreadas++;
+      }
+
+      createdProducts.push({
+        id: productId,
+        codigo: product.codigo,
+        nome: product.nome,
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Produto criado com sucesso",
+      data: {
+        produtos_criados: createdProducts.length,
+        variantes_criadas: variantesCreadas,
+        categorias_criadas: Array.from(categoriesCreated),
+        tipos_criados: Array.from(typesCreated),
+        cores_criadas: Array.from(colorsCreated),
+        grades_criadas: Array.from(gradesCreated),
+        produtos: createdProducts,
+      },
+    });
+  } catch (error) {
+    console.error("Erro ao criar produto:", error);
+    res.status(500).json({
+      success: false,
+      error: "Erro interno do servidor",
+      message: error instanceof Error ? error.message : "Erro desconhecido",
+    });
+  }
+});
+
 // Bulk create products with variants and grades
 router.post("/bulk", validateApiKey, async (req, res) => {
   try {
