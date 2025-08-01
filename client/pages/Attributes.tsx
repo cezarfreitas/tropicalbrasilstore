@@ -35,6 +35,8 @@ export default function Attributes() {
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Gender | Type | null>(null);
+  const [selectedGenders, setSelectedGenders] = useState<number[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<number[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
