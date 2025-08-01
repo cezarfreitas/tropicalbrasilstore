@@ -1,0 +1,150 @@
+# Gerenciamento de Estoque com Múltiplas Grades
+
+Quando você usa múltiplas grades na API `/api/products/bulk`, tem diferentes opções para gerenciar o estoque.
+
+## Opção 1: Estoque Igual para Todas as Grades
+
+```json
+{
+  "products": [{
+    "codigo": "TB1.2522",
+    "nome": "LOGO FEMININA",
+    "categoria": "LOGO FEMININA",
+    "tipo": "Sandália",
+    "tipo_estoque": "grade",
+    "variantes": [{
+      "cor": "AZUL ELEMENTAL",
+      "preco": 13.60,
+      "grade": "2647, 2637",
+      "estoque_grade": 100
+    }]
+  }]
+}
+```
+
+**Resultado:**
+- Grade 2647: 100 unidades
+- Grade 2637: 100 unidades
+- **Total**: 200 unidades
+
+## Opção 2: Estoque Específico por Grade
+
+```json
+{
+  "products": [{
+    "codigo": "TB1.2522",
+    "nome": "LOGO FEMININA", 
+    "categoria": "LOGO FEMININA",
+    "tipo": "Sandália",
+    "tipo_estoque": "grade",
+    "variantes": [{
+      "cor": "AZUL ELEMENTAL",
+      "preco": 13.60,
+      "grade": "2647, 2637",
+      "estoque_grades": {
+        "2647": 50,
+        "2637": 75
+      }
+    }]
+  }]
+}
+```
+
+**Resultado:**
+- Grade 2647: 50 unidades
+- Grade 2637: 75 unidades
+- **Total**: 125 unidades
+
+## Opção 3: Combinação (Recomendado)
+
+```json
+{
+  "products": [{
+    "codigo": "TB1.2522",
+    "nome": "LOGO FEMININA",
+    "categoria": "LOGO FEMININA", 
+    "tipo": "Sandália",
+    "tipo_estoque": "grade",
+    "variantes": [{
+      "cor": "AZUL ELEMENTAL",
+      "preco": 13.60,
+      "grade": "2647, 2637, 2639",
+      "estoque_grade": 100,        // Default para todas
+      "estoque_grades": {
+        "2647": 200               // Override apenas para 2647
+      }
+    }]
+  }]
+}
+```
+
+**Resultado:**
+- Grade 2647: 200 unidades (específico tem prioridade)
+- Grade 2637: 100 unidades (usa default)
+- Grade 2639: 100 unidades (usa default)
+- **Total**: 400 unidades
+
+## Prioridade de Estoque
+
+1. **`estoque_grades`** (específico por grade) - **Prioridade ALTA**
+2. **`estoque_grade`** (geral para todas) - **Prioridade BAIXA**
+
+Se ambos estiverem definidos, `estoque_grades` sempre tem prioridade para as grades especificadas.
+
+## Exemplo Prático - E-commerce
+
+```json
+{
+  "products": [{
+    "codigo": "HAV001",
+    "nome": "Havaianas Top",
+    "categoria": "Chinelos",
+    "tipo": "Sandália",
+    "tipo_estoque": "grade",
+    "variantes": [
+      {
+        "cor": "PRETO",
+        "preco": 25.90,
+        "grade": "Feminina 34-40, Masculina 38-44",
+        "estoque_grade": 50,
+        "estoque_grades": {
+          "Feminina 34-40": 100    // Mais demanda feminina
+        }
+      },
+      {
+        "cor": "AZUL",
+        "preco": 25.90, 
+        "grade": "Infantil 20-33, Feminina 34-40",
+        "estoque_grades": {
+          "Infantil 20-33": 30,
+          "Feminina 34-40": 80
+        }
+      }
+    ]
+  }]
+}
+```
+
+**Resultado do Exemplo:**
+- PRETO Feminina: 100 unidades
+- PRETO Masculina: 50 unidades  
+- AZUL Infantil: 30 unidades
+- AZUL Feminina: 80 unidades
+
+## Logs da API
+
+A API mostra nos logs qual estratégia está usando:
+
+```
+📦 Usando estoque específico para grade 2647: 200
+📦 Usando estoque geral para grade 2637: 100
+✅ Estoque configurado para grade 2647: 200 unidades
+✅ Estoque configurado para grade 2637: 100 unidades
+```
+
+## Recomendação
+
+Use **Opção 3 (Combinação)** para máxima flexibilidade:
+- Define um estoque padrão com `estoque_grade`
+- Ajusta grades específicas com `estoque_grades`
+- Facilita manutenção e reduz repetição de código
