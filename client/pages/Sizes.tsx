@@ -26,9 +26,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Edit2, Trash2, Ruler } from "lucide-react";
+import { Plus, Edit2, Trash2, Ruler, CheckSquare, Square } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Size, CreateSizeRequest } from "@shared/types";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function Sizes() {
   const [sizes, setSizes] = useState<Size[]>([]);
@@ -39,6 +40,10 @@ export default function Sizes() {
     size: "",
     display_order: 0,
   });
+
+  // Selection state
+  const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
+  const [bulkActionLoading, setBulkActionLoading] = useState(false);
 
   const { toast } = useToast();
 
