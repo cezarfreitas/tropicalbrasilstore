@@ -368,6 +368,17 @@ export default function Colors() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[50px]">
+                    <Checkbox
+                      checked={isAllSelected}
+                      ref={(el) => {
+                        if (el) el.indeterminate = isIndeterminate;
+                      }}
+                      onCheckedChange={toggleSelectAll}
+                      aria-label="Selecionar todas as cores"
+                      className={isIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                    />
+                  </TableHead>
                   <TableHead>Cor</TableHead>
                   <TableHead>Nome</TableHead>
                   <TableHead>Código</TableHead>
@@ -377,7 +388,17 @@ export default function Colors() {
               </TableHeader>
               <TableBody>
                 {colors.map((color) => (
-                  <TableRow key={color.id}>
+                  <TableRow
+                    key={color.id}
+                    className={selectedColors.includes(color.id) ? "bg-blue-50" : ""}
+                  >
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedColors.includes(color.id)}
+                        onCheckedChange={() => toggleColorSelection(color.id)}
+                        aria-label={`Selecionar cor ${color.name}`}
+                      />
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <div
