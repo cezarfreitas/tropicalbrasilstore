@@ -666,15 +666,30 @@ export default function GradesRedesigned() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Grid3x3 className="h-5 w-5" />
-            Templates de Grade
-          </CardTitle>
-          <CardDescription>
-            {grades.length === 0
-              ? "Nenhuma grade template cadastrada"
-              : `${grades.length} grade${grades.length !== 1 ? "s" : ""} template${grades.length !== 1 ? "s" : ""} cadastrada${grades.length !== 1 ? "s" : ""}`}
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Grid3x3 className="h-5 w-5" />
+                Templates de Grade
+              </CardTitle>
+              <CardDescription>
+                {grades.length === 0
+                  ? "Nenhuma grade template cadastrada"
+                  : `${grades.length} grade${grades.length !== 1 ? "s" : ""} template${grades.length !== 1 ? "s" : ""} cadastrada${grades.length !== 1 ? "s" : ""}`}
+              </CardDescription>
+            </div>
+            {grades.length > 0 && (
+              <Checkbox
+                checked={isAllSelected}
+                ref={(el) => {
+                  if (el) el.indeterminate = isIndeterminate;
+                }}
+                onCheckedChange={toggleSelectAll}
+                aria-label="Selecionar todas as grades"
+                className={isIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+              />
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           {grades.length === 0 ? (
