@@ -149,6 +149,66 @@ export default function Sizes() {
     setDialogOpen(true);
   };
 
+  // Selection functions
+  const isAllSelected = sizes.length > 0 && selectedSizes.length === sizes.length;
+  const isIndeterminate = selectedSizes.length > 0 && selectedSizes.length < sizes.length;
+
+  const handleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedSizes([]);
+    } else {
+      setSelectedSizes(sizes.map(size => size.id));
+    }
+  };
+
+  const handleSelectSize = (sizeId: number) => {
+    setSelectedSizes(prev =>
+      prev.includes(sizeId)
+        ? prev.filter(id => id !== sizeId)
+        : [...prev, sizeId]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedSizes.length === 0) return;
+
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedSizes.length} tamanho${selectedSizes.length !== 1 ? 's' : ''}?`;
+    if (!confirm(confirmMessage)) return;
+
+    setBulkActionLoading(true);
+    try {
+      const deletePromises = selectedSizes.map(id =>
+        fetch(`/api/sizes/${id}`, { method: "DELETE" })
+      );
+
+      const results = await Promise.all(deletePromises);
+      const failed = results.filter(r => !r.ok);
+
+      if (failed.length === 0) {
+        toast({
+          title: "Sucesso",
+          description: `${selectedSizes.length} tamanho${selectedSizes.length !== 1 ? 's' : ''} excluído${selectedSizes.length !== 1 ? 's' : ''} com sucesso`,
+        });
+        setSelectedSizes([]);
+        fetchSizes();
+      } else {
+        throw new Error(`${failed.length} tamanhos não puderam ser excluídos`);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao excluir tamanhos selecionados",
+        variant: "destructive",
+      });
+    } finally {
+      setBulkActionLoading(false);
+    }
+  };
+
+  const clearSelection = () => {
+    setSelectedSizes([]);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
