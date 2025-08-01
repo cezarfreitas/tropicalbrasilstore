@@ -255,7 +255,32 @@ export default function Colors() {
   const handleNewColor = () => {
     setEditingColor(null);
     setFormData({ name: "", hex_code: "" });
+    setSuggestedColor(null);
     setDialogOpen(true);
+  };
+
+  const handleNameChange = (name: string) => {
+    setFormData({ ...formData, name });
+
+    // Detectar cor automaticamente baseada no nome
+    const detectedColor = detectColorFromName(name);
+    setSuggestedColor(detectedColor);
+
+    // Se não há cor manual definida e temos uma sugestão, aplicar automaticamente
+    if (!formData.hex_code && detectedColor) {
+      setFormData({ name, hex_code: detectedColor });
+    }
+  };
+
+  const applySuggestedColor = () => {
+    if (suggestedColor) {
+      setFormData({ ...formData, hex_code: suggestedColor });
+      setSuggestedColor(null);
+      toast({
+        title: "Cor aplicada",
+        description: "Cor detectada automaticamente aplicada com sucesso!",
+      });
+    }
   };
 
   // Funções de seleção múltipla
