@@ -38,6 +38,7 @@ export default function Categories() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [formData, setFormData] = useState<CreateCategoryRequest>({
     name: "",
     description: "",
