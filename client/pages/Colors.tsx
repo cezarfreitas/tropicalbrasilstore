@@ -147,6 +147,7 @@ export default function Colors() {
   const [editingColor, setEditingColor] = useState<Color | null>(null);
   const [selectedColors, setSelectedColors] = useState<number[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [suggestedColor, setSuggestedColor] = useState<string | null>(null);
   const [formData, setFormData] = useState<CreateColorRequest>({
     name: "",
     hex_code: "",
