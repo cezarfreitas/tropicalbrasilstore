@@ -347,7 +347,7 @@ export default function Colors() {
 
   const handleBulkDetectColors = async () => {
     const confirmMessage = `Aplicar detecção inteligente de cores para todas as ${colors.length} cores cadastradas?`;
-
+    
     if (!confirm(confirmMessage)) return;
 
     try {
@@ -376,7 +376,7 @@ export default function Colors() {
 
       // Confirma as atualizações que serão feitas
       const updateMessage = `Foram detectadas ${updates.length} cores que podem ser atualizadas:\n\n${updates.map(u => `• ${u.name}: ${u.detectedColor}`).join('\n')}\n\nDeseja continuar?`;
-
+      
       if (!confirm(updateMessage)) return;
 
       // Aplica as atualizações
@@ -438,152 +438,152 @@ export default function Colors() {
             Gerencie a paleta de cores dos seus produtos
           </p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={handleNewColor}>
-              <Plus className="mr-2 h-4 w-4" />
-              Nova Cor
+        <div className="flex items-center gap-2">
+          {colors.length > 0 && (
+            <Button 
+              variant="outline" 
+              onClick={handleBulkDetectColors}
+              disabled={loading}
+              className="flex items-center gap-2"
+            >
+              <Palette className="h-4 w-4" />
+              🤖 Detectar Cores
             </Button>
-          </DialogTrigger>
-        </Dialog>
-        {colors.length > 0 && (
-          <Button
-            variant="outline"
-            onClick={handleBulkDetectColors}
-            disabled={loading}
-            className="flex items-center gap-2 ml-2"
-          >
-            <Palette className="h-4 w-4" />
-            🤖 Detectar Cores
-          </Button>
-        )}
-        <Dialog style={{ display: 'none' }}>
-          <DialogContent className="sm:max-w-[425px]">
-            <form onSubmit={handleSubmit}>
-              <DialogHeader>
-                <DialogTitle>
-                  {editingColor ? "Editar Cor" : "Nova Cor"}
-                </DialogTitle>
-                <DialogDescription>
-                  {editingColor
-                    ? "Atualize as informações da cor"
-                    : "Adicione uma nova cor para seus produtos"}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Nome da Cor</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => handleNameChange(e.target.value)}
-                    placeholder="Ex: Azul Marinho, Vermelho, Rosa"
-                    required
-                  />
-                  {suggestedColor && suggestedColor !== formData.hex_code && (
-                    <div className="flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded">
-                      <div
-                        className="w-4 h-4 rounded border"
-                        style={{ backgroundColor: suggestedColor }}
-                      ></div>
-                      <span className="text-sm text-blue-700">
-                        Cor detectada: {suggestedColor}
-                      </span>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        onClick={applySuggestedColor}
-                        className="ml-auto text-xs h-6"
-                      >
-                        Aplicar
-                      </Button>
-                    </div>
-                  )}
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="hex_code" className="flex items-center gap-2">
-                    Código da Cor
-                    {suggestedColor === formData.hex_code && formData.hex_code && (
-                      <Badge variant="secondary" className="text-xs">
-                        🤖 Detectado automaticamente
-                      </Badge>
-                    )}
-                  </Label>
-                  <div className="flex gap-2">
+          )}
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={handleNewColor}>
+                <Plus className="mr-2 h-4 w-4" />
+                Nova Cor
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <form onSubmit={handleSubmit}>
+                <DialogHeader>
+                  <DialogTitle>
+                    {editingColor ? "Editar Cor" : "Nova Cor"}
+                  </DialogTitle>
+                  <DialogDescription>
+                    {editingColor
+                      ? "Atualize as informações da cor"
+                      : "Adicione uma nova cor para seus produtos"}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="name">Nome da Cor</Label>
                     <Input
-                      id="hex_code"
-                      value={formData.hex_code}
-                      onChange={(e) => {
-                        setFormData({ ...formData, hex_code: e.target.value });
-                        // Limpar sugestão se usuário está editando manualmente
-                        if (e.target.value !== suggestedColor) {
-                          setSuggestedColor(null);
-                        }
-                      }}
-                      placeholder="#FF0000 (será detectado automaticamente)"
-                      pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => handleNameChange(e.target.value)}
+                      placeholder="Ex: Azul Marinho, Vermelho, Rosa"
+                      required
                     />
-                    {formData.hex_code && (
-                      <div
-                        className="w-12 h-10 rounded border border-border flex items-center justify-center"
-                        style={{ backgroundColor: formData.hex_code }}
-                        title={`Cor: ${formData.hex_code}`}
-                      >
-                        {suggestedColor === formData.hex_code && (
-                          <span className="text-xs">🤖</span>
-                        )}
+                    {suggestedColor && suggestedColor !== formData.hex_code && (
+                      <div className="flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded">
+                        <div
+                          className="w-4 h-4 rounded border"
+                          style={{ backgroundColor: suggestedColor }}
+                        ></div>
+                        <span className="text-sm text-blue-700">
+                          Cor detectada: {suggestedColor}
+                        </span>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={applySuggestedColor}
+                          className="ml-auto text-xs h-6"
+                        >
+                          Aplicar
+                        </Button>
                       </div>
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    💡 Digite o nome da cor e o código será detectado automaticamente!
-                  </p>
-
-                  {/* Preview de cores disponíveis */}
-                  {formData.name && !formData.hex_code && (
-                    <div className="mt-2">
-                      <p className="text-xs font-medium mb-2">Cores disponíveis para detecção:</p>
-                      <div className="grid grid-cols-6 gap-1 max-h-20 overflow-y-auto">
-                        {Object.entries(COLOR_MAPPINGS)
-                          .filter(([name]) =>
-                            name.toLowerCase().includes(formData.name.toLowerCase()) ||
-                            formData.name.toLowerCase().includes(name.toLowerCase())
-                          )
-                          .slice(0, 12)
-                          .map(([name, hex]) => (
-                            <div
-                              key={name}
-                              className="w-6 h-6 rounded border cursor-pointer hover:scale-110 transition-transform"
-                              style={{ backgroundColor: hex }}
-                              title={`${name} - ${hex}`}
-                              onClick={() => {
-                                setFormData({ ...formData, hex_code: hex });
-                                setSuggestedColor(null);
-                              }}
-                            />
-                          ))
-                        }
-                      </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="hex_code" className="flex items-center gap-2">
+                      Código da Cor
+                      {suggestedColor === formData.hex_code && formData.hex_code && (
+                        <Badge variant="secondary" className="text-xs">
+                          🤖 Detectado automaticamente
+                        </Badge>
+                      )}
+                    </Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="hex_code"
+                        value={formData.hex_code}
+                        onChange={(e) => {
+                          setFormData({ ...formData, hex_code: e.target.value });
+                          // Limpar sugestão se usuário está editando manualmente
+                          if (e.target.value !== suggestedColor) {
+                            setSuggestedColor(null);
+                          }
+                        }}
+                        placeholder="#FF0000 (será detectado automaticamente)"
+                        pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+                      />
+                      {formData.hex_code && (
+                        <div
+                          className="w-12 h-10 rounded border border-border flex items-center justify-center"
+                          style={{ backgroundColor: formData.hex_code }}
+                          title={`Cor: ${formData.hex_code}`}
+                        >
+                          {suggestedColor === formData.hex_code && (
+                            <span className="text-xs">🤖</span>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  )}
+                    <p className="text-xs text-muted-foreground">
+                      💡 Digite o nome da cor e o código será detectado automaticamente!
+                    </p>
+
+                    {/* Preview de cores disponíveis */}
+                    {formData.name && !formData.hex_code && (
+                      <div className="mt-2">
+                        <p className="text-xs font-medium mb-2">Cores disponíveis para detecção:</p>
+                        <div className="grid grid-cols-6 gap-1 max-h-20 overflow-y-auto">
+                          {Object.entries(COLOR_MAPPINGS)
+                            .filter(([name]) =>
+                              name.toLowerCase().includes(formData.name.toLowerCase()) ||
+                              formData.name.toLowerCase().includes(name.toLowerCase())
+                            )
+                            .slice(0, 12)
+                            .map(([name, hex]) => (
+                              <div
+                                key={name}
+                                className="w-6 h-6 rounded border cursor-pointer hover:scale-110 transition-transform"
+                                style={{ backgroundColor: hex }}
+                                title={`${name} - ${hex}`}
+                                onClick={() => {
+                                  setFormData({ ...formData, hex_code: hex });
+                                  setSuggestedColor(null);
+                                }}
+                              />
+                            ))
+                          }
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setDialogOpen(false)}
-                >
-                  Cancelar
-                </Button>
-                <Button type="submit">
-                  {editingColor ? "Atualizar" : "Criar"}
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setDialogOpen(false)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button type="submit">
+                    {editingColor ? "Atualizar" : "Criar"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {/* Barra de ações para seleção múltipla */}
