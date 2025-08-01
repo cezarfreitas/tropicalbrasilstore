@@ -407,6 +407,17 @@ export default function Categories() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[50px]">
+                    <Checkbox
+                      checked={isAllSelected}
+                      ref={(el) => {
+                        if (el) el.indeterminate = isIndeterminate;
+                      }}
+                      onCheckedChange={toggleSelectAll}
+                      aria-label="Selecionar todas as categorias"
+                      className={isIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                    />
+                  </TableHead>
                   <TableHead>Nome</TableHead>
                   <TableHead>Descrição</TableHead>
                   <TableHead>Menu</TableHead>
@@ -416,7 +427,17 @@ export default function Categories() {
               </TableHeader>
               <TableBody>
                 {categories.map((category) => (
-                  <TableRow key={category.id}>
+                  <TableRow
+                    key={category.id}
+                    className={selectedCategories.includes(category.id) ? "bg-blue-50" : ""}
+                  >
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedCategories.includes(category.id)}
+                        onCheckedChange={() => toggleCategorySelection(category.id)}
+                        aria-label={`Selecionar categoria ${category.name}`}
+                      />
+                    </TableCell>
                     <TableCell className="font-medium">
                       {category.name}
                     </TableCell>
