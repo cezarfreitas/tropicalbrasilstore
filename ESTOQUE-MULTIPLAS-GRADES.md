@@ -92,7 +92,7 @@ Quando você usa múltiplas grades na API `/api/products/bulk`, tem diferentes o
 - Grade 2637: 75 unidades
 - **Total**: 125 unidades
 
-## Opção 3: Combinação (Recomendado)
+## Opção 4: Combinação
 
 ```json
 {
