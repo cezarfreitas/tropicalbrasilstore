@@ -1,14 +1,18 @@
 {
-  "products": [{
-    "codigo": "TEST001",
-    "nome": "Produto Teste",
-    "categoria": "Teste",
-    "tipo": "Sandália",
-    "genero": "Feminina",
-    "variantes": [{
-      "cor": "AZUL",
-      "preco": 10.50,
-      "grade": "35,36"
-    }]
-  }]
+  "products": [
+    {
+      "codigo": "TEST001",
+      "nome": "Produto Teste",
+      "categoria": "Teste",
+      "tipo": "Sandália",
+      "genero": "Feminina",
+      "variantes": [
+        {
+          "cor": "AZUL",
+          "preco": 10.5,
+          "grade": "35,36"
+        }
+      ]
+    }
+  ]
 }
