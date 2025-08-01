@@ -827,10 +827,13 @@ router.post("/bulk", validateApiKey, async (req, res) => {
     });
   } catch (error: any) {
     console.error("Error in bulk product creation:", error);
+    console.error("Error stack:", error.stack);
+    console.error("Error message:", error.message);
     res.status(500).json({
       success: false,
       error: "Erro interno do servidor",
       message: "Não foi possível processar os produtos",
+      debug: error.message // Adicionar debug temporário
     });
   }
 });
