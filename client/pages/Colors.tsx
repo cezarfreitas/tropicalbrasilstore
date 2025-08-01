@@ -416,7 +416,14 @@ export default function Colors() {
                   )}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="hex_code">Código da Cor (Opcional)</Label>
+                  <Label htmlFor="hex_code" className="flex items-center gap-2">
+                    Código da Cor
+                    {suggestedColor === formData.hex_code && formData.hex_code && (
+                      <Badge variant="secondary" className="text-xs">
+                        🤖 Detectado automaticamente
+                      </Badge>
+                    )}
+                  </Label>
                   <div className="flex gap-2">
                     <Input
                       id="hex_code"
@@ -424,18 +431,23 @@ export default function Colors() {
                       onChange={(e) =>
                         setFormData({ ...formData, hex_code: e.target.value })
                       }
-                      placeholder="#FF0000"
+                      placeholder="#FF0000 (será detectado automaticamente)"
                       pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
                     />
                     {formData.hex_code && (
                       <div
-                        className="w-12 h-10 rounded border border-border"
+                        className="w-12 h-10 rounded border border-border flex items-center justify-center"
                         style={{ backgroundColor: formData.hex_code }}
-                      ></div>
+                        title={`Cor: ${formData.hex_code}`}
+                      >
+                        {suggestedColor === formData.hex_code && (
+                          <span className="text-xs">🤖</span>
+                        )}
+                      </div>
                     )}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Formato: #FFFFFF ou #FFF
+                    💡 Digite o nome da cor e o código será detectado automaticamente!
                   </p>
                 </div>
               </div>
