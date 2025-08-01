@@ -82,18 +82,35 @@ export default function Attributes() {
     }
   };
 
-  const fetchTypes = async () => {
+  const fetchTypes = async (retryCount = 0) => {
     try {
-      const response = await fetch("/api/types");
+      const response = await fetch("/api/types", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-cache",
+      });
+
       if (response.ok) {
         const data = await response.json();
         setTypes(data);
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error("Error fetching types:", error);
+
+      // Retry once if this is the first attempt
+      if (retryCount === 0) {
+        console.log("Retrying fetch types...");
+        setTimeout(() => fetchTypes(1), 1000);
+        return;
+      }
+
       toast({
         title: "Erro",
-        description: "Não foi possível carregar os tipos",
+        description: "Não foi possível carregar os tipos. Verifique sua conexão.",
         variant: "destructive",
       });
     }
