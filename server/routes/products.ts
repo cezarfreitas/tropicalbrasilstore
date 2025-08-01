@@ -23,7 +23,7 @@ interface BulkProduct {
   descricao?: string; // Descrição do produto (opcional)
   preco_sugerido?: number; // Preço sugerido de venda (opcional)
   vender_infinito?: boolean; // Venda sem controle de estoque
-  tipo_estoque?: 'size' | 'grade'; // Tipo de controle de estoque (opcional, default: 'grade')
+  tipo_estoque?: "size" | "grade"; // Tipo de controle de estoque (opcional, default: 'grade')
   variantes: BulkProductVariant[]; // Lista de variantes
 }
 
@@ -203,18 +203,25 @@ router.post("/create", validateApiKey, async (req, res) => {
       return res.status(400).json({
         success: false,
         error: "Use /bulk endpoint for multiple products",
-        message: "This endpoint accepts single product only"
+        message: "This endpoint accepts single product only",
       });
     }
 
     // Validações básicas
-    if (!productData.codigo || !productData.nome || !productData.categoria ||
-        !productData.tipo || !productData.variantes || !Array.isArray(productData.variantes) ||
-        productData.variantes.length === 0) {
+    if (
+      !productData.codigo ||
+      !productData.nome ||
+      !productData.categoria ||
+      !productData.tipo ||
+      !productData.variantes ||
+      !Array.isArray(productData.variantes) ||
+      productData.variantes.length === 0
+    ) {
       return res.status(400).json({
         success: false,
         error: "Dados inválidos",
-        message: "Código, nome, categoria, tipo e pelo menos uma variante são obrigatórios",
+        message:
+          "Código, nome, categoria, tipo e pelo menos uma variante são obrigatórios",
       });
     }
 
@@ -273,7 +280,7 @@ router.post("/create", validateApiKey, async (req, res) => {
           product.preco_sugerido || null,
           true,
           product.vender_infinito || false,
-          product.tipo_estoque || 'grade'
+          product.tipo_estoque || "grade",
         ],
       );
 
@@ -281,7 +288,12 @@ router.post("/create", validateApiKey, async (req, res) => {
 
       // Processar variantes
       for (const variante of product.variantes) {
-        if (!variante.cor || !variante.preco || variante.preco <= 0 || !variante.grade) {
+        if (
+          !variante.cor ||
+          !variante.preco ||
+          variante.preco <= 0 ||
+          !variante.grade
+        ) {
           continue; // Pular variantes inválidas
         }
 
@@ -526,7 +538,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             basePrice,
             product.preco_sugerido || null,
             product.vender_infinito || false,
-            product.tipo_estoque || 'grade',
+            product.tipo_estoque || "grade",
             true,
           ],
         );
@@ -555,10 +567,13 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         let gradesToProcess: string[] = [];
         if (Array.isArray(variante.grade)) {
           gradesToProcess = variante.grade;
-        } else if (typeof variante.grade === 'string') {
+        } else if (typeof variante.grade === "string") {
           // Se contém vírgula, dividir em múltiplas grades
-          gradesToProcess = variante.grade.includes(',')
-            ? variante.grade.split(',').map(g => g.trim()).filter(g => g.length > 0)
+          gradesToProcess = variante.grade.includes(",")
+            ? variante.grade
+                .split(",")
+                .map((g) => g.trim())
+                .filter((g) => g.length > 0)
             : [variante.grade];
         }
 
@@ -592,8 +607,6 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             continue;
           }
 
-
-
           // Gerar SKU para variante se não fornecido
           const variantSku =
             variante.sku ||
@@ -612,137 +625,151 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             );
           }
 
-        // Verificar se a relação produto-cor-grade já existe
-        const [existingRelation] = await db.execute(
-          `SELECT id FROM product_color_grades
+          // Verificar se a relação produto-cor-grade já existe
+          const [existingRelation] = await db.execute(
+            `SELECT id FROM product_color_grades
            WHERE product_id = ? AND color_id = ? AND grade_id = ?`,
-          [productId, colorId, gradeId],
-        );
-
-        let variantResult;
-        if ((existingRelation as any[]).length === 0) {
-          // Inserir relação produto-cor-grade apenas se não existir
-          [variantResult] = await db.execute(
-            `INSERT INTO product_color_grades
-             (product_id, color_id, grade_id)
-             VALUES (?, ?, ?)`,
             [productId, colorId, gradeId],
           );
-          console.log(`  ✅ Nova relação produto-cor-grade criada`);
-        } else {
-          console.log(`  ⚠️ Relação produto-cor-grade já existe, reutilizando`);
-          variantResult = { insertId: (existingRelation as any[])[0].id };
-        }
 
-        // Criar entrada na tabela product_color_variants para compatibilidade com admin WooCommerce
-        const [colorVariantResult] = await db.execute(
-          `INSERT INTO product_color_variants
+          let variantResult;
+          if ((existingRelation as any[]).length === 0) {
+            // Inserir relação produto-cor-grade apenas se não existir
+            [variantResult] = await db.execute(
+              `INSERT INTO product_color_grades
+             (product_id, color_id, grade_id)
+             VALUES (?, ?, ?)`,
+              [productId, colorId, gradeId],
+            );
+            console.log(`  ✅ Nova relação produto-cor-grade criada`);
+          } else {
+            console.log(
+              `  ⚠️ Relação produto-cor-grade já existe, reutilizando`,
+            );
+            variantResult = { insertId: (existingRelation as any[])[0].id };
+          }
+
+          // Criar entrada na tabela product_color_variants para compatibilidade com admin WooCommerce
+          const [colorVariantResult] = await db.execute(
+            `INSERT INTO product_color_variants
            (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          [
-            productId,
-            colorId,
-            `${product.nome} - ${variante.cor}`,
-            variantSku,
-            variante.preco,
-            localImageUrl,
-            0, // stock_total inicial
-            true,
-          ],
-        );
+            [
+              productId,
+              colorId,
+              `${product.nome} - ${variante.cor}`,
+              variantSku,
+              variante.preco,
+              localImageUrl,
+              0, // stock_total inicial
+              true,
+            ],
+          );
 
-        // Buscar todos os tamanhos da grade para criar variantes para cada um
-        const [gradeTemplates] = await db.execute(
-          "SELECT gt.id, gt.size_id, s.size FROM grade_templates gt JOIN sizes s ON gt.size_id = s.id WHERE gt.grade_id = ? ORDER BY s.display_order",
-          [gradeId],
-        );
+          // Buscar todos os tamanhos da grade para criar variantes para cada um
+          const [gradeTemplates] = await db.execute(
+            "SELECT gt.id, gt.size_id, s.size FROM grade_templates gt JOIN sizes s ON gt.size_id = s.id WHERE gt.grade_id = ? ORDER BY s.display_order",
+            [gradeId],
+          );
 
-        if ((gradeTemplates as any[]).length > 0) {
-          // Criar uma variante física para cada tamanho da grade
-          for (const template of gradeTemplates as any[]) {
-            const sizeId = template.size_id;
-            const sizeName = template.size;
+          if ((gradeTemplates as any[]).length > 0) {
+            // Criar uma variante física para cada tamanho da grade
+            for (const template of gradeTemplates as any[]) {
+              const sizeId = template.size_id;
+              const sizeName = template.size;
 
-            // SKU específico para cada tamanho
-            const sizeVariantSku = `${variantSku}-${sizeName}`;
+              // SKU específico para cada tamanho
+              const sizeVariantSku = `${variantSku}-${sizeName}`;
 
-            // Verificar se a variante já existe
-            const [existingVariant] = await db.execute(
-              `SELECT id FROM product_variants
+              // Verificar se a variante já existe
+              const [existingVariant] = await db.execute(
+                `SELECT id FROM product_variants
                WHERE product_id = ? AND color_id = ? AND size_id = ?`,
-              [productId, colorId, sizeId],
-            );
+                [productId, colorId, sizeId],
+              );
 
-            if ((existingVariant as any[]).length === 0) {
-              // Criar variante física do produto apenas se não existir
-              await db.execute(
-                `INSERT INTO product_variants
+              if ((existingVariant as any[]).length === 0) {
+                // Criar variante física do produto apenas se não existir
+                await db.execute(
+                  `INSERT INTO product_variants
                  (product_id, color_id, size_id, price_override, image_url, created_at)
                  VALUES (?, ?, ?, ?, ?, NOW())`,
-                [productId, colorId, sizeId, variante.preco, localImageUrl],
-              );
-            } else {
-              console.log(
-                `  ⚠️ Variante ${sizeName} já existe para ${variante.cor}, atualizando preço`,
-              );
-              // Atualizar preço se necessário
-              await db.execute(
-                `UPDATE product_variants
+                  [productId, colorId, sizeId, variante.preco, localImageUrl],
+                );
+              } else {
+                console.log(
+                  `  ⚠️ Variante ${sizeName} já existe para ${variante.cor}, atualizando preço`,
+                );
+                // Atualizar preço se necessário
+                await db.execute(
+                  `UPDATE product_variants
                  SET price_override = ?, image_url = COALESCE(?, image_url)
                  WHERE product_id = ? AND color_id = ? AND size_id = ?`,
-                [variante.preco, localImageUrl, productId, colorId, sizeId],
-              );
+                  [variante.preco, localImageUrl, productId, colorId, sizeId],
+                );
+              }
             }
+
+            console.log(
+              `  ✅ ${(gradeTemplates as any[]).length} variantes criadas para ${variante.cor} - SKU: ${variantSku}`,
+            );
+          } else {
+            console.log(
+              `  ⚠️ Não foi possível criar variante física para ${variante.cor} - grade sem tamanhos`,
+            );
           }
 
-          console.log(
-            `  ✅ ${(gradeTemplates as any[]).length} variantes criadas para ${variante.cor} - SKU: ${variantSku}`,
-          );
-        } else {
-          console.log(
-            `  ⚠️ Não foi possível criar variante física para ${variante.cor} - grade sem tamanhos`,
-          );
-        }
-
-        // Processar estoque baseado no tipo
-        if (product.tipo_estoque === 'grade' && variante.estoque_grade !== undefined) {
-          // Estoque por grade - definir quantidade na relação produto-cor-grade
-          await db.execute(
-            `UPDATE product_color_grades
+          // Processar estoque baseado no tipo
+          if (
+            product.tipo_estoque === "grade" &&
+            variante.estoque_grade !== undefined
+          ) {
+            // Estoque por grade - definir quantidade na relação produto-cor-grade
+            await db.execute(
+              `UPDATE product_color_grades
              SET stock_quantity = ?
              WHERE product_id = ? AND color_id = ? AND grade_id = ?`,
-            [variante.estoque_grade, productId, colorId, gradeId]
-          );
-          console.log(`  📦 Estoque por grade configurado: ${variante.estoque_grade} unidades`);
-        } else if (product.tipo_estoque === 'size' && variante.estoque_tamanhos) {
-          // Estoque por tamanho - definir quantidade individual por tamanho
-          for (const [tamanho, quantidade] of Object.entries(variante.estoque_tamanhos)) {
-            // Buscar size_id pelo nome do tamanho
-            const [sizeResult] = await db.execute(
-              `SELECT id FROM sizes WHERE size = ?`,
-              [tamanho]
+              [variante.estoque_grade, productId, colorId, gradeId],
             );
+            console.log(
+              `  📦 Estoque por grade configurado: ${variante.estoque_grade} unidades`,
+            );
+          } else if (
+            product.tipo_estoque === "size" &&
+            variante.estoque_tamanhos
+          ) {
+            // Estoque por tamanho - definir quantidade individual por tamanho
+            for (const [tamanho, quantidade] of Object.entries(
+              variante.estoque_tamanhos,
+            )) {
+              // Buscar size_id pelo nome do tamanho
+              const [sizeResult] = await db.execute(
+                `SELECT id FROM sizes WHERE size = ?`,
+                [tamanho],
+              );
 
-            if ((sizeResult as any[]).length > 0) {
-              const sizeId = (sizeResult as any[])[0].id;
-              await db.execute(
-                `UPDATE product_variants
+              if ((sizeResult as any[]).length > 0) {
+                const sizeId = (sizeResult as any[])[0].id;
+                await db.execute(
+                  `UPDATE product_variants
                  SET stock = ?
                  WHERE product_id = ? AND color_id = ? AND size_id = ?`,
-                [quantidade, productId, colorId, sizeId]
-              );
-              console.log(`  📦 Estoque tamanho ${tamanho}: ${quantidade} unidades`);
+                  [quantidade, productId, colorId, sizeId],
+                );
+                console.log(
+                  `  📦 Estoque tamanho ${tamanho}: ${quantidade} unidades`,
+                );
+              }
             }
           }
-        }
 
-        // Salvar foto do produto se fornecida (na primeira variante)
-        if (localImageUrl && variants.length === 0) {
-          await db.execute("UPDATE products SET photo = ? WHERE id = ?", [
-            localImageUrl,
-            productId,
-          ]);
-        }
+          // Salvar foto do produto se fornecida (na primeira variante)
+          if (localImageUrl && variants.length === 0) {
+            await db.execute("UPDATE products SET photo = ? WHERE id = ?", [
+              localImageUrl,
+              productId,
+            ]);
+          }
 
           variants.push({
             id: (variantResult as any).insertId,
@@ -875,7 +902,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         preco,
         preco_sugerido || null,
         vender_infinito || false,
-        'grade', // default para grade
+        "grade", // default para grade
         true,
       ],
     );

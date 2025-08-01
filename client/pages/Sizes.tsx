@@ -45,7 +45,7 @@ export default function Sizes() {
   // Selection state
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
-  
+
   // Bulk add state
   const [bulkAddDialogOpen, setBulkAddDialogOpen] = useState(false);
   const [bulkSizesText, setBulkSizesText] = useState("");
@@ -87,7 +87,8 @@ export default function Sizes() {
 
       toast({
         title: "Erro",
-        description: "Não foi possível carregar os tamanhos. Verifique sua conexão.",
+        description:
+          "Não foi possível carregar os tamanhos. Verifique sua conexão.",
         variant: "destructive",
       });
     } finally {
@@ -179,47 +180,49 @@ export default function Sizes() {
   };
 
   // Selection functions
-  const isAllSelected = sizes.length > 0 && selectedSizes.length === sizes.length;
-  const isIndeterminate = selectedSizes.length > 0 && selectedSizes.length < sizes.length;
+  const isAllSelected =
+    sizes.length > 0 && selectedSizes.length === sizes.length;
+  const isIndeterminate =
+    selectedSizes.length > 0 && selectedSizes.length < sizes.length;
 
   const handleSelectAll = () => {
     if (isAllSelected) {
       setSelectedSizes([]);
     } else {
-      setSelectedSizes(sizes.map(size => size.id));
+      setSelectedSizes(sizes.map((size) => size.id));
     }
   };
 
   const handleSelectSize = (sizeId: number) => {
-    setSelectedSizes(prev => 
+    setSelectedSizes((prev) =>
       prev.includes(sizeId)
-        ? prev.filter(id => id !== sizeId)
-        : [...prev, sizeId]
+        ? prev.filter((id) => id !== sizeId)
+        : [...prev, sizeId],
     );
   };
 
   const handleBulkDelete = async () => {
     if (selectedSizes.length === 0) return;
-    
-    const confirmMessage = `Tem certeza que deseja excluir ${selectedSizes.length} tamanho${selectedSizes.length !== 1 ? 's' : ''}?`;
+
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedSizes.length} tamanho${selectedSizes.length !== 1 ? "s" : ""}?`;
     if (!confirm(confirmMessage)) return;
 
     setBulkActionLoading(true);
     try {
-      const deletePromises = selectedSizes.map(id =>
+      const deletePromises = selectedSizes.map((id) =>
         fetch(`/api/sizes/${id}`, {
           method: "DELETE",
           cache: "no-cache",
-        })
+        }),
       );
-      
+
       const results = await Promise.all(deletePromises);
-      const failed = results.filter(r => !r.ok);
-      
+      const failed = results.filter((r) => !r.ok);
+
       if (failed.length === 0) {
         toast({
           title: "Sucesso",
-          description: `${selectedSizes.length} tamanho${selectedSizes.length !== 1 ? 's' : ''} excluído${selectedSizes.length !== 1 ? 's' : ''} com sucesso`,
+          description: `${selectedSizes.length} tamanho${selectedSizes.length !== 1 ? "s" : ""} excluído${selectedSizes.length !== 1 ? "s" : ""} com sucesso`,
         });
         setSelectedSizes([]);
         fetchSizes();
@@ -257,17 +260,17 @@ export default function Sizes() {
       // Parse sizes from text (split by comma, newline, or space)
       const sizesArray = bulkSizesText
         .split(/[,\n\s]+/)
-        .map(size => size.trim())
-        .filter(size => size.length > 0);
+        .map((size) => size.trim())
+        .filter((size) => size.length > 0);
 
       if (sizesArray.length === 0) {
         throw new Error("Nenhum tamanho válido encontrado");
       }
 
       // Check for duplicates in existing sizes
-      const existingSizes = sizes.map(s => s.size.toLowerCase());
-      const duplicates = sizesArray.filter(size => 
-        existingSizes.includes(size.toLowerCase())
+      const existingSizes = sizes.map((s) => s.size.toLowerCase());
+      const duplicates = sizesArray.filter((size) =>
+        existingSizes.includes(size.toLowerCase()),
       );
 
       if (duplicates.length > 0) {
@@ -278,8 +281,8 @@ export default function Sizes() {
       }
 
       // Filter out duplicates
-      const newSizes = sizesArray.filter(size => 
-        !existingSizes.includes(size.toLowerCase())
+      const newSizes = sizesArray.filter(
+        (size) => !existingSizes.includes(size.toLowerCase()),
       );
 
       if (newSizes.length === 0) {
@@ -298,16 +301,16 @@ export default function Sizes() {
             display_order: bulkStartOrder + index,
           }),
           cache: "no-cache",
-        })
+        }),
       );
 
       const results = await Promise.all(createPromises);
-      const failed = results.filter(r => !r.ok);
+      const failed = results.filter((r) => !r.ok);
 
       if (failed.length === 0) {
         toast({
           title: "Sucesso",
-          description: `${newSizes.length} tamanho${newSizes.length !== 1 ? 's' : ''} adicionado${newSizes.length !== 1 ? 's' : ''} com sucesso`,
+          description: `${newSizes.length} tamanho${newSizes.length !== 1 ? "s" : ""} adicionado${newSizes.length !== 1 ? "s" : ""} com sucesso`,
         });
         setBulkAddDialogOpen(false);
         setBulkSizesText("");
@@ -329,7 +332,8 @@ export default function Sizes() {
 
   const handleBulkAddDialog = () => {
     // Calculate next order based on existing sizes
-    const maxOrder = sizes.length > 0 ? Math.max(...sizes.map(s => s.display_order)) : 0;
+    const maxOrder =
+      sizes.length > 0 ? Math.max(...sizes.map((s) => s.display_order)) : 0;
     setBulkStartOrder(maxOrder + 1);
     setBulkAddDialogOpen(true);
   };
@@ -364,19 +368,17 @@ export default function Sizes() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-medium">
-                    {selectedSizes.length} tamanho{selectedSizes.length !== 1 ? 's' : ''} selecionado{selectedSizes.length !== 1 ? 's' : ''}
+                    {selectedSizes.length} tamanho
+                    {selectedSizes.length !== 1 ? "s" : ""} selecionado
+                    {selectedSizes.length !== 1 ? "s" : ""}
                   </span>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={clearSelection}
-                  >
+                  <Button variant="outline" size="sm" onClick={clearSelection}>
                     Limpar seleção
                   </Button>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button 
-                    variant="destructive" 
+                  <Button
+                    variant="destructive"
                     size="sm"
                     onClick={handleBulkDelete}
                     disabled={bulkActionLoading}
@@ -403,7 +405,10 @@ export default function Sizes() {
           </div>
           <div className="flex gap-2">
             {/* Bulk Add Dialog */}
-            <Dialog open={bulkAddDialogOpen} onOpenChange={setBulkAddDialogOpen}>
+            <Dialog
+              open={bulkAddDialogOpen}
+              onOpenChange={setBulkAddDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button variant="outline" onClick={handleBulkAddDialog}>
                   <PlusCircle className="mr-2 h-4 w-4" />
@@ -414,7 +419,8 @@ export default function Sizes() {
                 <DialogHeader>
                   <DialogTitle>Adicionar Tamanhos em Lote</DialogTitle>
                   <DialogDescription>
-                    Digite os tamanhos separados por vírgula, espaço ou quebra de linha
+                    Digite os tamanhos separados por vírgula, espaço ou quebra
+                    de linha
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -438,11 +444,14 @@ export default function Sizes() {
                       id="bulk-start-order"
                       type="number"
                       value={bulkStartOrder}
-                      onChange={(e) => setBulkStartOrder(parseInt(e.target.value) || 1)}
+                      onChange={(e) =>
+                        setBulkStartOrder(parseInt(e.target.value) || 1)
+                      }
                       min="1"
                     />
                     <p className="text-xs text-muted-foreground">
-                      A ordem será incrementada automaticamente para cada tamanho
+                      A ordem será incrementada automaticamente para cada
+                      tamanho
                     </p>
                   </div>
                 </div>
@@ -475,7 +484,7 @@ export default function Sizes() {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-            
+
             {/* Single Add Dialog */}
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
@@ -584,7 +593,11 @@ export default function Sizes() {
                       <Checkbox
                         checked={isAllSelected}
                         onCheckedChange={handleSelectAll}
-                        className={isIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                        className={
+                          isIndeterminate
+                            ? "data-[state=checked]:bg-blue-600"
+                            : ""
+                        }
                       />
                     </TableHead>
                     <TableHead>Tamanho</TableHead>
@@ -597,9 +610,11 @@ export default function Sizes() {
                   {sizes
                     .sort((a, b) => a.display_order - b.display_order)
                     .map((size) => (
-                      <TableRow 
+                      <TableRow
                         key={size.id}
-                        className={selectedSizes.includes(size.id) ? "bg-blue-50" : ""}
+                        className={
+                          selectedSizes.includes(size.id) ? "bg-blue-50" : ""
+                        }
                       >
                         <TableCell>
                           <Checkbox
