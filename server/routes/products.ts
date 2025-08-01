@@ -10,7 +10,7 @@ interface BulkProductVariant {
   grade: string | string[]; // Grade/tamanho - aceita string única ou array de strings
   foto?: string; // URL da foto (opcional)
   sku?: string; // SKU específico (opcional)
-  estoque_grade?: number; // Quantidade fixa para estoque por grade (aplicada a todas se múltiplas)
+  estoque_grade?: number | number[]; // Quantidade por grade - número único ou array posicional
   estoque_grades?: { [grade: string]: number }; // Estoque específico por grade individual
   estoque_tamanhos?: { [tamanho: string]: number }; // Estoque por tamanho individual
 }
