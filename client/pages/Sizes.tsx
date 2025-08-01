@@ -109,6 +109,7 @@ export default function Sizes() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        cache: "no-cache",
       });
 
       if (response.ok) {
