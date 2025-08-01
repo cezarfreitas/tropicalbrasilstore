@@ -2,7 +2,34 @@
 
 Quando você usa múltiplas grades na API `/api/products/bulk`, tem diferentes opções para gerenciar o estoque.
 
-## Opção 1: Estoque Igual para Todas as Grades
+## Opção 1: Estoque Array Posicional (Recomendado)
+
+```json
+{
+  "products": [{
+    "codigo": "TB1.2522",
+    "nome": "LOGO FEMININA",
+    "categoria": "LOGO FEMININA",
+    "tipo": "Sandália",
+    "tipo_estoque": "grade",
+    "variantes": [{
+      "cor": "AZUL ELEMENTAL",
+      "preco": 13.60,
+      "grade": "2647, 2637",
+      "estoque_grade": [15, 20]
+    }]
+  }]
+}
+```
+
+**Resultado:**
+- Grade 2647 (posição 0): 15 unidades
+- Grade 2637 (posição 1): 20 unidades
+- **Total**: 35 unidades
+
+**Como funciona:** Cada posição no array `estoque_grade` corresponde à mesma posição na lista de grades.
+
+## Opção 2: Estoque Igual para Todas as Grades
 
 ```json
 {
