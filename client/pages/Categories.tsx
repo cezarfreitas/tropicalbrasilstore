@@ -185,6 +185,66 @@ export default function Categories() {
     }
   };
 
+  // Funções de seleção múltipla
+  const isAllSelected = categories.length > 0 && selectedCategories.length === categories.length;
+  const isIndeterminate = selectedCategories.length > 0 && selectedCategories.length < categories.length;
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedCategories([]);
+    } else {
+      setSelectedCategories(categories.map(category => category.id));
+    }
+  };
+
+  const toggleCategorySelection = (categoryId: number) => {
+    setSelectedCategories(prev =>
+      prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+
+  const clearSelection = () => {
+    setSelectedCategories([]);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedCategories.length === 0) return;
+
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedCategories.length} categoria${selectedCategories.length !== 1 ? 's' : ''}?`;
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      const deletePromises = selectedCategories.map(id =>
+        fetch(`/api/categories/${id}`, {
+          method: 'DELETE'
+        })
+      );
+
+      const results = await Promise.all(deletePromises);
+      const failed = results.filter(r => !r.ok);
+
+      if (failed.length === 0) {
+        toast({
+          title: "Sucesso",
+          description: `${selectedCategories.length} categoria${selectedCategories.length !== 1 ? 's' : ''} excluída${selectedCategories.length !== 1 ? 's' : ''} com sucesso`,
+        });
+        setSelectedCategories([]);
+        fetchCategories();
+      } else {
+        throw new Error(`${failed.length} categoria${failed.length !== 1 ? 's' : ''} não puderam ser excluída${failed.length !== 1 ? 's' : ''}`);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
