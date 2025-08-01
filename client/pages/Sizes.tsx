@@ -92,9 +92,7 @@ export default function Sizes() {
         variant: "destructive",
       });
     } finally {
-      if (retryCount > 0) {
-        setLoading(false);
-      }
+      setLoading(false);
     }
   };
 
