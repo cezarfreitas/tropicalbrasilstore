@@ -58,22 +58,42 @@ export default function Sizes() {
     fetchSizes();
   }, []);
 
-  const fetchSizes = async () => {
+  const fetchSizes = async (retryCount = 0) => {
     try {
-      const response = await fetch("/api/sizes");
+      const response = await fetch("/api/sizes", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Add cache control to avoid browser caching issues
+        cache: "no-cache",
+      });
+
       if (response.ok) {
         const data = await response.json();
         setSizes(data);
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error("Error fetching sizes:", error);
+
+      // Retry once if this is the first attempt
+      if (retryCount === 0) {
+        console.log("Retrying fetch sizes...");
+        setTimeout(() => fetchSizes(1), 1000);
+        return;
+      }
+
       toast({
         title: "Erro",
-        description: "Não foi possível carregar os tamanhos",
+        description: "Não foi possível carregar os tamanhos. Verifique sua conexão.",
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      if (retryCount > 0) {
+        setLoading(false);
+      }
     }
   };
 
