@@ -180,6 +180,126 @@ export default function Attributes() {
     setFormData({ name: "", description: "" });
   };
 
+  // Funções de seleção múltipla para Gêneros
+  const isAllGendersSelected = genders.length > 0 && selectedGenders.length === genders.length;
+  const isGendersIndeterminate = selectedGenders.length > 0 && selectedGenders.length < genders.length;
+
+  const toggleSelectAllGenders = () => {
+    if (isAllGendersSelected) {
+      setSelectedGenders([]);
+    } else {
+      setSelectedGenders(genders.map(gender => gender.id));
+    }
+  };
+
+  const toggleGenderSelection = (genderId: number) => {
+    setSelectedGenders(prev =>
+      prev.includes(genderId)
+        ? prev.filter(id => id !== genderId)
+        : [...prev, genderId]
+    );
+  };
+
+  const clearGenderSelection = () => {
+    setSelectedGenders([]);
+  };
+
+  const handleBulkDeleteGenders = async () => {
+    if (selectedGenders.length === 0) return;
+
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedGenders.length} gênero${selectedGenders.length !== 1 ? 's' : ''}?`;
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      const deletePromises = selectedGenders.map(id =>
+        fetch(`/api/genders/${id}`, {
+          method: 'DELETE'
+        })
+      );
+
+      const results = await Promise.all(deletePromises);
+      const failed = results.filter(r => !r.ok);
+
+      if (failed.length === 0) {
+        toast({
+          title: "Sucesso",
+          description: `${selectedGenders.length} gênero${selectedGenders.length !== 1 ? 's' : ''} excluído${selectedGenders.length !== 1 ? 's' : ''} com sucesso`,
+        });
+        setSelectedGenders([]);
+        fetchGenders();
+      } else {
+        throw new Error(`${failed.length} gênero${failed.length !== 1 ? 's' : ''} não puderam ser excluído${failed.length !== 1 ? 's' : ''}`);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Funções de seleção múltipla para Tipos
+  const isAllTypesSelected = types.length > 0 && selectedTypes.length === types.length;
+  const isTypesIndeterminate = selectedTypes.length > 0 && selectedTypes.length < types.length;
+
+  const toggleSelectAllTypes = () => {
+    if (isAllTypesSelected) {
+      setSelectedTypes([]);
+    } else {
+      setSelectedTypes(types.map(type => type.id));
+    }
+  };
+
+  const toggleTypeSelection = (typeId: number) => {
+    setSelectedTypes(prev =>
+      prev.includes(typeId)
+        ? prev.filter(id => id !== typeId)
+        : [...prev, typeId]
+    );
+  };
+
+  const clearTypeSelection = () => {
+    setSelectedTypes([]);
+  };
+
+  const handleBulkDeleteTypes = async () => {
+    if (selectedTypes.length === 0) return;
+
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedTypes.length} tipo${selectedTypes.length !== 1 ? 's' : ''}?`;
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      const deletePromises = selectedTypes.map(id =>
+        fetch(`/api/types/${id}`, {
+          method: 'DELETE'
+        })
+      );
+
+      const results = await Promise.all(deletePromises);
+      const failed = results.filter(r => !r.ok);
+
+      if (failed.length === 0) {
+        toast({
+          title: "Sucesso",
+          description: `${selectedTypes.length} tipo${selectedTypes.length !== 1 ? 's' : ''} excluído${selectedTypes.length !== 1 ? 's' : ''} com sucesso`,
+        });
+        setSelectedTypes([]);
+        fetchTypes();
+      } else {
+        throw new Error(`${failed.length} tipo${failed.length !== 1 ? 's' : ''} não puderam ser excluído${failed.length !== 1 ? 's' : ''}`);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -374,7 +494,7 @@ export default function Attributes() {
                         </DialogTitle>
                         <DialogDescription>
                           {editingItem
-                            ? "Atualize as informações do tipo"
+                            ? "Atualize as informa��ões do tipo"
                             : "Crie um novo tipo para categorizar seus produtos"}
                         </DialogDescription>
                       </DialogHeader>
