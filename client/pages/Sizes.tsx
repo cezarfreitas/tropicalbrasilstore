@@ -26,10 +26,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Edit2, Trash2, Ruler, CheckSquare, Square } from "lucide-react";
+import { Plus, Edit2, Trash2, Ruler, CheckSquare, Square, PlusCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Size, CreateSizeRequest } from "@shared/types";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function Sizes() {
   const [sizes, setSizes] = useState<Size[]>([]);
@@ -246,7 +247,7 @@ export default function Sizes() {
                     size="sm"
                     onClick={clearSelection}
                   >
-                    Limpar seleção
+                    Limpar seleç��o
                   </Button>
                 </div>
                 <div className="flex items-center gap-2">
