@@ -725,7 +725,10 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           if (product.tipo_estoque === "grade") {
             let estoqueParaEstaGrade = 0;
 
-            // Prioridade: estoque_grades específico > estoque_grade geral
+            // Determinar índice da grade atual na lista de grades
+            const gradeIndex = gradesToProcess.indexOf(gradeNome);
+
+            // Prioridade: estoque_grades específico > estoque_grade array posicional > estoque_grade geral
             if (
               variante.estoque_grades &&
               variante.estoque_grades[gradeNome] !== undefined
@@ -734,7 +737,12 @@ router.post("/bulk", validateApiKey, async (req, res) => {
               console.log(
                 `  📦 Usando estoque específico para grade ${gradeNome}: ${estoqueParaEstaGrade}`,
               );
-            } else if (variante.estoque_grade !== undefined) {
+            } else if (Array.isArray(variante.estoque_grade) && gradeIndex >= 0 && gradeIndex < variante.estoque_grade.length) {
+              estoqueParaEstaGrade = variante.estoque_grade[gradeIndex];
+              console.log(
+                `  📦 Usando estoque posicional [${gradeIndex}] para grade ${gradeNome}: ${estoqueParaEstaGrade}`,
+              );
+            } else if (typeof variante.estoque_grade === 'number') {
               estoqueParaEstaGrade = variante.estoque_grade;
               console.log(
                 `  📦 Usando estoque geral para grade ${gradeNome}: ${estoqueParaEstaGrade}`,
