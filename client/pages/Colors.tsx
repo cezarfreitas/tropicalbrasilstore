@@ -445,6 +445,19 @@ export default function Colors() {
               Nova Cor
             </Button>
           </DialogTrigger>
+        </Dialog>
+        {colors.length > 0 && (
+          <Button
+            variant="outline"
+            onClick={handleBulkDetectColors}
+            disabled={loading}
+            className="flex items-center gap-2 ml-2"
+          >
+            <Palette className="h-4 w-4" />
+            🤖 Detectar Cores
+          </Button>
+        )}
+        <Dialog style={{ display: 'none' }}>
           <DialogContent className="sm:max-w-[425px]">
             <form onSubmit={handleSubmit}>
               <DialogHeader>
