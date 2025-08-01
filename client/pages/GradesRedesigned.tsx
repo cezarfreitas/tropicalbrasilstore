@@ -81,6 +81,7 @@ export default function GradesRedesigned() {
   const [editingGrade, setEditingGrade] = useState<Grade | null>(null);
   const [selectedGradeForAssign, setSelectedGradeForAssign] =
     useState<Grade | null>(null);
+  const [selectedGrades, setSelectedGrades] = useState<number[]>([]);
   const [formData, setFormData] = useState<{
     name: string;
     description: string;
