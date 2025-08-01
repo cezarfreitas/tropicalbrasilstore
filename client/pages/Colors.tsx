@@ -544,6 +544,10 @@ export default function Colors() {
             {colors.length === 0
               ? "Nenhuma cor cadastrada"
               : `${colors.length} cor${colors.length !== 1 ? "es" : ""} cadastrada${colors.length !== 1 ? "s" : ""}`}
+            <br />
+            <span className="text-blue-600 font-medium">
+              🤖 Sistema inteligente ativo - Digite o nome e a cor será detectada automaticamente!
+            </span>
           </CardDescription>
         </CardHeader>
         <CardContent>
