@@ -449,6 +449,34 @@ export default function Colors() {
                   <p className="text-xs text-muted-foreground">
                     💡 Digite o nome da cor e o código será detectado automaticamente!
                   </p>
+
+                  {/* Preview de cores disponíveis */}
+                  {formData.name && !formData.hex_code && (
+                    <div className="mt-2">
+                      <p className="text-xs font-medium mb-2">Cores disponíveis para detecção:</p>
+                      <div className="grid grid-cols-6 gap-1 max-h-20 overflow-y-auto">
+                        {Object.entries(COLOR_MAPPINGS)
+                          .filter(([name]) =>
+                            name.toLowerCase().includes(formData.name.toLowerCase()) ||
+                            formData.name.toLowerCase().includes(name.toLowerCase())
+                          )
+                          .slice(0, 12)
+                          .map(([name, hex]) => (
+                            <div
+                              key={name}
+                              className="w-6 h-6 rounded border cursor-pointer hover:scale-110 transition-transform"
+                              style={{ backgroundColor: hex }}
+                              title={`${name} - ${hex}`}
+                              onClick={() => {
+                                setFormData({ ...formData, hex_code: hex });
+                                setSuggestedColor(null);
+                              }}
+                            />
+                          ))
+                        }
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <DialogFooter>
