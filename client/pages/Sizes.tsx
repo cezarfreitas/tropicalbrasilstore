@@ -60,6 +60,7 @@ export default function Sizes() {
 
   const fetchSizes = async (retryCount = 0) => {
     try {
+      console.log("Fetching sizes from /api/sizes...");
       const response = await fetch("/api/sizes", {
         method: "GET",
         headers: {
@@ -69,11 +70,16 @@ export default function Sizes() {
         cache: "no-cache",
       });
 
+      console.log("Response status:", response.status, response.statusText);
+
       if (response.ok) {
         const data = await response.json();
+        console.log("Sizes data received:", data);
         setSizes(data);
         setLoading(false);
       } else {
+        const errorText = await response.text();
+        console.log("Response error text:", errorText);
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
