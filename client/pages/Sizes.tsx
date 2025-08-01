@@ -151,6 +151,7 @@ export default function Sizes() {
     try {
       const response = await fetch(`/api/sizes/${id}`, {
         method: "DELETE",
+        cache: "no-cache",
       });
 
       if (response.ok) {
