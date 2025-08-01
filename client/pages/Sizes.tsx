@@ -374,6 +374,13 @@ export default function Sizes() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-[50px]">
+                      <Checkbox
+                        checked={isAllSelected}
+                        onCheckedChange={handleSelectAll}
+                        className={isIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                      />
+                    </TableHead>
                     <TableHead>Tamanho</TableHead>
                     <TableHead>Ordem</TableHead>
                     <TableHead>Criado em</TableHead>
@@ -384,7 +391,16 @@ export default function Sizes() {
                   {sizes
                     .sort((a, b) => a.display_order - b.display_order)
                     .map((size) => (
-                      <TableRow key={size.id}>
+                      <TableRow
+                        key={size.id}
+                        className={selectedSizes.includes(size.id) ? "bg-blue-50" : ""}
+                      >
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedSizes.includes(size.id)}
+                            onCheckedChange={() => handleSelectSize(size.id)}
+                          />
+                        </TableCell>
                         <TableCell className="font-medium">
                           {size.size}
                         </TableCell>
