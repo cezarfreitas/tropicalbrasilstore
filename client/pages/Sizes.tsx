@@ -216,6 +216,98 @@ export default function Sizes() {
     setSelectedSizes([]);
   };
 
+  // Bulk add functions
+  const handleBulkAdd = async () => {
+    if (!bulkSizesText.trim()) {
+      toast({
+        title: "Erro",
+        description: "Digite os tamanhos que deseja adicionar",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setBulkAddLoading(true);
+    try {
+      // Parse sizes from text (split by comma, newline, or space)
+      const sizesArray = bulkSizesText
+        .split(/[,\n\s]+/)
+        .map(size => size.trim())
+        .filter(size => size.length > 0);
+
+      if (sizesArray.length === 0) {
+        throw new Error("Nenhum tamanho válido encontrado");
+      }
+
+      // Check for duplicates in existing sizes
+      const existingSizes = sizes.map(s => s.size.toLowerCase());
+      const duplicates = sizesArray.filter(size =>
+        existingSizes.includes(size.toLowerCase())
+      );
+
+      if (duplicates.length > 0) {
+        toast({
+          title: "Aviso",
+          description: `Tamanhos já existentes serão ignorados: ${duplicates.join(", ")}`,
+        });
+      }
+
+      // Filter out duplicates
+      const newSizes = sizesArray.filter(size =>
+        !existingSizes.includes(size.toLowerCase())
+      );
+
+      if (newSizes.length === 0) {
+        throw new Error("Todos os tamanhos já existem no sistema");
+      }
+
+      // Create requests for each size
+      const createPromises = newSizes.map((size, index) =>
+        fetch("/api/sizes", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            size: size,
+            display_order: bulkStartOrder + index,
+          }),
+        })
+      );
+
+      const results = await Promise.all(createPromises);
+      const failed = results.filter(r => !r.ok);
+
+      if (failed.length === 0) {
+        toast({
+          title: "Sucesso",
+          description: `${newSizes.length} tamanho${newSizes.length !== 1 ? 's' : ''} adicionado${newSizes.length !== 1 ? 's' : ''} com sucesso`,
+        });
+        setBulkAddDialogOpen(false);
+        setBulkSizesText("");
+        setBulkStartOrder(1);
+        fetchSizes();
+      } else {
+        throw new Error(`${failed.length} tamanhos não puderam ser criados`);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao adicionar tamanhos em lote",
+        variant: "destructive",
+      });
+    } finally {
+      setBulkAddLoading(false);
+    }
+  };
+
+  const handleBulkAddDialog = () => {
+    // Calculate next order based on existing sizes
+    const maxOrder = sizes.length > 0 ? Math.max(...sizes.map(s => s.display_order)) : 0;
+    setBulkStartOrder(maxOrder + 1);
+    setBulkAddDialogOpen(true);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
