@@ -399,6 +399,42 @@ export default function Attributes() {
                 </Dialog>
               </div>
             </CardHeader>
+
+            {/* Barra de ações para seleção múltipla de gêneros */}
+            {selectedGenders.length > 0 && (
+              <div className="mx-6 mb-4">
+                <Card className="border-blue-200 bg-blue-50">
+                  <CardContent className="pt-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm font-medium">
+                          {selectedGenders.length} gênero{selectedGenders.length !== 1 ? 's' : ''} selecionado{selectedGenders.length !== 1 ? 's' : ''}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={clearGenderSelection}
+                        >
+                          Limpar seleção
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={handleBulkDeleteGenders}
+                          className="flex items-center gap-2"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Excluir selecionados
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
             <CardContent>
               {genders.length === 0 ? (
                 <div className="text-center py-8">
