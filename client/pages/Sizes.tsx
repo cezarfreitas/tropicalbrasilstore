@@ -206,8 +206,11 @@ export default function Sizes() {
 
     setBulkActionLoading(true);
     try {
-      const deletePromises = selectedSizes.map(id => 
-        fetch(`/api/sizes/${id}`, { method: "DELETE" })
+      const deletePromises = selectedSizes.map(id =>
+        fetch(`/api/sizes/${id}`, {
+          method: "DELETE",
+          cache: "no-cache",
+        })
       );
       
       const results = await Promise.all(deletePromises);
