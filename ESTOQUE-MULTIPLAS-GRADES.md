@@ -129,9 +129,10 @@ Quando você usa múltiplas grades na API `/api/products/bulk`, tem diferentes o
 ## Prioridade de Estoque
 
 1. **`estoque_grades`** (específico por grade) - **Prioridade ALTA**
-2. **`estoque_grade`** (geral para todas) - **Prioridade BAIXA**
+2. **`estoque_grade` array** (posicional) - **Prioridade MÉDIA**
+3. **`estoque_grade` número** (geral para todas) - **Prioridade BAIXA**
 
-Se ambos estiverem definidos, `estoque_grades` sempre tem prioridade para as grades especificadas.
+A API verifica nesta ordem e usa a primeira opção disponível.
 
 ## Exemplo Prático - E-commerce
 
