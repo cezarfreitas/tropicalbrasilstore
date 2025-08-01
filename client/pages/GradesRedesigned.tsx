@@ -214,6 +214,66 @@ export default function GradesRedesigned() {
     }
   };
 
+  // Funções de seleção múltipla
+  const isAllSelected = grades.length > 0 && selectedGrades.length === grades.length;
+  const isIndeterminate = selectedGrades.length > 0 && selectedGrades.length < grades.length;
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedGrades([]);
+    } else {
+      setSelectedGrades(grades.map(grade => grade.id));
+    }
+  };
+
+  const toggleGradeSelection = (gradeId: number) => {
+    setSelectedGrades(prev =>
+      prev.includes(gradeId)
+        ? prev.filter(id => id !== gradeId)
+        : [...prev, gradeId]
+    );
+  };
+
+  const clearSelection = () => {
+    setSelectedGrades([]);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedGrades.length === 0) return;
+
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedGrades.length} grade${selectedGrades.length !== 1 ? 's' : ''}?`;
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      const deletePromises = selectedGrades.map(id =>
+        fetch(`/api/grades-redesigned/${id}`, {
+          method: 'DELETE'
+        })
+      );
+
+      const results = await Promise.all(deletePromises);
+      const failed = results.filter(r => !r.ok);
+
+      if (failed.length === 0) {
+        toast({
+          title: "Sucesso",
+          description: `${selectedGrades.length} grade${selectedGrades.length !== 1 ? 's' : ''} excluída${selectedGrades.length !== 1 ? 's' : ''} com sucesso`,
+        });
+        setSelectedGrades([]);
+        fetchData();
+      } else {
+        throw new Error(`${failed.length} grade${failed.length !== 1 ? 's' : ''} não puderam ser excluída${failed.length !== 1 ? 's' : ''}`);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleNewGrade = () => {
     resetForm();
     setDialogOpen(true);
