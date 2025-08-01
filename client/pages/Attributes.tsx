@@ -84,7 +84,6 @@ export default function Attributes() {
 
   const fetchTypes = async (retryCount = 0) => {
     try {
-      if (retryCount === 0) setLoading(true);
       const response = await fetch("/api/types", {
         method: "GET",
         headers: {
@@ -96,7 +95,6 @@ export default function Attributes() {
       if (response.ok) {
         const data = await response.json();
         setTypes(data);
-        setLoading(false);
       } else {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
@@ -110,7 +108,6 @@ export default function Attributes() {
         return;
       }
 
-      setLoading(false);
       toast({
         title: "Erro",
         description: "Não foi possível carregar os tipos. Verifique sua conexão.",
