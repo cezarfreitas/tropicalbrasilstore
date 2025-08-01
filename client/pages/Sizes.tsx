@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
   CardContent,
@@ -26,11 +27,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Edit2, Trash2, Ruler, CheckSquare, Square, PlusCircle } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Plus, Edit2, Trash2, Ruler, PlusCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Size, CreateSizeRequest } from "@shared/types";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 
 export default function Sizes() {
   const [sizes, setSizes] = useState<Size[]>([]);
@@ -45,7 +45,7 @@ export default function Sizes() {
   // Selection state
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
-
+  
   // Bulk add state
   const [bulkAddDialogOpen, setBulkAddDialogOpen] = useState(false);
   const [bulkSizesText, setBulkSizesText] = useState("");
@@ -169,7 +169,7 @@ export default function Sizes() {
   };
 
   const handleSelectSize = (sizeId: number) => {
-    setSelectedSizes(prev =>
+    setSelectedSizes(prev => 
       prev.includes(sizeId)
         ? prev.filter(id => id !== sizeId)
         : [...prev, sizeId]
@@ -178,19 +178,19 @@ export default function Sizes() {
 
   const handleBulkDelete = async () => {
     if (selectedSizes.length === 0) return;
-
+    
     const confirmMessage = `Tem certeza que deseja excluir ${selectedSizes.length} tamanho${selectedSizes.length !== 1 ? 's' : ''}?`;
     if (!confirm(confirmMessage)) return;
 
     setBulkActionLoading(true);
     try {
-      const deletePromises = selectedSizes.map(id =>
+      const deletePromises = selectedSizes.map(id => 
         fetch(`/api/sizes/${id}`, { method: "DELETE" })
       );
-
+      
       const results = await Promise.all(deletePromises);
       const failed = results.filter(r => !r.ok);
-
+      
       if (failed.length === 0) {
         toast({
           title: "Sucesso",
@@ -241,7 +241,7 @@ export default function Sizes() {
 
       // Check for duplicates in existing sizes
       const existingSizes = sizes.map(s => s.size.toLowerCase());
-      const duplicates = sizesArray.filter(size =>
+      const duplicates = sizesArray.filter(size => 
         existingSizes.includes(size.toLowerCase())
       );
 
@@ -253,7 +253,7 @@ export default function Sizes() {
       }
 
       // Filter out duplicates
-      const newSizes = sizesArray.filter(size =>
+      const newSizes = sizesArray.filter(size => 
         !existingSizes.includes(size.toLowerCase())
       );
 
@@ -262,7 +262,7 @@ export default function Sizes() {
       }
 
       // Create requests for each size
-      const createPromises = newSizes.map((size, index) =>
+      const createPromises = newSizes.map((size, index) => 
         fetch("/api/sizes", {
           method: "POST",
           headers: {
@@ -340,17 +340,17 @@ export default function Sizes() {
                   <span className="text-sm font-medium">
                     {selectedSizes.length} tamanho{selectedSizes.length !== 1 ? 's' : ''} selecionado{selectedSizes.length !== 1 ? 's' : ''}
                   </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
                     onClick={clearSelection}
                   >
-                    Limpar seleç��o
+                    Limpar seleção
                   </Button>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="destructive"
+                  <Button 
+                    variant="destructive" 
                     size="sm"
                     onClick={handleBulkDelete}
                     disabled={bulkActionLoading}
@@ -375,69 +375,146 @@ export default function Sizes() {
               Gerencie os tamanhos individuais disponíveis
             </p>
           </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={handleNewSize}>
-                <Plus className="mr-2 h-4 w-4" />
-                Novo Tamanho
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <form onSubmit={handleSubmit}>
+          <div className="flex gap-2">
+            {/* Bulk Add Dialog */}
+            <Dialog open={bulkAddDialogOpen} onOpenChange={setBulkAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" onClick={handleBulkAddDialog}>
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Adicionar em Lote
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
-                  <DialogTitle>
-                    {editingSize ? "Editar Tamanho" : "Novo Tamanho"}
-                  </DialogTitle>
+                  <DialogTitle>Adicionar Tamanhos em Lote</DialogTitle>
                   <DialogDescription>
-                    {editingSize
-                      ? "Atualize as informações do tamanho"
-                      : "Adicione um novo tamanho para seus produtos"}
+                    Digite os tamanhos separados por vírgula, espaço ou quebra de linha
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="size">Tamanho</Label>
-                    <Input
-                      id="size"
-                      value={formData.size}
-                      onChange={(e) =>
-                        setFormData({ ...formData, size: e.target.value })
-                      }
-                      placeholder="Ex: 32, 34, 36, 38, 40"
-                      required
+                    <Label htmlFor="bulk-sizes">Tamanhos</Label>
+                    <Textarea
+                      id="bulk-sizes"
+                      placeholder="Ex: 32, 34, 36, 38, 40&#10;ou&#10;32&#10;34&#10;36&#10;38&#10;40"
+                      value={bulkSizesText}
+                      onChange={(e) => setBulkSizesText(e.target.value)}
+                      rows={6}
+                      className="resize-none"
                     />
+                    <p className="text-xs text-muted-foreground">
+                      Separe os tamanhos por vírgula, espaço ou quebra de linha
+                    </p>
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="display_order">Ordem de Exibição</Label>
+                    <Label htmlFor="bulk-start-order">Ordem Inicial</Label>
                     <Input
-                      id="display_order"
+                      id="bulk-start-order"
                       type="number"
-                      value={formData.display_order}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          display_order: parseInt(e.target.value) || 0,
-                        })
-                      }
-                      placeholder="Ex: 1, 2, 3..."
+                      value={bulkStartOrder}
+                      onChange={(e) => setBulkStartOrder(parseInt(e.target.value) || 1)}
+                      min="1"
                     />
+                    <p className="text-xs text-muted-foreground">
+                      A ordem será incrementada automaticamente para cada tamanho
+                    </p>
                   </div>
                 </div>
                 <DialogFooter>
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setDialogOpen(false)}
+                    onClick={() => setBulkAddDialogOpen(false)}
+                    disabled={bulkAddLoading}
                   >
                     Cancelar
                   </Button>
-                  <Button type="submit">
-                    {editingSize ? "Atualizar" : "Criar"}
+                  <Button
+                    type="button"
+                    onClick={handleBulkAdd}
+                    disabled={bulkAddLoading || !bulkSizesText.trim()}
+                  >
+                    {bulkAddLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                        Adicionando...
+                      </>
+                    ) : (
+                      <>
+                        <PlusCircle className="h-4 w-4 mr-2" />
+                        Adicionar Tamanhos
+                      </>
+                    )}
                   </Button>
                 </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
+              </DialogContent>
+            </Dialog>
+            
+            {/* Single Add Dialog */}
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={handleNewSize}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Novo Tamanho
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <form onSubmit={handleSubmit}>
+                  <DialogHeader>
+                    <DialogTitle>
+                      {editingSize ? "Editar Tamanho" : "Novo Tamanho"}
+                    </DialogTitle>
+                    <DialogDescription>
+                      {editingSize
+                        ? "Atualize as informações do tamanho"
+                        : "Adicione um novo tamanho para seus produtos"}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="size">Tamanho</Label>
+                      <Input
+                        id="size"
+                        value={formData.size}
+                        onChange={(e) =>
+                          setFormData({ ...formData, size: e.target.value })
+                        }
+                        placeholder="Ex: 32, 34, 36, 38, 40"
+                        required
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="display_order">Ordem de Exibição</Label>
+                      <Input
+                        id="display_order"
+                        type="number"
+                        value={formData.display_order}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            display_order: parseInt(e.target.value) || 0,
+                          })
+                        }
+                        placeholder="Ex: 1, 2, 3..."
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setDialogOpen(false)}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button type="submit">
+                      {editingSize ? "Atualizar" : "Criar"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         <Card>
@@ -462,7 +539,11 @@ export default function Sizes() {
                 <p className="mt-1 text-sm text-muted-foreground">
                   Comece adicionando os tamanhos para seus produtos.
                 </p>
-                <div className="mt-6">
+                <div className="mt-6 flex gap-2 justify-center">
+                  <Button onClick={handleBulkAddDialog} variant="outline">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Adicionar em Lote
+                  </Button>
                   <Button onClick={handleNewSize}>
                     <Plus className="mr-2 h-4 w-4" />
                     Novo Tamanho
@@ -490,7 +571,7 @@ export default function Sizes() {
                   {sizes
                     .sort((a, b) => a.display_order - b.display_order)
                     .map((size) => (
-                      <TableRow
+                      <TableRow 
                         key={size.id}
                         className={selectedSizes.includes(size.id) ? "bg-blue-50" : ""}
                       >
