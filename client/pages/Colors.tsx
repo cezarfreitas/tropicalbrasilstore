@@ -35,6 +35,7 @@ export default function Colors() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingColor, setEditingColor] = useState<Color | null>(null);
+  const [selectedColors, setSelectedColors] = useState<number[]>([]);
   const [formData, setFormData] = useState<CreateColorRequest>({
     name: "",
     hex_code: "",
