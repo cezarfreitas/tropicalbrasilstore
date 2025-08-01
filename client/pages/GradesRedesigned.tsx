@@ -711,14 +711,24 @@ export default function GradesRedesigned() {
           ) : (
             <div className="space-y-4">
               {grades.map((grade) => (
-                <Card key={grade.id}>
+                <Card
+                  key={grade.id}
+                  className={selectedGrades.includes(grade.id) ? "border-blue-200 bg-blue-50" : ""}
+                >
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-lg">{grade.name}</CardTitle>
-                        {grade.description && (
-                          <CardDescription>{grade.description}</CardDescription>
-                        )}
+                      <div className="flex items-center gap-3">
+                        <Checkbox
+                          checked={selectedGrades.includes(grade.id)}
+                          onCheckedChange={() => toggleGradeSelection(grade.id)}
+                          aria-label={`Selecionar grade ${grade.name}`}
+                        />
+                        <div>
+                          <CardTitle className="text-lg">{grade.name}</CardTitle>
+                          {grade.description && (
+                            <CardDescription>{grade.description}</CardDescription>
+                          )}
+                        </div>
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge variant="outline">
