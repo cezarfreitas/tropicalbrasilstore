@@ -7,7 +7,7 @@ import { downloadAndSaveImage, isValidImageUrl } from "../lib/image-uploader";
 interface BulkProductVariant {
   cor: string; // Cor da variante
   preco: number; // Preço da variante
-  grade: string; // Grade/tamanho
+  grade: string | string[]; // Grade/tamanho - aceita string única ou array de strings
   foto?: string; // URL da foto (opcional)
   sku?: string; // SKU específico (opcional)
   estoque_grade?: number; // Quantidade fixa para estoque por grade
