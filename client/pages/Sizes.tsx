@@ -46,6 +46,12 @@ export default function Sizes() {
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
 
+  // Bulk add state
+  const [bulkAddDialogOpen, setBulkAddDialogOpen] = useState(false);
+  const [bulkSizesText, setBulkSizesText] = useState("");
+  const [bulkStartOrder, setBulkStartOrder] = useState(1);
+  const [bulkAddLoading, setBulkAddLoading] = useState(false);
+
   const { toast } = useToast();
 
   useEffect(() => {
