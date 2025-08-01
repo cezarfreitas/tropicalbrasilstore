@@ -27,6 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { Plus, Edit2, Trash2, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Color, CreateColorRequest } from "@shared/types";
