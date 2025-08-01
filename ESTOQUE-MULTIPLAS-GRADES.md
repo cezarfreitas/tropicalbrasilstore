@@ -182,10 +182,10 @@ A API verifica nesta ordem e usa a primeira opção disponível.
 A API mostra nos logs qual estratégia está usando:
 
 ```
-📦 Usando estoque específico para grade 2647: 200
-📦 Usando estoque geral para grade 2637: 100
-✅ Estoque configurado para grade 2647: 200 unidades
-✅ Estoque configurado para grade 2637: 100 unidades
+📦 Usando estoque posicional [0] para grade 2647: 15
+📦 Usando estoque posicional [1] para grade 2637: 20
+✅ Estoque configurado para grade 2647: 15 unidades
+✅ Estoque configurado para grade 2637: 20 unidades
 ```
 
 ## Recomendação
