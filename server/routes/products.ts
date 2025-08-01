@@ -722,20 +722,30 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           }
 
           // Processar estoque baseado no tipo
-          if (
-            product.tipo_estoque === "grade" &&
-            variante.estoque_grade !== undefined
-          ) {
-            // Estoque por grade - definir quantidade na relação produto-cor-grade
-            await db.execute(
-              `UPDATE product_color_grades
-             SET stock_quantity = ?
-             WHERE product_id = ? AND color_id = ? AND grade_id = ?`,
-              [variante.estoque_grade, productId, colorId, gradeId],
-            );
-            console.log(
-              `  📦 Estoque por grade configurado: ${variante.estoque_grade} unidades`,
-            );
+          if (product.tipo_estoque === "grade") {
+            let estoqueParaEstaGrade = 0;
+
+            // Prioridade: estoque_grades específico > estoque_grade geral
+            if (variante.estoque_grades && variante.estoque_grades[gradeNome] !== undefined) {
+              estoqueParaEstaGrade = variante.estoque_grades[gradeNome];
+              console.log(`  📦 Usando estoque específico para grade ${gradeNome}: ${estoqueParaEstaGrade}`);
+            } else if (variante.estoque_grade !== undefined) {
+              estoqueParaEstaGrade = variante.estoque_grade;
+              console.log(`  📦 Usando estoque geral para grade ${gradeNome}: ${estoqueParaEstaGrade}`);
+            }
+
+            if (estoqueParaEstaGrade > 0) {
+              // Estoque por grade - definir quantidade na relação produto-cor-grade
+              await db.execute(
+                `UPDATE product_color_grades
+               SET stock_quantity = ?
+               WHERE product_id = ? AND color_id = ? AND grade_id = ?`,
+                [estoqueParaEstaGrade, productId, colorId, gradeId],
+              );
+              console.log(
+                `  ✅ Estoque configurado para grade ${gradeNome}: ${estoqueParaEstaGrade} unidades`,
+              );
+            }
           } else if (
             product.tipo_estoque === "size" &&
             variante.estoque_tamanhos
