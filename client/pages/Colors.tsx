@@ -147,6 +147,66 @@ export default function Colors() {
     setDialogOpen(true);
   };
 
+  // Funções de seleção múltipla
+  const isAllSelected = colors.length > 0 && selectedColors.length === colors.length;
+  const isIndeterminate = selectedColors.length > 0 && selectedColors.length < colors.length;
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedColors([]);
+    } else {
+      setSelectedColors(colors.map(color => color.id));
+    }
+  };
+
+  const toggleColorSelection = (colorId: number) => {
+    setSelectedColors(prev =>
+      prev.includes(colorId)
+        ? prev.filter(id => id !== colorId)
+        : [...prev, colorId]
+    );
+  };
+
+  const clearSelection = () => {
+    setSelectedColors([]);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedColors.length === 0) return;
+
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedColors.length} cor${selectedColors.length !== 1 ? 'es' : ''}?`;
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      const deletePromises = selectedColors.map(id =>
+        fetch(`/api/colors/${id}`, {
+          method: 'DELETE'
+        })
+      );
+
+      const results = await Promise.all(deletePromises);
+      const failed = results.filter(r => !r.ok);
+
+      if (failed.length === 0) {
+        toast({
+          title: "Sucesso",
+          description: `${selectedColors.length} cor${selectedColors.length !== 1 ? 'es' : ''} excluída${selectedColors.length !== 1 ? 's' : ''} com sucesso`,
+        });
+        setSelectedColors([]);
+        fetchColors();
+      } else {
+        throw new Error(`${failed.length} cor${failed.length !== 1 ? 'es' : ''} não puderam ser excluída${failed.length !== 1 ? 's' : ''}`);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
