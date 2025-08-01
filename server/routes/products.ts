@@ -579,9 +579,12 @@ router.post("/bulk", validateApiKey, async (req, res) => {
 
         // Processar cada grade
         for (const gradeNome of gradesToProcess) {
-          // Verificar se já existe uma variante desta cor e grade para este produto
-          const gradeId = await getOrCreateGrade(gradeNome);
-          gradesCreated.add(gradeNome);
+          try {
+            console.log(`🔄 Processando grade: ${gradeNome} para cor: ${variante.cor}`);
+
+            // Verificar se já existe uma variante desta cor e grade para este produto
+            const gradeId = await getOrCreateGrade(gradeNome);
+            gradesCreated.add(gradeNome);
 
           // Gerar SKU para verificação
           const checkSku = variante.sku || `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}-${gradeNome}`;
@@ -784,6 +787,10 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           });
 
           variantesCreadas++;
+          } catch (gradeError: any) {
+            console.error(`❌ Erro ao processar grade ${gradeNome}:`, gradeError.message);
+            throw gradeError;
+          }
         } // fim do loop de grades
       } // fim do loop de variantes
 
