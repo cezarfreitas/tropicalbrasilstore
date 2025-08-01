@@ -287,7 +287,7 @@ export default function Sizes() {
       }
 
       // Create requests for each size
-      const createPromises = newSizes.map((size, index) => 
+      const createPromises = newSizes.map((size, index) =>
         fetch("/api/sizes", {
           method: "POST",
           headers: {
@@ -297,6 +297,7 @@ export default function Sizes() {
             size: size,
             display_order: bulkStartOrder + index,
           }),
+          cache: "no-cache",
         })
       );
 
