@@ -277,6 +277,12 @@ router.post("/create", validateApiKey, async (req, res) => {
       const categoryId = await getOrCreateCategory(product.categoria);
       const typeId = await getOrCreateType(product.tipo);
 
+      // Criar ou buscar marca se fornecida
+      let brandId = null;
+      if (product.marca) {
+        brandId = await getOrCreateBrand(product.marca);
+      }
+
       categoriesCreated.add(product.categoria);
       typesCreated.add(product.tipo);
 
