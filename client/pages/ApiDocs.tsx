@@ -564,6 +564,7 @@ export default function ApiDocs() {
 {`{
   "codigo": "TNS001",
   "nome": "Tênis Nike Air Max",
+  "marca": "Nike",
   "tipo_estoque": "size",
   "variantes": [
     {
