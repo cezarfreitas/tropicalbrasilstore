@@ -434,6 +434,7 @@ export default function ProductsWooCommerce() {
       category_id: undefined,
       gender_id: undefined,
       type_id: undefined,
+      brand_id: undefined,
       base_price: undefined,
       suggested_price: undefined,
       sku: "",
