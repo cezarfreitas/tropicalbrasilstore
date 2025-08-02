@@ -254,7 +254,7 @@ export default function Attributes() {
         }
       } else {
         throw new Error(
-          `Erro ao excluir ${activeTab === "genders" ? "gênero" : "tipo"}`,
+          `Erro ao excluir ${activeTab === "genders" ? "gênero" : activeTab === "types" ? "tipo" : "marca"}`,
         );
       }
     } catch (error: any) {
