@@ -29,6 +29,7 @@ interface WooCommerceProduct {
   name: string;
   description?: string;
   category_id?: number;
+  brand_id?: number;
   base_price?: number;
   suggested_price?: number;
   sku?: string;
