@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: "dist/spa",
     chunkSizeWarningLimit: 1000,
+    reportCompressedSize: false, // Skip gzip analysis for faster build
     rollupOptions: {
       output: {
         manualChunks: {
