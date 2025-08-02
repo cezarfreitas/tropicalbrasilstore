@@ -46,7 +46,7 @@ export function ProductImage({
       {
         rootMargin: "50px", // Start loading 50px before image comes into view
         threshold: 0.1,
-      }
+      },
     );
 
     if (imgRef.current) {
@@ -113,7 +113,7 @@ export function ProductImage({
           style={{
             display: hasError ? "none" : "block",
             transition: "opacity 0.2s ease-in-out",
-            opacity: isLoading ? 0.7 : 1
+            opacity: isLoading ? 0.7 : 1,
           }}
           decoding="async"
           fetchPriority={priority ? "high" : "auto"}
