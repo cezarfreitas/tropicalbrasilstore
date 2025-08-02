@@ -134,6 +134,44 @@ const apiEndpoints = [
   },
   {
     method: "GET",
+    endpoint: "/api/brands",
+    description: "Listar marcas disponíveis",
+    parameters: "",
+    example: {
+      id: 1,
+      name: "Havaianas",
+      description: "Marca líder em chinelos no Brasil",
+    },
+  },
+  {
+    method: "POST",
+    endpoint: "/api/brands",
+    description: "Criar nova marca",
+    parameters: "Body: Dados da marca",
+    example: {
+      name: "Nova Marca",
+      description: "Descrição da marca (opcional)",
+    },
+  },
+  {
+    method: "PUT",
+    endpoint: "/api/brands/{id}",
+    description: "Atualizar marca existente",
+    parameters: "id: ID da marca, Body: Dados atualizados",
+    example: {
+      name: "Marca Atualizada",
+      description: "Nova descrição da marca",
+    },
+  },
+  {
+    method: "DELETE",
+    endpoint: "/api/brands/{id}",
+    description: "Excluir marca",
+    parameters: "id: ID da marca",
+    example: "204 No Content",
+  },
+  {
+    method: "GET",
     endpoint: "/api/grades",
     description: "Listar grades de tamanhos",
     parameters: "",
