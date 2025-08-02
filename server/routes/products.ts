@@ -568,6 +568,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             product.descricao || null,
             categoryId,
             typeId,
+            brandId,
             genderId,
             product.codigo,
             basePrice,
@@ -1039,7 +1040,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         );
       } else {
         console.log(`⚠️ Variante já existe, atualizando preço`);
-        // Atualizar preço se necessário
+        // Atualizar preço se necess��rio
         await db.execute(
           "UPDATE product_variants SET price_override = ? WHERE product_id = ? AND color_id = ? AND size_id = ?",
           [preco, productId, colorId, sizeId],
