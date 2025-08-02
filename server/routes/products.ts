@@ -20,6 +20,7 @@ interface BulkProduct {
   nome: string; // Nome do produto
   categoria: string; // Categoria do produto
   tipo: string; // Tipo do produto
+  marca?: string; // Marca do produto (opcional)
   genero?: string; // Gênero (opcional)
   descricao?: string; // Descrição do produto (opcional)
   preco_sugerido?: number; // Preço sugerido de venda (opcional)
