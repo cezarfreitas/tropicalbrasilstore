@@ -13,6 +13,7 @@ export default defineConfig({
     outDir: "dist/server",
     target: "node18",
     ssr: true,
+    reportCompressedSize: false, // Skip size analysis to speed up build
     rollupOptions: {
       external: [
         // Node.js built-ins
