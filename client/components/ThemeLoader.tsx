@@ -81,16 +81,30 @@ export function ThemeLoader() {
       if (response.ok) {
         const settings = await response.json();
         const themeColors = {
-          primary_color: settings.primary_color,
-          secondary_color: settings.secondary_color,
-          accent_color: settings.accent_color,
-          background_color: settings.background_color,
-          text_color: settings.text_color,
+          primary_color: settings.primary_color || "#f97316",
+          secondary_color: settings.secondary_color || "#ea580c",
+          accent_color: settings.accent_color || "#fed7aa",
+          background_color: settings.background_color || "#ffffff",
+          text_color: settings.text_color || "#1f2937",
         };
         console.log("🎨 Received theme colors from server:", themeColors);
         setColors(themeColors);
+
+        // Save to localStorage for faster loading next time
+        localStorage.setItem("theme-colors", JSON.stringify(themeColors));
       } else {
         console.error("Failed to fetch theme colors, status:", response.status);
+
+        // Use fallback colors if server request fails
+        const fallbackColors = {
+          primary_color: "#f97316",
+          secondary_color: "#ea580c",
+          accent_color: "#fed7aa",
+          background_color: "#ffffff",
+          text_color: "#1f2937"
+        };
+        console.log("🎨 Using fallback theme colors:", fallbackColors);
+        setColors(fallbackColors);
       }
     } catch (error) {
       console.error("Error fetching theme colors:", error);
