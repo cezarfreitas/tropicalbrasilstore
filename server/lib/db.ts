@@ -9,10 +9,7 @@ const createConnection = () => {
       waitForConnections: true,
       connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "3"),
       queueLimit: 0,
-      idleTimeout: 20000,
-      maxIdle: 1,
       charset: "utf8mb4",
-      collation: "utf8mb4_unicode_ci",
     });
   }
 
@@ -27,10 +24,7 @@ const createConnection = () => {
       waitForConnections: true,
       connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "3"),
       queueLimit: 0,
-      idleTimeout: 20000,
-      maxIdle: 1,
       charset: "utf8mb4",
-      collation: "utf8mb4_unicode_ci",
     });
   }
 
@@ -45,10 +39,7 @@ const createConnection = () => {
       waitForConnections: true,
       connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "3"),
       queueLimit: 0,
-      idleTimeout: 20000,
-      maxIdle: 1,
       charset: "utf8mb4",
-      collation: "utf8mb4_unicode_ci",
     });
   }
 
@@ -59,8 +50,6 @@ const createConnection = () => {
     waitForConnections: true,
     connectionLimit: 3,
     queueLimit: 0,
-    idleTimeout: 20000,
-    maxIdle: 1,
   });
 };
 
