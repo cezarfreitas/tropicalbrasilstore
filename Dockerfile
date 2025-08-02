@@ -25,5 +25,5 @@ EXPOSE 3000
 # Set environment to production
 ENV NODE_ENV=production
 
-# Start the application with safety checks
-CMD ["npm", "run", "start:safe"]
+# Start with minimal server for debugging
+CMD ["npm", "run", "start:minimal"]
