@@ -304,6 +304,7 @@ router.post("/create", validateApiKey, async (req, res) => {
           product.descricao || "",
           categoryId,
           typeId,
+          brandId,
           genderId,
           product.preco_sugerido || null,
           true,
