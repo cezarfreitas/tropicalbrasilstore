@@ -15,9 +15,13 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'router-vendor': ['react-router-dom'],
-          'ui-vendor': ['lucide-react', '@radix-ui/react-dialog', '@radix-ui/react-tabs'],
+          "react-vendor": ["react", "react-dom"],
+          "router-vendor": ["react-router-dom"],
+          "ui-vendor": [
+            "lucide-react",
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-tabs",
+          ],
         },
       },
     },
@@ -42,7 +46,7 @@ function expressPlugin(): Plugin {
       server.middlewares.use(app);
     },
     transformIndexHtml: {
-      order: 'pre',
+      order: "pre",
       handler: async (html, context) => {
         // Inject store settings script into HTML
         const injection = `
@@ -75,8 +79,11 @@ function expressPlugin(): Plugin {
       })();
     </script>`;
 
-        return html.replace('<div id="root"></div>', `<div id="root"></div>${injection}`);
-      }
-    }
+        return html.replace(
+          '<div id="root"></div>',
+          `<div id="root"></div>${injection}`,
+        );
+      },
+    },
   };
 }
