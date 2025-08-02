@@ -865,6 +865,8 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         } // fim do loop de grades
       } // fim do loop de variantes
 
+      console.log(`📊 Total de variantes processadas para ${product.codigo}: ${variants.length}`);
+
       createdProducts.push({
         id: productId,
         codigo: product.codigo,
