@@ -42,12 +42,12 @@ try {
   console.log("✅ Fast build completed!");
 } catch (error) {
   console.error("❌ Fast build failed:", error.message);
-  // Fallback to regular build with shorter timeout for deploy
+  // Fallback to regular build with reasonable timeout
   console.log("🔄 Trying regular build...");
   try {
     execSync("node build.js", {
       stdio: "inherit",
-      timeout: 90000, // 1.5 minutes for fallback
+      timeout: 180000, // 3 minutes for fallback
       env: {
         ...process.env,
         NODE_ENV: "production",
