@@ -699,6 +699,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           }
 
           // Criar entrada na tabela product_color_variants para compatibilidade com admin WooCommerce
+          // Usando um SKU único que inclui a grade para evitar duplicatas
           const [colorVariantResult] = await db.execute(
             `INSERT INTO product_color_variants
            (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
@@ -706,7 +707,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             [
               productId,
               colorId,
-              `${product.nome} - ${variante.cor}`,
+              `${product.nome} - ${variante.cor} - ${gradeNome}`,
               variantSku,
               variante.preco,
               localImageUrl,
@@ -714,6 +715,8 @@ router.post("/bulk", validateApiKey, async (req, res) => {
               true,
             ],
           );
+
+          console.log(`  ✅ Variante de cor criada: ${variante.cor} - ${gradeNome}`);
 
           // Buscar todos os tamanhos da grade para criar variantes para cada um
           const [gradeTemplates] = await db.execute(
