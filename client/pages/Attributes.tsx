@@ -35,8 +35,10 @@ import { useToast } from "@/hooks/use-toast";
 import {
   Gender,
   Type,
+  Brand,
   CreateGenderRequest,
   CreateTypeRequest,
+  CreateBrandRequest,
 } from "@shared/types";
 
 export default function Attributes() {
