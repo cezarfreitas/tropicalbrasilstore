@@ -497,7 +497,7 @@ export default function Attributes() {
         onValueChange={setActiveTab}
         className="space-y-6"
       >
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="genders" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Gêneros
@@ -505,6 +505,10 @@ export default function Attributes() {
           <TabsTrigger value="types" className="flex items-center gap-2">
             <Package className="h-4 w-4" />
             Tipo
+          </TabsTrigger>
+          <TabsTrigger value="brands" className="flex items-center gap-2">
+            <Award className="h-4 w-4" />
+            Marcas
           </TabsTrigger>
         </TabsList>
 
