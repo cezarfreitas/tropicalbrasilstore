@@ -22,7 +22,10 @@ try {
 
   // Build server
   console.log("🚀 Building server...");
-  execSync("npm run build:server", { stdio: "inherit" });
+  execSync("npm run build:server", {
+    stdio: "inherit",
+    timeout: 120000 // 2 minutes timeout
+  });
 
   console.log("✅ Build completed successfully!");
 } catch (error) {
