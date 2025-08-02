@@ -113,6 +113,11 @@ export interface CreateTypeRequest {
   description?: string;
 }
 
+export interface CreateBrandRequest {
+  name: string;
+  description?: string;
+}
+
 export interface CreateProductRequest {
   name: string;
   description?: string;
