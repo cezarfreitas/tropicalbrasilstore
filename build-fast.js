@@ -16,11 +16,13 @@ try {
   console.log("🎨 Building client (fast)...");
   execSync("npm run build:client", {
     stdio: "inherit",
-    timeout: 60000, // 1 minute max
+    timeout: 45000, // 45 seconds max for deploy
     env: {
       ...process.env,
       NODE_ENV: "production",
       VITE_BUILD_FAST: "true",
+      CI: "true",
+      DISABLE_ESLINT_PLUGIN: "true",
     },
   });
 
@@ -28,11 +30,12 @@ try {
   console.log("🚀 Building server (fast)...");
   execSync("npm run build:server", {
     stdio: "inherit",
-    timeout: 60000, // 1 minute max
+    timeout: 30000, // 30 seconds max for server
     env: {
       ...process.env,
       NODE_ENV: "production",
       VITE_BUILD_FAST: "true",
+      CI: "true",
     },
   });
 
