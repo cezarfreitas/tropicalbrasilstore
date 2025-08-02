@@ -619,10 +619,10 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           const gradeId = await getOrCreateGrade(gradeNome);
           gradesCreated.add(gradeNome);
 
-          // Verificar se já existe uma variante desta cor para este produto
+          // Verificar se já existe uma variante desta cor e grade específica para este produto
           const [existingColorVariant] = await db.execute(
-            "SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?",
-            [productId, colorId],
+            "SELECT pcv.id FROM product_color_variants pcv INNER JOIN product_color_grades pcg ON pcv.product_id = pcg.product_id AND pcv.color_id = pcg.color_id WHERE pcv.product_id = ? AND pcv.color_id = ? AND pcg.grade_id = ?",
+            [productId, colorId, gradeId],
           );
 
           if ((existingColorVariant as any[]).length > 0) {
