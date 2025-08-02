@@ -116,7 +116,7 @@ export function ProductImage({
             opacity: isLoading ? 0.7 : 1
           }}
           decoding="async"
-          fetchpriority={priority ? "high" : "auto"}
+          fetchPriority={priority ? "high" : "auto"}
         />
       )}
     </div>
