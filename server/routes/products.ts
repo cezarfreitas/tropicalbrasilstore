@@ -617,8 +617,10 @@ router.post("/bulk", validateApiKey, async (req, res) => {
 
         // Processar cada grade
         for (const gradeNome of gradesToProcess) {
+          console.log(`🔄 Processando grade: ${gradeNome}`);
           // Verificar se já existe uma variante desta cor e grade para este produto
           const gradeId = await getOrCreateGrade(gradeNome);
+          console.log(`✅ Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`);
           gradesCreated.add(gradeNome);
 
           // Verificar se já existe uma variante desta cor e grade específica para este produto
