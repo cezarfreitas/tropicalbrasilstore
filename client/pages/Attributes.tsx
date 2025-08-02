@@ -941,6 +941,216 @@ export default function Attributes() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {/* Marcas Tab */}
+        <TabsContent value="brands" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Award className="h-5 w-5" />
+                    Marcas
+                  </CardTitle>
+                  <CardDescription>
+                    {brands.length === 0
+                      ? "Nenhuma marca cadastrada"
+                      : `${brands.length} marca${brands.length !== 1 ? "s" : ""} cadastrada${brands.length !== 1 ? "s" : ""}`}
+                  </CardDescription>
+                </div>
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button onClick={handleNew}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Nova Marca
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <form onSubmit={handleSubmit}>
+                      <DialogHeader>
+                        <DialogTitle>
+                          {editingItem ? "Editar Marca" : "Nova Marca"}
+                        </DialogTitle>
+                        <DialogDescription>
+                          {editingItem
+                            ? "Atualize as informações da marca"
+                            : "Adicione uma nova marca para seus produtos"}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="name">Nome da Marca</Label>
+                          <Input
+                            id="name"
+                            value={formData.name}
+                            onChange={(e) =>
+                              setFormData({ ...formData, name: e.target.value })
+                            }
+                            placeholder="Ex: Havaianas, Ipanema"
+                            required
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="description">Descrição (opcional)</Label>
+                          <Textarea
+                            id="description"
+                            value={formData.description}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                description: e.target.value,
+                              })
+                            }
+                            placeholder="Descrição da marca..."
+                            rows={3}
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setDialogOpen(false)}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button type="submit">
+                          {editingItem ? "Atualizar" : "Criar"}
+                        </Button>
+                      </DialogFooter>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardHeader>
+
+            {/* Barra de ações para seleção múltipla - Marcas */}
+            {selectedBrands.length > 0 && (
+              <Card className="border-blue-200 bg-blue-50 mx-6">
+                <CardContent className="pt-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <span className="text-sm font-medium">
+                        {selectedBrands.length} marca{selectedBrands.length !== 1 ? "s" : ""} selecionada{selectedBrands.length !== 1 ? "s" : ""}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={clearBrandSelection}
+                      >
+                        Limpar seleção
+                      </Button>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={handleBulkDeleteBrands}
+                        className="flex items-center gap-2"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Excluir selecionadas
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            <CardContent>
+              {brands.length === 0 ? (
+                <div className="text-center py-8">
+                  <Award className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                  <h3 className="mt-2 text-sm font-semibold">
+                    Nenhuma marca cadastrada
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Comece criando as primeiras marcas para seus produtos.
+                  </p>
+                  <div className="mt-6">
+                    <Button onClick={handleNew}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Nova Marca
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[50px]">
+                        <Checkbox
+                          checked={isAllBrandsSelected}
+                          ref={(el) => {
+                            if (el) el.indeterminate = isBrandsIndeterminate;
+                          }}
+                          onCheckedChange={toggleSelectAllBrands}
+                          aria-label="Selecionar todas as marcas"
+                          className={
+                            isBrandsIndeterminate
+                              ? "data-[state=checked]:bg-blue-600"
+                              : ""
+                          }
+                        />
+                      </TableHead>
+                      <TableHead>Nome</TableHead>
+                      <TableHead>Descrição</TableHead>
+                      <TableHead>Criado em</TableHead>
+                      <TableHead className="w-[100px]">Ações</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {brands.map((brand) => (
+                      <TableRow
+                        key={brand.id}
+                        className={
+                          selectedBrands.includes(brand.id) ? "bg-blue-50" : ""
+                        }
+                      >
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedBrands.includes(brand.id)}
+                            onCheckedChange={() => toggleBrandSelection(brand.id)}
+                            aria-label={`Selecionar marca ${brand.name}`}
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {brand.name}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {brand.description || "—"}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {new Date(brand.created_at).toLocaleDateString(
+                            "pt-BR",
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleEdit(brand)}
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleDelete(brand.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   );
