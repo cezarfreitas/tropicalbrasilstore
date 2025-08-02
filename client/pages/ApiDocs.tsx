@@ -192,6 +192,7 @@ const apiEndpoints = [
       nome: "Sandália Melissa",
       categoria: "Sandálias",
       tipo: "Feminino",
+      marca: "Melissa",
       descricao: "Sandália elegante",
       cor: "Rosa",
       preco: 199.9,
