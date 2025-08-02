@@ -242,6 +242,7 @@ router.post("/", async (req, res) => {
         name,
         description || null,
         category_id || null,
+        brand_id || null,
         base_price || null,
         suggested_price || null,
         sku || null,
