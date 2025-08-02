@@ -50,6 +50,7 @@ import { createCustomerAuthTable } from "./lib/create-customer-auth-table";
 import { addSellWithoutStockColumn } from "./lib/add-sell-without-stock";
 import { addParentSkuColumn } from "./lib/add-parent-sku";
 import { addParentIdColumn } from "./lib/add-parent-id-column";
+import { addBrandsTable } from "./lib/add-brands-table";
 import { addSizeGroupsTable } from "./lib/add-size-groups-table";
 import { createProductVariantsTable } from "./lib/create-product-variants";
 import { addPriceOverrideColumn } from "./lib/add-price-override-column";
