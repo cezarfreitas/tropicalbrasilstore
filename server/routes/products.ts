@@ -929,7 +929,7 @@ router.post("/single", validateApiKey, async (req, res) => {
       });
     }
 
-    // Verificar se produto com código já existe
+    // Verificar se produto com c��digo já existe
     const [existingProduct] = await db.execute(
       "SELECT id FROM products WHERE sku = ?",
       [codigo],
@@ -964,7 +964,7 @@ router.post("/single", validateApiKey, async (req, res) => {
 
     // Criar produto
     const [productResult] = await db.execute(
-      "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, suggested_price, sell_without_stock, stock_type, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO products (name, description, category_id, type_id, brand_id, gender_id, sku, base_price, suggested_price, sell_without_stock, stock_type, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         nome,
         descricao || null,
