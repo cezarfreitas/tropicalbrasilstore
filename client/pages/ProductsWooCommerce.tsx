@@ -1623,6 +1623,22 @@ export default function ProductsWooCommerce() {
                 ))}
               </SelectContent>
             </Select>
+            <Select
+              value={selectedBrand}
+              onValueChange={setSelectedBrand}
+            >
+              <SelectTrigger className="w-full sm:w-48">
+                <SelectValue placeholder="Marca" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as marcas</SelectItem>
+                {brands.map((brand) => (
+                  <SelectItem key={brand.id} value={brand.id.toString()}>
+                    {brand.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
               <SelectTrigger className="w-full sm:w-32">
                 <SelectValue placeholder="Status" />
