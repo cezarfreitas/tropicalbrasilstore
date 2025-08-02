@@ -129,6 +129,12 @@ interface Size {
   display_order: number;
 }
 
+interface Brand {
+  id: number;
+  name: string;
+  description?: string;
+}
+
 interface SizeGroup {
   id: number;
   name: string;
