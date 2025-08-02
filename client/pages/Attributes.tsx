@@ -176,7 +176,7 @@ export default function Attributes() {
     e.preventDefault();
 
     try {
-      const endpoint = activeTab === "genders" ? "/api/genders" : "/api/types";
+      const endpoint = activeTab === "genders" ? "/api/genders" : activeTab === "types" ? "/api/types" : "/api/brands";
       const url = editingItem ? `${endpoint}/${editingItem.id}` : endpoint;
       const method = editingItem ? "PUT" : "POST";
 
@@ -318,7 +318,7 @@ export default function Attributes() {
       if (failed.length === 0) {
         toast({
           title: "Sucesso",
-          description: `${selectedGenders.length} gênero${selectedGenders.length !== 1 ? "s" : ""} excluído${selectedGenders.length !== 1 ? "s" : ""} com sucesso`,
+          description: `${selectedGenders.length} g��nero${selectedGenders.length !== 1 ? "s" : ""} excluído${selectedGenders.length !== 1 ? "s" : ""} com sucesso`,
         });
         setSelectedGenders([]);
         fetchGenders();
