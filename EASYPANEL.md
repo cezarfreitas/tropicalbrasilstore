@@ -20,9 +20,14 @@ DB_CONNECTION_LIMIT=10
 
 O projeto está configurado para usar **Nixpacks** automaticamente.
 
-- **Build Command**: `npm run build`
+- **Build Command**: `npm run build:deploy` (otimizado para deploy)
 - **Start Command**: `npm start`
-- **Node Version**: 22
+- **Node Version**: 18 (recomendado para estabilidade)
+
+#### Scripts Disponíveis:
+- `npm run build:deploy` - Build ultra-otimizado para deploy (40s timeout)
+- `npm run build` - Build rápido para desenvolvimento
+- `npm run build:regular` - Build completo sem timeouts
 
 ## 📁 Estrutura de Deploy
 
