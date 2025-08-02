@@ -428,8 +428,120 @@ export default function ApiDocs() {
                 </ul>
               </div>
 
+              {/* Nova seção organizada de campos */}
+              <div className="space-y-6">
+                <h4 className="text-lg font-semibold">📋 Campos Organizados por Categoria</h4>
+
+                {/* Campos Obrigatórios */}
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <h5 className="font-semibold text-red-800 mb-3 flex items-center gap-2">
+                    🔴 Campos Obrigatórios
+                  </h5>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white p-3 rounded border">
+                      <h6 className="font-medium text-red-700 mb-2">Produto Principal:</h6>
+                      <ul className="text-sm space-y-1">
+                        <li>✅ <code className="bg-gray-100 px-1 rounded">codigo</code> - Código único</li>
+                        <li>✅ <code className="bg-gray-100 px-1 rounded">nome</code> - Nome do produto</li>
+                        <li>✅ <code className="bg-gray-100 px-1 rounded">variantes</code> - Array (mín: 1)</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white p-3 rounded border">
+                      <h6 className="font-medium text-red-700 mb-2">Cada Variante:</h6>
+                      <ul className="text-sm space-y-1">
+                        <li>✅ <code className="bg-gray-100 px-1 rounded">cor</code> - Cor da variante</li>
+                        <li>✅ <code className="bg-gray-100 px-1 rounded">preco</code> - Preço da variante</li>
+                        <li>✅ <code className="bg-gray-100 px-1 rounded">grade</code> - Nome da grade</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Campos de Classificação */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h5 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                    🏷️ Classificação (Auto-criados se não existirem)
+                  </h5>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-white p-3 rounded border text-center">
+                      <div className="text-2xl mb-1">📂</div>
+                      <code className="text-sm bg-gray-100 px-2 py-1 rounded block">categoria</code>
+                      <span className="text-xs text-gray-600">Ex: "Chinelos"</span>
+                    </div>
+                    <div className="bg-white p-3 rounded border text-center">
+                      <div className="text-2xl mb-1">🔖</div>
+                      <code className="text-sm bg-gray-100 px-2 py-1 rounded block">tipo</code>
+                      <span className="text-xs text-gray-600">Ex: "Casual"</span>
+                    </div>
+                    <div className="bg-white p-3 rounded border text-center">
+                      <div className="text-2xl mb-1">🏢</div>
+                      <code className="text-sm bg-gray-100 px-2 py-1 rounded block">marca</code>
+                      <span className="text-xs text-gray-600">Ex: "Havaianas"</span>
+                    </div>
+                    <div className="bg-white p-3 rounded border text-center">
+                      <div className="text-2xl mb-1">👥</div>
+                      <code className="text-sm bg-gray-100 px-2 py-1 rounded block">genero</code>
+                      <span className="text-xs text-gray-600">Ex: "Unissex"</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Campos Opcionais */}
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h5 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
+                    ⚙️ Configurações Opcionais
+                  </h5>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white p-3 rounded border">
+                      <h6 className="font-medium text-green-700 mb-2">Informações:</h6>
+                      <ul className="text-sm space-y-1">
+                        <li>📝 <code className="bg-gray-100 px-1 rounded">descricao</code> - Descrição</li>
+                        <li>💰 <code className="bg-gray-100 px-1 rounded">preco_sugerido</code> - Preço sugerido</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white p-3 rounded border">
+                      <h6 className="font-medium text-green-700 mb-2">Controles:</h6>
+                      <ul className="text-sm space-y-1">
+                        <li>♾️ <code className="bg-gray-100 px-1 rounded">vender_infinito</code> - Sem estoque</li>
+                        <li>📦 <code className="bg-gray-100 px-1 rounded">tipo_estoque</code> - "grade"/"size"</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Campos da Variante */}
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <h5 className="font-semibold text-purple-800 mb-3 flex items-center gap-2">
+                    🎨 Campos Adicionais da Variante
+                  </h5>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-white p-3 rounded border">
+                      <h6 className="font-medium text-purple-700 mb-2">Mídia & ID:</h6>
+                      <ul className="text-sm space-y-1">
+                        <li>📸 <code className="bg-gray-100 px-1 rounded">foto</code> - URL da foto</li>
+                        <li>🏷️ <code className="bg-gray-100 px-1 rounded">sku</code> - SKU específico</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white p-3 rounded border">
+                      <h6 className="font-medium text-purple-700 mb-2">Estoque por Grade:</h6>
+                      <ul className="text-sm space-y-1">
+                        <li>📦 <code className="bg-gray-100 px-1 rounded">estoque_grade</code> - Qtd total</li>
+                        <li><span className="text-xs text-gray-600">Ex: 25</span></li>
+                      </ul>
+                    </div>
+                    <div className="bg-white p-3 rounded border">
+                      <h6 className="font-medium text-purple-700 mb-2">Estoque por Tamanho:</h6>
+                      <ul className="text-sm space-y-1">
+                        <li>👟 <code className="bg-gray-100 px-1 rounded">estoque_tamanhos</code> - Objeto</li>
+                        <li><span className="text-xs text-gray-600">Ex: 37:5, 38:8</span></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-4">
-                <h4 className="text-lg font-semibold">Estrutura do Produto</h4>
+                <h4 className="text-lg font-semibold">📄 Estrutura JSON Completa</h4>
                 <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
                   {`{
   "codigo": "CHN001",              // C��digo único do produto (obrigatório)
