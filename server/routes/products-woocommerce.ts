@@ -102,7 +102,7 @@ router.get("/", async (req, res) => {
       LEFT JOIN colors co ON pcv.color_id = co.id
       LEFT JOIN product_color_grades pcg ON p.id = pcg.product_id
       ${whereClause}
-      GROUP BY p.id, c.name
+      GROUP BY p.id, c.name, b.name
       ORDER BY p.created_at DESC
       LIMIT ${limit} OFFSET ${offset}
     `;
