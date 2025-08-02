@@ -334,7 +334,7 @@ export default function ProductsWooCommerce() {
       console.error("Error fetching products:", error);
       toast({
         title: "Erro",
-        description: "Não foi possível carregar os produtos",
+        description: "N��o foi possível carregar os produtos",
         variant: "destructive",
       });
     } finally {
@@ -970,6 +970,33 @@ export default function ProductsWooCommerce() {
                                   value={type.id.toString()}
                                 >
                                   {type.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="brand">Marca</Label>
+                          <Select
+                            value={formData.brand_id?.toString() || ""}
+                            onValueChange={(value) =>
+                              setFormData({
+                                ...formData,
+                                brand_id: value ? parseInt(value) : undefined,
+                              })
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecionar marca" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {brands.map((brand) => (
+                                <SelectItem
+                                  key={brand.id}
+                                  value={brand.id.toString()}
+                                >
+                                  {brand.name}
                                 </SelectItem>
                               ))}
                             </SelectContent>
