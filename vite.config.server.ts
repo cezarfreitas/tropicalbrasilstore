@@ -49,7 +49,7 @@ export default defineConfig({
       },
     },
     minify: false, // Keep readable for debugging
-    sourcemap: true,
+    sourcemap: false, // Disable sourcemap for faster build
   },
   resolve: {
     alias: {
