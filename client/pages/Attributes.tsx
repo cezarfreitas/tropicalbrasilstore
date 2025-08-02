@@ -61,7 +61,7 @@ export default function Attributes() {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      await Promise.all([fetchGenders(), fetchTypes()]);
+      await Promise.all([fetchGenders(), fetchTypes(), fetchBrands()]);
       setLoading(false);
     };
     loadData();
