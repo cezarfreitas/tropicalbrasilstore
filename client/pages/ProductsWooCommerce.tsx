@@ -104,6 +104,7 @@ interface WooCommerceProduct {
   category_name?: string;
   gender_name?: string;
   type_name?: string;
+  brand_name?: string;
   variant_count?: number;
   total_stock?: number;
   available_colors?: string;
