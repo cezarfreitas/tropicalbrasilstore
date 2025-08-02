@@ -59,8 +59,6 @@ const createConnection = () => {
     waitForConnections: true,
     connectionLimit: 3,
     queueLimit: 0,
-    acquireTimeout: 5000,
-    timeout: 5000,
     idleTimeout: 20000,
     maxIdle: 1,
   });
