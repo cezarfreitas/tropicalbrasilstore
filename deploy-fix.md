@@ -10,25 +10,29 @@
 ## ✅ Correções Aplicadas:
 
 ### 1. Database Configuration (server/lib/db.ts)
+
 - ❌ Removido `collation: "utf8mb4_unicode_ci"`
 - ❌ Removido `idleTimeout: 20000`
 - ❌ Removido `maxIdle: 1`
 - ✅ Mantido apenas configurações compatíveis
 
-### 2. JWT Configuration (server/lib/auth-utils.ts)  
+### 2. JWT Configuration (server/lib/auth-utils.ts)
+
 - ✅ Adicionado type assertion: `payload as object`
 
 ### 3. Build Scripts
+
 - ✅ Criado `build-simple.js` sem timeout
 - ✅ Atualizado `nixpacks.toml` com comandos diretos
 - ✅ Package.json usando build simplificado
 
 ### 4. Nixpacks Config
+
 ```toml
 [phases.build]
 cmds = [
   "rm -rf dist",
-  "mkdir -p dist", 
+  "mkdir -p dist",
   "npm run build:client",
   "npm run build:server"
 ]
@@ -64,4 +68,5 @@ PORT=3000
 5. ✅ Nixpacks config simplificado
 
 ## 🎯 Status:
+
 **Deploy pronto para funcionar com as correções aplicadas!**
