@@ -4,6 +4,17 @@ import fs from "fs";
 import { createServer } from "./index";
 import { fileURLToPath } from "url";
 
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
 const port = process.env.PORT || 3000;
 
 // Production environment checks (minimal logging for faster startup)
