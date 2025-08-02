@@ -48,7 +48,7 @@ export default function Attributes() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<Gender | Type | null>(null);
+  const [editingItem, setEditingItem] = useState<Gender | Type | Brand | null>(null);
   const [selectedGenders, setSelectedGenders] = useState<number[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<number[]>([]);
   const [formData, setFormData] = useState({
