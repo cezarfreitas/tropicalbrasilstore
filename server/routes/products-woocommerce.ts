@@ -49,6 +49,7 @@ router.get("/", async (req, res) => {
 
     const search = (req.query.search as string) || "";
     const category = (req.query.category as string) || "";
+    const brand = (req.query.brand as string) || "";
     const status = (req.query.status as string) || "";
 
     // Build WHERE conditions
