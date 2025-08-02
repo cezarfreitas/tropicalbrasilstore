@@ -605,6 +605,7 @@ Authorization: Bearer your_api_key
       "nome": "Chinelo Havaianas Top",
       "categoria": "Chinelos",
       "tipo": "Casual",
+      "marca": "Havaianas",
       "genero": "Unissex",
       "descricao": "O chinelo mais famoso do Brasil",
       "preco_sugerido": 39.90,
