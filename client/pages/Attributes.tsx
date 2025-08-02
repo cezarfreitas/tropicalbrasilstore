@@ -233,7 +233,7 @@ export default function Attributes() {
     if (!confirm("Tem certeza que deseja excluir este item?")) return;
 
     try {
-      const endpoint = activeTab === "genders" ? "/api/genders" : "/api/types";
+      const endpoint = activeTab === "genders" ? "/api/genders" : activeTab === "types" ? "/api/types" : "/api/brands";
       const response = await fetch(`${endpoint}/${id}`, {
         method: "DELETE",
       });
