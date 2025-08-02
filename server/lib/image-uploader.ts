@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import axios from "axios";
+import sharp from "sharp";
 
 // Ensure upload directory exists
 const uploadDir = path.join(process.cwd(), "public", "uploads", "products");
