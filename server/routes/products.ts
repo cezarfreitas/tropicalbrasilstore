@@ -545,6 +545,12 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         const typeId = await getOrCreateType(product.tipo);
         typesCreated.add(product.tipo);
 
+        // Criar ou buscar marca se fornecida
+        let brandId = null;
+        if (product.marca) {
+          brandId = await getOrCreateBrand(product.marca);
+        }
+
         // Criar ou buscar gênero se fornecido
         let genderId = null;
         if (product.genero) {
