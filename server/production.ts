@@ -15,8 +15,16 @@ if (process.env.NODE_ENV === "production") {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Create Express app
-const app = createServer();
+// Create Express app with error handling
+let app;
+try {
+  console.log("🔧 Creating Express server...");
+  app = createServer();
+  console.log("✅ Express server created successfully");
+} catch (error) {
+  console.error("❌ Failed to create Express server:", error);
+  process.exit(1);
+}
 
 // Ensure uploads directory exists in production
 const uploadsPath = path.join(process.cwd(), "public", "uploads");
