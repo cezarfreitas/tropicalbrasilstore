@@ -41,13 +41,13 @@ export async function downloadAndSaveImage(
     // Process image with Sharp for ecommerce optimization
     await sharp(response.data)
       .resize(800, 800, {
-        fit: 'inside',
+        fit: "inside",
         withoutEnlargement: true,
-        background: { r: 255, g: 255, b: 255, alpha: 1 } // White background for transparent images
+        background: { r: 255, g: 255, b: 255, alpha: 1 }, // White background for transparent images
       })
       .webp({
         quality: 85, // High quality for ecommerce
-        effort: 6,   // Better compression
+        effort: 6, // Better compression
       })
       .toFile(filepath);
 
@@ -57,9 +57,9 @@ export async function downloadAndSaveImage(
 
     await sharp(response.data)
       .resize(300, 300, {
-        fit: 'inside',
+        fit: "inside",
         withoutEnlargement: true,
-        background: { r: 255, g: 255, b: 255, alpha: 1 }
+        background: { r: 255, g: 255, b: 255, alpha: 1 },
       })
       .webp({
         quality: 80,
@@ -92,22 +92,26 @@ export function isValidImageUrl(url: string): boolean {
 
     // Check if URL ends with image extension
     const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp"];
-    const hasImageExtension = imageExtensions.some((ext) => pathname.endsWith(ext));
+    const hasImageExtension = imageExtensions.some((ext) =>
+      pathname.endsWith(ext),
+    );
 
     // Check for common image hosting patterns
-    const isImageHost = hostname.includes('vteximg') ||
-                       hostname.includes('shopify') ||
-                       hostname.includes('cloudinary') ||
-                       hostname.includes('amazonaws') ||
-                       pathname.includes('image') ||
-                       pathname.includes('photo') ||
-                       pathname.includes('img');
+    const isImageHost =
+      hostname.includes("vteximg") ||
+      hostname.includes("shopify") ||
+      hostname.includes("cloudinary") ||
+      hostname.includes("amazonaws") ||
+      pathname.includes("image") ||
+      pathname.includes("photo") ||
+      pathname.includes("img");
 
     // Check for image-like path patterns (like vtex urls)
-    const hasImagePath = pathname.includes('-640-') || // vtex dimensions pattern
-                        pathname.includes('ids/') ||    // vtex ids pattern
-                        pathname.match(/\d+x\d+/) ||     // dimension patterns
-                        pathname.includes('upload');
+    const hasImagePath =
+      pathname.includes("-640-") || // vtex dimensions pattern
+      pathname.includes("ids/") || // vtex ids pattern
+      pathname.match(/\d+x\d+/) || // dimension patterns
+      pathname.includes("upload");
 
     return hasImageExtension || isImageHost || hasImagePath;
   } catch {

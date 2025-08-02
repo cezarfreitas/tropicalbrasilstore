@@ -613,14 +613,19 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             : [variante.grade];
         }
 
-        console.log(`📊 Grades a processar para ${variante.cor}:`, gradesToProcess);
+        console.log(
+          `📊 Grades a processar para ${variante.cor}:`,
+          gradesToProcess,
+        );
 
         // Processar cada grade
         for (const gradeNome of gradesToProcess) {
           console.log(`🔄 Processando grade: ${gradeNome}`);
           // Verificar se já existe uma variante desta cor e grade para este produto
           const gradeId = await getOrCreateGrade(gradeNome);
-          console.log(`✅ Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`);
+          console.log(
+            `✅ Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`,
+          );
           gradesCreated.add(gradeNome);
 
           // Verificar se já existe uma variante desta cor e grade específica para este produto
@@ -716,7 +721,9 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             ],
           );
 
-          console.log(`  ✅ Variante de cor criada: ${variante.cor} - ${gradeNome}`);
+          console.log(
+            `  ✅ Variante de cor criada: ${variante.cor} - ${gradeNome}`,
+          );
 
           // Buscar todos os tamanhos da grade para criar variantes para cada um
           const [gradeTemplates] = await db.execute(
@@ -865,7 +872,9 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         } // fim do loop de grades
       } // fim do loop de variantes
 
-      console.log(`📊 Total de variantes processadas para ${product.codigo}: ${variants.length}`);
+      console.log(
+        `📊 Total de variantes processadas para ${product.codigo}: ${variants.length}`,
+      );
 
       createdProducts.push({
         id: productId,

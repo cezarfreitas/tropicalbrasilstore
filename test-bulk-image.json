@@ -6,15 +6,15 @@
       "categoria": "Logo",
       "tipo": "Sandália",
       "genero": "Feminina",
-      "marca":"Tropical Brasil",
+      "marca": "Tropical Brasil",
       "descricao": "Chinelo Havaianas Top tradicional, confortável e durável. Material borracha de alta qualidade.",
-      "preco_sugerido": 13.60,
+      "preco_sugerido": 13.6,
       "vender_infinito": true,
       "tipo_estoque": "grade",
       "variantes": [
         {
           "cor": "Azul Elemental",
-          "preco": 13.60,
+          "preco": 13.6,
           "grade": "2647, 2637",
           "foto": "https://projetoinfluencer.vteximg.com.br/arquivos/ids/6953678-640-960/Chinelo-Tropical-Brasil-Institucion-Flip-Flop-Branco-Com-Azul.jpg",
           "sku": "TB1.2522-AzulElemental",
