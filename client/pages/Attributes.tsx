@@ -30,7 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Edit2, Trash2, Tags, Users, Package } from "lucide-react";
+import { Plus, Edit2, Trash2, Tags, Users, Package, Award } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Gender,
