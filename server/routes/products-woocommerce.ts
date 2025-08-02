@@ -66,6 +66,11 @@ router.get("/", async (req, res) => {
       params.push(category);
     }
 
+    if (brand) {
+      conditions.push("p.brand_id = ?");
+      params.push(brand);
+    }
+
     if (status === "active") {
       conditions.push("p.active = true");
     } else if (status === "inactive") {
