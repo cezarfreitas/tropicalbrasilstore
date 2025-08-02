@@ -192,8 +192,8 @@ export default function Attributes() {
         toast({
           title: "Sucesso",
           description: editingItem
-            ? `${activeTab === "genders" ? "Gênero" : "Tipo"} atualizado com sucesso`
-            : `${activeTab === "genders" ? "Gênero" : "Tipo"} criado com sucesso`,
+            ? `${activeTab === "genders" ? "Gênero" : activeTab === "types" ? "Tipo" : "Marca"} atualizado com sucesso`
+            : `${activeTab === "genders" ? "Gênero" : activeTab === "types" ? "Tipo" : "Marca"} criado com sucesso`,
         });
         setDialogOpen(false);
         resetForm();
@@ -318,7 +318,7 @@ export default function Attributes() {
       if (failed.length === 0) {
         toast({
           title: "Sucesso",
-          description: `${selectedGenders.length} g��nero${selectedGenders.length !== 1 ? "s" : ""} excluído${selectedGenders.length !== 1 ? "s" : ""} com sucesso`,
+          description: `${selectedGenders.length} gênero${selectedGenders.length !== 1 ? "s" : ""} excluído${selectedGenders.length !== 1 ? "s" : ""} com sucesso`,
         });
         setSelectedGenders([]);
         fetchGenders();
