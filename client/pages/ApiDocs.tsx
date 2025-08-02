@@ -51,6 +51,7 @@ const apiEndpoints = [
           nome: "Chinelo Havaianas Top",
           categoria: "Chinelos",
           tipo: "Casual",
+          marca: "Havaianas",
           descricao: "Chinelo tradicional Havaianas",
           variantes: [
             {
