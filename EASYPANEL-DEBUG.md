@@ -1,11 +1,13 @@
 # 🚨 EasyPanel Debugging - Service Not Started
 
 ## ❌ Problema Atual:
+
 Service mostrando "Service is not started" no EasyPanel
 
 ## 🔍 Possíveis Causas:
 
 ### 1. **Variáveis de Ambiente**
+
 O container precisa das variáveis de ambiente no EasyPanel:
 
 ```bash
@@ -20,17 +22,20 @@ PORT=3000
 ```
 
 ### 2. **Container não consegue conectar ao banco**
+
 - Verificar se o banco de dados está acessível
 - Testar conectividade de rede
 - Verificar credenciais
 
 ### 3. **Porta incorreta**
+
 - EasyPanel pode estar esperando porta diferente
 - Verificar configuração de rede do projeto
 
 ## ✅ Correções Aplicadas:
 
 ### 1. **Startup Logging melhorado**
+
 ```typescript
 // Bind to 0.0.0.0 (container-friendly)
 app.listen(port, "0.0.0.0", () => {
@@ -39,20 +44,23 @@ app.listen(port, "0.0.0.0", () => {
 ```
 
 ### 2. **Error Handling**
+
 ```typescript
-process.on('uncaughtException', (error) => {
-  console.error('❌ Uncaught Exception:', error);
+process.on("uncaughtException", (error) => {
+  console.error("❌ Uncaught Exception:", error);
   process.exit(1);
 });
 ```
 
 ### 3. **Dependency Check**
+
 ```bash
 npm run check  # Verifica se tudo está instalado
 npm run start:safe  # Start com verificação
 ```
 
 ### 4. **Dockerfile atualizado**
+
 ```dockerfile
 CMD ["npm", "run", "start:safe"]
 ```
@@ -60,22 +68,28 @@ CMD ["npm", "run", "start:safe"]
 ## 🚀 Próximos Passos no EasyPanel:
 
 ### 1. **Verificar Logs**
+
 No painel do EasyPanel:
+
 - Ir em "Logs" do container
 - Verificar mensagens de erro
 - Procurar por "❌" ou erros
 
 ### 2. **Verificar Variáveis**
+
 No painel do EasyPanel:
+
 - Ir em "Environment Variables"
 - Adicionar as variáveis necessárias
 - Reiniciar o container
 
 ### 3. **Configurar Rede**
+
 - Verificar se porta 3000 está exposta
 - Verificar se domain/proxy está configurado
 
 ### 4. **Database Connection**
+
 - Se usando banco externo, verificar conectividade
 - Se usando banco interno, verificar se está rodando
 - Testar credenciais
@@ -99,4 +113,5 @@ npm run start:safe
 - [ ] Container reiniciado após mudanças
 
 ## 🎯 Resultado Esperado:
+
 Depois das correções, o serviço deve mostrar a loja funcionando normalmente como no Fly.io
