@@ -950,6 +950,12 @@ router.post("/single", validateApiKey, async (req, res) => {
     const colorId = await getOrCreateColor(cor);
     const gradeId = await getOrCreateGrade(grade);
 
+    // Criar ou buscar marca se fornecida
+    let brandId = null;
+    if (marca) {
+      brandId = await getOrCreateBrand(marca);
+    }
+
     // Criar ou buscar gênero se fornecido
     let genderId = null;
     if (genero) {
