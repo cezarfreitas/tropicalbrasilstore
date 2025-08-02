@@ -1,51 +1,44 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  # MySQL Database
-  db:
-    image: mysql:8.0
-    container_name: chinelos_db
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-chinelos_root_2024}
-      MYSQL_DATABASE: ${DB_NAME:-chinelos_store}
-      MYSQL_USER: ${DB_USER:-chinelos_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-chinelos_pass_2024}
-    volumes:
-      - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    command: --default-authentication-plugin=mysql_native_password
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
-
-    # Application
   app:
     build:
       context: .
       dockerfile: Dockerfile.docker-compose
-    container_name: chinelos_app
-    restart: unless-stopped
-    environment:
-      NODE_ENV: production
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_NAME: ${DB_NAME:-chinelos_store}
-      DB_USER: ${DB_USER:-chinelos_user}
-      DB_PASSWORD: ${DB_PASSWORD:-chinelos_pass_2024}
-      PORT: 3000
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=chinelos_store
+      - DB_USER=chinelos_user
+      - DB_PASSWORD=${DB_PASSWORD:-chinelos_password_change_this}
     depends_on:
-      db:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      - db
+    volumes:
+      - uploads:/app/public/uploads
+    networks:
+      - chinelos_network
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=chinelos_store
+      - MYSQL_USER=chinelos_user
+      - MYSQL_PASSWORD=${DB_PASSWORD:-chinelos_password_change_this}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-root_password_change_this}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - chinelos_network
 
 volumes:
   mysql_data:
+  uploads:
+
+networks:
+  chinelos_network:
+    driver: bridge
