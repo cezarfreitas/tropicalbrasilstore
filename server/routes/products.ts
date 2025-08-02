@@ -909,6 +909,7 @@ router.post("/single", validateApiKey, async (req, res) => {
       nome,
       categoria,
       tipo,
+      marca,
       genero,
       descricao,
       cor,
