@@ -115,6 +115,7 @@ export function createServer() {
       await addDesignColumns(); // Add design customization columns
       await addShowInMenuColumn(); // Add show_in_menu column to categories
       await addGendersTypesTable(); // Add genders and types tables
+      await addBrandsTable(); // Add brands table
       await createApiLogsTable(); // Create API logs table
       await createVendorsSystem(); // Create vendors system tables
       await addVendorPassword(); // Add password column to vendors
