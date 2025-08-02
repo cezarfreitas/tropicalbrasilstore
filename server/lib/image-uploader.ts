@@ -88,13 +88,28 @@ export function isValidImageUrl(url: string): boolean {
   try {
     const parsedUrl = new URL(url);
     const pathname = parsedUrl.pathname.toLowerCase();
+    const hostname = parsedUrl.hostname.toLowerCase();
 
     // Check if URL ends with image extension
     const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp"];
-    return (
-      imageExtensions.some((ext) => pathname.endsWith(ext)) ||
-      pathname.includes("image")
-    );
+    const hasImageExtension = imageExtensions.some((ext) => pathname.endsWith(ext));
+
+    // Check for common image hosting patterns
+    const isImageHost = hostname.includes('vteximg') ||
+                       hostname.includes('shopify') ||
+                       hostname.includes('cloudinary') ||
+                       hostname.includes('amazonaws') ||
+                       pathname.includes('image') ||
+                       pathname.includes('photo') ||
+                       pathname.includes('img');
+
+    // Check for image-like path patterns (like vtex urls)
+    const hasImagePath = pathname.includes('-640-') || // vtex dimensions pattern
+                        pathname.includes('ids/') ||    // vtex ids pattern
+                        pathname.match(/\d+x\d+/) ||     // dimension patterns
+                        pathname.includes('upload');
+
+    return hasImageExtension || isImageHost || hasImagePath;
   } catch {
     return false;
   }
