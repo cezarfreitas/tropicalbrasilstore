@@ -629,7 +629,7 @@ export default function ApiDocs() {
                       ⚠️ Validações
                     </h5>
                     <ul className="text-sm text-yellow-700 space-y-1">
-                      <li>• C��digo deve ser ��nico</li>
+                      <li>• Código deve ser único</li>
                       <li>• Mínimo 1 variante por produto</li>
                       <li>• Preço deve ser maior que 0</li>
                       <li>• Nome da grade é obrigatório</li>
