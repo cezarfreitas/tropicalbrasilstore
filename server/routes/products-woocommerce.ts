@@ -97,6 +97,7 @@ router.get("/", async (req, res) => {
         GROUP_CONCAT(DISTINCT CONCAT(co.name, ':', co.hex_code) ORDER BY co.name) as color_data
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN brands b ON p.brand_id = b.id
       LEFT JOIN product_color_variants pcv ON p.id = pcv.product_id
       LEFT JOIN colors co ON pcv.color_id = co.id
       LEFT JOIN product_color_grades pcg ON p.id = pcg.product_id
