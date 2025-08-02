@@ -45,7 +45,6 @@ try {
 
   console.log("✅ Client-only build completed!");
   process.exit(0);
-  
 } catch (error) {
   console.error("❌ Client-only build failed:", error.message);
   process.exit(1);
