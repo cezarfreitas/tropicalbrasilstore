@@ -1,34 +1,38 @@
 #!/usr/bin/env node
 
 // Check if all required dependencies are available
+import fs from 'fs';
+import path from 'path';
+
 console.log("🔍 Checking dependencies...");
 
 const requiredDeps = [
-  "express",
-  "mysql2",
-  "cors",
-  "jsonwebtoken",
-  "bcryptjs",
-  "multer",
+  'express',
+  'mysql2',
+  'cors',
+  'jsonwebtoken',
+  'bcryptjs',
+  'multer'
 ];
 
 let allGood = true;
 
+// Check dependencies using dynamic imports
 for (const dep of requiredDeps) {
   try {
-    require(dep);
+    await import(dep);
     console.log(`✅ ${dep}: OK`);
   } catch (error) {
-    console.error(`❌ ${dep}: MISSING`);
+    console.error(`❌ ${dep}: MISSING - ${error.message}`);
     allGood = false;
   }
 }
 
 // Check if dist files exist
-const fs = require("fs");
-const path = require("path");
-
-const requiredFiles = ["dist/server/production.js", "dist/spa/index.html"];
+const requiredFiles = [
+  'dist/server/production.js',
+  'dist/spa/index.html'
+];
 
 for (const file of requiredFiles) {
   if (fs.existsSync(file)) {
@@ -40,8 +44,8 @@ for (const file of requiredFiles) {
 }
 
 // Environment variables check
-const requiredEnvs = ["NODE_ENV"];
-const optionalEnvs = ["DATABASE_URL", "MYSQL_HOST", "DB_HOST", "PORT"];
+const requiredEnvs = ['NODE_ENV'];
+const optionalEnvs = ['DATABASE_URL', 'MYSQL_HOST', 'DB_HOST', 'PORT'];
 
 console.log("\n📋 Environment Variables:");
 for (const env of requiredEnvs) {
