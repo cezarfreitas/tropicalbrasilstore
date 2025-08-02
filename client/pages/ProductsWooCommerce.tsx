@@ -149,6 +149,7 @@ export default function ProductsWooCommerce() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [genders, setGenders] = useState<any[]>([]);
   const [types, setTypes] = useState<any[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [colors, setColors] = useState<Color[]>([]);
   const [sizes, setSizes] = useState<Size[]>([]);
   const [grades, setGrades] = useState<any[]>([]);
