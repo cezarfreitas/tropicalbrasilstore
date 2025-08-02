@@ -51,6 +51,7 @@ export default function Attributes() {
   const [editingItem, setEditingItem] = useState<Gender | Type | Brand | null>(null);
   const [selectedGenders, setSelectedGenders] = useState<number[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<number[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
