@@ -295,8 +295,8 @@ router.post("/create", validateApiKey, async (req, res) => {
       // Criar produto principal
       const [productResult] = await db.execute(
         `INSERT INTO products
-         (name, sku, parent_sku, description, category_id, type_id, gender_id, suggested_price, active, sell_without_stock, stock_type)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         (name, sku, parent_sku, description, category_id, type_id, brand_id, gender_id, suggested_price, active, sell_without_stock, stock_type)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           product.nome,
           product.codigo,
