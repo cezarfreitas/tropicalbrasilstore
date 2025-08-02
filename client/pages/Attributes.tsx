@@ -137,6 +137,41 @@ export default function Attributes() {
     }
   };
 
+  const fetchBrands = async (retryCount = 0) => {
+    try {
+      const response = await fetch("/api/brands", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-cache",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setBrands(data);
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+
+      // Retry once if this is the first attempt
+      if (retryCount === 0) {
+        console.log("Retrying fetch brands...");
+        setTimeout(() => fetchBrands(1), 1000);
+        return;
+      }
+
+      toast({
+        title: "Erro",
+        description:
+          "Não foi possível carregar as marcas. Verifique sua conexão.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
