@@ -26,9 +26,12 @@ O projeto está configurado para usar **Nixpacks** automaticamente.
 
 #### Scripts Disponíveis:
 
-- `npm run build:deploy` - Build ultra-otimizado para deploy (40s timeout)
-- `npm run build` - Build rápido para desenvolvimento
+- `npm run build:client-only` - Build apenas frontend (90s, ideal para deploy)
+- `npm run build:deploy` - Build ultra-otimizado para deploy
+- `npm run build` - Build rápido com timeouts ajustados
 - `npm run build:regular` - Build completo sem timeouts
+
+**Recomendado para Easypanel**: `npm run build:client-only`
 
 ## 📁 Estrutura de Deploy
 
