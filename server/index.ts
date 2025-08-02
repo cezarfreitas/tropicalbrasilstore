@@ -76,6 +76,13 @@ export function createServer() {
 
   // Middleware
   app.use(cors());
+
+  // Configure charset to UTF-8 for proper encoding of special characters
+  app.use((req, res, next) => {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    next();
+  });
+
   app.use(express.json({ limit: "50mb" })); // Increase limit for large CSV imports
   app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
