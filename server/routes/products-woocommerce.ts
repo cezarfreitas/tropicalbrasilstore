@@ -216,6 +216,7 @@ router.post("/", async (req, res) => {
       name,
       description,
       category_id,
+      brand_id,
       base_price,
       suggested_price,
       sku,
