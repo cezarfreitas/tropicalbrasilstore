@@ -53,10 +53,9 @@ try {
 
   console.log("✅ Deploy build completed successfully!");
   process.exit(0);
-  
 } catch (error) {
   console.error("❌ Deploy build failed:", error.message);
-  
+
   // Last resort fallback
   console.log("🆘 Attempting emergency build...");
   try {

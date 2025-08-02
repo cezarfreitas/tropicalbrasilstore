@@ -5,7 +5,8 @@ import { createServer } from "./server";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const isDeployBuild = process.env.VITE_BUILD_FAST === "true" || process.env.CI === "true";
+  const isDeployBuild =
+    process.env.VITE_BUILD_FAST === "true" || process.env.CI === "true";
 
   return {
     server: {

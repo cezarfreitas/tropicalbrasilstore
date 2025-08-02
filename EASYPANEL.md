@@ -25,6 +25,7 @@ O projeto está configurado para usar **Nixpacks** automaticamente.
 - **Node Version**: 18 (recomendado para estabilidade)
 
 #### Scripts Disponíveis:
+
 - `npm run build:deploy` - Build ultra-otimizado para deploy (40s timeout)
 - `npm run build` - Build rápido para desenvolvimento
 - `npm run build:regular` - Build completo sem timeouts
@@ -53,12 +54,14 @@ dist/
 ### Build Timeout/Stuck
 
 **Soluções implementadas:**
+
 - ✅ `build-deploy.js` com timeouts agressivos (40s client, 25s server)
 - ✅ `Dockerfile.easypanel` com multi-stage build otimizado
 - ✅ Variáveis de ambiente para máxima velocidade de build
 - ✅ Chunk splitting otimizado (bundle reduzido de 903KB → 665KB)
 
 **Se build ainda estiver lento:**
+
 1. Use `npm run build:deploy` em vez de `npm run build`
 2. Configure `NODE_OPTIONS=--max-old-space-size=2048` nas env vars
 3. Use Dockerfile.easypanel se precisar de Docker
@@ -90,23 +93,27 @@ dist/
 ## ⚡ Otimizações de Deploy Implementadas
 
 ### ✅ Scripts Otimizados
+
 - `build-deploy.js` - Build ultra-rápido com timeouts agressivos
 - `build-fast.js` - Build rápido com fallback inteligente
 - Timeouts: 40s client + 25s server = ~65s total
 
 ### ✅ Configuração Vite Otimizada
+
 - Minificação esbuild (mais rápida que terser)
 - Sourcemaps desabilitados em produção
 - Chunk splitting otimizado: bundle 903KB → 665KB
 - Análise de compressão desabilitada
 
 ### ✅ Dockerfiles Disponíveis
+
 - `Dockerfile` - Versão básica otimizada
 - `Dockerfile.easypanel` - Multi-stage build para máxima otimização
 - Usuário não-root para segurança
 - Health check configurado
 
 ### ✅ Configurações de Ambiente
+
 ```bash
 NODE_OPTIONS=--max-old-space-size=2048
 VITE_BUILD_FAST=true

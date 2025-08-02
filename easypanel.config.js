@@ -7,7 +7,7 @@ export const easypanelConfig = {
     fallbackTimeout: 80000, // 80 segundos para fallback
     maxMemory: "2048MB",
   },
-  
+
   // Variáveis de ambiente recomendadas
   env: {
     NODE_ENV: "production",
@@ -18,7 +18,7 @@ export const easypanelConfig = {
     NODE_OPTIONS: "--max-old-space-size=2048",
     DB_CONNECTION_LIMIT: "3", // Reduzido para deploy
   },
-  
+
   // Configurações do Docker
   docker: {
     nodeVersion: "18-alpine",
@@ -33,7 +33,7 @@ export const easypanelConfig = {
       retries: 3,
     },
   },
-  
+
   // Comandos recomendados
   commands: {
     build: "npm run build:deploy",
