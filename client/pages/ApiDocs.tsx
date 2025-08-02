@@ -1269,7 +1269,7 @@ Authorization: Bearer YOUR_API_KEY`}
                 </h5>
                 <p className="text-sm text-yellow-700">
                   Mantenha suas chaves de API seguras. Não as compartilhe
-                  publicamente ou as inclua em c��digo front-end. Use sempre
+                  publicamente ou as inclua em código front-end. Use sempre
                   HTTPS em produção.
                 </p>
               </div>
