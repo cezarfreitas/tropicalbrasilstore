@@ -540,6 +540,16 @@ export default function ApiDocs() {
                 </div>
               </div>
 
+              {/* Teste de Codificação */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                <h5 className="font-semibold text-yellow-800 mb-2">🔤 Teste de Codificação</h5>
+                <div className="text-sm text-yellow-700">
+                  <p>Caracteres especiais: á, é, í, ó, ú, ã, ç, ñ</p>
+                  <p>Palavras: código, descrição, categoria, configuração, autenticação</p>
+                  <p>Emojis: 🔴 ✅ 📋 🏷️ ⚙️ 🎨 💡</p>
+                </div>
+              </div>
+
               <div className="space-y-4">
                 <h4 className="text-lg font-semibold">📄 Estrutura JSON Completa</h4>
                 <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
