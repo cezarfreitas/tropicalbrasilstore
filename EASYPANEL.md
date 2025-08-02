@@ -50,6 +50,19 @@ dist/
 
 ## 🐛 Troubleshooting
 
+### Build Timeout/Stuck
+
+**Soluções implementadas:**
+- ✅ `build-deploy.js` com timeouts agressivos (40s client, 25s server)
+- ✅ `Dockerfile.easypanel` com multi-stage build otimizado
+- ✅ Variáveis de ambiente para máxima velocidade de build
+- ✅ Chunk splitting otimizado (bundle reduzido de 903KB → 665KB)
+
+**Se build ainda estiver lento:**
+1. Use `npm run build:deploy` em vez de `npm run build`
+2. Configure `NODE_OPTIONS=--max-old-space-size=2048` nas env vars
+3. Use Dockerfile.easypanel se precisar de Docker
+
 ### Erro "Not a directory" / Undefined Variable
 
 - ✅ Removido Dockerfile conflitante (renomeado para Dockerfile.docker-compose)
