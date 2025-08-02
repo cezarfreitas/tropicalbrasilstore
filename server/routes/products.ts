@@ -970,6 +970,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         descricao || null,
         categoryId,
         typeId,
+        brandId,
         genderId,
         codigo,
         preco,
