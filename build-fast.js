@@ -16,7 +16,7 @@ try {
   console.log("🎨 Building client (fast)...");
   execSync("npm run build:client", {
     stdio: "inherit",
-    timeout: 45000, // 45 seconds max for deploy
+    timeout: 60000, // 1 minute for client
     env: {
       ...process.env,
       NODE_ENV: "production",
@@ -30,7 +30,7 @@ try {
   console.log("🚀 Building server (fast)...");
   execSync("npm run build:server", {
     stdio: "inherit",
-    timeout: 30000, // 30 seconds max for server
+    timeout: 45000, // 45 seconds for server
     env: {
       ...process.env,
       NODE_ENV: "production",
