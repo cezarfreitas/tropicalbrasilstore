@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
       outDir: "dist/spa",
       chunkSizeWarningLimit: 1000,
       reportCompressedSize: false, // Skip gzip analysis for faster build
-      minify: isDeployBuild ? "esbuild" : "terser", // Faster minification for deploy
+      minify: "esbuild", // Use esbuild for all builds (faster and no extra deps)
       sourcemap: isDeployBuild ? false : true, // Skip sourcemaps for deploy
       rollupOptions: {
         output: {
