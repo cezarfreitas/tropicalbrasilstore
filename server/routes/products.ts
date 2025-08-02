@@ -613,6 +613,8 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             : [variante.grade];
         }
 
+        console.log(`📊 Grades a processar para ${variante.cor}:`, gradesToProcess);
+
         // Processar cada grade
         for (const gradeNome of gradesToProcess) {
           // Verificar se já existe uma variante desta cor e grade para este produto
