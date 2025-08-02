@@ -436,6 +436,7 @@ export default function ApiDocs() {
   "nome": "Chinelo Havaianas Top", // Nome do produto (obrigatório)
   "categoria": "Chinelos",         // Categoria (criada automaticamente se não existir)
   "tipo": "Casual",               // Tipo (criado automaticamente se não existir)
+  "marca": "Havaianas",           // Marca (criada automaticamente se não existir, opcional)
   "genero": "Unissex",             // Gênero (criado automaticamente se não existir)
   "descricao": "Descrição...",    // Descrição do produto (opcional)
   "preco_sugerido": 39.90,        // Preço sugerido de venda (opcional)
@@ -552,7 +553,7 @@ export default function ApiDocs() {
                     <p className="text-sm text-blue-700">
                       ✓ Cada grade/cor tem quantidade fixa<br/>
                       ✓ Independente dos tamanhos<br/>
-                      ✓ Ideal para produtos com grades padronizadas
+                      ��� Ideal para produtos com grades padronizadas
                     </p>
                   </div>
 
