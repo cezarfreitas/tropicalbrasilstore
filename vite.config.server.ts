@@ -44,7 +44,7 @@ export default defineConfig({
         "xlsx",
         "zod",
         "node-fetch",
-        /^node:.*/,  // All Node.js built-in modules
+        /^node:.*/, // All Node.js built-in modules
       ],
       output: {
         format: "es",

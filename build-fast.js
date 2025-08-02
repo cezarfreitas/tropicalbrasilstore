@@ -14,26 +14,26 @@ try {
 
   // Build client with maximum speed
   console.log("🎨 Building client (fast)...");
-  execSync("npm run build:client", { 
+  execSync("npm run build:client", {
     stdio: "inherit",
     timeout: 60000, // 1 minute max
-    env: { 
-      ...process.env, 
+    env: {
+      ...process.env,
       NODE_ENV: "production",
-      VITE_BUILD_FAST: "true"
-    }
+      VITE_BUILD_FAST: "true",
+    },
   });
 
   // Build server with minimal processing
   console.log("🚀 Building server (fast)...");
   execSync("npm run build:server", {
-    stdio: "inherit", 
+    stdio: "inherit",
     timeout: 60000, // 1 minute max
-    env: { 
-      ...process.env, 
+    env: {
+      ...process.env,
       NODE_ENV: "production",
-      VITE_BUILD_FAST: "true"
-    }
+      VITE_BUILD_FAST: "true",
+    },
   });
 
   console.log("✅ Fast build completed!");

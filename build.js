@@ -28,8 +28,8 @@ try {
     env: {
       ...process.env,
       NODE_ENV: "production",
-      VITE_DISABLE_DEV_LOGS: "true"
-    }
+      VITE_DISABLE_DEV_LOGS: "true",
+    },
   });
 
   console.log("✅ Build completed successfully!");
