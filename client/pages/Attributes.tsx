@@ -404,6 +404,70 @@ export default function Attributes() {
     }
   };
 
+  // Funções de seleção múltipla para Marcas
+  const isAllBrandsSelected =
+    brands.length > 0 && selectedBrands.length === brands.length;
+  const isBrandsIndeterminate =
+    selectedBrands.length > 0 && selectedBrands.length < brands.length;
+
+  const toggleSelectAllBrands = () => {
+    if (isAllBrandsSelected) {
+      setSelectedBrands([]);
+    } else {
+      setSelectedBrands(brands.map((brand) => brand.id));
+    }
+  };
+
+  const toggleBrandSelection = (brandId: number) => {
+    setSelectedBrands((prev) =>
+      prev.includes(brandId)
+        ? prev.filter((id) => id !== brandId)
+        : [...prev, brandId],
+    );
+  };
+
+  const clearBrandSelection = () => {
+    setSelectedBrands([]);
+  };
+
+  const handleBulkDeleteBrands = async () => {
+    if (selectedBrands.length === 0) return;
+
+    const confirmMessage = `Tem certeza que deseja excluir ${selectedBrands.length} marca${selectedBrands.length !== 1 ? "s" : ""}?`;
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      const deletePromises = selectedBrands.map((id) =>
+        fetch(`/api/brands/${id}`, {
+          method: "DELETE",
+        }),
+      );
+
+      const results = await Promise.all(deletePromises);
+      const failed = results.filter((r) => !r.ok);
+
+      if (failed.length === 0) {
+        toast({
+          title: "Sucesso",
+          description: `${selectedBrands.length} marca${selectedBrands.length !== 1 ? "s" : ""} excluída${selectedBrands.length !== 1 ? "s" : ""} com sucesso`,
+        });
+        setSelectedBrands([]);
+        fetchBrands();
+      } else {
+        throw new Error(
+          `${failed.length} marca${failed.length !== 1 ? "s" : ""} não puderam ser excluída${failed.length !== 1 ? "s" : ""}`,
+        );
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
