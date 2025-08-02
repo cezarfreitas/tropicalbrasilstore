@@ -378,6 +378,18 @@ export default function ProductsWooCommerce() {
     }
   };
 
+  const fetchBrands = async () => {
+    try {
+      const response = await fetch("/api/brands");
+      if (response.ok) {
+        const data = await response.json();
+        setBrands(data);
+      }
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
+  };
+
   const fetchColors = async () => {
     try {
       const response = await fetch("/api/colors");
