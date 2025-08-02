@@ -82,6 +82,7 @@ const apiEndpoints = [
       name: "Chinelo Havaianas Top",
       price: 29.9,
       category: "Chinelos",
+      marca: "Havaianas",
       variants: 2,
     },
   },
