@@ -321,6 +321,8 @@ export default function ProductsWooCommerce() {
       if (searchTerm) params.append("search", searchTerm);
       if (selectedCategory && selectedCategory !== "all")
         params.append("category", selectedCategory);
+      if (selectedBrand && selectedBrand !== "all")
+        params.append("brand", selectedBrand);
       if (selectedStatus && selectedStatus !== "all")
         params.append("status", selectedStatus);
 
