@@ -303,6 +303,7 @@ export default function ProductsWooCommerce() {
     fetchCategories();
     fetchGenders();
     fetchTypes();
+    fetchBrands();
     fetchColors();
     fetchSizes();
     fetchGrades();
