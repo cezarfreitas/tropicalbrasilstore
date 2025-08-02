@@ -76,6 +76,26 @@ async function getOrCreateType(name: string): Promise<number> {
   return (result as any).insertId;
 }
 
+// Função auxiliar para criar ou buscar marca
+async function getOrCreateBrand(name: string): Promise<number> {
+  // Buscar marca existente
+  const [existing] = await db.execute("SELECT id FROM brands WHERE name = ?", [
+    name,
+  ]);
+
+  if ((existing as any[]).length > 0) {
+    return (existing as any[])[0].id;
+  }
+
+  // Criar nova marca
+  const [result] = await db.execute(
+    "INSERT INTO brands (name, description) VALUES (?, ?)",
+    [name, `Marca ${name} criada automaticamente`],
+  );
+
+  return (result as any).insertId;
+}
+
 // Função auxiliar para criar ou buscar cor
 async function getOrCreateColor(name: string): Promise<number> {
   // Buscar cor existente
