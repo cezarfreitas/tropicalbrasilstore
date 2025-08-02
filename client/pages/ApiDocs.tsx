@@ -853,7 +853,7 @@ Authorization: Bearer your_api_key
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h5 className="font-semibold text-blue-800 mb-2">
-                  �� Dicas de Implementação
+                  💡 Dicas de Implementação
                 </h5>
                 <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Use códigos alfanuméricos únicos para cada produto</li>
