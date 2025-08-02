@@ -108,6 +108,17 @@ export function ThemeLoader() {
       }
     } catch (error) {
       console.error("Error fetching theme colors:", error);
+
+      // Use fallback colors if there's any error
+      const fallbackColors = {
+        primary_color: "#f97316",
+        secondary_color: "#ea580c",
+        accent_color: "#fed7aa",
+        background_color: "#ffffff",
+        text_color: "#1f2937"
+      };
+      console.log("🎨 Using fallback colors due to error:", fallbackColors);
+      setColors(fallbackColors);
     } finally {
       setLoading(false);
     }
