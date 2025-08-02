@@ -422,7 +422,7 @@ export default function ApiDocs() {
                     baseado no padrão da grade
                   </li>
                   <li>
-                    • <strong>Auto-cadastro:</strong> Categorias, tipos e cores
+                    • <strong>Auto-cadastro:</strong> Categorias, tipos, marcas e cores
                     são criados automaticamente se não existirem
                   </li>
                 </ul>
@@ -553,7 +553,7 @@ export default function ApiDocs() {
                     <p className="text-sm text-blue-700">
                       ✓ Cada grade/cor tem quantidade fixa<br/>
                       ✓ Independente dos tamanhos<br/>
-                      ��� Ideal para produtos com grades padronizadas
+                      ✓ Ideal para produtos com grades padronizadas
                     </p>
                   </div>
 
