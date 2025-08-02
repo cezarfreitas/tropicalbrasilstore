@@ -404,7 +404,7 @@ export default function Attributes() {
     }
   };
 
-  // Funções de seleção múltipla para Marcas
+  // Funç��es de seleção múltipla para Marcas
   const isAllBrandsSelected =
     brands.length > 0 && selectedBrands.length === brands.length;
   const isBrandsIndeterminate =
@@ -487,7 +487,7 @@ export default function Attributes() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Atributos</h1>
           <p className="text-muted-foreground">
-            Gerencie os gêneros e tipos dos seus produtos
+            Gerencie os gêneros, tipos e marcas dos seus produtos
           </p>
         </div>
       </div>
