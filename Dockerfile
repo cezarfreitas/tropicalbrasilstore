@@ -23,8 +23,8 @@ ENV NODE_ENV=production
 ENV VITE_BUILD_FAST=true
 ENV DISABLE_ESLINT_PLUGIN=true
 
-# Build with timeout and optimizations
-RUN timeout 300s npm run build || npm run build:regular
+# Build with multiple fallback strategies
+RUN npm run build:client-only || npm run build || npm run build:regular
 
 # Clean up build dependencies to reduce image size
 RUN npm prune --production && \
