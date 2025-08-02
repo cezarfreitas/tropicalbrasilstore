@@ -20,6 +20,7 @@
     "build:server": "vite build --config vite.config.server.ts",
     "start": "node dist/server/production.js",
     "start:prod": "NODE_ENV=production node dist/server/production.js",
+    "start:minimal": "node server/minimal.js",
     "check": "node server/check-deps.js",
     "start:safe": "npm run check && npm start",
     "test": "vitest --run",
