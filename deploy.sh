@@ -1,53 +1,5 @@
 #!/bin/bash
 
-<<<<<<< HEAD
-# Chinelos Store - Deploy Script for Easy Panel
-
-echo "🚀 Iniciando deploy da Chinelos Store..."
-
-# Verificar se docker e docker-compose estão instalados
-if ! command -v docker &> /dev/null; then
-    echo "❌ Docker não encontrado. Instale o Docker primeiro."
-    exit 1
-fi
-
-if ! command -v docker-compose &> /dev/null; then
-    echo "❌ Docker Compose não encontrado. Instale o Docker Compose primeiro."
-    exit 1
-fi
-
-# Criar arquivo .env se não existir
-if [ ! -f .env ]; then
-    echo "📝 Criando arquivo .env..."
-    cp .env.example .env
-    echo "⚠️  Configure as variáveis de ambiente no arquivo .env"
-fi
-
-# Build e start dos containers
-echo "🔨 Fazendo build da aplicação..."
-docker-compose build --no-cache
-
-echo "🚀 Iniciando containers..."
-docker-compose up -d
-
-# Verificar se os containers estão rodando
-echo "🔍 Verificando status dos containers..."
-docker-compose ps
-
-echo "✅ Deploy concluído!"
-echo ""
-echo "📱 Aplicação disponível em: http://localhost:3000"
-echo "🗄️  Banco de dados disponível em: localhost:3306"
-echo ""
-echo "📋 Para ver os logs:"
-echo "   docker-compose logs -f app"
-echo ""
-echo "🛑 Para parar a aplicação:"
-echo "   docker-compose down"
-echo ""
-echo "🔄 Para reiniciar:"
-echo "   docker-compose restart"
-=======
 # Deploy script for Nixpacks
 echo "🚀 Starting deployment preparation..."
 
@@ -59,8 +11,14 @@ fi
 
 # Check if nixpacks.toml exists
 if [ ! -f "nixpacks.toml" ]; then
-    echo "❌ nixpacks.toml not found. Please create it first."
-    exit 1
+    echo "⚠️  nixpacks.toml not found. Creating it from backup..."
+    if [ -f "nixpacks.toml.backup" ]; then
+        cp nixpacks.toml.backup nixpacks.toml
+        echo "✅ Created nixpacks.toml from backup"
+    else
+        echo "❌ No nixpacks configuration found. Please create nixpacks.toml"
+        exit 1
+    fi
 fi
 
 echo "✅ Found required files"
@@ -112,5 +70,5 @@ echo "Deploy with your preferred platform that supports Nixpacks:"
 echo "  - Railway: railway up"
 echo "  - Render: git push"
 echo "  - Fly.io: fly deploy"
+echo "  - EasyPanel: git push to connected repository"
 echo "  - Any Nixpacks-compatible platform"
->>>>>>> c72c1b6292519beaaf381a21765f20e08bcdca45
