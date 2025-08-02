@@ -20,9 +20,17 @@ try {
   console.log("🎨 Building client...");
   execSync("npm run build:client", { stdio: "inherit" });
 
-  // Build server
+  // Build server with faster options
   console.log("🚀 Building server...");
-  execSync("npm run build:server", { stdio: "inherit" });
+  execSync("npm run build:server", {
+    stdio: "inherit",
+    timeout: 90000, // 1.5 minutes timeout
+    env: {
+      ...process.env,
+      NODE_ENV: "production",
+      VITE_DISABLE_DEV_LOGS: "true",
+    },
+  });
 
   console.log("✅ Build completed successfully!");
 } catch (error) {

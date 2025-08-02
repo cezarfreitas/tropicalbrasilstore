@@ -13,6 +13,7 @@ export default defineConfig({
     outDir: "dist/server",
     target: "node18",
     ssr: true,
+    reportCompressedSize: false, // Skip size analysis to speed up build
     rollupOptions: {
       external: [
         // Node.js built-ins
@@ -34,6 +35,16 @@ export default defineConfig({
         "cors",
         "mysql2",
         "nodemailer",
+        "sharp",
+        "axios",
+        "bcryptjs",
+        "jsonwebtoken",
+        "multer",
+        "csv-parser",
+        "xlsx",
+        "zod",
+        "node-fetch",
+        /^node:.*/, // All Node.js built-in modules
       ],
       output: {
         format: "es",
@@ -41,7 +52,7 @@ export default defineConfig({
       },
     },
     minify: false, // Keep readable for debugging
-    sourcemap: true,
+    sourcemap: false, // Disable sourcemap for faster build
   },
   resolve: {
     alias: {

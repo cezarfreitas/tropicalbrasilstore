@@ -174,7 +174,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       </div>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-56 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-card px-6 py-8 shadow-sm">
           <Link to="/admin" className="flex h-16 shrink-0 items-center gap-2">
             <div className="rounded-xl bg-primary p-3">
@@ -227,7 +227,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-72">
+      <div className="lg:pl-56">
         {/* Top bar */}
         <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b bg-card px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
           <Button

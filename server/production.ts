@@ -6,15 +6,9 @@ import { fileURLToPath } from "url";
 
 const port = process.env.PORT || 3000;
 
-// Production environment checks
+// Production environment checks (minimal logging for faster startup)
 if (process.env.NODE_ENV === "production") {
   console.log("🌍 Production mode enabled");
-  console.log(
-    "📊 Database configured:",
-    process.env.DATABASE_URL || process.env.MYSQL_HOST || process.env.DB_HOST
-      ? "✅"
-      : "❌",
-  );
 }
 
 // Get current directory for ES modules

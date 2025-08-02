@@ -20,6 +20,7 @@ interface BulkProduct {
   nome: string; // Nome do produto
   categoria: string; // Categoria do produto
   tipo: string; // Tipo do produto
+  marca?: string; // Marca do produto (opcional)
   genero?: string; // Gênero (opcional)
   descricao?: string; // Descrição do produto (opcional)
   preco_sugerido?: number; // Preço sugerido de venda (opcional)
@@ -70,6 +71,26 @@ async function getOrCreateType(name: string): Promise<number> {
   const [result] = await db.execute(
     "INSERT INTO types (name, description) VALUES (?, ?)",
     [name, `Tipo ${name} criado automaticamente`],
+  );
+
+  return (result as any).insertId;
+}
+
+// Função auxiliar para criar ou buscar marca
+async function getOrCreateBrand(name: string): Promise<number> {
+  // Buscar marca existente
+  const [existing] = await db.execute("SELECT id FROM brands WHERE name = ?", [
+    name,
+  ]);
+
+  if ((existing as any[]).length > 0) {
+    return (existing as any[])[0].id;
+  }
+
+  // Criar nova marca
+  const [result] = await db.execute(
+    "INSERT INTO brands (name, description) VALUES (?, ?)",
+    [name, `Marca ${name} criada automaticamente`],
   );
 
   return (result as any).insertId;
@@ -256,6 +277,12 @@ router.post("/create", validateApiKey, async (req, res) => {
       const categoryId = await getOrCreateCategory(product.categoria);
       const typeId = await getOrCreateType(product.tipo);
 
+      // Criar ou buscar marca se fornecida
+      let brandId = null;
+      if (product.marca) {
+        brandId = await getOrCreateBrand(product.marca);
+      }
+
       categoriesCreated.add(product.categoria);
       typesCreated.add(product.tipo);
 
@@ -268,8 +295,8 @@ router.post("/create", validateApiKey, async (req, res) => {
       // Criar produto principal
       const [productResult] = await db.execute(
         `INSERT INTO products
-         (name, sku, parent_sku, description, category_id, type_id, gender_id, suggested_price, active, sell_without_stock, stock_type)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         (name, sku, parent_sku, description, category_id, type_id, brand_id, gender_id, suggested_price, active, sell_without_stock, stock_type)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           product.nome,
           product.codigo,
@@ -277,6 +304,7 @@ router.post("/create", validateApiKey, async (req, res) => {
           product.descricao || "",
           categoryId,
           typeId,
+          brandId,
           genderId,
           product.preco_sugerido || null,
           true,
@@ -517,6 +545,12 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         const typeId = await getOrCreateType(product.tipo);
         typesCreated.add(product.tipo);
 
+        // Criar ou buscar marca se fornecida
+        let brandId = null;
+        if (product.marca) {
+          brandId = await getOrCreateBrand(product.marca);
+        }
+
         // Criar ou buscar gênero se fornecido
         let genderId = null;
         if (product.genero) {
@@ -528,12 +562,13 @@ router.post("/bulk", validateApiKey, async (req, res) => {
 
         // Criar produto principal
         const [productResult] = await db.execute(
-          "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, suggested_price, sell_without_stock, stock_type, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          "INSERT INTO products (name, description, category_id, type_id, brand_id, gender_id, sku, base_price, suggested_price, sell_without_stock, stock_type, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
           [
             product.nome,
             product.descricao || null,
             categoryId,
             typeId,
+            brandId,
             genderId,
             product.codigo,
             basePrice,
@@ -578,16 +613,25 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             : [variante.grade];
         }
 
+        console.log(
+          `📊 Grades a processar para ${variante.cor}:`,
+          gradesToProcess,
+        );
+
         // Processar cada grade
         for (const gradeNome of gradesToProcess) {
+          console.log(`🔄 Processando grade: ${gradeNome}`);
           // Verificar se já existe uma variante desta cor e grade para este produto
           const gradeId = await getOrCreateGrade(gradeNome);
+          console.log(
+            `✅ Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`,
+          );
           gradesCreated.add(gradeNome);
 
-          // Verificar se já existe uma variante desta cor para este produto
+          // Verificar se já existe uma variante desta cor e grade específica para este produto
           const [existingColorVariant] = await db.execute(
-            "SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?",
-            [productId, colorId],
+            "SELECT pcv.id FROM product_color_variants pcv INNER JOIN product_color_grades pcg ON pcv.product_id = pcg.product_id AND pcv.color_id = pcg.color_id WHERE pcv.product_id = ? AND pcv.color_id = ? AND pcg.grade_id = ?",
+            [productId, colorId, gradeId],
           );
 
           if ((existingColorVariant as any[]).length > 0) {
@@ -616,15 +660,23 @@ router.post("/bulk", validateApiKey, async (req, res) => {
 
           // Download e salvar imagem se fornecida
           let localImageUrl = null;
-          if (variante.foto && isValidImageUrl(variante.foto)) {
-            localImageUrl = await downloadAndSaveImage(
-              variante.foto,
-              product.codigo,
-              variante.cor,
-            );
-            console.log(
-              `  📷 Imagem processada para ${variante.cor}: ${localImageUrl || "falhou"}`,
-            );
+          if (variante.foto) {
+            console.log(`🔍 Verificando URL da imagem: ${variante.foto}`);
+            const isValid = isValidImageUrl(variante.foto);
+            console.log(`📋 URL é válida: ${isValid}`);
+
+            if (isValid) {
+              localImageUrl = await downloadAndSaveImage(
+                variante.foto,
+                product.codigo,
+                variante.cor,
+              );
+              console.log(
+                `  📷 Imagem processada para ${variante.cor}: ${localImageUrl || "falhou"}`,
+              );
+            } else {
+              console.log(`  ❌ URL de imagem inválida: ${variante.foto}`);
+            }
           }
 
           // Verificar se a relação produto-cor-grade já existe
@@ -652,6 +704,7 @@ router.post("/bulk", validateApiKey, async (req, res) => {
           }
 
           // Criar entrada na tabela product_color_variants para compatibilidade com admin WooCommerce
+          // Usando um SKU único que inclui a grade para evitar duplicatas
           const [colorVariantResult] = await db.execute(
             `INSERT INTO product_color_variants
            (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
@@ -659,13 +712,17 @@ router.post("/bulk", validateApiKey, async (req, res) => {
             [
               productId,
               colorId,
-              `${product.nome} - ${variante.cor}`,
+              `${product.nome} - ${variante.cor} - ${gradeNome}`,
               variantSku,
               variante.preco,
               localImageUrl,
               0, // stock_total inicial
               true,
             ],
+          );
+
+          console.log(
+            `  ✅ Variante de cor criada: ${variante.cor} - ${gradeNome}`,
           );
 
           // Buscar todos os tamanhos da grade para criar variantes para cada um
@@ -815,6 +872,10 @@ router.post("/bulk", validateApiKey, async (req, res) => {
         } // fim do loop de grades
       } // fim do loop de variantes
 
+      console.log(
+        `📊 Total de variantes processadas para ${product.codigo}: ${variants.length}`,
+      );
+
       createdProducts.push({
         id: productId,
         codigo: product.codigo,
@@ -874,6 +935,7 @@ router.post("/single", validateApiKey, async (req, res) => {
       nome,
       categoria,
       tipo,
+      marca,
       genero,
       descricao,
       cor,
@@ -893,7 +955,7 @@ router.post("/single", validateApiKey, async (req, res) => {
       });
     }
 
-    // Verificar se produto com código já existe
+    // Verificar se produto com c��digo já existe
     const [existingProduct] = await db.execute(
       "SELECT id FROM products WHERE sku = ?",
       [codigo],
@@ -914,6 +976,12 @@ router.post("/single", validateApiKey, async (req, res) => {
     const colorId = await getOrCreateColor(cor);
     const gradeId = await getOrCreateGrade(grade);
 
+    // Criar ou buscar marca se fornecida
+    let brandId = null;
+    if (marca) {
+      brandId = await getOrCreateBrand(marca);
+    }
+
     // Criar ou buscar gênero se fornecido
     let genderId = null;
     if (genero) {
@@ -922,12 +990,13 @@ router.post("/single", validateApiKey, async (req, res) => {
 
     // Criar produto
     const [productResult] = await db.execute(
-      "INSERT INTO products (name, description, category_id, type_id, gender_id, sku, base_price, suggested_price, sell_without_stock, stock_type, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO products (name, description, category_id, type_id, brand_id, gender_id, sku, base_price, suggested_price, sell_without_stock, stock_type, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         nome,
         descricao || null,
         categoryId,
         typeId,
+        brandId,
         genderId,
         codigo,
         preco,
@@ -1005,7 +1074,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         );
       } else {
         console.log(`⚠️ Variante já existe, atualizando preço`);
-        // Atualizar preço se necessário
+        // Atualizar preço se necess��rio
         await db.execute(
           "UPDATE product_variants SET price_override = ? WHERE product_id = ? AND color_id = ? AND size_id = ?",
           [preco, productId, colorId, sizeId],
