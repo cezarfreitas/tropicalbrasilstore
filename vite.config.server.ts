@@ -34,6 +34,13 @@ export default defineConfig({
         "cors",
         "mysql2",
         "nodemailer",
+        "sharp",
+        "axios",
+        "bcryptjs",
+        "jsonwebtoken",
+        "multer",
+        "csv-parser",
+        "xlsx",
       ],
       output: {
         format: "es",
