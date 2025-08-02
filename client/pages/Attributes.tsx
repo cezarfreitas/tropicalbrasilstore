@@ -45,6 +45,7 @@ export default function Attributes() {
   const [activeTab, setActiveTab] = useState("genders");
   const [genders, setGenders] = useState<Gender[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Gender | Type | null>(null);
