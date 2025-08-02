@@ -87,6 +87,34 @@ dist/
 - `/api/ping` - Status da API
 - `/health` - Health check
 
+## ⚡ Otimizações de Deploy Implementadas
+
+### ✅ Scripts Otimizados
+- `build-deploy.js` - Build ultra-rápido com timeouts agressivos
+- `build-fast.js` - Build rápido com fallback inteligente
+- Timeouts: 40s client + 25s server = ~65s total
+
+### ✅ Configuração Vite Otimizada
+- Minificação esbuild (mais rápida que terser)
+- Sourcemaps desabilitados em produção
+- Chunk splitting otimizado: bundle 903KB → 665KB
+- Análise de compressão desabilitada
+
+### ✅ Dockerfiles Disponíveis
+- `Dockerfile` - Versão básica otimizada
+- `Dockerfile.easypanel` - Multi-stage build para máxima otimização
+- Usuário não-root para segurança
+- Health check configurado
+
+### ✅ Configurações de Ambiente
+```bash
+NODE_OPTIONS=--max-old-space-size=2048
+VITE_BUILD_FAST=true
+CI=true
+DISABLE_ESLINT_PLUGIN=true
+DB_CONNECTION_LIMIT=3
+```
+
 ---
 
-**Deploy pronto para EasyPanel!** 🎉
+**Deploy ultra-otimizado para EasyPanel!** 🚀⚡
