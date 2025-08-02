@@ -334,7 +334,7 @@ export default function ProductsWooCommerce() {
       console.error("Error fetching products:", error);
       toast({
         title: "Erro",
-        description: "N��o foi possível carregar os produtos",
+        description: "Não foi possível carregar os produtos",
         variant: "destructive",
       });
     } finally {
@@ -1720,6 +1720,9 @@ export default function ProductsWooCommerce() {
                   </TableHead>
                   <TableHead className="w-[120px] p-3 font-semibold text-center">
                     Categoria
+                  </TableHead>
+                  <TableHead className="w-[100px] p-3 font-semibold text-center">
+                    Marca
                   </TableHead>
                   <TableHead className="w-[140px] p-3 font-semibold text-center">
                     Variantes
