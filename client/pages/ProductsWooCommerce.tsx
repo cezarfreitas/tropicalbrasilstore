@@ -308,7 +308,7 @@ export default function ProductsWooCommerce() {
     fetchColors();
     fetchSizes();
     fetchGrades();
-  }, [currentPage, searchTerm, selectedCategory, selectedStatus]);
+  }, [currentPage, searchTerm, selectedCategory, selectedBrand, selectedStatus]);
 
   const fetchProducts = async () => {
     try {
