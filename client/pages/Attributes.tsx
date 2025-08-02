@@ -241,7 +241,7 @@ export default function Attributes() {
       if (response.ok) {
         toast({
           title: "Sucesso",
-          description: `${activeTab === "genders" ? "Gênero" : "Tipo"} excluído com sucesso`,
+          description: `${activeTab === "genders" ? "Gênero" : activeTab === "types" ? "Tipo" : "Marca"} excluído com sucesso`,
         });
 
         // Refresh the appropriate list
