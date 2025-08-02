@@ -89,6 +89,7 @@ router.get("/", async (req, res) => {
       SELECT
         p.*,
         c.name as category_name,
+        b.name as brand_name,
         COUNT(DISTINCT pcv.id) as variant_count,
         SUM(pcv.stock_total) as total_stock,
         COUNT(DISTINCT pcg.grade_id) as grade_count,
