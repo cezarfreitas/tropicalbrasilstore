@@ -651,15 +651,23 @@ router.post("/bulk", validateApiKey, async (req, res) => {
 
           // Download e salvar imagem se fornecida
           let localImageUrl = null;
-          if (variante.foto && isValidImageUrl(variante.foto)) {
-            localImageUrl = await downloadAndSaveImage(
-              variante.foto,
-              product.codigo,
-              variante.cor,
-            );
-            console.log(
-              `  📷 Imagem processada para ${variante.cor}: ${localImageUrl || "falhou"}`,
-            );
+          if (variante.foto) {
+            console.log(`🔍 Verificando URL da imagem: ${variante.foto}`);
+            const isValid = isValidImageUrl(variante.foto);
+            console.log(`📋 URL é válida: ${isValid}`);
+
+            if (isValid) {
+              localImageUrl = await downloadAndSaveImage(
+                variante.foto,
+                product.codigo,
+                variante.cor,
+              );
+              console.log(
+                `  📷 Imagem processada para ${variante.cor}: ${localImageUrl || "falhou"}`,
+              );
+            } else {
+              console.log(`  ❌ URL de imagem inválida: ${variante.foto}`);
+            }
           }
 
           // Verificar se a relação produto-cor-grade já existe
