@@ -222,7 +222,7 @@ export default function ProductsWooCommerce() {
     return "";
   };
 
-  // Função para marcar uma variante como principal do catálogo
+  // Funç��o para marcar uma variante como principal do catálogo
   const setMainVariant = (variantIndex: number) => {
     const updatedVariants = formData.color_variants.map((variant, index) => ({
       ...variant,
@@ -1844,6 +1844,19 @@ export default function ProductsWooCommerce() {
                             {product.category_name ? (
                               <span className="inline-block px-2 py-1 bg-gray-100 rounded-md text-xs">
                                 {product.category_name}
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground text-xs">
+                                N/A
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="p-3 text-center">
+                          <div className="text-sm font-medium">
+                            {product.brand_name ? (
+                              <span className="inline-block px-2 py-1 bg-blue-100 rounded-md text-xs">
+                                {product.brand_name}
                               </span>
                             ) : (
                               <span className="text-muted-foreground text-xs">
