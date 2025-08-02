@@ -544,7 +544,7 @@ export default function ApiDocs() {
                 <h4 className="text-lg font-semibold">📄 Estrutura JSON Completa</h4>
                 <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
                   {`{
-  "codigo": "CHN001",              // C��digo único do produto (obrigatório)
+  "codigo": "CHN001",              // Código único do produto (obrigatório)
   "nome": "Chinelo Havaianas Top", // Nome do produto (obrigatório)
   "categoria": "Chinelos",         // Categoria (criada automaticamente se não existir)
   "tipo": "Casual",               // Tipo (criado automaticamente se não existir)
