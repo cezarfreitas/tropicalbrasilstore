@@ -539,6 +539,7 @@ export default function ApiDocs() {
 {`{
   "codigo": "CHN001",
   "nome": "Chinelo Havaianas",
+  "marca": "Havaianas",
   "tipo_estoque": "grade",
   "variantes": [
     {
