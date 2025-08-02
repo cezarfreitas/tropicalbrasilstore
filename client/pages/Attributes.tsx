@@ -247,8 +247,10 @@ export default function Attributes() {
         // Refresh the appropriate list
         if (activeTab === "genders") {
           fetchGenders();
-        } else {
+        } else if (activeTab === "types") {
           fetchTypes();
+        } else {
+          fetchBrands();
         }
       } else {
         throw new Error(
