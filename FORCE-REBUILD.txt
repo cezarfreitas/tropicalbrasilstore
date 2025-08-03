@@ -1,0 +1,5 @@
+FORCE REBUILD - 2025-08-03T02:35:00Z
+This file forces EasyPanel to rebuild completely.
+Local build is working perfectly - React fully loaded.
+Problem: EasyPanel serving old cached build.
+Solution: Force complete rebuild with new timestamp.
