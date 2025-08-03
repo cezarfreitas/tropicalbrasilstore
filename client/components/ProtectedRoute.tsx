@@ -21,7 +21,9 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   // Temporary bypass for demo (remove in production)
-  const isDev = process.env.NODE_ENV === 'development' || window.location.hostname.includes('fly.dev');
+  const isDev =
+    process.env.NODE_ENV === "development" ||
+    window.location.hostname.includes("fly.dev");
 
   if (!isAuthenticated && !isDev) {
     return <Navigate to="/admin/login" replace />;
