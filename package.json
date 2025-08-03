@@ -21,6 +21,7 @@
     "start": "node dist/server/production.js",
     "start:prod": "NODE_ENV=production node dist/server/production.js",
     "start:minimal": "node server/minimal.js",
+    "start:health": "node server/health-only.js",
     "check": "node server/check-deps.js",
     "start:safe": "npm run check && npm start",
     "test": "vitest --run",
