@@ -273,8 +273,14 @@ export default function Vendors() {
         fetchVendors();
         fetchStats();
       } else {
-        const error = await response.json();
-        throw new Error(error.error);
+        let errorMessage = "Erro na operação";
+        try {
+          const error = await response.json();
+          errorMessage = error.error || error.message || errorMessage;
+        } catch {
+          errorMessage = `Erro ${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
     } catch (error) {
       console.error("Error deleting vendor:", error);
@@ -315,8 +321,14 @@ export default function Vendors() {
         fetchStats();
         setAssignCustomerDialogOpen(false);
       } else {
-        const error = await response.json();
-        throw new Error(error.error);
+        let errorMessage = "Erro na operação";
+        try {
+          const error = await response.json();
+          errorMessage = error.error || error.message || errorMessage;
+        } catch {
+          errorMessage = `Erro ${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
     } catch (error) {
       console.error("Error assigning customer:", error);
@@ -346,8 +358,14 @@ export default function Vendors() {
         fetchVendorCustomers(selectedVendor.id);
         fetchStats();
       } else {
-        const error = await response.json();
-        throw new Error(error.error);
+        let errorMessage = "Erro na operação";
+        try {
+          const error = await response.json();
+          errorMessage = error.error || error.message || errorMessage;
+        } catch {
+          errorMessage = `Erro ${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
     } catch (error) {
       console.error("Error unassigning customer:", error);
