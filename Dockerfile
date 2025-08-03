@@ -1,4 +1,4 @@
-# Simple Dockerfile for EasyPanel with external database
+# Production Dockerfile for EasyPanel
 FROM node:22-alpine
 
 # Set working directory
@@ -18,20 +18,21 @@ COPY . .
 
 # Create upload directories
 RUN mkdir -p public/uploads/logos && \
-    mkdir -p public/uploads/products && \
-    mkdir -p server/public/uploads/logos && \
-    mkdir -p server/public/uploads/products
+    mkdir -p public/uploads/products
 
-# Set environment for external database
-ENV NODE_ENV=development
-ENV PORT=3000
+# Set environment
+ENV NODE_ENV=production
+ENV PORT=80
 
-# Expose port
-EXPOSE 3000
+# Build the application
+RUN npm run build
 
-# Health check for EasyPanel
+# Expose port 80 (EasyPanel requirement)
+EXPOSE 80
+
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:3000/health || exit 1
+    CMD curl -f http://localhost:80/health || exit 1
 
-# Use development server
-CMD ["npm", "run", "dev"]
+# Start production server
+CMD ["npm", "start"]
