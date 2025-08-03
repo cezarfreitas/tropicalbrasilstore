@@ -32,5 +32,5 @@ ENV NODE_ENV=production
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
 
-# Start health-only server for EasyPanel
-CMD ["npm", "run", "start:health"]
+# Start persistent server for EasyPanel
+CMD ["npm", "run", "start:persistent"]
