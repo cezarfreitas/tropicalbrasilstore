@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
         "localhost",
         ".easypanel.host",
         ".jzo3qo.easypanel.host",
-        "ide-testeloja.jzo3qo.easypanel.host"
+        "ide-testeloja.jzo3qo.easypanel.host",
       ],
     },
     build: {
