@@ -57,10 +57,10 @@ app.use("/assets/*", (req, res, next) => {
   const filePath = path.join(staticPath, req.path);
   if (fs.existsSync(filePath)) {
     // Set proper content types
-    if (req.path.endsWith('.js')) {
-      res.setHeader('Content-Type', 'application/javascript');
-    } else if (req.path.endsWith('.css')) {
-      res.setHeader('Content-Type', 'text/css');
+    if (req.path.endsWith(".js")) {
+      res.setHeader("Content-Type", "application/javascript");
+    } else if (req.path.endsWith(".css")) {
+      res.setHeader("Content-Type", "text/css");
     }
 
     res.setHeader("Cache-Control", "public, max-age=31536000");
