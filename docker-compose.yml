@@ -10,61 +10,34 @@ services:
     ports:
       - "3000:3000"
     environment:
+      # Use external database
       NODE_ENV: development
       PORT: 3000
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_USER: ${DB_USER:-chinelos_user}
-      DB_PASSWORD: ${DB_PASSWORD:?Database password is required}
-      DB_NAME: ${DB_NAME:-chinelos_store}
-      MYSQL_HOST: db
-      MYSQL_PORT: 3306
-      MYSQL_USER: ${DB_USER:-chinelos_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:?Database password is required}
-      MYSQL_DATABASE: ${DB_NAME:-chinelos_store}
-    depends_on:
-      db:
-        condition: service_healthy
+      DATABASE_URL: mysql://tropical:805ce7692e5b4d6ced5f@5.161.52.206:3232/tropical
+      
+      # Legacy format (fallback)
+      DB_HOST: 5.161.52.206
+      DB_PORT: 3232
+      DB_USER: tropical
+      DB_PASSWORD: 805ce7692e5b4d6ced5f
+      DB_NAME: tropical
+      MYSQL_HOST: 5.161.52.206
+      MYSQL_PORT: 3232
+      MYSQL_USER: tropical
+      MYSQL_PASSWORD: 805ce7692e5b4d6ced5f
+      MYSQL_DATABASE: tropical
     volumes:
       - upload_data:/app/public/uploads
     networks:
       - chinelos-network
-
-  db:
-    image: mysql:8.0
-    container_name: chinelos-db
-    restart: unless-stopped
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Database root password is required}
-      MYSQL_DATABASE: ${DB_NAME:-chinelos_store}
-      MYSQL_USER: ${DB_USER:-chinelos_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:?Database password is required}
-    volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - chinelos-network
-    command: --default-authentication-plugin=mysql_native_password
     healthcheck:
-      test:
-        [
-          "CMD",
-          "mysqladmin",
-          "ping",
-          "-h",
-          "localhost",
-          "-u",
-          "root",
-          "-p${DB_ROOT_PASSWORD}",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
 volumes:
-  db_data:
   upload_data:
 
 networks:
