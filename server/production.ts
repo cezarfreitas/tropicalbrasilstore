@@ -45,49 +45,48 @@ if (!fs.existsSync(uploadsPath)) {
   console.log("📁 Created uploads directories");
 }
 
-// Serve uploads
+// Serve uploads FIRST (before any other middleware)
 app.use("/uploads", express.static(uploadsPath));
 
 // Serve static files from dist/spa
 const staticPath = path.join(__dirname, "../spa");
 console.log("📁 Static path:", staticPath);
 
-// Serve assets explicitly
-app.use(
-  "/assets",
-  express.static(path.join(staticPath, "assets"), {
-    maxAge: "1y",
-    setHeaders: (res) => {
-      res.setHeader("Access-Control-Allow-Origin", "*");
-    },
-  }),
-);
+// CRITICAL: Serve assets with highest priority - BEFORE catch-all route
+app.use('/assets/*', (req, res, next) => {
+  const filePath = path.join(staticPath, req.path);
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send('Asset not found');
+  }
+});
 
-// Serve other static files
-app.use(express.static(staticPath));
+// Serve other static files (manifest.json, favicon, etc.)
+app.use(express.static(staticPath, {
+  maxAge: '1d',
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  }
+}));
 
-// SPA routing - serve index.html for non-API routes
+// API routes should already be handled by createServer()
+
+// SPA routing - serve index.html for all other routes
+// This MUST be the LAST route to avoid interfering with assets
 app.get("*", (req, res) => {
-  // Skip API routes
-  if (req.path.startsWith("/api/")) {
-    return res.status(404).json({ error: "API endpoint not found" });
-  }
-
-  // Skip assets
-  if (
-    req.path.startsWith("/assets/") ||
-    req.path.startsWith("/uploads/") ||
-    req.path.includes(".")
-  ) {
-    return res.status(404).send("File not found");
-  }
-
-  // Serve index.html for SPA routes
+  // This should only handle SPA routes, not files
+  console.log("SPA Route:", req.path);
+  
   const indexPath = path.join(staticPath, "index.html");
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {
-    res.status(404).send("App not found");
+    res.status(404).send('App not found');
   }
 });
 
@@ -97,5 +96,16 @@ app.listen(port, "0.0.0.0", () => {
   console.log(`📱 App: http://0.0.0.0:${port}`);
   console.log(`🔌 API: http://0.0.0.0:${port}/api`);
   console.log(`❤️  Health: http://0.0.0.0:${port}/health`);
+  
+  // Verify assets exist
+  const assetsPath = path.join(staticPath, 'assets');
+  if (fs.existsSync(assetsPath)) {
+    const files = fs.readdirSync(assetsPath);
+    console.log(`📦 Assets found: ${files.length} files`);
+    files.forEach(file => console.log(`   - /assets/${file}`));
+  } else {
+    console.error(`❌ Assets directory not found: ${assetsPath}`);
+  }
+  
   console.log("🎉 EasyPanel deployment successful!");
 });
