@@ -25,5 +25,5 @@ EXPOSE 3000
 # Set environment to production
 ENV NODE_ENV=production
 
-# Start production server
-CMD ["npm", "start"]
+# Start health-only server for EasyPanel
+CMD ["npm", "run", "start:health"]
