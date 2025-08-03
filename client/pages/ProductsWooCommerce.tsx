@@ -93,6 +93,7 @@ interface WooCommerceProduct {
   category_id?: number;
   gender_id?: number;
   type_id?: number;
+  brand_id?: number;
   base_price?: number;
   suggested_price?: number;
   sku?: string;
@@ -103,6 +104,7 @@ interface WooCommerceProduct {
   category_name?: string;
   gender_name?: string;
   type_name?: string;
+  brand_name?: string;
   variant_count?: number;
   total_stock?: number;
   available_colors?: string;
@@ -127,6 +129,12 @@ interface Size {
   display_order: number;
 }
 
+interface Brand {
+  id: number;
+  name: string;
+  description?: string;
+}
+
 interface SizeGroup {
   id: number;
   name: string;
@@ -141,6 +149,7 @@ export default function ProductsWooCommerce() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [genders, setGenders] = useState<any[]>([]);
   const [types, setTypes] = useState<any[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [colors, setColors] = useState<Color[]>([]);
   const [sizes, setSizes] = useState<Size[]>([]);
   const [grades, setGrades] = useState<any[]>([]);
@@ -161,6 +170,7 @@ export default function ProductsWooCommerce() {
     category_id: undefined,
     gender_id: undefined,
     type_id: undefined,
+    brand_id: undefined,
     base_price: undefined,
     suggested_price: undefined,
     sku: "",
@@ -174,6 +184,7 @@ export default function ProductsWooCommerce() {
   // Filters
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedBrand, setSelectedBrand] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
 
   // Pagination
@@ -212,7 +223,7 @@ export default function ProductsWooCommerce() {
     return "";
   };
 
-  // Função para marcar uma variante como principal do catálogo
+  // Funç��o para marcar uma variante como principal do catálogo
   const setMainVariant = (variantIndex: number) => {
     const updatedVariants = formData.color_variants.map((variant, index) => ({
       ...variant,
@@ -293,10 +304,11 @@ export default function ProductsWooCommerce() {
     fetchCategories();
     fetchGenders();
     fetchTypes();
+    fetchBrands();
     fetchColors();
     fetchSizes();
     fetchGrades();
-  }, [currentPage, searchTerm, selectedCategory, selectedStatus]);
+  }, [currentPage, searchTerm, selectedCategory, selectedBrand, selectedStatus]);
 
   const fetchProducts = async () => {
     try {
@@ -309,6 +321,8 @@ export default function ProductsWooCommerce() {
       if (searchTerm) params.append("search", searchTerm);
       if (selectedCategory && selectedCategory !== "all")
         params.append("category", selectedCategory);
+      if (selectedBrand && selectedBrand !== "all")
+        params.append("brand", selectedBrand);
       if (selectedStatus && selectedStatus !== "all")
         params.append("status", selectedStatus);
 
@@ -367,6 +381,18 @@ export default function ProductsWooCommerce() {
     }
   };
 
+  const fetchBrands = async () => {
+    try {
+      const response = await fetch("/api/brands");
+      if (response.ok) {
+        const data = await response.json();
+        setBrands(data);
+      }
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
+  };
+
   const fetchColors = async () => {
     try {
       const response = await fetch("/api/colors");
@@ -411,6 +437,7 @@ export default function ProductsWooCommerce() {
       category_id: undefined,
       gender_id: undefined,
       type_id: undefined,
+      brand_id: undefined,
       base_price: undefined,
       suggested_price: undefined,
       sku: "",
@@ -946,6 +973,33 @@ export default function ProductsWooCommerce() {
                                   value={type.id.toString()}
                                 >
                                   {type.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="brand">Marca</Label>
+                          <Select
+                            value={formData.brand_id?.toString() || ""}
+                            onValueChange={(value) =>
+                              setFormData({
+                                ...formData,
+                                brand_id: value ? parseInt(value) : undefined,
+                              })
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecionar marca" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {brands.map((brand) => (
+                                <SelectItem
+                                  key={brand.id}
+                                  value={brand.id.toString()}
+                                >
+                                  {brand.name}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -1569,6 +1623,22 @@ export default function ProductsWooCommerce() {
                 ))}
               </SelectContent>
             </Select>
+            <Select
+              value={selectedBrand}
+              onValueChange={setSelectedBrand}
+            >
+              <SelectTrigger className="w-full sm:w-48">
+                <SelectValue placeholder="Marca" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as marcas</SelectItem>
+                {brands.map((brand) => (
+                  <SelectItem key={brand.id} value={brand.id.toString()}>
+                    {brand.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
               <SelectTrigger className="w-full sm:w-32">
                 <SelectValue placeholder="Status" />
@@ -1669,6 +1739,9 @@ export default function ProductsWooCommerce() {
                   </TableHead>
                   <TableHead className="w-[120px] p-3 font-semibold text-center">
                     Categoria
+                  </TableHead>
+                  <TableHead className="w-[100px] p-3 font-semibold text-center">
+                    Marca
                   </TableHead>
                   <TableHead className="w-[140px] p-3 font-semibold text-center">
                     Variantes
@@ -1790,6 +1863,19 @@ export default function ProductsWooCommerce() {
                             {product.category_name ? (
                               <span className="inline-block px-2 py-1 bg-gray-100 rounded-md text-xs">
                                 {product.category_name}
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground text-xs">
+                                N/A
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="p-3 text-center">
+                          <div className="text-sm font-medium">
+                            {product.brand_name ? (
+                              <span className="inline-block px-2 py-1 bg-blue-100 rounded-md text-xs">
+                                {product.brand_name}
                               </span>
                             ) : (
                               <span className="text-muted-foreground text-xs">

@@ -29,6 +29,7 @@ interface WooCommerceProduct {
   name: string;
   description?: string;
   category_id?: number;
+  brand_id?: number;
   base_price?: number;
   suggested_price?: number;
   sku?: string;
@@ -49,6 +50,7 @@ router.get("/", async (req, res) => {
 
     const search = (req.query.search as string) || "";
     const category = (req.query.category as string) || "";
+    const brand = (req.query.brand as string) || "";
     const status = (req.query.status as string) || "";
 
     // Build WHERE conditions
@@ -63,6 +65,11 @@ router.get("/", async (req, res) => {
     if (category) {
       conditions.push("p.category_id = ?");
       params.push(category);
+    }
+
+    if (brand) {
+      conditions.push("p.brand_id = ?");
+      params.push(brand);
     }
 
     if (status === "active") {
@@ -83,6 +90,7 @@ router.get("/", async (req, res) => {
       SELECT
         p.*,
         c.name as category_name,
+        b.name as brand_name,
         COUNT(DISTINCT pcv.id) as variant_count,
         SUM(pcv.stock_total) as total_stock,
         COUNT(DISTINCT pcg.grade_id) as grade_count,
@@ -90,11 +98,12 @@ router.get("/", async (req, res) => {
         GROUP_CONCAT(DISTINCT CONCAT(co.name, ':', co.hex_code) ORDER BY co.name) as color_data
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN brands b ON p.brand_id = b.id
       LEFT JOIN product_color_variants pcv ON p.id = pcv.product_id
       LEFT JOIN colors co ON pcv.color_id = co.id
       LEFT JOIN product_color_grades pcg ON p.id = pcg.product_id
       ${whereClause}
-      GROUP BY p.id, c.name
+      GROUP BY p.id, c.name, b.name
       ORDER BY p.created_at DESC
       LIMIT ${limit} OFFSET ${offset}
     `;
@@ -207,6 +216,7 @@ router.post("/", async (req, res) => {
       name,
       description,
       category_id,
+      brand_id,
       base_price,
       suggested_price,
       sku,
@@ -225,13 +235,14 @@ router.post("/", async (req, res) => {
     // Create main product
     const [productResult] = await connection.execute(
       `INSERT INTO products (
-        name, description, category_id, base_price, suggested_price,
+        name, description, category_id, brand_id, base_price, suggested_price,
         sku, parent_sku, photo, active, sell_without_stock, stock_type
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         name,
         description || null,
         category_id || null,
+        brand_id || null,
         base_price || null,
         suggested_price || null,
         sku || null,
@@ -341,6 +352,7 @@ router.put("/:id", async (req, res) => {
       name,
       description,
       category_id,
+      brand_id,
       base_price,
       suggested_price,
       sku,
@@ -358,13 +370,14 @@ router.put("/:id", async (req, res) => {
     // Update main product
     await connection.execute(
       `UPDATE products SET
-       name = ?, description = ?, category_id = ?, base_price = ?, suggested_price = ?,
+       name = ?, description = ?, category_id = ?, brand_id = ?, base_price = ?, suggested_price = ?,
        sku = ?, parent_sku = ?, photo = ?, active = ?, sell_without_stock = ?, stock_type = ?
        WHERE id = ?`,
       [
         name,
         description || null,
         category_id || null,
+        brand_id || null,
         base_price || null,
         suggested_price || null,
         sku || null,

@@ -9,6 +9,7 @@ import { sizeGroupsRouter } from "./routes/size-groups";
 import { colorsRouter } from "./routes/colors";
 import { gendersRouter } from "./routes/genders";
 import { typesRouter } from "./routes/types";
+import { brandsRouter } from "./routes/brands";
 import { productsRouter } from "./routes/products";
 import { seedRouter } from "./routes/seed";
 import { statsRouter } from "./routes/stats";
@@ -49,6 +50,7 @@ import { createCustomerAuthTable } from "./lib/create-customer-auth-table";
 import { addSellWithoutStockColumn } from "./lib/add-sell-without-stock";
 import { addParentSkuColumn } from "./lib/add-parent-sku";
 import { addParentIdColumn } from "./lib/add-parent-id-column";
+import { addBrandsTable } from "./lib/add-brands-table";
 import { addSizeGroupsTable } from "./lib/add-size-groups-table";
 import { createProductVariantsTable } from "./lib/create-product-variants";
 import { addPriceOverrideColumn } from "./lib/add-price-override-column";
@@ -74,6 +76,13 @@ export function createServer() {
 
   // Middleware
   app.use(cors());
+
+  // Configure charset to UTF-8 for proper encoding of special characters
+  app.use((req, res, next) => {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    next();
+  });
+
   app.use(express.json({ limit: "50mb" })); // Increase limit for large CSV imports
   app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
@@ -113,6 +122,7 @@ export function createServer() {
       await addDesignColumns(); // Add design customization columns
       await addShowInMenuColumn(); // Add show_in_menu column to categories
       await addGendersTypesTable(); // Add genders and types tables
+      await addBrandsTable(); // Add brands table
       await createApiLogsTable(); // Create API logs table
       await createVendorsSystem(); // Create vendors system tables
       await addVendorPassword(); // Add password column to vendors
@@ -148,6 +158,7 @@ export function createServer() {
   app.use("/api/colors", colorsRouter);
   app.use("/api/genders", gendersRouter);
   app.use("/api/types", typesRouter);
+  app.use("/api/brands", brandsRouter);
   app.use("/api/products", productsRouter);
   app.use("/api/products-enhanced", productsEnhancedRouter);
   app.use("/api/products-woocommerce", productsWooCommerceRouter);

@@ -21,6 +21,25 @@ export default function Login() {
     return <Navigate to="/admin" replace />;
   }
 
+  const handleBypass = async () => {
+    setIsLoading(true);
+    try {
+      await login("admin", "admin");
+      toast({
+        title: "Acesso liberado",
+        description: "Entrando no painel administrativo...",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro no bypass",
+        description: "Tente fazer login normal",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -130,6 +149,16 @@ export default function Login() {
                 ) : (
                   "Entrar"
                 )}
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full mt-2"
+                onClick={handleBypass}
+                disabled={isLoading}
+              >
+                🚀 Acesso Rápido (Demo)
               </Button>
             </form>
 

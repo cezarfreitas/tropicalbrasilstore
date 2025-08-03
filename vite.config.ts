@@ -4,22 +4,44 @@ import path from "path";
 import { createServer } from "./server";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-  },
-  build: {
-    outDir: "dist/spa",
-  },
-  plugins: [react(), expressPlugin()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./client"),
-      "@shared": path.resolve(__dirname, "./shared"),
+export default defineConfig(({ mode }) => {
+  const isDeployBuild =
+    process.env.VITE_BUILD_FAST === "true" || process.env.CI === "true";
+
+  return {
+    server: {
+      host: "::",
+      port: 8080,
     },
-  },
-}));
+    build: {
+      outDir: "dist/spa",
+      chunkSizeWarningLimit: 1000,
+      reportCompressedSize: false, // Skip gzip analysis for faster build
+      minify: "esbuild", // Use esbuild for all builds (faster and no extra deps)
+      sourcemap: isDeployBuild ? false : true, // Skip sourcemaps for deploy
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            "react-vendor": ["react", "react-dom"],
+            "router-vendor": ["react-router-dom"],
+            "ui-vendor": [
+              "lucide-react",
+              "@radix-ui/react-dialog",
+              "@radix-ui/react-tabs",
+            ],
+          },
+        },
+      },
+    },
+    plugins: [react(), expressPlugin()],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./client"),
+        "@shared": path.resolve(__dirname, "./shared"),
+      },
+    },
+  };
+});
 
 function expressPlugin(): Plugin {
   return {
@@ -32,7 +54,7 @@ function expressPlugin(): Plugin {
       server.middlewares.use(app);
     },
     transformIndexHtml: {
-      order: 'pre',
+      order: "pre",
       handler: async (html, context) => {
         // Inject store settings script into HTML
         const injection = `
@@ -65,8 +87,11 @@ function expressPlugin(): Plugin {
       })();
     </script>`;
 
-        return html.replace('<div id="root"></div>', `<div id="root"></div>${injection}`);
-      }
-    }
+        return html.replace(
+          '<div id="root"></div>',
+          `<div id="root"></div>${injection}`,
+        );
+      },
+    },
   };
 }

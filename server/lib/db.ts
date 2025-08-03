@@ -7,13 +7,9 @@ const createConnection = () => {
     return mysql.createPool({
       uri: process.env.DATABASE_URL,
       waitForConnections: true,
-      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "10"),
+      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "3"),
       queueLimit: 0,
-      acquireTimeout: 60000,
-      timeout: 60000,
-      reconnect: true,
       charset: "utf8mb4",
-      collation: "utf8mb4_unicode_ci",
     });
   }
 
@@ -26,13 +22,9 @@ const createConnection = () => {
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE || "default",
       waitForConnections: true,
-      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "10"),
+      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "3"),
       queueLimit: 0,
-      acquireTimeout: 60000,
-      timeout: 60000,
-      reconnect: true,
       charset: "utf8mb4",
-      collation: "utf8mb4_unicode_ci",
     });
   }
 
@@ -45,10 +37,9 @@ const createConnection = () => {
       password: process.env.DB_PASSWORD || "",
       database: process.env.DB_NAME || "chinelos_store",
       waitForConnections: true,
-      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "10"),
+      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "3"),
       queueLimit: 0,
       charset: "utf8mb4",
-      collation: "utf8mb4_unicode_ci",
     });
   }
 
@@ -57,7 +48,7 @@ const createConnection = () => {
   return mysql.createPool({
     uri: "mysql://mysql:eA1mPCW1xwJE31nJOxZixcHdIB68WwQ0Gqe7wAdRw7FqclRQYfOINf7p9vHAAXSN@5.161.52.206:5435/default",
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 3,
     queueLimit: 0,
   });
 };

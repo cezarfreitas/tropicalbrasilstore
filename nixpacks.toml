@@ -1,0 +1,16 @@
+[variables]
+NODE_ENV = "production"
+
+[phases.install]
+cmds = ["npm ci --only=production", "npm ci"]
+
+[phases.build]
+cmds = [
+  "rm -rf dist",
+  "mkdir -p dist",
+  "npm run build:client",
+  "npm run build:server"
+]
+
+[phases.start]
+cmd = "npm start"

@@ -4,25 +4,38 @@ import fs from "fs";
 import { createServer } from "./index";
 import { fileURLToPath } from "url";
 
+// Handle uncaught exceptions
+process.on("uncaughtException", (error) => {
+  console.error("❌ Uncaught Exception:", error);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("❌ Unhandled Rejection at:", promise, "reason:", reason);
+  process.exit(1);
+});
+
 const port = process.env.PORT || 3000;
 
-// Production environment checks
+// Production environment checks (minimal logging for faster startup)
 if (process.env.NODE_ENV === "production") {
   console.log("🌍 Production mode enabled");
-  console.log(
-    "📊 Database configured:",
-    process.env.DATABASE_URL || process.env.MYSQL_HOST || process.env.DB_HOST
-      ? "✅"
-      : "❌",
-  );
 }
 
 // Get current directory for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Create Express app
-const app = createServer();
+// Create Express app with error handling
+let app;
+try {
+  console.log("🔧 Creating Express server...");
+  app = createServer();
+  console.log("✅ Express server created successfully");
+} catch (error) {
+  console.error("❌ Failed to create Express server:", error);
+  process.exit(1);
+}
 
 // Ensure uploads directory exists in production
 const uploadsPath = path.join(process.cwd(), "public", "uploads");
@@ -55,11 +68,20 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(staticPath, "index.html"));
 });
 
-// Start server
-app.listen(port, () => {
-  console.log(`🚀 Server running on port ${port}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log(`📱 Frontend: http://localhost:${port}`);
-  console.log(`🔌 API: http://localhost:${port}/api`);
-  console.log(`❤️  Health check: http://localhost:${port}/health`);
-});
+// Start server with better container support
+console.log("🚀 Starting server...");
+console.log(`📋 Port: ${port}`);
+console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
+
+try {
+  app.listen(port, "0.0.0.0", () => {
+    console.log(`✅ Server running on http://0.0.0.0:${port}`);
+    console.log(`📱 Frontend: http://0.0.0.0:${port}`);
+    console.log(`🔌 API: http://0.0.0.0:${port}/api`);
+    console.log(`❤️  Health check: http://0.0.0.0:${port}/health`);
+    console.log("🎉 Application started successfully!");
+  });
+} catch (error) {
+  console.error("❌ Failed to start server:", error);
+  process.exit(1);
+}

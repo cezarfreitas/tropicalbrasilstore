@@ -6,14 +6,14 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
 export interface TokenPayload {
   id: number;
   email: string;
-  type: 'vendor' | 'admin';
+  type: "vendor" | "admin";
 }
 
 /**
  * Generate a JWT token for authentication
  */
 export function generateToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return jwt.sign(payload as object, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
 /**
@@ -31,7 +31,9 @@ export function verifyToken(token: string): TokenPayload | null {
  * Generate a random session ID
  */
 export function generateSessionId(): string {
-  return Math.random().toString(36).substring(2, 15) + 
-         Math.random().toString(36).substring(2, 15) +
-         Date.now().toString(36);
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15) +
+    Date.now().toString(36)
+  );
 }

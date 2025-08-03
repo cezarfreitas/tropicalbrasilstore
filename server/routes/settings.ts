@@ -10,6 +10,9 @@ const router = Router();
 // Get store settings
 router.get("/", async (req, res) => {
   try {
+    // First, ensure the table exists and has the required columns
+    await ensureSettingsTableAndColumns();
+
     const [settings] = await db.execute(`
       SELECT * FROM store_settings ORDER BY id LIMIT 1
     `);
@@ -18,71 +21,16 @@ router.get("/", async (req, res) => {
 
     // If no settings exist, create default settings
     if (!storeSettings) {
-      const defaultSettings = {
-        store_name: "Chinelos Store",
-        store_description: "Loja especializada em chinelos de alta qualidade",
-        contact_email: "contato@chinelos.com",
-        contact_phone: "(11) 99999-9999",
-        contact_whatsapp: "(11) 99999-9999",
-        address: "Rua Principal, 123",
-        city: "São Paulo",
-        state: "SP",
-        postal_code: "01234-567",
-        shipping_fee: 15.0,
-        free_shipping_threshold: 150.0,
-        payment_methods: JSON.stringify(["pix", "credit_card", "debit_card"]),
-        social_instagram: "@chinelos",
-        social_facebook: "facebook.com/chinelos",
-        logo_url: null,
-        banner_url: null,
-        maintenance_mode: false,
-        allow_orders: true,
-        tax_rate: 0.0,
-        primary_color: "#f97316",
-        secondary_color: "#ea580c",
-        accent_color: "#fed7aa",
-        background_color: "#ffffff",
-        text_color: "#1f2937",
-      };
-
-      await db.execute(
-        `
-        INSERT INTO store_settings (
-          store_name, store_description, contact_email, contact_phone, 
-          contact_whatsapp, address, city, state, postal_code,
-          shipping_fee, free_shipping_threshold, payment_methods,
-          social_instagram, social_facebook, logo_url, banner_url,
-          maintenance_mode, allow_orders, tax_rate, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
-      `,
-        [
-          defaultSettings.store_name,
-          defaultSettings.store_description,
-          defaultSettings.contact_email,
-          defaultSettings.contact_phone,
-          defaultSettings.contact_whatsapp,
-          defaultSettings.address,
-          defaultSettings.city,
-          defaultSettings.state,
-          defaultSettings.postal_code,
-          defaultSettings.shipping_fee,
-          defaultSettings.free_shipping_threshold,
-          defaultSettings.payment_methods,
-          defaultSettings.social_instagram,
-          defaultSettings.social_facebook,
-          defaultSettings.logo_url,
-          defaultSettings.banner_url,
-          defaultSettings.maintenance_mode,
-          defaultSettings.allow_orders,
-          defaultSettings.tax_rate,
-        ],
-      );
+      await createDefaultSettings();
 
       const [newSettings] = await db.execute(`
         SELECT * FROM store_settings ORDER BY id LIMIT 1
       `);
       storeSettings = (newSettings as any[])[0];
     }
+
+    // Ensure theme colors exist with fallback values
+    storeSettings = ensureThemeColors(storeSettings);
 
     // Parse JSON fields
     if (storeSettings.payment_methods) {
@@ -98,9 +46,159 @@ router.get("/", async (req, res) => {
     res.json(storeSettings);
   } catch (error) {
     console.error("Error fetching store settings:", error);
-    res.status(500).json({ error: "Failed to fetch store settings" });
+
+    // Return fallback settings with theme colors
+    const fallbackSettings = {
+      id: 1,
+      store_name: "Chinelos Store",
+      store_description: "Loja especializada em chinelos",
+      primary_color: "#f97316",
+      secondary_color: "#ea580c",
+      accent_color: "#fed7aa",
+      background_color: "#ffffff",
+      text_color: "#1f2937",
+      payment_methods: ["pix", "credit_card"],
+      shipping_fee: 15.0,
+      free_shipping_threshold: 150.0,
+      maintenance_mode: false,
+      allow_orders: true,
+      tax_rate: 0.0
+    };
+
+    res.json(fallbackSettings);
   }
 });
+
+// Helper function to ensure table and columns exist
+async function ensureSettingsTableAndColumns() {
+  try {
+    // Check if table exists
+    const [tables] = await db.execute(`
+      SELECT TABLE_NAME FROM information_schema.TABLES
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'store_settings'
+    `);
+
+    if ((tables as any[]).length === 0) {
+      // Create table if it doesn't exist
+      await db.execute(`
+        CREATE TABLE store_settings (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          store_name VARCHAR(255) NOT NULL DEFAULT 'Chinelos Store',
+          store_description TEXT,
+          contact_email VARCHAR(255),
+          contact_phone VARCHAR(50),
+          contact_whatsapp VARCHAR(50),
+          address TEXT,
+          city VARCHAR(100),
+          state VARCHAR(50),
+          postal_code VARCHAR(20),
+          shipping_fee DECIMAL(10, 2) DEFAULT 15.00,
+          free_shipping_threshold DECIMAL(10, 2) DEFAULT 150.00,
+          payment_methods JSON,
+          social_instagram VARCHAR(255),
+          social_facebook VARCHAR(255),
+          logo_url TEXT,
+          banner_url TEXT,
+          maintenance_mode BOOLEAN DEFAULT FALSE,
+          allow_orders BOOLEAN DEFAULT TRUE,
+          tax_rate DECIMAL(5, 4) DEFAULT 0.0000,
+          primary_color VARCHAR(7) DEFAULT '#f97316',
+          secondary_color VARCHAR(7) DEFAULT '#ea580c',
+          accent_color VARCHAR(7) DEFAULT '#fed7aa',
+          background_color VARCHAR(7) DEFAULT '#ffffff',
+          text_color VARCHAR(7) DEFAULT '#1f2937',
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )
+      `);
+    } else {
+      // Check and add color columns if they don't exist
+      const colorColumns = [
+        { name: "primary_color", default: "#f97316" },
+        { name: "secondary_color", default: "#ea580c" },
+        { name: "accent_color", default: "#fed7aa" },
+        { name: "background_color", default: "#ffffff" },
+        { name: "text_color", default: "#1f2937" },
+      ];
+
+      for (const column of colorColumns) {
+        try {
+          await db.execute(`
+            ALTER TABLE store_settings
+            ADD COLUMN ${column.name} VARCHAR(7) DEFAULT '${column.default}'
+          `);
+        } catch (e) {
+          // Column probably already exists, ignore error
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error ensuring settings table:", error);
+  }
+}
+
+// Helper function to create default settings
+async function createDefaultSettings() {
+  try {
+    await db.execute(`
+      INSERT INTO store_settings (
+        store_name, store_description, contact_email, contact_phone,
+        contact_whatsapp, address, city, state, postal_code,
+        shipping_fee, free_shipping_threshold, payment_methods,
+        social_instagram, social_facebook, logo_url, banner_url,
+        maintenance_mode, allow_orders, tax_rate,
+        primary_color, secondary_color, accent_color, background_color, text_color
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [
+      "Chinelos Store",
+      "Loja especializada em chinelos de alta qualidade",
+      "contato@chinelos.com",
+      "(11) 99999-9999",
+      "(11) 99999-9999",
+      "Rua Principal, 123",
+      "São Paulo",
+      "SP",
+      "01234-567",
+      15.0,
+      150.0,
+      JSON.stringify(["pix", "credit_card", "debit_card"]),
+      "@chinelos",
+      "facebook.com/chinelos",
+      null,
+      null,
+      false,
+      true,
+      0.0,
+      "#f97316",
+      "#ea580c",
+      "#fed7aa",
+      "#ffffff",
+      "#1f2937"
+    ]);
+  } catch (error) {
+    console.error("Error creating default settings:", error);
+  }
+}
+
+// Helper function to ensure theme colors exist
+function ensureThemeColors(settings: any) {
+  const defaultColors = {
+    primary_color: "#f97316",
+    secondary_color: "#ea580c",
+    accent_color: "#fed7aa",
+    background_color: "#ffffff",
+    text_color: "#1f2937"
+  };
+
+  // Ensure all color fields exist
+  for (const [key, defaultValue] of Object.entries(defaultColors)) {
+    if (!settings[key]) {
+      settings[key] = defaultValue;
+    }
+  }
+
+  return settings;
+}
 
 // Update store settings
 router.patch("/", async (req, res) => {
