@@ -10,11 +10,11 @@ console.log("🔒 Persistent server starting (ignoring SIGTERM)...");
 
 // Basic routes
 app.get("/health", (req, res) => {
-  res.json({ 
-    status: "healthy", 
+  res.json({
+    status: "healthy",
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    pid: process.pid
+    pid: process.pid,
   });
 });
 
@@ -46,21 +46,21 @@ app.get("/status", (req, res) => {
     uptime: process.uptime(),
     memory: process.memoryUsage(),
     pid: process.pid,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
 // Override signal handlers to prevent termination
-process.on('SIGTERM', () => {
-  console.log('🛡️  SIGTERM received but ignored (staying alive)');
+process.on("SIGTERM", () => {
+  console.log("🛡️  SIGTERM received but ignored (staying alive)");
 });
 
-process.on('SIGINT', () => {
-  console.log('🛡️  SIGINT received but ignored (staying alive)');
+process.on("SIGINT", () => {
+  console.log("🛡️  SIGINT received but ignored (staying alive)");
 });
 
-process.on('SIGHUP', () => {
-  console.log('🛡️  SIGHUP received but ignored (staying alive)');
+process.on("SIGHUP", () => {
+  console.log("🛡️  SIGHUP received but ignored (staying alive)");
 });
 
 // Start server
