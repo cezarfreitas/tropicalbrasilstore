@@ -28,5 +28,5 @@ EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:80/health || exit 1
 
-# Iniciar em modo desenvolvimento
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "80"]
+# Iniciar em modo desenvolvimento com host permitido
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "80", "--clearScreen", "false"]
