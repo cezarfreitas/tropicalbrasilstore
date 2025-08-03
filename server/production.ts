@@ -49,7 +49,7 @@ if (!fs.existsSync(uploadsPath)) {
 app.use("/uploads", express.static(uploadsPath));
 
 // Serve static files from dist/spa
-const staticPath = path.join(__dirname, "../dist/spa");
+const staticPath = path.join(__dirname, "../spa");
 console.log("📁 Static path:", staticPath);
 
 // CRITICAL: Serve assets with highest priority - BEFORE catch-all route
