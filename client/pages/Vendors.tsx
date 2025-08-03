@@ -382,7 +382,7 @@ export default function Vendors() {
       name: "",
       email: "",
       phone: "",
-  
+      commission_percentage: 0,
       active: true,
       avatar_url: "",
       bio: "",
@@ -530,7 +530,7 @@ export default function Vendors() {
                   <TableRow>
                     <TableHead>Vendedor</TableHead>
                     <TableHead>Contato</TableHead>
-                    <TableHead>Comiss��o</TableHead>
+                    <TableHead>Comissão</TableHead>
                     <TableHead>Vendas</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Ações</TableHead>
