@@ -1,6 +1,5 @@
 {
   "name": "fusion-starter",
-  "version": "1.0.1-production-20250803",
   "private": true,
   "type": "module",
   "pkg": {
