@@ -12,12 +12,7 @@ export default defineConfig(({ mode }) => {
     server: {
       host: "::",
       port: 8080,
-      allowedHosts: [
-        "localhost",
-        ".easypanel.host",
-        ".jzo3qo.easypanel.host",
-        "ide-testeloja.jzo3qo.easypanel.host",
-      ],
+      allowedHosts: "all",
     },
     build: {
       outDir: "dist/spa",
