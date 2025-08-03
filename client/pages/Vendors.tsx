@@ -217,8 +217,14 @@ export default function Vendors() {
         fetchStats();
         resetForm();
       } else {
-        const error = await response.json();
-        throw new Error(error.error);
+        let errorMessage = "Erro ao salvar vendedor";
+        try {
+          const error = await response.json();
+          errorMessage = error.error || error.message || errorMessage;
+        } catch {
+          errorMessage = `Erro ${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
     } catch (error) {
       console.error("Error saving vendor:", error);
