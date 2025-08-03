@@ -13,9 +13,17 @@ export default defineConfig(({ mode }) => {
       host: "0.0.0.0",
       port: 8080,
       strictPort: true,
-      allowedHosts: "all",
+      allowedHosts: [
+        "localhost",
+        ".easypanel.host",
+        ".jzo3qo.easypanel.host",
+        "ide-testeloja.jzo3qo.easypanel.host",
+        "b2b.tropicalbrasilsandalias.com.br",
+        ".tropicalbrasilsandalias.com.br"
+      ],
       hmr: {
         clientPort: 80,
+        host: "b2b.tropicalbrasilsandalias.com.br"
       },
     },
     build: {
