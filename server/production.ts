@@ -55,30 +55,35 @@ const staticPath = path.join(__dirname, "../spa");
 console.log("📁 Serving static files from:", staticPath);
 
 // CRITICAL: Serve assets with explicit route first to prevent catch-all interference
-app.use('/assets', express.static(path.join(staticPath, 'assets'), {
-  maxAge: '1y',
-  setHeaders: (res, path) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Cache-Control', 'public, max-age=31536000');
-  }
-}));
+app.use(
+  "/assets",
+  express.static(path.join(staticPath, "assets"), {
+    maxAge: "1y",
+    setHeaders: (res, path) => {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Cache-Control", "public, max-age=31536000");
+    },
+  }),
+);
 
 // Serve other static files (manifest, favicon, etc.)
-app.use(express.static(staticPath, {
-  setHeaders: (res, path) => {
-    if (path.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    }
-  }
-}));
+app.use(
+  express.static(staticPath, {
+    setHeaders: (res, path) => {
+      if (path.endsWith(".html")) {
+        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+      }
+    },
+  }),
+);
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get("/health", (req, res) => {
   res.json({
-    status: 'healthy',
+    status: "healthy",
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
-    port: port
+    environment: process.env.NODE_ENV || "development",
+    port: port,
   });
 });
 
@@ -91,15 +96,17 @@ app.get("*", (req, res) => {
   }
 
   // Skip asset files and other static files
-  if (req.path.startsWith("/assets/") || 
-      req.path.startsWith("/uploads/") ||
-      req.path.includes('.js') ||
-      req.path.includes('.css') ||
-      req.path.includes('.ico') ||
-      req.path.includes('.png') ||
-      req.path.includes('.jpg') ||
-      req.path.includes('.svg')) {
-    return res.status(404).send('Asset not found');
+  if (
+    req.path.startsWith("/assets/") ||
+    req.path.startsWith("/uploads/") ||
+    req.path.includes(".js") ||
+    req.path.includes(".css") ||
+    req.path.includes(".ico") ||
+    req.path.includes(".png") ||
+    req.path.includes(".jpg") ||
+    req.path.includes(".svg")
+  ) {
+    return res.status(404).send("Asset not found");
   }
 
   // Serve index.html for all other routes (SPA routing)
@@ -107,7 +114,7 @@ app.get("*", (req, res) => {
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {
-    res.status(404).send('Application not found');
+    res.status(404).send("Application not found");
   }
 });
 
@@ -116,7 +123,7 @@ console.log("🚀 Starting server...");
 console.log(`📋 Port: ${port}`);
 console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
 console.log(`📁 Static path: ${staticPath}`);
-console.log(`📁 Assets path: ${path.join(staticPath, 'assets')}`);
+console.log(`📁 Assets path: ${path.join(staticPath, "assets")}`);
 
 try {
   app.listen(port, "0.0.0.0", () => {
@@ -125,13 +132,13 @@ try {
     console.log(`🔌 API: http://0.0.0.0:${port}/api`);
     console.log(`❤️  Health check: http://0.0.0.0:${port}/health`);
     console.log("🎉 Application started successfully!");
-    
+
     // Verify static files exist
-    const assetsPath = path.join(staticPath, 'assets');
+    const assetsPath = path.join(staticPath, "assets");
     if (fs.existsSync(assetsPath)) {
       const files = fs.readdirSync(assetsPath);
       console.log(`📦 Assets found: ${files.length} files`);
-      files.forEach(file => console.log(`   - ${file}`));
+      files.forEach((file) => console.log(`   - ${file}`));
     } else {
       console.log(`⚠️  Assets directory not found: ${assetsPath}`);
     }
