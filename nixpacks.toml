@@ -8,8 +8,7 @@ cmds = ["npm ci --only=production", "npm ci"]
 cmds = [
   "rm -rf dist",
   "mkdir -p dist",
-  "npm run build:client",
-  "npm run build:server"
+  "npm run build"
 ]
 
 [phases.start]
