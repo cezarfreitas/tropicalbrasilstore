@@ -1,44 +1,50 @@
-version: "3.8"
+version: '3.8'
 
 services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile.docker-compose
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - PORT=3000
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_NAME=chinelos_store
-      - DB_USER=chinelos_user
-      - DB_PASSWORD=${DB_PASSWORD:-chinelos_password_change_this}
+      - DB_USER=${DB_USER:-chinelos_user}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME:-chinelos_store}
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=${DB_USER:-chinelos_user}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME:-chinelos_store}
     depends_on:
       - db
     volumes:
-      - uploads:/app/public/uploads
-    networks:
-      - chinelos_network
+      - ./public/uploads:/app/public/uploads
+      - ./server/public/uploads:/app/server/public/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   db:
     image: mysql:8.0
     environment:
-      - MYSQL_DATABASE=chinelos_store
-      - MYSQL_USER=chinelos_user
-      - MYSQL_PASSWORD=${DB_PASSWORD:-chinelos_password_change_this}
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-root_password_change_this}
-    volumes:
-      - mysql_data:/var/lib/mysql
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME:-chinelos_store}
+      - MYSQL_USER=${DB_USER:-chinelos_user}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     ports:
       - "3306:3306"
-    networks:
-      - chinelos_network
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
 
 volumes:
-  mysql_data:
-  uploads:
-
-networks:
-  chinelos_network:
-    driver: bridge
+  db_data:
