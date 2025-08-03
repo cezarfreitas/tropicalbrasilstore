@@ -1,15 +1,83 @@
+# =============================================================================
+# Chinelos Store - Nixpacks Configuration
+# For Railway, Render, Fly.io, and other Nixpacks-compatible platforms
+# =============================================================================
+
 [variables]
 NODE_ENV = "production"
+NPM_CONFIG_PRODUCTION = "false"
+
+# =============================================================================
+# Build Configuration
+# =============================================================================
+
+[phases.setup]
+nixPkgs = ["nodejs_22", "npm"]
 
 [phases.install]
-cmds = ["npm ci --only=production", "npm ci"]
-
-[phases.build]
+dependsOn = ["setup"]
 cmds = [
-  "rm -rf dist",
-  "mkdir -p dist",
-  "npm run build"
+    "npm ci --include=dev --silent",
+    "npm cache clean --force"
 ]
 
-[phases.start]
+[phases.build]
+dependsOn = ["install"]
+cmds = [
+    "echo '🚀 Building Chinelos Store...'",
+    "rm -rf dist",
+    "mkdir -p dist",
+    "npm run build",
+    "echo '✅ Build completed successfully'",
+    "ls -la dist/"
+]
+
+[phases.optimize]
+dependsOn = ["build"]
+cmds = [
+    "echo '🔧 Optimizing for production...'",
+    "npm prune --production",
+    "echo '✅ Dependencies optimized'"
+]
+
+# =============================================================================
+# Runtime Configuration
+# =============================================================================
+
+[start]
 cmd = "npm start"
+
+# =============================================================================
+# File Configuration
+# =============================================================================
+
+[staticDirs]
+"public" = "/"
+
+# =============================================================================
+# Provider-Specific Settings
+# =============================================================================
+
+# Railway specific
+[providers.railway]
+buildCommand = "npm run build"
+startCommand = "npm start"
+
+# Render specific
+[providers.render]
+buildCommand = "npm ci && npm run build"
+startCommand = "npm start"
+
+# =============================================================================
+# Environment Variables Documentation
+# =============================================================================
+
+# Required environment variables for production:
+# DATABASE_URL=mysql://user:password@host:port/database
+# NODE_ENV=production
+# PORT=3000 (optional, defaults to platform-provided port)
+
+# Optional environment variables:
+# DB_CONNECTION_LIMIT=10
+# APP_NAME="Chinelos Store"
+# APP_VERSION="1.0.0"
