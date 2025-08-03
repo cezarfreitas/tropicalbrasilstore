@@ -1,12 +1,14 @@
 # 🚨 EasyPanel Solution - Service Not Reachable
 
 ## 📊 Status Atual:
+
 - ✅ **Fly.io**: https://b3d8b2c65a9545f6afe50b903dd0474d-2db40f6ea019442580663b253.fly.dev/ (Funcionando)
 - ❌ **EasyPanel**: https://ide-b2btropical.jzo3qo.easypanel.host/ (Service not reachable)
 
 ## 🔍 Possíveis Causas:
 
 ### 1. **Variáveis de Ambiente Faltando**
+
 ```bash
 # Necessárias no EasyPanel:
 NODE_ENV=production
@@ -15,11 +17,13 @@ PORT=3000
 ```
 
 ### 2. **Container Falhando no Startup**
+
 - Database connection failing
 - Dependencies missing
 - Port binding issues
 
 ### 3. **Proxy/Network Configuration**
+
 - EasyPanel proxy não configurado
 - Porta incorreta
 - SSL/Domain issues
@@ -27,29 +31,35 @@ PORT=3000
 ## ✅ Soluções Implementadas:
 
 ### 1. **Minimal Server Debug**
+
 Criado `server/minimal.js` que:
+
 - ✅ Não depende do banco de dados
-- ✅ Tem logging extensivo  
+- ✅ Tem logging extensivo
 - ✅ Fallback para HTML simples
 - ✅ Health check robusto
 
 ### 2. **Dockerfile Atualizado**
+
 ```dockerfile
 # Usar servidor minimal para debug
 CMD ["npm", "run", "start:minimal"]
 ```
 
 ### 3. **Scripts de Debug**
+
 ```bash
 npm run start:minimal  # Servidor sem deps
-npm run check          # Verificar dependências  
+npm run check          # Verificar dependências
 npm run start:safe     # Servidor completo com checks
 ```
 
 ## 🚀 Próximos Passos:
 
 ### 1. **Rebuild no EasyPanel**
+
 Com o servidor minimal, deve mostrar:
+
 ```
 🎉 Minimal Server Running!
 Port: 3000
@@ -57,23 +67,29 @@ Environment: production
 ```
 
 ### 2. **Verificar Logs**
+
 No EasyPanel, verificar:
+
 - Container logs
-- Build logs  
+- Build logs
 - Network/proxy logs
 
 ### 3. **Testar Endpoints**
+
 - `/health` - Health check
 - `/api/ping` - API test
 - `/` - Homepage
 
 ### 4. **Identificar Problema Real**
+
 Se minimal funcionar:
+
 - ✅ Container está OK
-- ✅ Network está OK  
+- ✅ Network está OK
 - ❌ Problema é no servidor completo
 
 Se minimal não funcionar:
+
 - ❌ Problema de infraestrutura
 - ❌ Variáveis de ambiente
 - ❌ Network/proxy
@@ -94,13 +110,15 @@ curl https://ide-b2btropical.jzo3qo.easypanel.host/
 ## 📋 Checklist:
 
 ### EasyPanel Configuration:
+
 - [ ] Environment variables set
-- [ ] Container building successfully  
+- [ ] Container building successfully
 - [ ] Port 3000 exposed
 - [ ] Domain/proxy configured
 - [ ] SSL certificate active
 
 ### Application:
+
 - [ ] Minimal server working
 - [ ] Health check responding
 - [ ] API endpoints working
@@ -109,6 +127,7 @@ curl https://ide-b2btropical.jzo3qo.easypanel.host/
 ## 🎯 Expected Result:
 
 After rebuild, EasyPanel should show:
+
 1. **Minimal server page** with server info
 2. **Health check** at `/health`
 3. **API test** at `/api/ping`
@@ -118,6 +137,7 @@ Then we can switch back to full server once we identify the issue.
 ## 🔄 Rollback Plan:
 
 If minimal works, switch back to full server:
+
 ```dockerfile
 CMD ["npm", "run", "start:safe"]
 ```
