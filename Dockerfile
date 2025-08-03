@@ -1,5 +1,8 @@
-# Dockerfile para EasyPanel
+# Dockerfile para EasyPanel - REBUILD 2025-08-03T02:35:00Z
 FROM node:22-alpine
+
+# Force rebuild cache bust
+ENV REBUILD_TIMESTAMP=20250803023500
 
 WORKDIR /app
 
