@@ -55,6 +55,14 @@ console.log("📁 Static path:", staticPath);
 // Serve assets directly with express.static (no custom handler)
 // This ensures proper mime-type detection
 
+// Serve assets with highest priority and proper mime types
+app.use("/assets", express.static(path.join(staticPath, "assets"), {
+  maxAge: "1y",
+  setHeaders: (res, filePath) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  },
+}));
+
 // Serve other static files (manifest.json, favicon, etc.)
 app.use(
   express.static(staticPath, {
