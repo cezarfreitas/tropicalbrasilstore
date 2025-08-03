@@ -12,8 +12,8 @@ console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
 
 // Force JSON responses (sometimes proxy expects this)
 app.use((req, res, next) => {
-  res.header('X-Powered-By', 'EasyPanel-Node');
-  res.header('X-Service-Status', 'running');
+  res.header("X-Powered-By", "EasyPanel-Node");
+  res.header("X-Service-Status", "running");
   next();
 });
 
@@ -92,7 +92,7 @@ app.get("/health", (req, res) => {
     pid: process.pid,
     memory: process.memoryUsage(),
     platform: "easypanel",
-    service: "chinelos-store"
+    service: "chinelos-store",
   });
 });
 
@@ -117,7 +117,7 @@ app.get("/status", (req, res) => {
     pid: process.pid,
     timestamp: new Date().toISOString(),
     port: port,
-    environment: process.env.NODE_ENV || "development"
+    environment: process.env.NODE_ENV || "development",
   });
 });
 
@@ -132,7 +132,11 @@ app.get("/test", (req, res) => {
 
 // API ping for testing
 app.get("/api/ping", (req, res) => {
-  res.json({ message: "pong", server: "easypanel-force", timestamp: new Date().toISOString() });
+  res.json({
+    message: "pong",
+    server: "easypanel-force",
+    timestamp: new Date().toISOString(),
+  });
 });
 
 // Override signal handlers
@@ -149,7 +153,9 @@ console.log("🚀 Starting server...");
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`✅ EasyPanel Force server running on http://0.0.0.0:${port}`);
-  console.log(`🌐 External URL: https://ide-b2btropical.jzo3qo.easypanel.host/`);
+  console.log(
+    `🌐 External URL: https://ide-b2btropical.jzo3qo.easypanel.host/`,
+  );
   console.log(`🔒 Signal handlers: Overridden`);
   console.log(`📡 Headers: Custom EasyPanel headers added`);
   console.log(`🎯 Ready for EasyPanel proxy!`);
@@ -157,7 +163,9 @@ app.listen(port, "0.0.0.0", () => {
 
 // Keep alive with more frequent heartbeat
 setInterval(() => {
-  console.log(`💗 EasyPanel server alive - uptime: ${Math.floor(process.uptime())}s - memory: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`);
+  console.log(
+    `💗 EasyPanel server alive - uptime: ${Math.floor(process.uptime())}s - memory: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`,
+  );
 }, 15000);
 
 // Force garbage collection periodically
