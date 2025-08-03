@@ -9,7 +9,7 @@ RUN apk add --no-cache curl
 # Copiar package files
 COPY package*.json ./
 
-# Instalar dependências
+# Instalar TODAS as dependências (incluindo dev para build)
 RUN npm install --legacy-peer-deps
 
 # Copiar código fonte
@@ -20,6 +20,9 @@ RUN mkdir -p public/uploads/logos public/uploads/products
 
 # Build da aplicação
 RUN npm run build
+
+# Limpar dev dependencies após build para reduzir tamanho
+RUN npm prune --production
 
 # Porta 80 para EasyPanel
 ENV PORT=80
