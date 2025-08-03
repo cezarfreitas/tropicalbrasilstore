@@ -93,17 +93,22 @@ interface VendorStats {
 
 export default function Vendors() {
   const [vendors, setVendors] = useState<Vendor[]>([]);
-  const [unassignedCustomers, setUnassignedCustomers] = useState<Customer[]>([]);
-  const [selectedVendorCustomers, setSelectedVendorCustomers] = useState<Customer[]>([]);
+  const [unassignedCustomers, setUnassignedCustomers] = useState<Customer[]>(
+    [],
+  );
+  const [selectedVendorCustomers, setSelectedVendorCustomers] = useState<
+    Customer[]
+  >([]);
   const [stats, setStats] = useState<VendorStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  
+
   // Modal states
   const [dialogOpen, setDialogOpen] = useState(false);
   const [customersDialogOpen, setCustomersDialogOpen] = useState(false);
-  const [assignCustomerDialogOpen, setAssignCustomerDialogOpen] = useState(false);
+  const [assignCustomerDialogOpen, setAssignCustomerDialogOpen] =
+    useState(false);
   const [editingVendor, setEditingVendor] = useState<Vendor | null>(null);
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
   const [saving, setSaving] = useState(false);
@@ -230,7 +235,8 @@ export default function Vendors() {
       console.error("Error saving vendor:", error);
       toast({
         title: "Erro",
-        description: error instanceof Error ? error.message : "Erro ao salvar vendedor",
+        description:
+          error instanceof Error ? error.message : "Erro ao salvar vendedor",
         variant: "destructive",
       });
     } finally {
@@ -286,7 +292,8 @@ export default function Vendors() {
       console.error("Error deleting vendor:", error);
       toast({
         title: "Erro",
-        description: error instanceof Error ? error.message : "Erro ao excluir vendedor",
+        description:
+          error instanceof Error ? error.message : "Erro ao excluir vendedor",
         variant: "destructive",
       });
     }
@@ -308,7 +315,7 @@ export default function Vendors() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ assigned_by: "Admin" }),
-        }
+        },
       );
 
       if (response.ok) {
@@ -346,7 +353,7 @@ export default function Vendors() {
     try {
       const response = await fetch(
         `/api/vendors/${selectedVendor.id}/customers/${customerId}`,
-        { method: "DELETE" }
+        { method: "DELETE" },
       );
 
       if (response.ok) {
@@ -463,9 +470,7 @@ export default function Vendors() {
               <div className="text-2xl font-bold">
                 {formatCurrency(stats.sales.total_sales_with_vendors)}
               </div>
-              <p className="text-xs text-muted-foreground">
-                Via vendedores
-              </p>
+              <p className="text-xs text-muted-foreground">Via vendedores</p>
             </CardContent>
           </Card>
 
@@ -577,9 +582,7 @@ export default function Vendors() {
                           )}
                         </div>
                       </TableCell>
-                      <TableCell>
-
-                      </TableCell>
+                      <TableCell></TableCell>
                       <TableCell>
                         <div className="space-y-1">
                           <div className="font-medium">
@@ -754,11 +757,13 @@ export default function Vendors() {
                   step="0.1"
                   value={formData.commission_percentage}
                   onChange={(e) =>
-                    setFormData({ ...formData, commission_percentage: parseFloat(e.target.value) || 0 })
+                    setFormData({
+                      ...formData,
+                      commission_percentage: parseFloat(e.target.value) || 0,
+                    })
                   }
                 />
               </div>
-
             </div>
 
             <div>
@@ -851,11 +856,7 @@ export default function Vendors() {
                 Cancelar
               </Button>
               <Button type="submit" disabled={saving}>
-                {saving
-                  ? "Salvando..."
-                  : editingVendor
-                    ? "Atualizar"
-                    : "Criar"}
+                {saving ? "Salvando..." : editingVendor ? "Atualizar" : "Criar"}
               </Button>
             </DialogFooter>
           </form>
@@ -866,9 +867,7 @@ export default function Vendors() {
       <Dialog open={customersDialogOpen} onOpenChange={setCustomersDialogOpen}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>
-              Clientes de {selectedVendor?.name}
-            </DialogTitle>
+            <DialogTitle>Clientes de {selectedVendor?.name}</DialogTitle>
             <DialogDescription>
               Clientes atribuídos a este vendedor
             </DialogDescription>
@@ -920,9 +919,9 @@ export default function Vendors() {
                   <TableCell>
                     <div className="text-sm">
                       {customer.vendor_assigned_at &&
-                        new Date(customer.vendor_assigned_at).toLocaleDateString(
-                          "pt-BR"
-                        )}
+                        new Date(
+                          customer.vendor_assigned_at,
+                        ).toLocaleDateString("pt-BR")}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -942,7 +941,10 @@ export default function Vendors() {
       </Dialog>
 
       {/* Modal de Atribuir Cliente */}
-      <Dialog open={assignCustomerDialogOpen} onOpenChange={setAssignCustomerDialogOpen}>
+      <Dialog
+        open={assignCustomerDialogOpen}
+        onOpenChange={setAssignCustomerDialogOpen}
+      >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Atribuir Cliente a Vendedor</DialogTitle>
@@ -957,7 +959,7 @@ export default function Vendors() {
               <Select
                 value={selectedVendor?.id.toString() || ""}
                 onValueChange={(value) => {
-                  const vendor = vendors.find(v => v.id.toString() === value);
+                  const vendor = vendors.find((v) => v.id.toString() === value);
                   setSelectedVendor(vendor || null);
                 }}
               >
@@ -965,11 +967,13 @@ export default function Vendors() {
                   <SelectValue placeholder="Escolha um vendedor..." />
                 </SelectTrigger>
                 <SelectContent>
-                  {vendors.filter(v => v.active).map((vendor) => (
-                    <SelectItem key={vendor.id} value={vendor.id.toString()}>
-                      {vendor.name}
-                    </SelectItem>
-                  ))}
+                  {vendors
+                    .filter((v) => v.active)
+                    .map((vendor) => (
+                      <SelectItem key={vendor.id} value={vendor.id.toString()}>
+                        {vendor.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -986,7 +990,8 @@ export default function Vendors() {
                       <div>
                         <div className="font-medium">{customer.name}</div>
                         <div className="text-sm text-muted-foreground">
-                          {customer.email} �� {formatCurrency(customer.total_spent)}
+                          {customer.email} ��{" "}
+                          {formatCurrency(customer.total_spent)}
                         </div>
                       </div>
                       <Button
