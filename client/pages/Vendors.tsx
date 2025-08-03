@@ -244,7 +244,7 @@ export default function Vendors() {
       name: vendor.name,
       email: vendor.email,
       phone: vendor.phone || "",
-
+      commission_percentage: vendor.commission_percentage || 0,
       active: vendor.active,
       avatar_url: vendor.avatar_url || "",
       bio: vendor.bio || "",
