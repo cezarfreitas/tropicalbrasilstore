@@ -23,6 +23,7 @@
     "start:minimal": "node server/minimal.js",
     "start:health": "node server/health-only.js",
     "start:persistent": "node server/persistent.js",
+    "start:easypanel": "node server/easypanel-force.js",
     "check": "node server/check-deps.js",
     "start:safe": "npm run check && npm start",
     "test": "vitest --run",
