@@ -113,7 +113,7 @@ export default function Vendors() {
     name: "",
     email: "",
     phone: "",
-
+    commission_percentage: 0,
     active: true,
     avatar_url: "",
     bio: "",
