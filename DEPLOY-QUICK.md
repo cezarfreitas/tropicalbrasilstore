@@ -28,12 +28,14 @@ cp .env.example .env
 ## 🔧 Environment Variables
 
 ### Essenciais:
+
 ```env
 DATABASE_URL=mysql://user:pass@host:port/db
 NODE_ENV=production
 ```
 
 ### Docker Compose:
+
 ```env
 DB_PASSWORD=your_password
 DB_ROOT_PASSWORD=root_password

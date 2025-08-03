@@ -3,7 +3,7 @@
 # For Easy Panel, local development, and self-hosting
 # =============================================================================
 
-version: '3.8'
+version: "3.8"
 
 services:
   # =============================================================================
@@ -21,45 +21,45 @@ services:
       # Application
       NODE_ENV: production
       PORT: 3000
-      
+
       # Database connection (MySQL format)
       DB_HOST: db
       DB_PORT: 3306
       DB_USER: ${DB_USER:-chinelos_user}
       DB_PASSWORD: ${DB_PASSWORD:?Database password is required}
       DB_NAME: ${DB_NAME:-chinelos_store}
-      
+
       # Alternative MySQL format (legacy support)
       MYSQL_HOST: db
       MYSQL_PORT: 3306
       MYSQL_USER: ${DB_USER:-chinelos_user}
       MYSQL_PASSWORD: ${DB_PASSWORD:?Database password is required}
       MYSQL_DATABASE: ${DB_NAME:-chinelos_store}
-      
+
       # Optional configurations
       DB_CONNECTION_LIMIT: ${DB_CONNECTION_LIMIT:-10}
       APP_NAME: ${APP_NAME:-Chinelos Store}
       APP_VERSION: ${APP_VERSION:-1.0.0}
-      
+
     depends_on:
       db:
         condition: service_healthy
-        
+
     volumes:
       # Persistent upload storage
       - upload_data:/app/public/uploads
       - upload_server_data:/app/server/public/uploads
-      
+
     networks:
       - chinelos-network
-      
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-      
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.chinelos.rule=Host(`${DOMAIN:-localhost}`)"
@@ -81,17 +81,17 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:?Database password is required}
       MYSQL_CHARSET: utf8mb4
       MYSQL_COLLATION: utf8mb4_unicode_ci
-      
+
     volumes:
       # Persistent database storage
       - db_data:/var/lib/mysql
-      
+
       # Custom MySQL configuration
       - ./mysql.conf:/etc/mysql/conf.d/custom.cnf:ro
-      
+
     networks:
       - chinelos-network
-      
+
     command: >
       --default-authentication-plugin=mysql_native_password
       --character-set-server=utf8mb4
@@ -99,9 +99,19 @@ services:
       --innodb-buffer-pool-size=256M
       --max-connections=200
       --sql-mode=STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO
-      
+
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${DB_ROOT_PASSWORD}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -154,21 +164,21 @@ volumes:
       type: none
       o: bind
       device: ${DB_DATA_PATH:-./data/mysql}
-      
+
   upload_data:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: ${UPLOAD_PATH:-./data/uploads}
-      
+
   upload_server_data:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: ${UPLOAD_SERVER_PATH:-./data/server-uploads}
-      
+
   # redis_data:
   #   driver: local
 
