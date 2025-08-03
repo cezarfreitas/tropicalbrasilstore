@@ -1,4 +1,4 @@
-# Simple Dockerfile for EasyPanel
+# Simple Dockerfile using development server
 FROM node:22-alpine
 
 # Set working directory
@@ -7,33 +7,27 @@ WORKDIR /app
 # Install curl for health checks
 RUN apk add --no-cache curl
 
-# Copy package files first
-COPY package.json ./
+# Copy package files
+COPY package*.json ./
 
-# Install dependencies with npm install (more compatible than npm ci)
-RUN npm install --production=false --legacy-peer-deps --silent
+# Install dependencies
+RUN npm install --legacy-peer-deps
 
 # Copy all source files
 COPY . .
 
-# Create necessary directories
+# Create upload directories
 RUN mkdir -p public/uploads/logos && \
     mkdir -p public/uploads/products && \
     mkdir -p server/public/uploads/logos && \
     mkdir -p server/public/uploads/products
 
-# Set environment variables
-ENV NODE_ENV=production
+# Set environment
+ENV NODE_ENV=development
 ENV PORT=3000
-
-# Build the application
-RUN npm run build
-
-# Remove dev dependencies to reduce image size
-RUN npm prune --production
 
 # Expose port
 EXPOSE 3000
 
-# Start command
-CMD ["npm", "start"]
+# Use development server (same as Fly.dev)
+CMD ["npm", "run", "dev"]
