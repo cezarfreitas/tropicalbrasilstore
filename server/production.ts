@@ -53,26 +53,28 @@ const staticPath = path.join(__dirname, "../spa");
 console.log("📁 Static path:", staticPath);
 
 // CRITICAL: Serve assets with highest priority - BEFORE catch-all route
-app.use('/assets/*', (req, res, next) => {
+app.use("/assets/*", (req, res, next) => {
   const filePath = path.join(staticPath, req.path);
   if (fs.existsSync(filePath)) {
-    res.setHeader('Cache-Control', 'public, max-age=31536000');
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader("Cache-Control", "public, max-age=31536000");
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.sendFile(filePath);
   } else {
-    res.status(404).send('Asset not found');
+    res.status(404).send("Asset not found");
   }
 });
 
 // Serve other static files (manifest.json, favicon, etc.)
-app.use(express.static(staticPath, {
-  maxAge: '1d',
-  setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    }
-  }
-}));
+app.use(
+  express.static(staticPath, {
+    maxAge: "1d",
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith(".html")) {
+        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+      }
+    },
+  }),
+);
 
 // API routes should already be handled by createServer()
 
@@ -81,12 +83,12 @@ app.use(express.static(staticPath, {
 app.get("*", (req, res) => {
   // This should only handle SPA routes, not files
   console.log("SPA Route:", req.path);
-  
+
   const indexPath = path.join(staticPath, "index.html");
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {
-    res.status(404).send('App not found');
+    res.status(404).send("App not found");
   }
 });
 
@@ -96,16 +98,16 @@ app.listen(port, "0.0.0.0", () => {
   console.log(`📱 App: http://0.0.0.0:${port}`);
   console.log(`🔌 API: http://0.0.0.0:${port}/api`);
   console.log(`❤️  Health: http://0.0.0.0:${port}/health`);
-  
+
   // Verify assets exist
-  const assetsPath = path.join(staticPath, 'assets');
+  const assetsPath = path.join(staticPath, "assets");
   if (fs.existsSync(assetsPath)) {
     const files = fs.readdirSync(assetsPath);
     console.log(`📦 Assets found: ${files.length} files`);
-    files.forEach(file => console.log(`   - /assets/${file}`));
+    files.forEach((file) => console.log(`   - /assets/${file}`));
   } else {
     console.error(`❌ Assets directory not found: ${assetsPath}`);
   }
-  
+
   console.log("🎉 EasyPanel deployment successful!");
 });
