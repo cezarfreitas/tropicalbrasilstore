@@ -1,37 +1,39 @@
-# Use Node.js 22 LTS Alpine
+# Simple Dockerfile for EasyPanel
 FROM node:22-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Install required system dependencies
+# Install curl for health checks
 RUN apk add --no-cache curl
 
-# Copy package files
-COPY package*.json ./
+# Copy package files first
+COPY package.json ./
 
-# Remove package-lock.json and install dependencies
-RUN rm -f package-lock.json && \
-    npm install --legacy-peer-deps && \
-    npm cache clean --force
+# Install dependencies with npm install (more compatible than npm ci)
+RUN npm install --production=false --legacy-peer-deps --silent
 
-# Copy source code
+# Copy all source files
 COPY . .
 
-# Create upload directories
-RUN mkdir -p public/uploads/logos public/uploads/products && \
-    mkdir -p server/public/uploads/logos server/public/uploads/products
+# Create necessary directories
+RUN mkdir -p public/uploads/logos && \
+    mkdir -p public/uploads/products && \
+    mkdir -p server/public/uploads/logos && \
+    mkdir -p server/public/uploads/products
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
 
 # Build the application
-ENV NODE_ENV=production
 RUN npm run build
+
+# Remove dev dependencies to reduce image size
+RUN npm prune --production
 
 # Expose port
 EXPOSE 3000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:3000/health || exit 1
-
-# Start the application
+# Start command
 CMD ["npm", "start"]
