@@ -1,5 +1,0 @@
-Nome do Produto,Categoria,Preço Base,Preço de Venda,URL da Foto,Grupo de Tamanhos,Cor (uma por linha),SKU,SKU Pai,Descrição,Preço Sugerido,Tipo de Estoque (grade/size),Estoque por Grade,Estoque Tam 37,Estoque Tam 38,Estoque Tam 39,Estoque Tam 40,Estoque Tam 41,Estoque Tam 42,Estoque Tam 43,Estoque Tam 44,Estoque por Variante (DEPRECATED)
-"Chinelo Teste Grade","1","20.00","29.90","","1","azul","TEST001-AZUL","TEST001","Produto de teste para estoque por grade","39.90","grade","25","","","","","","","","",""
-"Chinelo Teste Grade","1","20.00","29.90","","1","vermelho","TEST001-VERMELHO","TEST001","Produto de teste para estoque por grade","39.90","grade","30","","","","","","","","",""
-"Tênis Teste Tamanho","2","100.00","149.90","","2","branco","TEST002-BRANCO","TEST002","Produto de teste para estoque por tamanho","199.90","size","","3","5","8","10","6","4","2","1",""
-"Tênis Teste Tamanho","2","100.00","149.90","","2","preto","TEST002-PRETO","TEST002","Produto de teste para estoque por tamanho","199.90","size","","4","6","10","12","8","5","3","2",""
