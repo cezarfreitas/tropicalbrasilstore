@@ -23,6 +23,7 @@ ENV PORT=80
 ENV NODE_ENV=development
 ENV VITE_HOST=0.0.0.0
 ENV VITE_PORT=80
+ENV DATABASE_URL=mysql://tropical:805ce7692e5b4d6ced5f@main.idenegociosdigitais.com.br:3232/tropical
 
 EXPOSE 80
 
