@@ -21,6 +21,8 @@ RUN mkdir -p public/uploads/logos public/uploads/products
 # Porta 80 para EasyPanel
 ENV PORT=80
 ENV NODE_ENV=development
+ENV VITE_HOST=0.0.0.0
+ENV VITE_PORT=80
 
 EXPOSE 80
 
