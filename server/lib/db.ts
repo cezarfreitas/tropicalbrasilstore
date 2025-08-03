@@ -10,6 +10,10 @@ const createConnection = () => {
       connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "3"),
       queueLimit: 0,
       charset: "utf8mb4",
+      acquireTimeout: 60000,
+      timeout: 60000,
+      reconnect: true,
+      connectTimeout: 60000,
     });
   }
 
