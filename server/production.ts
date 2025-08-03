@@ -52,24 +52,8 @@ app.use("/uploads", express.static(uploadsPath));
 const staticPath = path.join(__dirname, "../spa");
 console.log("📁 Static path:", staticPath);
 
-// CRITICAL: Serve assets with highest priority - BEFORE catch-all route
-app.use("/assets/*", (req, res, next) => {
-  const filePath = path.join(staticPath, req.path);
-  if (fs.existsSync(filePath)) {
-    // Set proper content types
-    if (req.path.endsWith(".js")) {
-      res.setHeader("Content-Type", "application/javascript");
-    } else if (req.path.endsWith(".css")) {
-      res.setHeader("Content-Type", "text/css");
-    }
-
-    res.setHeader("Cache-Control", "public, max-age=31536000");
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.sendFile(filePath);
-  } else {
-    res.status(404).send("Asset not found");
-  }
-});
+// Serve assets directly with express.static (no custom handler)
+// This ensures proper mime-type detection
 
 // Serve other static files (manifest.json, favicon, etc.)
 app.use(
