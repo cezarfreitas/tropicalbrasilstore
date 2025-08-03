@@ -1,4 +1,4 @@
-# Simple Dockerfile using development server
+# Simple Dockerfile for EasyPanel with external database
 FROM node:22-alpine
 
 # Set working directory
@@ -22,12 +22,16 @@ RUN mkdir -p public/uploads/logos && \
     mkdir -p server/public/uploads/logos && \
     mkdir -p server/public/uploads/products
 
-# Set environment
+# Set environment for external database
 ENV NODE_ENV=development
 ENV PORT=3000
 
 # Expose port
 EXPOSE 3000
 
-# Use development server (same as Fly.dev)
+# Health check for EasyPanel
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:3000/health || exit 1
+
+# Use development server
 CMD ["npm", "run", "dev"]
