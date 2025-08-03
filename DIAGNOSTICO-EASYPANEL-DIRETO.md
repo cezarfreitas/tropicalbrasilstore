@@ -3,32 +3,41 @@
 ## ⚡ Execute estes comandos NO SEU VPS EasyPanel:
 
 ### 1️⃣ **PRIMEIRO: Verificar se há containers rodando**
+
 ```bash
 docker ps
 ```
+
 **Se vazio = Nenhum container rodando (problema principal)**
 
 ### 2️⃣ **Verificar containers parados**
+
 ```bash
 docker ps -a
 ```
+
 **Deve mostrar containers com status "Exited" ou "Up"**
 
 ### 3️⃣ **Verificar se algo está na porta 80**
+
 ```bash
 netstat -tlnp | grep :80
 sudo lsof -i :80
 ```
+
 **Se vazio = Porta 80 livre (problema!)**
 
 ### 4️⃣ **Testar se algo responde na porta 80**
+
 ```bash
 curl -I http://localhost:80
 wget -O- http://localhost:80
 ```
+
 **Se der erro = Nada rodando na porta 80**
 
 ### 5️⃣ **Verificar logs do sistema**
+
 ```bash
 journalctl -xe | tail -20
 docker logs $(docker ps -q) 2>/dev/null || echo "Nenhum container ativo"
@@ -37,6 +46,7 @@ docker logs $(docker ps -q) 2>/dev/null || echo "Nenhum container ativo"
 ## 🔧 **SOLUÇÕES POR CENÁRIO:**
 
 ### ❌ **CENÁRIO 1: Nenhum container rodando**
+
 ```bash
 # Verificar se EasyPanel está funcionando
 sudo systemctl status docker
@@ -47,6 +57,7 @@ docker start $(docker ps -a -q)
 ```
 
 ### ❌ **CENÁRIO 2: Container roda mas não responde**
+
 ```bash
 # Ver se container está "healthy"
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
@@ -60,6 +71,7 @@ docker exec $CONTAINER_ID curl -I http://localhost:80
 ```
 
 ### ❌ **CENÁRIO 3: Problema de rede/proxy**
+
 ```bash
 # Verificar port binding
 docker port $(docker ps -q)
@@ -68,6 +80,7 @@ docker port $(docker ps -q)
 ```
 
 ## 🚀 **TESTE RÁPIDO - Servidor Temporário**
+
 ```bash
 # Criar servidor de teste simples
 cat > test-server.js << 'EOF'
@@ -87,6 +100,7 @@ node test-server.js &
 # Testar
 curl http://localhost:80
 ```
+
 **Se funcionar = Problema é com a aplicação, não com o servidor**
 
 ## 📱 **VERIFICAÇÃO DA CONFIGURAÇÃO EASYPANEL**
@@ -94,10 +108,12 @@ curl http://localhost:80
 No painel do EasyPanel, verifique:
 
 1. **App Settings:**
+
    - Port: `80`
    - Environment Variables: `PORT=80`
 
 2. **Domain Settings:**
+
    - Custom Domain configurado?
    - SSL habilitado?
 
@@ -106,6 +122,7 @@ No painel do EasyPanel, verifique:
    - Port: `80`
 
 ## 🎯 **COMANDO ÚNICO DE DIAGNÓSTICO**
+
 ```bash
 echo "=== DIAGNÓSTICO RÁPIDO ===" && \
 echo "1. Containers:" && docker ps && \
@@ -117,12 +134,15 @@ echo "4. Docker status:" && sudo systemctl is-active docker
 ## 📞 **Resultados Possíveis:**
 
 ### ✅ **Se mostrar containers UP + porta 80 ocupada**
+
 → Problema de configuração do EasyPanel (proxy/domain)
 
 ### ❌ **Se não mostrar containers**
+
 → Deploy falhou ou containers crasharam
 
 ### ⚠️ **Se containers UP mas porta 80 livre**
+
 → Aplicação não está bindando na porta 80
 
 **Execute estes comandos e me envie os resultados!** 🔍
