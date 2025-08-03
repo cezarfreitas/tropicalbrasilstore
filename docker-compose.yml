@@ -14,7 +14,7 @@ services:
       NODE_ENV: development
       PORT: 3000
       DATABASE_URL: mysql://tropical:805ce7692e5b4d6ced5f@5.161.52.206:3232/tropical
-      
+
       # Legacy format (fallback)
       DB_HOST: 5.161.52.206
       DB_PORT: 3232

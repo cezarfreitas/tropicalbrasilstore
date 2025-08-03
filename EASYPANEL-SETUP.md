@@ -54,15 +54,18 @@ Após o deploy, verifique:
 ## 🆘 Troubleshooting
 
 ### Container não inicia:
+
 - Verificar variáveis de ambiente
 - Verificar logs do container
 
 ### Health Check falha:
+
 - Verificar se porta 3000 está exposta
 - Verificar se `/health` está acessível
 - Aguardar start period (60s)
 
 ### Banco não conecta:
+
 - Verificar DATABASE_URL
 - Verificar conectividade de rede
 - Verificar credenciais
