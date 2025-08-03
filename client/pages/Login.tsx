@@ -150,6 +150,16 @@ export default function Login() {
                   "Entrar"
                 )}
               </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full mt-2"
+                onClick={handleBypass}
+                disabled={isLoading}
+              >
+                🚀 Acesso Rápido (Demo)
+              </Button>
             </form>
 
             <div className="mt-6 pt-6 border-t border-gray-200">
