@@ -1,0 +1,16 @@
+{
+  "name": "chinelos-store-dev",
+  "type": "app",
+  "build": {
+    "type": "dockerfile",
+    "dockerfile": "./Dockerfile"
+  },
+  "env": {
+    "NODE_ENV": "development",
+    "PORT": "80"
+  },
+  "healthcheck": {
+    "path": "/health",
+    "interval": 30
+  }
+}
