@@ -36,7 +36,7 @@ app.get("/api/ping", (req, res) => {
 
 // Serve static files if they exist
 try {
-  const staticPath = path.join(__dirname, "../spa");
+  const staticPath = path.join(__dirname, "../dist/spa");
   console.log(`📁 Trying to serve static files from: ${staticPath}`);
 
   app.use(express.static(staticPath));
