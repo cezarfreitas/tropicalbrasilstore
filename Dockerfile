@@ -9,8 +9,8 @@ RUN apk add --no-cache curl
 # Copiar arquivos de dependências
 COPY package*.json ./
 
-# Instalar dependências
-RUN npm install
+# Instalar dependências com resolução de conflitos
+RUN npm install --legacy-peer-deps
 
 # Copiar código fonte
 COPY . .
