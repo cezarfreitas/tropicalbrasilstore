@@ -1,2 +1,7 @@
-# Disable Nixpacks detection - force use of Dockerfile
+# DISABLE NIXPACKS COMPLETELY - FORCE DOCKERFILE ONLY
+# EasyPanel must use our custom Dockerfile, not auto-detection
 *
+**/*
+node_modules
+package.json
+package-lock.json
