@@ -19,11 +19,11 @@ export default defineConfig(({ mode }) => {
         ".jzo3qo.easypanel.host",
         "ide-testeloja.jzo3qo.easypanel.host",
         "b2b.tropicalbrasilsandalias.com.br",
-        ".tropicalbrasilsandalias.com.br"
+        ".tropicalbrasilsandalias.com.br",
       ],
       hmr: {
         clientPort: 80,
-        host: "b2b.tropicalbrasilsandalias.com.br"
+        host: "b2b.tropicalbrasilsandalias.com.br",
       },
     },
     build: {
