@@ -1,6 +1,7 @@
 # 🚨 FIX IMEDIATO - Container Rodando Mas App Não Responde
 
-## ❌ **PROBLEMA:** 
+## ❌ **PROBLEMA:**
+
 ```
 curl: (7) Failed to connect to localhost port 3000 after 0 ms: Could not connect to server
 ```
@@ -8,18 +9,23 @@ curl: (7) Failed to connect to localhost port 3000 after 0 ms: Could not connect
 ## 🔍 **EXECUTE ESTES COMANDOS NO CONTAINER:**
 
 ### 1️⃣ **Verificar processos rodando**
+
 ```bash
 ps aux
 ```
+
 **Procure por:** `node`, `npm`, `server`
 
 ### 2️⃣ **Verificar portas em uso**
+
 ```bash
 netstat -tlnp
 ```
+
 **Deve mostrar:** `:3000` ou `:80` em LISTEN
 
 ### 3️⃣ **Verificar se há arquivos da aplicação**
+
 ```bash
 ls -la
 ls -la server/
@@ -27,6 +33,7 @@ ls -la dist/
 ```
 
 ### 4️⃣ **Tentar iniciar manualmente**
+
 ```bash
 # Opção 1: Servidor direto
 node server/index.js
@@ -39,6 +46,7 @@ npm run start:production
 ```
 
 ### 5️⃣ **Se nada funcionar, criar servidor temporário**
+
 ```bash
 # Criar servidor básico
 cat > temp-server.js << 'EOF'
@@ -60,14 +68,17 @@ node temp-server.js &
 ```
 
 ### 6️⃣ **Testar novamente**
+
 ```bash
 curl http://localhost:3000
 ```
+
 **Deve retornar:** `TEMP SERVER OK - PORT 3000`
 
 ## 🎯 **POSSÍVEIS CAUSAS:**
 
 ### ❌ **App não startou corretamente**
+
 ```bash
 # Verificar logs de startup
 npm run build
@@ -75,6 +86,7 @@ npm start
 ```
 
 ### ❌ **Porta errada configurada**
+
 ```bash
 # Verificar variáveis de ambiente
 env | grep PORT
@@ -82,12 +94,14 @@ echo $PORT
 ```
 
 ### ❌ **Dependências faltando**
+
 ```bash
 # Instalar dependências
 npm install
 ```
 
 ### ❌ **Build não foi feito**
+
 ```bash
 # Fazer build
 npm run build
@@ -97,6 +111,7 @@ ls -la dist/
 ## 🚀 **SOLUÇÃO DEFINITIVA:**
 
 ### **Método 1: Rebuild completo**
+
 ```bash
 # Limpar tudo
 rm -rf node_modules package-lock.json dist/
@@ -112,6 +127,7 @@ npm start
 ```
 
 ### **Método 2: Usar servidor simples**
+
 ```bash
 # Criar simple-server.js
 cat > simple-server.js << 'EOF'
@@ -136,6 +152,7 @@ node simple-server.js
 ```
 
 ## 📱 **TESTE FINAL:**
+
 ```bash
 # Em outro terminal (ou background)
 curl http://localhost:3000/health
