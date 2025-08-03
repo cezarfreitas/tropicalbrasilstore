@@ -30,28 +30,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Edit2, Trash2, Tags, Users, Package, Award } from "lucide-react";
+import { Plus, Edit2, Trash2, Tags, Users, Package } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Gender,
   Type,
-  Brand,
   CreateGenderRequest,
   CreateTypeRequest,
-  CreateBrandRequest,
 } from "@shared/types";
 
 export default function Attributes() {
   const [activeTab, setActiveTab] = useState("genders");
   const [genders, setGenders] = useState<Gender[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
-  const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<Gender | Type | Brand | null>(null);
+  const [editingItem, setEditingItem] = useState<Gender | Type | null>(null);
   const [selectedGenders, setSelectedGenders] = useState<number[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<number[]>([]);
-  const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -61,7 +57,7 @@ export default function Attributes() {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      await Promise.all([fetchGenders(), fetchTypes(), fetchBrands()]);
+      await Promise.all([fetchGenders(), fetchTypes()]);
       setLoading(false);
     };
     loadData();
@@ -137,46 +133,11 @@ export default function Attributes() {
     }
   };
 
-  const fetchBrands = async (retryCount = 0) => {
-    try {
-      const response = await fetch("/api/brands", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        cache: "no-cache",
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setBrands(data);
-      } else {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-    } catch (error) {
-      console.error("Error fetching brands:", error);
-
-      // Retry once if this is the first attempt
-      if (retryCount === 0) {
-        console.log("Retrying fetch brands...");
-        setTimeout(() => fetchBrands(1), 1000);
-        return;
-      }
-
-      toast({
-        title: "Erro",
-        description:
-          "Não foi possível carregar as marcas. Verifique sua conexão.",
-        variant: "destructive",
-      });
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const endpoint = activeTab === "genders" ? "/api/genders" : activeTab === "types" ? "/api/types" : "/api/brands";
+      const endpoint = activeTab === "genders" ? "/api/genders" : "/api/types";
       const url = editingItem ? `${endpoint}/${editingItem.id}` : endpoint;
       const method = editingItem ? "PUT" : "POST";
 
@@ -192,8 +153,8 @@ export default function Attributes() {
         toast({
           title: "Sucesso",
           description: editingItem
-            ? `${activeTab === "genders" ? "Gênero" : activeTab === "types" ? "Tipo" : "Marca"} atualizado com sucesso`
-            : `${activeTab === "genders" ? "Gênero" : activeTab === "types" ? "Tipo" : "Marca"} criado com sucesso`,
+            ? `${activeTab === "genders" ? "Gênero" : "Tipo"} atualizado com sucesso`
+            : `${activeTab === "genders" ? "Gênero" : "Tipo"} criado com sucesso`,
         });
         setDialogOpen(false);
         resetForm();
@@ -202,10 +163,8 @@ export default function Attributes() {
         // Refresh the appropriate list
         if (activeTab === "genders") {
           fetchGenders();
-        } else if (activeTab === "types") {
-          fetchTypes();
         } else {
-          fetchBrands();
+          fetchTypes();
         }
       } else {
         const error = await response.json();
@@ -233,7 +192,7 @@ export default function Attributes() {
     if (!confirm("Tem certeza que deseja excluir este item?")) return;
 
     try {
-      const endpoint = activeTab === "genders" ? "/api/genders" : activeTab === "types" ? "/api/types" : "/api/brands";
+      const endpoint = activeTab === "genders" ? "/api/genders" : "/api/types";
       const response = await fetch(`${endpoint}/${id}`, {
         method: "DELETE",
       });
@@ -241,20 +200,18 @@ export default function Attributes() {
       if (response.ok) {
         toast({
           title: "Sucesso",
-          description: `${activeTab === "genders" ? "Gênero" : activeTab === "types" ? "Tipo" : "Marca"} excluído com sucesso`,
+          description: `${activeTab === "genders" ? "Gênero" : "Tipo"} excluído com sucesso`,
         });
 
         // Refresh the appropriate list
         if (activeTab === "genders") {
           fetchGenders();
-        } else if (activeTab === "types") {
-          fetchTypes();
         } else {
-          fetchBrands();
+          fetchTypes();
         }
       } else {
         throw new Error(
-          `Erro ao excluir ${activeTab === "genders" ? "gênero" : activeTab === "types" ? "tipo" : "marca"}`,
+          `Erro ao excluir ${activeTab === "genders" ? "gênero" : "tipo"}`,
         );
       }
     } catch (error: any) {
@@ -404,70 +361,6 @@ export default function Attributes() {
     }
   };
 
-  // Funç��es de seleção múltipla para Marcas
-  const isAllBrandsSelected =
-    brands.length > 0 && selectedBrands.length === brands.length;
-  const isBrandsIndeterminate =
-    selectedBrands.length > 0 && selectedBrands.length < brands.length;
-
-  const toggleSelectAllBrands = () => {
-    if (isAllBrandsSelected) {
-      setSelectedBrands([]);
-    } else {
-      setSelectedBrands(brands.map((brand) => brand.id));
-    }
-  };
-
-  const toggleBrandSelection = (brandId: number) => {
-    setSelectedBrands((prev) =>
-      prev.includes(brandId)
-        ? prev.filter((id) => id !== brandId)
-        : [...prev, brandId],
-    );
-  };
-
-  const clearBrandSelection = () => {
-    setSelectedBrands([]);
-  };
-
-  const handleBulkDeleteBrands = async () => {
-    if (selectedBrands.length === 0) return;
-
-    const confirmMessage = `Tem certeza que deseja excluir ${selectedBrands.length} marca${selectedBrands.length !== 1 ? "s" : ""}?`;
-
-    if (!confirm(confirmMessage)) return;
-
-    try {
-      const deletePromises = selectedBrands.map((id) =>
-        fetch(`/api/brands/${id}`, {
-          method: "DELETE",
-        }),
-      );
-
-      const results = await Promise.all(deletePromises);
-      const failed = results.filter((r) => !r.ok);
-
-      if (failed.length === 0) {
-        toast({
-          title: "Sucesso",
-          description: `${selectedBrands.length} marca${selectedBrands.length !== 1 ? "s" : ""} excluída${selectedBrands.length !== 1 ? "s" : ""} com sucesso`,
-        });
-        setSelectedBrands([]);
-        fetchBrands();
-      } else {
-        throw new Error(
-          `${failed.length} marca${failed.length !== 1 ? "s" : ""} não puderam ser excluída${failed.length !== 1 ? "s" : ""}`,
-        );
-      }
-    } catch (error: any) {
-      toast({
-        title: "Erro",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -487,7 +380,7 @@ export default function Attributes() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Atributos</h1>
           <p className="text-muted-foreground">
-            Gerencie os gêneros, tipos e marcas dos seus produtos
+            Gerencie os gêneros e tipos dos seus produtos
           </p>
         </div>
       </div>
@@ -497,7 +390,7 @@ export default function Attributes() {
         onValueChange={setActiveTab}
         className="space-y-6"
       >
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="genders" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Gêneros
@@ -505,10 +398,6 @@ export default function Attributes() {
           <TabsTrigger value="types" className="flex items-center gap-2">
             <Package className="h-4 w-4" />
             Tipo
-          </TabsTrigger>
-          <TabsTrigger value="brands" className="flex items-center gap-2">
-            <Award className="h-4 w-4" />
-            Marcas
           </TabsTrigger>
         </TabsList>
 
@@ -655,7 +544,7 @@ export default function Attributes() {
                         <Checkbox
                           checked={isAllGendersSelected}
                           ref={(el) => {
-                            if (el) el.indeterminate = isGendersIndeterminate;
+                            if (el) (el as any).indeterminate = isGendersIndeterminate;
                           }}
                           onCheckedChange={toggleSelectAllGenders}
                           aria-label="Selecionar todos os gêneros"
@@ -928,216 +817,6 @@ export default function Attributes() {
                               variant="outline"
                               size="icon"
                               onClick={() => handleDelete(type.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Marcas Tab */}
-        <TabsContent value="brands" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Award className="h-5 w-5" />
-                    Marcas
-                  </CardTitle>
-                  <CardDescription>
-                    {brands.length === 0
-                      ? "Nenhuma marca cadastrada"
-                      : `${brands.length} marca${brands.length !== 1 ? "s" : ""} cadastrada${brands.length !== 1 ? "s" : ""}`}
-                  </CardDescription>
-                </div>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button onClick={handleNew}>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Nova Marca
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <form onSubmit={handleSubmit}>
-                      <DialogHeader>
-                        <DialogTitle>
-                          {editingItem ? "Editar Marca" : "Nova Marca"}
-                        </DialogTitle>
-                        <DialogDescription>
-                          {editingItem
-                            ? "Atualize as informações da marca"
-                            : "Adicione uma nova marca para seus produtos"}
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="name">Nome da Marca</Label>
-                          <Input
-                            id="name"
-                            value={formData.name}
-                            onChange={(e) =>
-                              setFormData({ ...formData, name: e.target.value })
-                            }
-                            placeholder="Ex: Havaianas, Ipanema"
-                            required
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="description">Descrição (opcional)</Label>
-                          <Textarea
-                            id="description"
-                            value={formData.description}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                description: e.target.value,
-                              })
-                            }
-                            placeholder="Descrição da marca..."
-                            rows={3}
-                          />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setDialogOpen(false)}
-                        >
-                          Cancelar
-                        </Button>
-                        <Button type="submit">
-                          {editingItem ? "Atualizar" : "Criar"}
-                        </Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </CardHeader>
-
-            {/* Barra de ações para seleção múltipla - Marcas */}
-            {selectedBrands.length > 0 && (
-              <Card className="border-blue-200 bg-blue-50 mx-6">
-                <CardContent className="pt-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <span className="text-sm font-medium">
-                        {selectedBrands.length} marca{selectedBrands.length !== 1 ? "s" : ""} selecionada{selectedBrands.length !== 1 ? "s" : ""}
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={clearBrandSelection}
-                      >
-                        Limpar seleção
-                      </Button>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={handleBulkDeleteBrands}
-                        className="flex items-center gap-2"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        Excluir selecionadas
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            <CardContent>
-              {brands.length === 0 ? (
-                <div className="text-center py-8">
-                  <Award className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                  <h3 className="mt-2 text-sm font-semibold">
-                    Nenhuma marca cadastrada
-                  </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Comece criando as primeiras marcas para seus produtos.
-                  </p>
-                  <div className="mt-6">
-                    <Button onClick={handleNew}>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Nova Marca
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[50px]">
-                        <Checkbox
-                          checked={isAllBrandsSelected}
-                          ref={(el) => {
-                            if (el) el.indeterminate = isBrandsIndeterminate;
-                          }}
-                          onCheckedChange={toggleSelectAllBrands}
-                          aria-label="Selecionar todas as marcas"
-                          className={
-                            isBrandsIndeterminate
-                              ? "data-[state=checked]:bg-blue-600"
-                              : ""
-                          }
-                        />
-                      </TableHead>
-                      <TableHead>Nome</TableHead>
-                      <TableHead>Descrição</TableHead>
-                      <TableHead>Criado em</TableHead>
-                      <TableHead className="w-[100px]">Ações</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {brands.map((brand) => (
-                      <TableRow
-                        key={brand.id}
-                        className={
-                          selectedBrands.includes(brand.id) ? "bg-blue-50" : ""
-                        }
-                      >
-                        <TableCell>
-                          <Checkbox
-                            checked={selectedBrands.includes(brand.id)}
-                            onCheckedChange={() => toggleBrandSelection(brand.id)}
-                            aria-label={`Selecionar marca ${brand.name}`}
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {brand.name}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {brand.description || "—"}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {new Date(brand.created_at).toLocaleDateString(
-                            "pt-BR",
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => handleEdit(brand)}
-                            >
-                              <Edit2 className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => handleDelete(brand.id)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
