@@ -761,7 +761,7 @@ export default function Attributes() {
                         <Checkbox
                           checked={isAllTypesSelected}
                           ref={(el) => {
-                            if (el) el.indeterminate = isTypesIndeterminate;
+                            if (el) (el as any).indeterminate = isTypesIndeterminate;
                           }}
                           onCheckedChange={toggleSelectAllTypes}
                           aria-label="Selecionar todos os tipos"
