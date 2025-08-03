@@ -3,11 +3,13 @@
 ## 📋 Passo a Passo
 
 ### 1. **Criar Novo Projeto no EasyPanel**
+
 - Acesse seu painel EasyPanel
 - Clique em "New Project"
 - Escolha "Docker"
 
 ### 2. **Configurar Repository**
+
 - **Repository URL**: URL do seu repositório Git
 - **Branch**: `main`
 - **Build Path**: `/`
@@ -24,6 +26,7 @@ DATABASE_URL=mysql://user:password@host:port/database
 ```
 
 **Exemplo com seu banco:**
+
 ```env
 NODE_ENV=production
 PORT=80
@@ -54,19 +57,23 @@ Após o deploy:
 ## 🆘 Troubleshooting
 
 ### ❌ Build falhou:
+
 - Verificar logs do build
 - Confirmar se Dockerfile está na raiz
 
 ### ❌ Container não inicia:
+
 - Verificar variáveis de ambiente
 - Verificar logs do container
 
 ### ❌ Health Check falha:
+
 - Aguardar 60s (start period)
 - Verificar se porta 80 está exposta
 - Verificar endpoint `/health`
 
 ### ❌ App não carrega:
+
 - Verificar se domínio aponta para porta 80
 - Verificar logs da aplicação
 

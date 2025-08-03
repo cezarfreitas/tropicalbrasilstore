@@ -53,12 +53,15 @@ const staticPath = path.join(__dirname, "../spa");
 console.log("📁 Static path:", staticPath);
 
 // Serve assets explicitly
-app.use('/assets', express.static(path.join(staticPath, 'assets'), {
-  maxAge: '1y',
-  setHeaders: (res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-}));
+app.use(
+  "/assets",
+  express.static(path.join(staticPath, "assets"), {
+    maxAge: "1y",
+    setHeaders: (res) => {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+    },
+  }),
+);
 
 // Serve other static files
 app.use(express.static(staticPath));
@@ -71,10 +74,12 @@ app.get("*", (req, res) => {
   }
 
   // Skip assets
-  if (req.path.startsWith("/assets/") || 
-      req.path.startsWith("/uploads/") ||
-      req.path.includes('.')) {
-    return res.status(404).send('File not found');
+  if (
+    req.path.startsWith("/assets/") ||
+    req.path.startsWith("/uploads/") ||
+    req.path.includes(".")
+  ) {
+    return res.status(404).send("File not found");
   }
 
   // Serve index.html for SPA routes
@@ -82,7 +87,7 @@ app.get("*", (req, res) => {
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {
-    res.status(404).send('App not found');
+    res.status(404).send("App not found");
   }
 });
 
