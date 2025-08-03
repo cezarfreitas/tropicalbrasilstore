@@ -530,7 +530,7 @@ export default function Vendors() {
                   <TableRow>
                     <TableHead>Vendedor</TableHead>
                     <TableHead>Contato</TableHead>
-                    <TableHead>Comissão</TableHead>
+                    <TableHead>Comiss��o</TableHead>
                     <TableHead>Vendas</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Ações</TableHead>
@@ -740,6 +740,21 @@ export default function Vendors() {
                   value={formData.phone}
                   onChange={(e) =>
                     setFormData({ ...formData, phone: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="commission">Comissão (%)</Label>
+                <Input
+                  id="commission"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.1"
+                  value={formData.commission_percentage}
+                  onChange={(e) =>
+                    setFormData({ ...formData, commission_percentage: parseFloat(e.target.value) || 0 })
                   }
                 />
               </div>
