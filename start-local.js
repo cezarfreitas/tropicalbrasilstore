@@ -36,22 +36,27 @@ if (!fs.existsSync(staticPath)) {
 app.use("/uploads", express.static(path.join(__dirname, "public", "uploads")));
 
 // Serve assets
-app.use("/assets", express.static(path.join(staticPath, "assets"), {
-  maxAge: "1d",
-  setHeaders: (res, filePath) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-  },
-}));
+app.use(
+  "/assets",
+  express.static(path.join(staticPath, "assets"), {
+    maxAge: "1d",
+    setHeaders: (res, filePath) => {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+    },
+  }),
+);
 
 // Serve other static files
-app.use(express.static(staticPath, {
-  maxAge: "1d",
-  setHeaders: (res, filePath) => {
-    if (filePath.endsWith(".html")) {
-      res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-    }
-  },
-}));
+app.use(
+  express.static(staticPath, {
+    maxAge: "1d",
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith(".html")) {
+        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+      }
+    },
+  }),
+);
 
 // SPA routing
 app.get("*", (req, res) => {
@@ -71,14 +76,14 @@ app.listen(port, () => {
   console.log(`✅ Local server running on http://localhost:${port}`);
   console.log(`📱 App: http://localhost:${port}`);
   console.log(`🔧 API: http://localhost:${port}/api`);
-  
+
   // Verify files exist
   const indexPath = path.join(staticPath, "index.html");
   const assetsPath = path.join(staticPath, "assets");
-  
-  console.log(`📄 Index: ${fs.existsSync(indexPath) ? '✅' : '❌'}`);
-  console.log(`📦 Assets: ${fs.existsSync(assetsPath) ? '✅' : '❌'}`);
-  
+
+  console.log(`📄 Index: ${fs.existsSync(indexPath) ? "✅" : "❌"}`);
+  console.log(`📦 Assets: ${fs.existsSync(assetsPath) ? "✅" : "❌"}`);
+
   if (fs.existsSync(assetsPath)) {
     const files = fs.readdirSync(assetsPath);
     console.log(`📦 Assets found: ${files.length} files`);
