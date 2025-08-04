@@ -47,7 +47,8 @@ router.post("/", upload.single("file"), (req, res) => {
     }
 
     // Return the full URL
-    const baseUrl = process.env.APP_URL || "https://b2b.tropicalbrasilsandalias.com.br";
+    const baseUrl =
+      process.env.APP_URL || "https://b2b.tropicalbrasilsandalias.com.br";
     const publicUrl = `${baseUrl}/uploads/products/${req.file.filename}`;
 
     res.json({
@@ -67,7 +68,7 @@ router.delete("/:filename", (req, res) => {
   try {
     const filename = req.params.filename;
     const filepath = path.join(uploadDir, filename);
-    
+
     if (fs.existsSync(filepath)) {
       fs.unlinkSync(filepath);
       res.json({ success: true, message: "File deleted successfully" });

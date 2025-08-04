@@ -129,7 +129,8 @@ export function ensureFullImageUrl(imageUrl: string | null): string | null {
 
   // If it's a relative path, convert to full URL
   if (imageUrl.startsWith("/uploads/")) {
-    const baseUrl = process.env.APP_URL || "https://b2b.tropicalbrasilsandalias.com.br";
+    const baseUrl =
+      process.env.APP_URL || "https://b2b.tropicalbrasilsandalias.com.br";
     return `${baseUrl}${imageUrl}`;
   }
 
