@@ -765,21 +765,51 @@ router.post("/bulk", async (req, res) => {
           gradesToProcess,
         );
 
-        // Processar cada grade
+        // PRIMEIRO: Criar/encontrar a variante de cor (uma por produto+cor)
+        const [existingColorVariant] = await db.execute(
+          `SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?`,
+          [productId, colorId]
+        );
+
+        let colorVariantId;
+        const variantSku = variante.sku || `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}`;
+
+        if ((existingColorVariant as any[]).length > 0) {
+          // Variante já existe - atualizar
+          colorVariantId = (existingColorVariant as any[])[0].id;
+          console.log(`  ↻ Variante de cor existente encontrada: ${variante.cor} (ID: ${colorVariantId})`);
+
+          await db.execute(
+            `UPDATE product_color_variants SET price = ?, variant_name = ?, variant_sku = ?, active = true WHERE id = ?`,
+            [variante.preco, `${product.nome} - ${variante.cor}`, variantSku, colorVariantId]
+          );
+        } else {
+          // Criar nova variante
+          const [colorVariantResult] = await db.execute(
+            `INSERT INTO product_color_variants
+           (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+              productId,
+              colorId,
+              `${product.nome} - ${variante.cor}`,
+              variantSku,
+              variante.preco,
+              localImageUrl,
+              0,
+              true,
+            ],
+          );
+          colorVariantId = (colorVariantResult as any).insertId;
+          console.log(`  ✅ Nova variante de cor criada: ${variante.cor} (ID: ${colorVariantId})`);
+        }
+
+        // SEGUNDO: Associar cada grade à variante de cor criada acima
         for (const gradeNome of gradesToProcess) {
           console.log(`🔄 Processando grade: ${gradeNome}`);
-          // Verificar se já existe uma variante desta cor e grade para este produto
           const gradeId = await getOrCreateGrade(gradeNome);
-          console.log(
-            `✅ Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`,
-          );
+          console.log(`✅ Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`);
           gradesCreated.add(gradeNome);
-
-          // Verificar se já existe uma variante desta cor e grade específica para este produto
-          const [existingColorVariant] = await db.execute(
-            "SELECT pcv.id FROM product_color_variants pcv INNER JOIN product_color_grades pcg ON pcv.product_id = pcg.product_id AND pcv.color_id = pcg.color_id WHERE pcv.product_id = ? AND pcv.color_id = ? AND pcg.grade_id = ?",
-            [productId, colorId, gradeId],
-          );
 
           if ((existingColorVariant as any[]).length > 0) {
             console.log(
