@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Package } from "lucide-react";
+import { getImageUrl } from "@/lib/image-utils";
 
 interface ProductImageProps {
   src?: string;
@@ -9,6 +10,15 @@ interface ProductImageProps {
   loading?: "lazy" | "eager";
   priority?: boolean;
   sizes?: string;
+  // Optional product data for automatic image selection
+  product?: {
+    photo?: string;
+    color_variants?: Array<{
+      image_url?: string;
+      images?: string[];
+      is_main_catalog?: boolean;
+    }>;
+  };
 }
 
 export function ProductImage({
