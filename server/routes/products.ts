@@ -507,7 +507,7 @@ router.post("/bulk", async (req, res) => {
       });
     }
 
-    // Validação inicial mais detalhada
+    // Validação inicial
     if (!req.body) {
       console.error(`[${requestId}] No request body received`);
       return res.status(400).json({
@@ -519,32 +519,13 @@ router.post("/bulk", async (req, res) => {
       });
     }
 
-    if (!products) {
-      console.error(
-        `[${requestId}] No products field in request:`,
-        Object.keys(req.body),
-      );
-      return res.status(400).json({
-        success: false,
-        error: "Missing products field",
-        message: "Request body must contain a 'products' array",
-        code: "MISSING_PRODUCTS_FIELD",
-        receivedFields: Object.keys(req.body),
-        requestId,
-      });
-    }
-
-    if (!Array.isArray(products)) {
-      console.error(
-        `[${requestId}] Products is not an array, received:`,
-        typeof products,
-      );
+    if (!Array.isArray(products) || products.length === 0) {
+      console.error(`[${requestId}] Invalid products array:`, typeof products);
       return res.status(400).json({
         success: false,
         error: "Invalid products format",
-        message: "Products must be an array",
-        code: "INVALID_PRODUCTS_TYPE",
-        receivedType: typeof products,
+        message: "Products must be a non-empty array",
+        code: "INVALID_PRODUCTS_FORMAT",
         requestId,
       });
     }
