@@ -768,20 +768,29 @@ router.post("/bulk", async (req, res) => {
         // PRIMEIRO: Criar/encontrar a variante de cor (uma por produto+cor)
         const [existingColorVariant] = await db.execute(
           `SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?`,
-          [productId, colorId]
+          [productId, colorId],
         );
 
         let colorVariantId;
-        const variantSku = variante.sku || `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}`;
+        const variantSku =
+          variante.sku ||
+          `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}`;
 
         if ((existingColorVariant as any[]).length > 0) {
           // Variante já existe - atualizar
           colorVariantId = (existingColorVariant as any[])[0].id;
-          console.log(`  ↻ Variante de cor existente encontrada: ${variante.cor} (ID: ${colorVariantId})`);
+          console.log(
+            `  ↻ Variante de cor existente encontrada: ${variante.cor} (ID: ${colorVariantId})`,
+          );
 
           await db.execute(
             `UPDATE product_color_variants SET price = ?, variant_name = ?, variant_sku = ?, active = true WHERE id = ?`,
-            [variante.preco, `${product.nome} - ${variante.cor}`, variantSku, colorVariantId]
+            [
+              variante.preco,
+              `${product.nome} - ${variante.cor}`,
+              variantSku,
+              colorVariantId,
+            ],
           );
         } else {
           // Criar nova variante
@@ -801,14 +810,18 @@ router.post("/bulk", async (req, res) => {
             ],
           );
           colorVariantId = (colorVariantResult as any).insertId;
-          console.log(`  ✅ Nova variante de cor criada: ${variante.cor} (ID: ${colorVariantId})`);
+          console.log(
+            `  ✅ Nova variante de cor criada: ${variante.cor} (ID: ${colorVariantId})`,
+          );
         }
 
         // SEGUNDO: Associar cada grade à variante de cor criada acima
         for (const gradeNome of gradesToProcess) {
           console.log(`🔄 Processando grade: ${gradeNome}`);
           const gradeId = await getOrCreateGrade(gradeNome);
-          console.log(`✅ Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`);
+          console.log(
+            `✅ Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`,
+          );
           gradesCreated.add(gradeNome);
 
           // A variante de cor já foi criada/encontrada acima, vamos apenas associar a grade
