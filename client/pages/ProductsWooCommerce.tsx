@@ -299,8 +299,8 @@ export default function ProductsWooCommerce() {
     });
   };
 
+  // Load static data only once
   useEffect(() => {
-    fetchProducts();
     fetchCategories();
     fetchGenders();
     fetchTypes();
@@ -308,6 +308,11 @@ export default function ProductsWooCommerce() {
     fetchColors();
     fetchSizes();
     fetchGrades();
+  }, []); // Only run once on mount
+
+  // Load products when filters change
+  useEffect(() => {
+    fetchProducts();
   }, [currentPage, searchTerm, selectedCategory, selectedBrand, selectedStatus]);
 
   const fetchProducts = async () => {
