@@ -29,6 +29,7 @@ export function ProductImage({
   loading = "lazy",
   priority = false,
   sizes = "(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw",
+  product,
 }: ProductImageProps) {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
