@@ -485,7 +485,7 @@ router.post("/bulk", async (req, res) => {
   );
 
   try {
-    // Support multiple formats: single product, array of products, or legacy {products: [...]}
+    // Support multiple formats: single product, array of products, legacy {products: [...]}, or new {produto: {...}, variantes: [...]}
     let products: any[];
 
     if (Array.isArray(req.body)) {
@@ -496,6 +496,31 @@ router.post("/bulk", async (req, res) => {
       // Legacy format with products wrapper
       console.log(`[${requestId}] Using legacy products wrapper format`);
       products = req.body.products;
+    } else if (req.body.produto && req.body.variantes) {
+      // New format with produto/variantes structure
+      console.log(`[${requestId}] Using new produto/variantes format`);
+      const produto = req.body.produto;
+      const variantes = req.body.variantes;
+
+      // Convert to internal format
+      products = [{
+        codigo: produto.codigo,
+        nome: produto.nome,
+        categoria: produto.categoria,
+        tipo: produto.tipo,
+        marca: produto.marca,
+        genero: produto.genero,
+        descricao: produto.descricao,
+        preco_sugerido: produto.preco_sugerido,
+        vender_infinito: produto.vender_infinito || false,
+        tipo_estoque: produto.tipo_estoque || "grade",
+        variantes: variantes.map((variante: any) => ({
+          cor: variante.cor,
+          preco: variante.preco,
+          foto: variante.foto,
+          grades: variante.grades || {}
+        }))
+      }];
     } else if (req.body.codigo || req.body.row_number !== undefined) {
       // Single product format
       console.log(`[${requestId}] Using single product format`);
@@ -505,7 +530,7 @@ router.post("/bulk", async (req, res) => {
       return res.status(400).json({
         success: false,
         error: "Invalid request format",
-        message: "Request body must be a single product, an array of products, or contain a 'products' array",
+        message: "Request body must be a single product, an array of products, contain a 'products' array, or use the new produto/variantes format",
         code: "INVALID_FORMAT",
         requestId,
       });
