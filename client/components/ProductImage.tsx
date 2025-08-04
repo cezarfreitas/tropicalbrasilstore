@@ -96,11 +96,15 @@ export function ProductImage({
 
     // Test if the URL is accessible
     if (src) {
-      fetch(src, { method: 'HEAD' }).then(response => {
-        console.log(`🔗 Image URL test for "${src}": ${response.status} ${response.statusText}`);
-      }).catch(fetchError => {
-        console.error(`🌐 Network error for "${src}":`, fetchError.message);
-      });
+      fetch(src, { method: "HEAD" })
+        .then((response) => {
+          console.log(
+            `🔗 Image URL test for "${src}": ${response.status} ${response.statusText}`,
+          );
+        })
+        .catch((fetchError) => {
+          console.error(`🌐 Network error for "${src}":`, fetchError.message);
+        });
     }
 
     setHasError(true);

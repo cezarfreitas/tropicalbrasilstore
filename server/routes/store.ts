@@ -218,9 +218,9 @@ router.get("/products-paginated", async (req, res) => {
 
         // Check if it's a local file and validate it exists
         if (mainImage.startsWith("/uploads/")) {
-          const fs = require('fs');
-          const path = require('path');
-          const filePath = path.join(process.cwd(), 'public', mainImage);
+          const fs = require("fs");
+          const path = require("path");
+          const filePath = path.join(process.cwd(), "public", mainImage);
 
           if (!fs.existsSync(filePath)) {
             console.warn(`❌ Image file does not exist: ${filePath}`);
@@ -228,7 +228,10 @@ router.get("/products-paginated", async (req, res) => {
           } else {
             console.log(`✅ Image file verified: ${mainImage}`);
           }
-        } else if (!mainImage.startsWith("http") && !mainImage.startsWith("/")) {
+        } else if (
+          !mainImage.startsWith("http") &&
+          !mainImage.startsWith("/")
+        ) {
           console.warn(
             `⚠️ Image URL might be invalid (doesn't start with http or /): "${mainImage}"`,
           );
