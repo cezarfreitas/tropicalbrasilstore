@@ -183,18 +183,18 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   // Função para limpar todos os filtros e voltar à página inicial
   const clearAllFilters = () => {
-    setSelectedColorFilter(null);
-    setSelectedGenderFilter(null);
-    setSelectedTypeFilter(null);
+    setSelectedColorFilters([]);
+    setSelectedGenderFilters([]);
+    setSelectedTypeFilters([]);
     setSearchTerm("");
     navigate("/loja");
   };
 
   // Verificar se há algum filtro ativo
   const hasActiveFilters = () => {
-    return selectedColorFilter !== null ||
-           selectedGenderFilter !== null ||
-           selectedTypeFilter !== null ||
+    return selectedColorFilters.length > 0 ||
+           selectedGenderFilters.length > 0 ||
+           selectedTypeFilters.length > 0 ||
            searchTerm.trim() !== "";
   };
 
