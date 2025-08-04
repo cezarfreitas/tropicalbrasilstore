@@ -76,9 +76,9 @@ export function ProductImage({
   const finalSrc = src ? getImageUrl(src) : getBestAvailableImage();
 
   // Debug log only for empty or problematic sources
-  if (!src || src.trim() === "" || hasError) {
+  if (!finalSrc || finalSrc.trim() === "" || hasError) {
     console.log(
-      `🖼️ ProductImage issue: src="${src}", alt="${alt}", hasError=${hasError}, shouldLoad=${shouldLoad}`,
+      `🖼️ ProductImage issue: originalSrc="${src}", finalSrc="${finalSrc}", alt="${alt}", hasError=${hasError}, shouldLoad=${shouldLoad}`,
     );
   }
 
