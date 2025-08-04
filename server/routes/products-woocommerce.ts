@@ -1,5 +1,6 @@
 import { Router } from "express";
 import db from "../lib/db";
+import { ensureFullImageUrl } from "../lib/image-uploader";
 
 const router = Router();
 
