@@ -166,8 +166,8 @@ router.get("/products-paginated", async (req, res) => {
       }));
 
       console.log(
-        `🎨 Found ${(colorRows as any[]).length} colors for ${product.name}:`,
-        (colorRows as any[]).map((c) => ({
+        `🎨 Found ${processedColorRows.length} colors for ${product.name}:`,
+        processedColorRows.map((c) => ({
           name: c.name,
           image_url: c.image_url,
         })),
