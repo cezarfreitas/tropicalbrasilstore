@@ -208,7 +208,7 @@ router.get("/products-paginated", async (req, res) => {
           mainImage = ensureFullImageUrl((mainVariantRows as any[])[0].image_url);
         } else {
           // If no main variant, use first color with image
-          const colorWithImage = (colorRows as any[]).find((c) => c.image_url);
+          const colorWithImage = processedColorRows.find((c) => c.image_url);
           if (colorWithImage) {
             mainImage = ensureFullImageUrl(colorWithImage.image_url);
           }
