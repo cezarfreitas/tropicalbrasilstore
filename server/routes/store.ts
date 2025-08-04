@@ -130,14 +130,16 @@ router.get("/products-paginated", async (req, res) => {
           mainImage = (mainVariantRows as any[])[0].image_url;
         } else {
           // If no main variant, use first color with image
-          const colorWithImage = (colorRows as any[]).find(c => c.image_url);
+          const colorWithImage = (colorRows as any[]).find((c) => c.image_url);
           if (colorWithImage) {
             mainImage = colorWithImage.image_url;
           }
         }
       }
 
-      console.log(`🖼️ Product ${product.name}: photo=${product.photo}, mainImage=${mainImage}, colors with images: ${(colorRows as any[]).filter(c => c.image_url).length}`);
+      console.log(
+        `🖼️ Product ${product.name}: photo=${product.photo}, mainImage=${mainImage}, colors with images: ${(colorRows as any[]).filter((c) => c.image_url).length}`,
+      );
 
       productsWithDetails.push({
         ...product,

@@ -37,7 +37,7 @@ interface WooCommerceProduct {
   active?: boolean;
   sell_without_stock?: boolean;
   size_group_id?: number;
-  stock_type?: 'size' | 'grade';
+  stock_type?: "size" | "grade";
   color_variants: ColorVariant[];
 }
 
@@ -58,7 +58,9 @@ router.get("/", async (req, res) => {
     const params = [];
 
     if (search) {
-      conditions.push("(p.name LIKE ? OR p.sku LIKE ? OR p.description LIKE ?)");
+      conditions.push(
+        "(p.name LIKE ? OR p.sku LIKE ? OR p.description LIKE ?)",
+      );
       params.push(`%${search}%`, `%${search}%`, `%${search}%`);
     }
 
@@ -78,7 +80,8 @@ router.get("/", async (req, res) => {
       conditions.push("p.active = false");
     }
 
-    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+    const whereClause =
+      conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
     // Get total count
     const countQuery = `SELECT COUNT(DISTINCT p.id) as total FROM products p ${whereClause}`;
@@ -126,12 +129,15 @@ router.get("/", async (req, res) => {
       );
 
       // Convert image_url to images array for consistency and debug
-      product.color_variants = (variantRows as any[]).map(variant => {
-        const images = variant.images || (variant.image_url ? [variant.image_url] : []);
-        console.log(`🖼️ Product ${product.name} - Variant ${variant.color_name}: image_url=${variant.image_url}, images=[${images.join(', ')}]`);
+      product.color_variants = (variantRows as any[]).map((variant) => {
+        const images =
+          variant.images || (variant.image_url ? [variant.image_url] : []);
+        console.log(
+          `🖼️ Product ${product.name} - Variant ${variant.color_name}: image_url=${variant.image_url}, images=[${images.join(", ")}]`,
+        );
         return {
           ...variant,
-          images: images
+          images: images,
         };
       });
 
@@ -209,7 +215,7 @@ router.get("/:id", async (req, res) => {
          WHERE product_id = ? AND color_id = ?`,
         [req.params.id, variant.color_id],
       );
-      variant.grade_ids = (gradeRows as any[]).map(row => row.grade_id);
+      variant.grade_ids = (gradeRows as any[]).map((row) => row.grade_id);
 
       // Get images for this variant
       const [imageRows] = await db.execute(
@@ -218,7 +224,7 @@ router.get("/:id", async (req, res) => {
          ORDER BY display_order`,
         [variant.id],
       );
-      variant.images = (imageRows as any[]).map(row => row.image_url);
+      variant.images = (imageRows as any[]).map((row) => row.image_url);
     }
 
     product.color_variants = variantRows;
@@ -280,7 +286,7 @@ router.post("/", async (req, res) => {
         photo || null,
         active,
         sell_without_stock,
-        (req.body as WooCommerceProduct).stock_type || 'grade',
+        (req.body as WooCommerceProduct).stock_type || "grade",
       ],
     );
 
@@ -391,7 +397,8 @@ router.put("/:id", async (req, res) => {
       active,
       sell_without_stock,
       color_variants,
-    }: WooCommerceProduct & { active?: boolean; sell_without_stock?: boolean } = req.body;
+    }: WooCommerceProduct & { active?: boolean; sell_without_stock?: boolean } =
+      req.body;
 
     if (!name) {
       return res.status(400).json({ error: "Name is required" });
@@ -415,7 +422,7 @@ router.put("/:id", async (req, res) => {
         photo || null,
         active !== false,
         sell_without_stock || false,
-        (req.body as WooCommerceProduct).stock_type || 'grade',
+        (req.body as WooCommerceProduct).stock_type || "grade",
         req.params.id,
       ],
     );
