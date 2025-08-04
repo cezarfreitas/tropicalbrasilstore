@@ -46,9 +46,10 @@ router.post("/", upload.single("file"), (req, res) => {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    // Return the public URL
-    const publicUrl = `/uploads/products/${req.file.filename}`;
-    
+    // Return the full URL
+    const baseUrl = process.env.APP_URL || "https://b2b.tropicalbrasilsandalias.com.br";
+    const publicUrl = `${baseUrl}/uploads/products/${req.file.filename}`;
+
     res.json({
       success: true,
       url: publicUrl,
