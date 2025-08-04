@@ -166,7 +166,7 @@ export function ProductImage({
     setIsLoading(false);
   };
 
-  if (!src || hasError) {
+  if (!finalSrc || hasError) {
     return (
       <div className="flex items-center justify-center w-full h-full bg-muted/50">
         <Package
