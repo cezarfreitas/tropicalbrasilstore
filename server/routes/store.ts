@@ -36,6 +36,12 @@ router.get("/products-paginated", async (req, res) => {
     const totalProducts = (countResult as any)[0].total;
     const totalPages = Math.ceil(totalProducts / limit);
 
+    // Debug: Check total products regardless of active status
+    const [allProductsCount] = await db.execute('SELECT COUNT(*) as total FROM products');
+    const [activeProductsCount] = await db.execute('SELECT COUNT(*) as total FROM products WHERE active = true');
+
+    console.log(`📊 Products status: Total=${(allProductsCount as any[])[0].total}, Active=${(activeProductsCount as any[])[0].total}, Query result=${totalProducts}`);
+
     // Get paginated products with enhanced data (using inline values as workaround)
     let productsQuery = `
       SELECT
