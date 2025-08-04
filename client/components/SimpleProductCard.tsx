@@ -42,30 +42,30 @@ export function SimpleProductCard({
 }: SimpleProductCardProps) {
   const [selectedColorImage, setSelectedColorImage] = useState<string | null>(null);
 
-  // Use the same logic as ProductDetail page - get the best image to display
-  const getDisplayImageSrc = (): string | null => {
-    // Priority: selected color image > first available color > product photo
-    if (selectedColorImage) {
-      return getImageUrl(selectedColorImage);
-    }
+  // EXACT same logic as ProductDetail page working example
+  const selectedVariantImage = selectedColorImage;
 
-    // Check available_colors for first image (same as page product logic)
-    if (product.available_colors && product.available_colors.length > 0) {
-      const firstColorWithImage = product.available_colors.find(color =>
-        color.image_url && color.image_url.trim() !== ''
-      );
-      if (firstColorWithImage) {
-        return getImageUrl(firstColorWithImage.image_url);
-      }
-    }
+  // This is the EXACT line that works in ProductDetail.tsx line 571-572:
+  // <ProductImage src={getImageUrl(selectedVariantImage || product.photo)} />
+  const finalImageSrc = getImageUrl(selectedVariantImage || product.photo);
 
-    // Fallback to product photo
-    if (product.photo && product.photo.trim()) {
-      return getImageUrl(product.photo);
+  // Additional check for available_colors as fallback (for product_color_variants.image_url)
+  let bestImageSrc = finalImageSrc;
+  if (!bestImageSrc && product.available_colors && product.available_colors.length > 0) {
+    const firstColorWithImage = product.available_colors.find(c => c.image_url);
+    if (firstColorWithImage && firstColorWithImage.image_url) {
+      bestImageSrc = getImageUrl(firstColorWithImage.image_url);
     }
+  }
 
-    return null;
-  };
+  console.log(`���� CARD DEBUG Product ${product.id}:`, {
+    selectedVariantImage,
+    productPhoto: product.photo,
+    finalImageSrc,
+    bestImageSrc,
+    availableColors: product.available_colors?.length || 0,
+    firstColorImage: product.available_colors?.find(c => c.image_url)?.image_url || null
+  });
 
   const handleColorClick = (colorImageUrl: string, e: React.MouseEvent) => {
     e.stopPropagation();
