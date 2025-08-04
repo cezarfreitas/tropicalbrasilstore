@@ -85,6 +85,23 @@ function Store() {
   // Track selected variant image for each product
   const [selectedVariantImages, setSelectedVariantImages] = useState<Record<number, string>>({});
 
+  // Debug products data
+  useEffect(() => {
+    if (products && products.length > 0) {
+      console.log('🛍️ Store products data:', products);
+      products.forEach((product, index) => {
+        console.log(`🛍️ Product ${index + 1}: ${product.name}`);
+        console.log(`  - photo: ${product.photo || 'null'}`);
+        console.log(`  - available_colors: ${product.available_colors?.length || 0}`);
+        if (product.available_colors) {
+          product.available_colors.forEach((color, colorIndex) => {
+            console.log(`    Color ${colorIndex + 1}: ${color.name} - image_url: ${color.image_url || 'null'}`);
+          });
+        }
+      });
+    }
+  }, [products]);
+
   // Handlers
   const handleProductClick = (productId: number) => {
     navigate(`/loja/produto/${productId}`);
