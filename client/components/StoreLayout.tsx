@@ -622,6 +622,20 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               </h3>
             </div>
             {navigationLinks.map((link, index) => {
+              // Se é o botão "Todos" ou tem onClick, usar button ao invés de Link
+              if (link.onClick || link.isClearButton) {
+                return (
+                  <button
+                    key={link.to}
+                    onClick={link.onClick}
+                    className="group flex items-center w-full text-left text-sm font-medium text-white/80 hover:text-white hover:bg-white/15 rounded-xl px-3 py-2 transition-all duration-300 hover:shadow-lg border border-transparent hover:border-white/20 backdrop-blur-sm hover:backdrop-blur-md"
+                  >
+                    <span className="flex-1">{link.label}</span>
+                    <ChevronDown className="h-4 w-4 text-white/40 group-hover:text-white/80 rotate-[-90deg] transition-all duration-300" />
+                  </button>
+                );
+              }
+
               return (
                 <Link
                   key={link.to}
