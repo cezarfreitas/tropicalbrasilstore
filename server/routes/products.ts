@@ -927,10 +927,10 @@ router.post("/bulk", async (req, res) => {
 
             if (isValid) {
               // Esta imagem já foi baixada antes do loop das grades
-              console.log("⚠️ Pulando download duplicado - imagem já processada");
               console.log(
-                `  📷 Imagem já processada para ${variante.cor}`,
+                "⚠️ Pulando download duplicado - imagem já processada",
               );
+              console.log(`  📷 Imagem já processada para ${variante.cor}`);
             } else {
               console.log(`  ❌ URL de imagem inválida: ${variante.foto}`);
             }
