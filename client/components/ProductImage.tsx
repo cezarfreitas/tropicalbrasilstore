@@ -36,6 +36,45 @@ export function ProductImage({
   const [shouldLoad, setShouldLoad] = useState(priority || loading === "eager");
   const imgRef = useRef<HTMLImageElement>(null);
 
+  // Function to get the best available image from product data
+  const getBestAvailableImage = (): string | null => {
+    if (!product) return null;
+
+    // First try main product photo
+    if (product.photo) {
+      return getImageUrl(product.photo);
+    }
+
+    // Then try main catalog variant
+    const mainVariant = product.color_variants?.find(v => v.is_main_catalog);
+    if (mainVariant) {
+      if (mainVariant.images && mainVariant.images.length > 0) {
+        return getImageUrl(mainVariant.images[0]);
+      }
+      if (mainVariant.image_url) {
+        return getImageUrl(mainVariant.image_url);
+      }
+    }
+
+    // Finally try first variant with image
+    const firstVariantWithImage = product.color_variants?.find(
+      v => (v.images && v.images.length > 0) || v.image_url
+    );
+    if (firstVariantWithImage) {
+      if (firstVariantWithImage.images && firstVariantWithImage.images.length > 0) {
+        return getImageUrl(firstVariantWithImage.images[0]);
+      }
+      if (firstVariantWithImage.image_url) {
+        return getImageUrl(firstVariantWithImage.image_url);
+      }
+    }
+
+    return null;
+  };
+
+  // Get the final image source to use
+  const finalSrc = src ? getImageUrl(src) : getBestAvailableImage();
+
   // Debug log only for empty or problematic sources
   if (!src || src.trim() === "" || hasError) {
     console.log(
