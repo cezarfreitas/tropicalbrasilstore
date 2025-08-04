@@ -113,8 +113,35 @@ router.get("/products-paginated", async (req, res) => {
         [product.id],
       );
 
+      // Determine main product image
+      let mainImage = product.photo;
+
+      // If no photo in products table, try to get from main variant or first available variant
+      if (!mainImage && colorRows && colorRows.length > 0) {
+        // First try to find the main catalog variant
+        const [mainVariantRows] = await db.execute(
+          `SELECT image_url FROM product_color_variants
+           WHERE product_id = ? AND is_main_catalog = true AND image_url IS NOT NULL
+           LIMIT 1`,
+          [product.id],
+        );
+
+        if (mainVariantRows && (mainVariantRows as any[]).length > 0) {
+          mainImage = (mainVariantRows as any[])[0].image_url;
+        } else {
+          // If no main variant, use first color with image
+          const colorWithImage = (colorRows as any[]).find(c => c.image_url);
+          if (colorWithImage) {
+            mainImage = colorWithImage.image_url;
+          }
+        }
+      }
+
+      console.log(`🖼️ Product ${product.name}: photo=${product.photo}, mainImage=${mainImage}, colors with images: ${(colorRows as any[]).filter(c => c.image_url).length}`);
+
       productsWithDetails.push({
         ...product,
+        photo: mainImage, // Override with the determined main image
         available_colors: colorRows,
         available_sizes: sizeRows,
         price_range: {
