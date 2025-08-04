@@ -12,11 +12,12 @@ interface Product {
   category_name?: string;
   base_price?: number;
   suggested_price?: number;
+  // available_colors comes from product_color_variants table with JOIN to colors
   available_colors?: Array<{
     id: number;
     name: string;
     hex_code?: string;
-    image_url?: string;
+    image_url?: string; // This comes from product_color_variants.image_url column
   }>;
 }
 
