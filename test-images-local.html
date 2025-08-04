@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Imagens Locais</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .image-test { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        img { max-width: 200px; max-height: 200px; border: 1px solid #ddd; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste de Imagens Locais - SimpleProductCard</h1>
+    
+    <div class="image-test">
+        <h3>Produto 649 - Imagem Principal</h3>
+        <p>URL: <code>/uploads/products/product-1754275524219-619684965.png</code></p>
+        <img id="img1" src="/uploads/products/product-1754275524219-619684965.png" 
+             alt="Produto 649" 
+             onload="imageLoaded(this)" 
+             onerror="imageError(this)">
+        <div id="result1"></div>
+    </div>
+    
+    <div class="image-test">
+        <h3>Teste 001 - Vermelho</h3>
+        <p>URL: <code>/uploads/products/teste001-vermelho-1753759781595.jpg</code></p>
+        <img id="img2" src="/uploads/products/teste001-vermelho-1753759781595.jpg" 
+             alt="Teste Vermelho" 
+             onload="imageLoaded(this)" 
+             onerror="imageError(this)">
+        <div id="result2"></div>
+    </div>
+    
+    <div class="image-test">
+        <h3>Teste 001 - Azul</h3>
+        <p>URL: <code>/uploads/products/teste001-azul-1753759786453.jpg</code></p>
+        <img id="img3" src="/uploads/products/teste001-azul-1753759786453.jpg" 
+             alt="Teste Azul" 
+             onload="imageLoaded(this)" 
+             onerror="imageError(this)">
+        <div id="result3"></div>
+    </div>
+    
+    <div class="image-test">
+        <h3>Chinelo 001 - Vermelho</h3>
+        <p>URL: <code>/uploads/products/chn001-vermelho-1753802511911.webp</code></p>
+        <img id="img4" src="/uploads/products/chn001-vermelho-1753802511911.webp" 
+             alt="Chinelo Vermelho" 
+             onload="imageLoaded(this)" 
+             onerror="imageError(this)">
+        <div id="result4"></div>
+    </div>
+
+    <script>
+        function imageLoaded(img) {
+            const resultDiv = document.getElementById(`result${img.id.slice(-1)}`);
+            resultDiv.innerHTML = '<span class="success">✅ Imagem carregada com sucesso!</span>';
+            console.log(`✅ Image loaded: ${img.src}`);
+        }
+
+        function imageError(img) {
+            const resultDiv = document.getElementById(`result${img.id.slice(-1)}`);
+            resultDiv.innerHTML = '<span class="error">❌ Erro ao carregar imagem</span>';
+            console.error(`❌ Failed to load: ${img.src}`);
+        }
+
+        // Test URL construction like SimpleProductCard
+        function testLocalImageUrl(imageUrl) {
+            if (!imageUrl) return null;
+            
+            if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+                return imageUrl;
+            }
+            
+            if (imageUrl.startsWith('/uploads/')) {
+                return `${window.location.origin}${imageUrl}`;
+            }
+            
+            if (!imageUrl.includes('/')) {
+                return `${window.location.origin}/uploads/products/${imageUrl}`;
+            }
+            
+            return imageUrl;
+        }
+
+        console.log('🔧 Testing URL construction:');
+        console.log('Local path:', testLocalImageUrl('/uploads/products/product-1754275524219-619684965.png'));
+        console.log('Filename only:', testLocalImageUrl('teste001-vermelho-1753759781595.jpg'));
+        console.log('Absolute URL:', testLocalImageUrl('https://example.com/image.jpg'));
+    </script>
+</body>
+</html>
