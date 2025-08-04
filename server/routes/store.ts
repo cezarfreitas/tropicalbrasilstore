@@ -77,17 +77,19 @@ router.get("/products-paginated", async (req, res) => {
     // For each product, get available colors and variants
     const productsWithDetails = [];
     for (const product of products as any[]) {
-      // Get available colors with stock info
+      // Get available colors with stock info and images
       const [colorRows] = await db.execute(
         `
         SELECT DISTINCT
           co.id,
           co.name,
-          co.hex_code
+          co.hex_code,
+          pcv.image_url
         FROM product_color_grades pcg
         LEFT JOIN colors co ON pcg.color_id = co.id
+        LEFT JOIN product_color_variants pcv ON pcg.product_id = pcv.product_id AND pcg.color_id = pcv.color_id
         WHERE pcg.product_id = ? AND co.id IS NOT NULL
-        GROUP BY co.id, co.name, co.hex_code
+        GROUP BY co.id, co.name, co.hex_code, pcv.image_url
         ORDER BY co.name
       `,
         [product.id],
