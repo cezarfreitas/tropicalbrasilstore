@@ -129,17 +129,17 @@ router.get("/", async (req, res) => {
         [product.id],
       );
 
-      // Convert image_url to images array for consistency and ensure full URLs
+      // Convert image_url to images array for consistency and ensure local URLs
       product.color_variants = (variantRows as any[]).map((variant) => {
-        const fullImageUrl = ensureFullImageUrl(variant.image_url);
+        const localImageUrl = ensureLocalImageUrl(variant.image_url);
         const images =
-          variant.images || (fullImageUrl ? [fullImageUrl] : []);
+          variant.images || (localImageUrl ? [localImageUrl] : []);
         console.log(
-          `🖼️ Product ${product.name} - Variant ${variant.color_name}: image_url=${fullImageUrl}, images=[${images.join(", ")}]`,
+          `🖼️ Product ${product.name} - Variant ${variant.color_name}: image_url=${localImageUrl}, images=[${images.join(", ")}]`,
         );
         return {
           ...variant,
-          image_url: fullImageUrl,
+          image_url: localImageUrl,
           images: images,
         };
       });
