@@ -84,21 +84,8 @@ export function SimpleProductCard({
     const firstVariantWithImage = enhancedProductData.variants.find(v => v.image_url);
     if (firstVariantWithImage && firstVariantWithImage.image_url) {
       bestImageSrc = getImageUrl(firstVariantWithImage.image_url);
-      console.log(`🎯 Using enhanced data image for product ${product.id}: ${firstVariantWithImage.image_url}`);
     }
   }
-
-  console.log(`🔧 CARD DEBUG Product ${product.id}:`, {
-    selectedVariantImage,
-    productPhoto: product.photo,
-    finalImageSrc,
-    bestImageSrc,
-    availableColors: product.available_colors?.length || 0,
-    firstColorImage: product.available_colors?.find(c => c.image_url)?.image_url || null,
-    enhancedDataLoaded: !!enhancedProductData,
-    enhancedVariants: enhancedProductData?.variants?.length || 0,
-    enhancedFirstImage: enhancedProductData?.variants?.find(v => v.image_url)?.image_url || null
-  });
 
   const handleColorClick = (colorImageUrl: string, e: React.MouseEvent) => {
     e.stopPropagation();
