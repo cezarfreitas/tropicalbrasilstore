@@ -17,7 +17,7 @@ app.get("*", (req, res) => {
   if (req.path.startsWith("/api/") || req.path.startsWith("/uploads/")) {
     return res.status(404).json({ error: "Not Found" });
   }
-  
+
   res.sendFile(path.join(staticPath, "index.html"));
 });
 
@@ -26,5 +26,7 @@ const PORT = process.env.PORT || 80;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Production server running on port ${PORT}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
-  console.log(`💾 Database: ${process.env.DATABASE_URL ? "Connected" : "No URL set"}`);
+  console.log(
+    `💾 Database: ${process.env.DATABASE_URL ? "Connected" : "No URL set"}`,
+  );
 });
