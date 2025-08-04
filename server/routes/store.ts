@@ -325,7 +325,7 @@ router.get("/products", async (req, res) => {
       ORDER BY p.name
     `);
 
-    // For each product, get available colors
+    // For each product, get available colors with images
     const productsWithColors = [];
     for (const product of products as any[]) {
       const [colorRows] = await db.execute(
@@ -333,18 +333,26 @@ router.get("/products", async (req, res) => {
         SELECT DISTINCT
           co.id,
           co.name,
-          co.hex_code
+          co.hex_code,
+          pcv.image_url
         FROM product_color_grades pcg
         LEFT JOIN colors co ON pcg.color_id = co.id
+        LEFT JOIN product_color_variants pcv ON pcg.product_id = pcv.product_id AND pcg.color_id = pcv.color_id
         WHERE pcg.product_id = ? AND co.id IS NOT NULL
         ORDER BY co.name
       `,
         [product.id],
       );
 
+      // Ensure all color image URLs are full URLs
+      const processedColors = (colorRows as any[]).map((color) => ({
+        ...color,
+        image_url: ensureFullImageUrl(color.image_url),
+      }));
+
       productsWithColors.push({
         ...product,
-        available_colors: colorRows,
+        available_colors: processedColors,
       });
     }
 
