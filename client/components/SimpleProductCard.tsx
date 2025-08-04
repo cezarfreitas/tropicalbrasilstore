@@ -73,10 +73,21 @@ export function SimpleProductCard({
 
   // Additional check for available_colors as fallback (for product_color_variants.image_url)
   let bestImageSrc = finalImageSrc;
+
+  // Try available_colors from listing API
   if (!bestImageSrc && product.available_colors && product.available_colors.length > 0) {
     const firstColorWithImage = product.available_colors.find(c => c.image_url);
     if (firstColorWithImage && firstColorWithImage.image_url) {
       bestImageSrc = getImageUrl(firstColorWithImage.image_url);
+    }
+  }
+
+  // Try enhanced data from individual product API (contains pcv.image_url)
+  if (!bestImageSrc && enhancedProductData && enhancedProductData.variants) {
+    const firstVariantWithImage = enhancedProductData.variants.find(v => v.image_url);
+    if (firstVariantWithImage && firstVariantWithImage.image_url) {
+      bestImageSrc = getImageUrl(firstVariantWithImage.image_url);
+      console.log(`🎯 Using enhanced data image for product ${product.id}: ${firstVariantWithImage.image_url}`);
     }
   }
 
