@@ -21,10 +21,10 @@ export default defineConfig(({ mode }) => {
         "b2b.tropicalbrasilsandalias.com.br",
         ".tropicalbrasilsandalias.com.br",
       ],
-      hmr: {
+      hmr: mode === 'development' ? {
         clientPort: 80,
         host: "b2b.tropicalbrasilsandalias.com.br",
-      },
+      } : false,
     },
     build: {
       outDir: "dist/spa",
