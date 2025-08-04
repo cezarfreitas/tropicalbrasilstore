@@ -811,24 +811,7 @@ router.post("/bulk", async (req, res) => {
           console.log(`✅ Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`);
           gradesCreated.add(gradeNome);
 
-          if ((existingColorVariant as any[]).length > 0) {
-            console.log(
-              `⚠️ Variante de cor ${variante.cor} com grade ${gradeNome} já existe para o produto ${product.codigo} - pulando...`,
-            );
-
-            // Adicionar à lista de variantes retornadas (mesmo que não criada)
-            variants.push({
-              id: (existingColorVariant as any[])[0].id,
-              cor: variante.cor,
-              sku:
-                variante.sku ||
-                `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}-${gradeNome}`,
-              grade: gradeNome,
-              preco: variante.preco,
-              status: "existing",
-            });
-            continue;
-          }
+          // A variante de cor já foi criada/encontrada acima, vamos apenas associar a grade
 
           // Gerar SKU para variante se não fornecido
           const variantSku =
