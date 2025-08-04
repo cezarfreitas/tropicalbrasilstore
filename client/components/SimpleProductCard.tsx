@@ -188,54 +188,39 @@ export function SimpleProductCard({
 
           {/* Category Badge */}
           {product.category_name && (
-            <Badge
-              variant="secondary"
-              className="absolute top-1 left-1 sm:top-1.5 sm:left-1.5 text-[9px] sm:text-[10px] md:text-xs bg-primary text-white px-1 sm:px-1.5 py-0.5 rounded-full shadow-md font-medium"
-            >
+            <Badge className="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 text-xs">
               {product.category_name}
             </Badge>
           )}
 
-          {/* Color Variants */}
+          {/* Color Variants - Simplificado */}
           {product.available_colors && product.available_colors.length > 0 && (
-            <div className="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5">
-              <div className="flex gap-0.5 sm:gap-1">
+            <div className="absolute bottom-2 right-2">
+              <div className="flex gap-1">
                 {product.available_colors
                   .slice(0, 2)
                   .map((color) => (
                     <div
                       key={color.id}
-                      className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-md sm:rounded-lg border-2 border-white cursor-pointer active:scale-95 sm:hover:scale-110 transition-all duration-200 shadow-md sm:shadow-lg overflow-hidden bg-gray-100 touch-manipulation"
-                      title={`${color.name}${color.hex_code ? ` (${color.hex_code})` : ""}`}
+                      className="w-6 h-6 rounded border-2 border-white cursor-pointer bg-gray-100"
+                      title={color.name}
                       onClick={(e) =>
                         color.image_url &&
                         handleColorClick(color.image_url, e)
                       }
+                      style={{ backgroundColor: getColorBackgroundColor(color) }}
                     >
                       {color.image_url ? (
                         <img
                           src={getLocalImageUrl(color.image_url)}
                           alt={color.name}
-                          className="w-full h-full object-contain"
+                          className="w-full h-full object-contain rounded"
                           loading="lazy"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            const parent = e.currentTarget.parentElement;
-                            if (parent) {
-                              parent.style.backgroundColor = getColorBackgroundColor(color);
-                              parent.innerHTML = `<span class="text-[6px] sm:text-[7px] lg:text-[8px] font-bold text-white">${color.name?.charAt(0)?.toUpperCase()}</span>`;
-                            }
-                          }}
                         />
                       ) : (
-                        <div
-                          className="w-full h-full flex items-center justify-center text-[6px] sm:text-[7px] lg:text-[8px] font-bold text-white rounded-lg"
-                          style={{
-                            backgroundColor: getColorBackgroundColor(color),
-                          }}
-                        >
+                        <span className="text-xs font-bold text-white">
                           {color.name?.charAt(0)?.toUpperCase()}
-                        </div>
+                        </span>
                       )}
                     </div>
                   ))}
@@ -244,22 +229,25 @@ export function SimpleProductCard({
           )}
         </div>
 
-        {/* Product Info */}
-        <div className="p-2 sm:p-2.5 md:p-3 space-y-1 sm:space-y-1.5 md:space-y-2">
-          <div>
-            <h3 className="font-medium text-xs sm:text-sm md:text-base text-gray-900 line-clamp-2 leading-tight">
-              {product.name}
-            </h3>
+        {/* Product Info - Simplificado */}
+        <div className="p-3">
+          <h3 className="font-medium text-sm text-gray-900 mb-2">
+            {product.name}
+          </h3>
+
+          {/* Debug Info */}
+          <div className="text-xs text-gray-500 mb-2">
+            ID: {product.id} | Colors: {product.available_colors?.length || 0} |
+            Image: {displayImageUrl ? "✅" : "❌"}
           </div>
 
           {/* Pricing */}
           {product.base_price && (
-            <div className="bg-gray-50 rounded-md sm:rounded-lg p-1.5 sm:p-2">
+            <div className="bg-gray-50 rounded p-2 mb-2">
               <PriceDisplay
                 price={product.base_price}
                 suggestedPrice={product.suggested_price}
                 variant="default"
-                className="[&>div:first-child]:text-sm [&>div:first-child]:sm:text-lg [&>div:first-child]:md:text-xl [&>div:first-child]:lg:text-2xl"
                 onLoginClick={onLoginClick}
               />
             </div>
@@ -268,32 +256,16 @@ export function SimpleProductCard({
           {/* Add to Cart Button */}
           {isAuthenticated && isApproved && (
             <Button
-              className="w-full bg-primary hover:bg-primary/90 active:bg-primary/80 text-white text-[10px] sm:text-xs md:text-sm lg:text-base font-medium h-8 sm:h-10 md:h-12 rounded-md sm:rounded-lg transition-all duration-200 active:scale-95 sm:hover:shadow-lg touch-manipulation"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium h-10 rounded"
               onClick={(e) => {
                 e.stopPropagation();
                 onProductClick(product.id);
               }}
             >
-              <span className="hidden sm:inline">
-                Adicionar ao Carrinho
-              </span>
-              <span className="sm:hidden">Comprar</span>
+              Adicionar ao Carrinho
             </Button>
           )}
         </div>
-
-        {/* Add to Cart Icon - Mobile */}
-        {isAuthenticated && isApproved && (
-          <div
-            className="sm:hidden absolute bottom-2 right-2 bg-primary hover:bg-primary/90 rounded-full p-1.5 shadow-lg transition-all duration-200 active:scale-95"
-            onClick={(e) => {
-              e.stopPropagation();
-              onProductClick(product.id);
-            }}
-          >
-            <ShoppingCart className="h-5 w-5 text-white" />
-          </div>
-        )}
       </CardContent>
     </Card>
   );
