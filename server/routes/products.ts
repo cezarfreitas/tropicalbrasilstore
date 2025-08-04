@@ -849,7 +849,7 @@ router.post("/bulk", async (req, res) => {
           // A variante de cor já foi criada/encontrada acima, vamos apenas associar a grade
 
           // Gerar SKU para variante se não fornecido
-          const variantSku =
+          const gradeVariantSku =
             variante.sku ||
             `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}-${gradeNome}`;
 
