@@ -853,8 +853,6 @@ router.post("/bulk", async (req, res) => {
             variante.sku ||
             `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}-${gradeNome}`;
 
-
-
           if (variante.foto) {
             console.log(`��� Verificando URL da imagem: ${variante.foto}`);
             const isValid = isValidImageUrl(variante.foto);
