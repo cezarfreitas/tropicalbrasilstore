@@ -733,13 +733,15 @@ router.post("/bulk", async (req, res) => {
 
       // Processar cada variante
       for (const variante of product.variantes) {
-        console.log(`🎨 Processando variante: ${variante.cor} do produto: ${product.codigo}`);
+        console.log(
+          `🎨 Processando variante: ${variante.cor} do produto: ${product.codigo}`,
+        );
 
         if (!variante.cor || variante.preco <= 0 || !variante.grade) {
           console.error(`❌ Dados inválidos para variante ${variante.cor}:`, {
             cor: variante.cor,
             preco: variante.preco,
-            grade: variante.grade
+            grade: variante.grade,
           });
           return res.status(422).json({
             success: false,
@@ -747,15 +749,19 @@ router.post("/bulk", async (req, res) => {
             message:
               "Cor, preço > 0 e grade são obrigatórios para cada variante",
             produto: product.codigo,
-            variante: variante.cor
+            variante: variante.cor,
           });
         }
 
         // Criar ou buscar cor
-        console.log(`🎨 Criando/buscando cor: ${variante.cor} para produto ${product.codigo}`);
+        console.log(
+          `🎨 Criando/buscando cor: ${variante.cor} para produto ${product.codigo}`,
+        );
         const colorId = await getOrCreateColor(variante.cor);
         colorsCreated.add(variante.cor);
-        console.log(`✅ Cor criada/encontrada: ${variante.cor} (ID: ${colorId})`);
+        console.log(
+          `✅ Cor criada/encontrada: ${variante.cor} (ID: ${colorId})`,
+        );
 
         // Processar grades - suporta string única, array ou string separada por vírgula
         let gradesToProcess: string[] = [];
@@ -777,7 +783,9 @@ router.post("/bulk", async (req, res) => {
         );
 
         if (gradesToProcess.length === 0) {
-          console.error(`❌ Nenhuma grade válida encontrada para ${product.codigo} - ${variante.cor}`);
+          console.error(
+            `❌ Nenhuma grade válida encontrada para ${product.codigo} - ${variante.cor}`,
+          );
           console.error(`📋 Grade original: "${variante.grade}"`);
           return res.status(422).json({
             success: false,
@@ -785,7 +793,7 @@ router.post("/bulk", async (req, res) => {
             message: "Pelo menos uma grade deve ser fornecida",
             produto: product.codigo,
             variante: variante.cor,
-            grade_original: variante.grade
+            grade_original: variante.grade,
           });
         }
 
@@ -805,7 +813,9 @@ router.post("/bulk", async (req, res) => {
 
             // Construir URL completa para salvar no banco
             if (localImagePath) {
-              const baseUrl = process.env.APP_URL || 'https://b2b.tropicalbrasilsandalias.com.br';
+              const baseUrl =
+                process.env.APP_URL ||
+                "https://b2b.tropicalbrasilsandalias.com.br";
               imageUrlForDatabase = `${baseUrl}${localImagePath}`;
               console.log(
                 `📷 Imagem processada para ${variante.cor}: ${imageUrlForDatabase}`,
@@ -817,7 +827,9 @@ router.post("/bulk", async (req, res) => {
         }
 
         // PRIMEIRO: Criar/encontrar a variante de cor (uma por produto+cor)
-        console.log(`🔍 Verificando variante de cor existente para produto ${productId}, cor ${colorId}`);
+        console.log(
+          `🔍 Verificando variante de cor existente para produto ${productId}, cor ${colorId}`,
+        );
         const [existingColorVariant] = await db.execute(
           `SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?`,
           [productId, colorId],
@@ -855,7 +867,9 @@ router.post("/bulk", async (req, res) => {
         } else {
           // Criar nova variante
           try {
-            console.log(`🆕 Criando nova variante de cor para ${product.nome} - ${variante.cor}`);
+            console.log(
+              `🆕 Criando nova variante de cor para ${product.nome} - ${variante.cor}`,
+            );
             const [colorVariantResult] = await db.execute(
               `INSERT INTO product_color_variants
              (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
@@ -884,7 +898,7 @@ router.post("/bulk", async (req, res) => {
               cor: variante.cor,
               variantSku,
               preco: variante.preco,
-              imageUrl: imageUrlForDatabase
+              imageUrl: imageUrlForDatabase,
             });
             throw insertError;
           }
@@ -983,7 +997,13 @@ router.post("/bulk", async (req, res) => {
                   `INSERT INTO product_variants
                  (product_id, color_id, size_id, price_override, image_url, created_at)
                  VALUES (?, ?, ?, ?, ?, NOW())`,
-                  [productId, colorId, sizeId, variante.preco, imageUrlForDatabase],
+                  [
+                    productId,
+                    colorId,
+                    sizeId,
+                    variante.preco,
+                    imageUrlForDatabase,
+                  ],
                 );
               } else {
                 console.log(
@@ -994,7 +1014,13 @@ router.post("/bulk", async (req, res) => {
                   `UPDATE product_variants
                  SET price_override = ?, image_url = COALESCE(?, image_url)
                  WHERE product_id = ? AND color_id = ? AND size_id = ?`,
-                  [variante.preco, imageUrlForDatabase, productId, colorId, sizeId],
+                  [
+                    variante.preco,
+                    imageUrlForDatabase,
+                    productId,
+                    colorId,
+                    sizeId,
+                  ],
                 );
               }
             }
@@ -1303,11 +1329,10 @@ router.post("/single", validateApiKey, async (req, res) => {
 
       // Construir URL completa para salvar no banco
       if (localImagePath) {
-        const baseUrl = process.env.APP_URL || 'https://b2b.tropicalbrasilsandalias.com.br';
+        const baseUrl =
+          process.env.APP_URL || "https://b2b.tropicalbrasilsandalias.com.br";
         imageUrlForDatabase = `${baseUrl}${localImagePath}`;
-        console.log(
-          `📷 Imagem processada para ${cor}: ${imageUrlForDatabase}`,
-        );
+        console.log(`📷 Imagem processada para ${cor}: ${imageUrlForDatabase}`);
       }
     }
 
