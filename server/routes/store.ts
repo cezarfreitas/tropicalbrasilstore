@@ -17,6 +17,18 @@ router.get("/products-paginated", async (req, res) => {
       `🔍 Search request - term: "${searchTerm}", page: ${page}, limit: ${limit}`,
     );
 
+    // Special debug for product 649
+    const [product649Check] = await db.execute(
+      'SELECT id, name, photo, active FROM products WHERE id = 649'
+    );
+
+    if ((product649Check as any[]).length > 0) {
+      const p649 = (product649Check as any[])[0];
+      console.log(`🎯 Product 649 exists: ${p649.name}, photo: ${p649.photo || 'null'}, active: ${p649.active}`);
+    } else {
+      console.log('❌ Product 649 does not exist in database');
+    }
+
     // Get total count for pagination
     let countQuery = `
       SELECT COUNT(DISTINCT p.id) as total
