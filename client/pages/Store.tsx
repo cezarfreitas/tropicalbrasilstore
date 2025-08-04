@@ -296,18 +296,30 @@ function Store() {
         {/* Products Grid */}
         {!loading && filteredProducts.length > 0 && (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
-              {filteredProducts.map((product, index) => (
-                <SimpleProductCard
-                  key={product.id}
-                  product={product}
-                  onProductClick={handleProductClick}
-                  onLoginClick={() => setShowLoginModal(true)}
-                  isAuthenticated={isAuthenticated}
-                  isApproved={isApproved}
-                  index={index}
-                />
+            <div style={{ padding: "20px", backgroundColor: "lightblue", margin: "10px" }}>
+              <h2>🧪 DEBUG: {filteredProducts.length} produtos encontrados</h2>
+              {filteredProducts.map(p => (
+                <div key={p.id} style={{ margin: "5px", padding: "5px", backgroundColor: "white" }}>
+                  ID: {p.id} | Nome: {p.name} | Cores: {p.available_colors?.length || 0}
+                </div>
               ))}
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
+              {filteredProducts.map((product, index) => {
+                console.log(`🎯 Rendering product ${product.id} in grid`);
+                return (
+                  <SimpleProductCard
+                    key={product.id}
+                    product={product}
+                    onProductClick={handleProductClick}
+                    onLoginClick={() => setShowLoginModal(true)}
+                    isAuthenticated={isAuthenticated}
+                    isApproved={isApproved}
+                    index={index}
+                  />
+                );
+              })}
             </div>
 
             {/* Pagination - Mobile Otimizada */}
