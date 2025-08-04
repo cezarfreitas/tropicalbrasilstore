@@ -19,9 +19,14 @@ app.use(
 
 // Catch-all handler for SPA routing
 app.get("*", (req, res) => {
-  // Don't serve index.html for API routes
-  if (req.path.startsWith("/api/") || req.path.startsWith("/uploads/")) {
+  // Don't serve index.html for API routes or uploads
+  if (req.path.startsWith("/api/")) {
     return res.status(404).json({ error: "Not Found" });
+  }
+
+  // Don't intercept upload routes - they are handled by static middleware above
+  if (req.path.startsWith("/uploads/")) {
+    return res.status(404).json({ error: "File not found" });
   }
 
   res.sendFile(path.join(staticPath, "index.html"));
