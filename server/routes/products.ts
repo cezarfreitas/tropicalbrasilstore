@@ -863,59 +863,7 @@ router.post("/bulk", async (req, res) => {
             variantResult = { insertId: (existingRelation as any[])[0].id };
           }
 
-          // Criar entrada na tabela product_color_variants para compatibilidade com admin WooCommerce
-          // Usando um SKU único que inclui a grade para evitar duplicatas
-          // Verificar se a variante de cor já existe
-          const [existingColorVariant] = await db.execute(
-            `SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?`,
-            [productId, colorId],
-          );
-
-          let colorVariantId;
-          if ((existingColorVariant as any[]).length > 0) {
-            // Variante já existe - atualizar se necessário
-            colorVariantId = (existingColorVariant as any[])[0].id;
-            console.log(
-              `  ↻ Variante de cor existente encontrada: ${variante.cor} (ID: ${colorVariantId})`,
-            );
-
-            // Atualizar preço se diferente
-            await db.execute(
-              `UPDATE product_color_variants SET price = ?, variant_name = ?, active = true WHERE id = ?`,
-              [
-                `${product.nome} - ${variante.cor} - ${gradeNome}`,
-                variante.preco,
-                colorVariantId,
-              ],
-            );
-          } else {
-            // Criar nova variante
-            const [colorVariantResult] = await db.execute(
-              `INSERT INTO product_color_variants
-             (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-             ON DUPLICATE KEY UPDATE
-             variant_name = VALUES(variant_name),
-             variant_sku = VALUES(variant_sku),
-             price = VALUES(price),
-             image_url = VALUES(image_url),
-             active = VALUES(active)`,
-              [
-                productId,
-                colorId,
-                `${product.nome} - ${variante.cor} - ${gradeNome}`,
-                variantSku,
-                variante.preco,
-                localImageUrl,
-                0, // stock_total inicial
-                true,
-              ],
-            );
-            colorVariantId = (colorVariantResult as any).insertId;
-            console.log(
-              `  ✅ Nova variante de cor criada: ${variante.cor} - ${gradeNome} (ID: ${colorVariantId})`,
-            );
-          }
+          // A variante de cor (colorVariantId) já foi criada acima, usar ela
 
           console.log(
             `  ✅ Variante de cor criada: ${variante.cor} - ${gradeNome}`,
