@@ -570,6 +570,7 @@ export default function ProductDetail() {
                 <div className="aspect-square relative">
                   <ProductImage
                     src={getImageUrl(selectedVariantImage || product.photo)}
+                    product={product}
                     alt={product.name}
                     className="w-full h-full object-contain"
                     priority={true}
