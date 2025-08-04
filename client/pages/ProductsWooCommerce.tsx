@@ -198,14 +198,32 @@ export default function ProductsWooCommerce() {
 
   // Função para obter a imagem da variante principal ou a primeira disponível
   const getMainVariantImage = (product: WooCommerceProduct): string => {
+    console.log(`🔍 Getting image for product: ${product.name}`, {
+      variants: product.color_variants?.length || 0,
+      variants_data: product.color_variants?.map(v => ({
+        color: v.color_name,
+        image_url: v.image_url,
+        images: v.images,
+        is_main: v.is_main_catalog
+      }))
+    });
+
     // Primeiro tenta encontrar a variante marcada como principal
     const mainVariant = product.color_variants?.find((v) => v.is_main_catalog);
     if (mainVariant) {
+      console.log(`📌 Found main variant for ${product.name}:`, {
+        color: mainVariant.color_name,
+        images: mainVariant.images,
+        image_url: mainVariant.image_url
+      });
+
       // Prioriza array de imagens, depois image_url
       if (mainVariant.images && mainVariant.images.length > 0) {
+        console.log(`✅ Using first image from array: ${mainVariant.images[0]}`);
         return mainVariant.images[0];
       }
       if (mainVariant.image_url) {
+        console.log(`✅ Using image_url: ${mainVariant.image_url}`);
         return mainVariant.image_url;
       }
     }
@@ -216,15 +234,24 @@ export default function ProductsWooCommerce() {
     );
 
     if (firstVariantWithImage) {
+      console.log(`🎯 Using first variant with image for ${product.name}:`, {
+        color: firstVariantWithImage.color_name,
+        images: firstVariantWithImage.images,
+        image_url: firstVariantWithImage.image_url
+      });
+
       if (
         firstVariantWithImage.images &&
         firstVariantWithImage.images.length > 0
       ) {
+        console.log(`✅ Using first image from array: ${firstVariantWithImage.images[0]}`);
         return firstVariantWithImage.images[0];
       }
+      console.log(`✅ Using image_url: ${firstVariantWithImage.image_url}`);
       return firstVariantWithImage.image_url || "";
     }
 
+    console.warn(`❌ No image found for product: ${product.name}`);
     return "";
   };
 
