@@ -25,8 +25,10 @@ export function ProductImage({
   const [shouldLoad, setShouldLoad] = useState(priority || loading === "eager");
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // Debug log
-  console.log(`🖼️ ProductImage: src="${src}", alt="${alt}", hasError=${hasError}, shouldLoad=${shouldLoad}`);
+  // Debug log only for empty or problematic sources
+  if (!src || src.trim() === '' || hasError) {
+    console.log(`🖼️ ProductImage issue: src="${src}", alt="${alt}", hasError=${hasError}, shouldLoad=${shouldLoad}`);
+  }
 
   const iconSizes = {
     sm: "h-8 w-8",
