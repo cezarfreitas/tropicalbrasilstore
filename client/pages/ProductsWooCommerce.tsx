@@ -2073,7 +2073,7 @@ export default function ProductsWooCommerce() {
                           <div className="flex items-center gap-4">
                             <div className="w-16 h-16 rounded-lg border overflow-hidden flex-shrink-0 shadow-sm">
                               <ProductImage
-                                src={getMainVariantImage(product) || ""}
+                                src={getMainVariantImage(product)}
                                 alt={product.name}
                                 className="w-full h-full object-cover"
                               />
