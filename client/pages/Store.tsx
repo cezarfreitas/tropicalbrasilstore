@@ -438,12 +438,19 @@ function Store() {
                                     }
                                   >
                                     {color.image_url ? (
-                                      <ProductImage
+                                      <img
                                         src={getImageUrl(color.image_url)}
                                         alt={color.name}
                                         className="w-full h-full object-contain"
                                         loading="lazy"
-                                        sizes="32px"
+                                        onError={(e) => {
+                                          e.currentTarget.style.display = 'none';
+                                          const parent = e.currentTarget.parentElement;
+                                          if (parent) {
+                                            parent.style.backgroundColor = getColorValue(color);
+                                            parent.innerHTML = `<span class="text-[6px] sm:text-[7px] lg:text-[8px] font-bold text-white">${color.name?.charAt(0)?.toUpperCase()}</span>`;
+                                          }
+                                        }}
                                       />
                                     ) : (
                                       <div
