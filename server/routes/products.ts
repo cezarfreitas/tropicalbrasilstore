@@ -373,22 +373,40 @@ router.post("/create", validateApiKey, async (req, res) => {
           );
         } else {
           // Criar nova variante de cor
-          const [variantResult] = await db.execute(
-            `INSERT INTO product_color_variants
-             (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [
-              productId,
-              colorId,
-              variante.cor,
-              variante.sku || null,
-              variante.preco,
-              imageUrl,
-              variante.estoque_grade || 0,
-              true,
-            ],
+          // Verificar se a variante já existe antes de inserir
+          const [existingVariant] = await db.execute(
+            `SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?`,
+            [productId, colorId]
           );
-          colorVariantId = (variantResult as any).insertId;
+
+          if ((existingVariant as any[]).length > 0) {
+            // Variante já existe - atualizar
+            colorVariantId = (existingVariant as any[])[0].id;
+            await db.execute(
+              `UPDATE product_color_variants SET variant_name = ?, price = ?, stock_total = ?, active = true WHERE id = ?`,
+              [variante.cor, variante.preco, variante.estoque_grade || 0, colorVariantId]
+            );
+            console.log(`↻ Variante existente atualizada: ${variante.cor} (ID: ${colorVariantId})`);
+          } else {
+            // Criar nova variante
+            const [variantResult] = await db.execute(
+              `INSERT INTO product_color_variants
+               (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+              [
+                productId,
+                colorId,
+                variante.cor,
+                variante.sku || null,
+                variante.preco,
+                imageUrl,
+                variante.estoque_grade || 0,
+                true,
+              ],
+            );
+            colorVariantId = (variantResult as any).insertId;
+            console.log(`✅ Nova variante criada: ${variante.cor} (ID: ${colorVariantId})`);
+          }
         }
 
         // Associar grade ao produto-cor
