@@ -371,15 +371,40 @@ function Store() {
                   <CardContent className="p-0 relative">
                     {/* Product Image - Otimizado para mobile */}
                     <div className="aspect-square relative overflow-hidden bg-white">
-                      <ProductImage
-                        src={getImageUrl(selectedVariantImages[product.id] || product.photo)}
-                        product={product}
-                        alt={product.name}
-                        className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-2 sm:p-3"
-                        priority={index < 8}
-                        loading={index < 8 ? "eager" : "lazy"}
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
-                      />
+                      {(() => {
+                        // Get the best available image for this product
+                        const selectedImage = selectedVariantImages[product.id];
+                        const productPhoto = product.photo;
+                        const firstColorImage = product.available_colors?.find(c => c.image_url)?.image_url;
+
+                        const imageToUse = selectedImage || productPhoto || firstColorImage;
+                        const processedImageUrl = getImageUrl(imageToUse);
+
+                        console.log(`🖼️ Product ${product.id} (${product.name}):`, {
+                          selectedImage,
+                          productPhoto,
+                          firstColorImage,
+                          imageToUse,
+                          processedImageUrl
+                        });
+
+                        return processedImageUrl ? (
+                          <img
+                            src={processedImageUrl}
+                            alt={product.name}
+                            className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-2 sm:p-3"
+                            loading={index < 8 ? "eager" : "lazy"}
+                            onError={(e) => {
+                              console.error(`Failed to load image for product ${product.id}: ${processedImageUrl}`);
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                            <div className="text-4xl text-gray-400">📦</div>
+                          </div>
+                        );
+                      })()}
 
                       {/* Category Badge - Mobile otimizado */}
                       {product.category_name && (
