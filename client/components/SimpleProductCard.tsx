@@ -161,23 +161,28 @@ export function SimpleProductCard({
 
   return (
     <Card
-      className="group cursor-pointer hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 relative border border-gray-200 hover:border-primary/40 rounded-lg sm:rounded-xl overflow-hidden bg-white active:scale-[0.98] sm:hover:-translate-y-1 touch-manipulation"
+      className="cursor-pointer border border-gray-200 rounded-lg overflow-hidden bg-white"
       onClick={() => onProductClick(product.id)}
+      style={{ minHeight: "300px", display: "block" }}
     >
-      <CardContent className="p-0 relative">
+      <CardContent className="p-0">
         {/* Product Image */}
-        <div className="aspect-square relative overflow-hidden bg-white">
+        <div className="aspect-square relative bg-white" style={{ minHeight: "200px" }}>
           {displayImageUrl && !imageError ? (
             <img
               src={displayImageUrl}
               alt={product.name}
-              className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-2 sm:p-3"
+              className="w-full h-full object-contain p-2"
               loading={index < 8 ? "eager" : "lazy"}
               onError={handleImageError}
+              style={{ display: "block" }}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gray-100">
               <div className="text-4xl text-gray-400">📦</div>
+              <div className="text-sm text-gray-600 ml-2">
+                {displayImageUrl ? "Erro ao carregar" : "Sem imagem"}
+              </div>
             </div>
           )}
 
