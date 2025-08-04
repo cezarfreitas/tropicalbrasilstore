@@ -82,7 +82,7 @@ router.get("/products-paginated", async (req, res) => {
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
       LEFT JOIN product_variants pv ON p.id = pv.product_id
-      WHERE p.active = true
+      WHERE 1=1 -- DEBUG: Temporarily removed active filter to find product 649
     `;
 
     const productsParams: any[] = [];
