@@ -191,6 +191,16 @@ router.get("/products-paginated", async (req, res) => {
         `🖼️ Product ${product.name}: photo=${product.photo}, mainImage=${mainImage}, colors with images: ${(colorRows as any[]).filter((c) => c.image_url).length}`,
       );
 
+      // Validate image URL
+      if (mainImage) {
+        console.log(`🔗 Final image URL for ${product.name}: "${mainImage}"`);
+        if (!mainImage.startsWith('http') && !mainImage.startsWith('/')) {
+          console.warn(`⚠️ Image URL might be invalid (doesn't start with http or /): "${mainImage}"`);
+        }
+      } else {
+        console.warn(`❌ No image found for product ${product.name}`);
+      }
+
       productsWithDetails.push({
         ...product,
         photo: mainImage, // Override with the determined main image
