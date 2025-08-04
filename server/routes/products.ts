@@ -816,7 +816,7 @@ router.post("/bulk", async (req, res) => {
               variante.preco,
               `${product.nome} - ${variante.cor}`,
               variantSku,
-              localImageUrl,
+              imageUrlForDatabase,
               colorVariantId,
             ],
           );
