@@ -14,16 +14,20 @@ router.get("/", async (req, res) => {
       [gradeRows] = await db.execute(
         "SELECT * FROM grade_vendida ORDER BY name",
       );
-      console.log(`📊 Found ${(gradeRows as any[]).length} grades in grade_vendida`);
+      console.log(
+        `📊 Found ${(gradeRows as any[]).length} grades in grade_vendida`,
+      );
     } catch (tableError) {
-      console.warn("⚠️ grade_vendida table doesn't exist, falling back to grades table");
+      console.warn(
+        "⚠️ grade_vendida table doesn't exist, falling back to grades table",
+      );
 
       // Fallback to grades table if grade_vendida doesn't exist
       try {
-        [gradeRows] = await db.execute(
-          "SELECT * FROM grades ORDER BY name",
+        [gradeRows] = await db.execute("SELECT * FROM grades ORDER BY name");
+        console.log(
+          `📊 Found ${(gradeRows as any[]).length} grades in grades table`,
         );
-        console.log(`📊 Found ${(gradeRows as any[]).length} grades in grades table`);
       } catch (fallbackError) {
         console.error("❌ Neither grade_vendida nor grades table exists");
         return res.json([]); // Return empty array instead of error
@@ -52,7 +56,10 @@ router.get("/", async (req, res) => {
         );
         grade.assignment_count = (assignmentCount as any)[0].count;
       } catch (detailError) {
-        console.warn(`⚠️ Error getting details for grade ${grade.id}:`, detailError.message);
+        console.warn(
+          `⚠️ Error getting details for grade ${grade.id}:`,
+          detailError.message,
+        );
         grade.templates = [];
         grade.assignment_count = 0;
       }
