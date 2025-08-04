@@ -85,17 +85,24 @@ function Store() {
   // Track selected variant image for each product
   const [selectedVariantImages, setSelectedVariantImages] = useState<Record<number, string>>({});
 
-  // Debug products data
+  // Debug products data - focus on missing images
   useEffect(() => {
     if (products && products.length > 0) {
-      console.log('🛍️ Store products data:', products);
+      console.log(`🛍️ Store loaded ${products.length} products`);
       products.forEach((product, index) => {
-        console.log(`🛍️ Product ${index + 1}: ${product.name}`);
-        console.log(`  - photo: ${product.photo || 'null'}`);
-        console.log(`  - available_colors: ${product.available_colors?.length || 0}`);
-        if (product.available_colors) {
-          product.available_colors.forEach((color, colorIndex) => {
-            console.log(`    Color ${colorIndex + 1}: ${color.name} - image_url: ${color.image_url || 'null'}`);
+        const hasPhoto = product.photo && product.photo.trim() !== '';
+        const hasColorImages = product.available_colors?.some(c => c.image_url && c.image_url.trim() !== '');
+
+        if (!hasPhoto && !hasColorImages) {
+          console.warn(`⚠️ Product ${product.name} has NO images:`, {
+            photo: product.photo,
+            available_colors: product.available_colors?.length || 0,
+            colors: product.available_colors?.map(c => ({ name: c.name, image_url: c.image_url }))
+          });
+        } else {
+          console.log(`✅ Product ${product.name} has images:`, {
+            photo: product.photo || 'null',
+            color_images: product.available_colors?.filter(c => c.image_url).length || 0
           });
         }
       });
