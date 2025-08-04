@@ -118,7 +118,7 @@ router.get("/products", async (req, res) => {
       // Fallback to system based on stock type
       let colorRows = wooColorRows;
       if ((wooColorRows as any[]).length === 0) {
-        if (product.stock_type === 'size') {
+        if (product.stock_type === "size") {
           // Estoque por tamanho: mostrar cores com estoque individual
           const [sizeColorRows] = await db.execute(
             `
@@ -134,7 +134,7 @@ router.get("/products", async (req, res) => {
             [product.id, product.sell_without_stock],
           );
           colorRows = sizeColorRows;
-        } else if (product.stock_type === 'grade') {
+        } else if (product.stock_type === "grade") {
           // Estoque por grade: mostrar cores que têm grades ativas
           const [gradeColorRows] = await db.execute(
             `
@@ -293,7 +293,7 @@ router.get("/products-paginated", async (req, res) => {
       let available_colors = [];
       let available_grades_count = 0;
 
-      if (product.stock_type === 'grade') {
+      if (product.stock_type === "grade") {
         // Para produtos com estoque por grade
         const [gradeColors] = await db.execute(
           `SELECT DISTINCT
@@ -318,9 +318,9 @@ router.get("/products-paginated", async (req, res) => {
           [product.id, product.sell_without_stock],
         );
         available_grades_count = (availableGrades as any)[0].available_count;
-        product.total_grade_stock = (availableGrades as any)[0].total_grade_stock || 0;
-
-      } else if (product.stock_type === 'size') {
+        product.total_grade_stock =
+          (availableGrades as any)[0].total_grade_stock || 0;
+      } else if (product.stock_type === "size") {
         // Para produtos com estoque por tamanho
         const [sizeColors] = await db.execute(
           `SELECT DISTINCT
@@ -424,7 +424,7 @@ router.get("/products/:id", async (req, res) => {
     // Get variants based on stock type
     let variantRows = wooVariantRows;
     if ((wooVariantRows as any[]).length === 0) {
-      if (product.stock_type === 'size') {
+      if (product.stock_type === "size") {
         // Para estoque por tamanho: mostrar variantes individuais
         const variantStockCondition = product.sell_without_stock
           ? ""
@@ -456,7 +456,7 @@ router.get("/products/:id", async (req, res) => {
 
     // Get available grades only for grade-based stock products
     let gradeRows = [];
-    if (product.stock_type === 'grade') {
+    if (product.stock_type === "grade") {
       const [grades] = await db.execute(
         `SELECT DISTINCT
           g.id,
@@ -518,9 +518,10 @@ router.get("/products/:id", async (req, res) => {
       let shouldShowGrade = false;
 
       // Para estoque por grade, verificar se há estoque na combinação grade/cor
-      const gradeStockAvailable = (gradeRows as any[]).find(
-        g => g.id === grade.id && g.color_id === grade.color_id
-      )?.stock_quantity || 0;
+      const gradeStockAvailable =
+        (gradeRows as any[]).find(
+          (g) => g.id === grade.id && g.color_id === grade.color_id,
+        )?.stock_quantity || 0;
 
       if (product.sell_without_stock) {
         // Se permite venda sem estoque, mostrar grade se estiver ativa

@@ -38,28 +38,42 @@ export function SimpleProductCard({
   onLoginClick,
   isAuthenticated,
   isApproved,
-  index
+  index,
 }: SimpleProductCardProps) {
-  const [selectedColorImage, setSelectedColorImage] = useState<string | null>(null);
+  const [selectedColorImage, setSelectedColorImage] = useState<string | null>(
+    null,
+  );
   const [enhancedProductData, setEnhancedProductData] = useState<any>(null);
 
   // If no image available from listing API, try to fetch from individual product API
   useEffect(() => {
-    const hasAnyImage = !!(product.photo || (product.available_colors && product.available_colors.some(c => c.image_url)));
+    const hasAnyImage = !!(
+      product.photo ||
+      (product.available_colors &&
+        product.available_colors.some((c) => c.image_url))
+    );
 
     if (!hasAnyImage && !enhancedProductData) {
       fetch(`/api/store/products/${product.id}`)
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           if (data.variants && data.variants.length > 0) {
             setEnhancedProductData(data);
           }
         })
-        .catch(error => {
-          console.error(`Failed to fetch enhanced data for product ${product.id}:`, error);
+        .catch((error) => {
+          console.error(
+            `Failed to fetch enhanced data for product ${product.id}:`,
+            error,
+          );
         });
     }
-  }, [product.id, product.photo, product.available_colors, enhancedProductData]);
+  }, [
+    product.id,
+    product.photo,
+    product.available_colors,
+    enhancedProductData,
+  ]);
 
   // EXACT same logic as ProductDetail page working example
   const selectedVariantImage = selectedColorImage;
@@ -72,8 +86,14 @@ export function SimpleProductCard({
   let bestImageSrc = finalImageSrc;
 
   // Try available_colors from listing API
-  if (!bestImageSrc && product.available_colors && product.available_colors.length > 0) {
-    const firstColorWithImage = product.available_colors.find(c => c.image_url);
+  if (
+    !bestImageSrc &&
+    product.available_colors &&
+    product.available_colors.length > 0
+  ) {
+    const firstColorWithImage = product.available_colors.find(
+      (c) => c.image_url,
+    );
     if (firstColorWithImage && firstColorWithImage.image_url) {
       bestImageSrc = getImageUrl(firstColorWithImage.image_url);
     }
@@ -81,7 +101,9 @@ export function SimpleProductCard({
 
   // Try enhanced data from individual product API (contains pcv.image_url)
   if (!bestImageSrc && enhancedProductData && enhancedProductData.variants) {
-    const firstVariantWithImage = enhancedProductData.variants.find(v => v.image_url);
+    const firstVariantWithImage = enhancedProductData.variants.find(
+      (v) => v.image_url,
+    );
     if (firstVariantWithImage && firstVariantWithImage.image_url) {
       bestImageSrc = getImageUrl(firstVariantWithImage.image_url);
     }
@@ -94,21 +116,33 @@ export function SimpleProductCard({
 
   const getColorBackgroundColor = (color: any) => {
     if (color.hex_code) return color.hex_code;
-    
+
     const colorMap: { [key: string]: string } = {
-      branco: "#FFFFFF", white: "#FFFFFF",
-      preto: "#000000", black: "#000000",
-      azul: "#0066CC", blue: "#0066CC",
-      vermelho: "#CC0000", red: "#CC0000",
-      verde: "#228B22", green: "#228B22",
-      amarelo: "#FFFF99", yellow: "#FFFF99",
-      rosa: "#FF6699", pink: "#FF6699",
-      roxo: "#9966CC", purple: "#9966CC",
-      laranja: "#FF6600", orange: "#FF6600",
-      marrom: "#996633", brown: "#996633",
-      cinza: "#999999", gray: "#999999", grey: "#999999",
+      branco: "#FFFFFF",
+      white: "#FFFFFF",
+      preto: "#000000",
+      black: "#000000",
+      azul: "#0066CC",
+      blue: "#0066CC",
+      vermelho: "#CC0000",
+      red: "#CC0000",
+      verde: "#228B22",
+      green: "#228B22",
+      amarelo: "#FFFF99",
+      yellow: "#FFFF99",
+      rosa: "#FF6699",
+      pink: "#FF6699",
+      roxo: "#9966CC",
+      purple: "#9966CC",
+      laranja: "#FF6600",
+      orange: "#FF6600",
+      marrom: "#996633",
+      brown: "#996633",
+      cinza: "#999999",
+      gray: "#999999",
+      grey: "#999999",
     };
-    
+
     const colorName = color.name?.toLowerCase();
     return colorName && colorMap[colorName] ? colorMap[colorName] : "#E5E7EB";
   };
@@ -129,7 +163,7 @@ export function SimpleProductCard({
             loading={index < 8 ? "eager" : "lazy"}
             product={{
               photo: product.photo,
-              available_colors: product.available_colors
+              available_colors: product.available_colors,
             }}
           />
 
@@ -144,33 +178,30 @@ export function SimpleProductCard({
           {product.available_colors && product.available_colors.length > 0 && (
             <div className="absolute bottom-2 right-2">
               <div className="flex gap-1">
-                {product.available_colors
-                  .slice(0, 2)
-                  .map((color) => (
-                    <div
-                      key={color.id}
-                      className="w-6 h-6 rounded border-2 border-white cursor-pointer bg-gray-100"
-                      title={color.name}
-                      onClick={(e) =>
-                        color.image_url &&
-                        handleColorClick(color.image_url, e)
-                      }
-                      style={{ backgroundColor: getColorBackgroundColor(color) }}
-                    >
-                      {color.image_url ? (
-                        <img
-                          src={getImageUrl(color.image_url)}
-                          alt={color.name}
-                          className="w-full h-full object-contain rounded"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <span className="text-xs font-bold text-white">
-                          {color.name?.charAt(0)?.toUpperCase()}
-                        </span>
-                      )}
-                    </div>
-                  ))}
+                {product.available_colors.slice(0, 2).map((color) => (
+                  <div
+                    key={color.id}
+                    className="w-6 h-6 rounded border-2 border-white cursor-pointer bg-gray-100"
+                    title={color.name}
+                    onClick={(e) =>
+                      color.image_url && handleColorClick(color.image_url, e)
+                    }
+                    style={{ backgroundColor: getColorBackgroundColor(color) }}
+                  >
+                    {color.image_url ? (
+                      <img
+                        src={getImageUrl(color.image_url)}
+                        alt={color.name}
+                        className="w-full h-full object-contain rounded"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className="text-xs font-bold text-white">
+                        {color.name?.charAt(0)?.toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -181,8 +212,6 @@ export function SimpleProductCard({
           <h3 className="font-medium text-sm text-gray-900 mb-2">
             {product.name}
           </h3>
-
-
 
           {/* Pricing */}
           {product.base_price && (

@@ -52,7 +52,11 @@ interface StoreLayoutProps {
 }
 
 // Utility function for XML HTTP requests with retry logic
-const fetchWithRetry = async (url: string, retryCount = 0, maxRetries = 2): Promise<any> => {
+const fetchWithRetry = async (
+  url: string,
+  retryCount = 0,
+  maxRetries = 2,
+): Promise<any> => {
   try {
     const response = await new Promise<Response>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -93,8 +97,10 @@ const fetchWithRetry = async (url: string, retryCount = 0, maxRetries = 2): Prom
     console.error(`Error fetching ${url}:`, error);
 
     if (retryCount < maxRetries) {
-      console.log(`Retrying ${url}... (attempt ${retryCount + 1}/${maxRetries + 1})`);
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+      console.log(
+        `Retrying ${url}... (attempt ${retryCount + 1}/${maxRetries + 1})`,
+      );
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 seconds
       return fetchWithRetry(url, retryCount + 1, maxRetries);
     } else {
       throw error; // Re-throw if all retries failed
@@ -123,9 +129,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [availableColors, setAvailableColors] = useState<any[]>([]);
-  const [selectedColorFilters, setSelectedColorFilters] = useState<number[]>([]);
+  const [selectedColorFilters, setSelectedColorFilters] = useState<number[]>(
+    [],
+  );
   const [availableGenders, setAvailableGenders] = useState<any[]>([]);
-  const [selectedGenderFilters, setSelectedGenderFilters] = useState<number[]>([]);
+  const [selectedGenderFilters, setSelectedGenderFilters] = useState<number[]>(
+    [],
+  );
   const [availableTypes, setAvailableTypes] = useState<any[]>([]);
   const [selectedTypeFilters, setSelectedTypeFilters] = useState<number[]>([]);
 
@@ -145,7 +155,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     // Sync color filters with URL params (support multiple values separated by comma)
     const colorParam = searchParams.get("cor");
     if (colorParam) {
-      const colorIds = colorParam.split(',').map(id => parseInt(id)).filter(id => !isNaN(id));
+      const colorIds = colorParam
+        .split(",")
+        .map((id) => parseInt(id))
+        .filter((id) => !isNaN(id));
       setSelectedColorFilters(colorIds);
     } else {
       setSelectedColorFilters([]);
@@ -154,7 +167,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     // Sync gender filters with URL params (support multiple values separated by comma)
     const genderParam = searchParams.get("genero");
     if (genderParam) {
-      const genderIds = genderParam.split(',').map(id => parseInt(id)).filter(id => !isNaN(id));
+      const genderIds = genderParam
+        .split(",")
+        .map((id) => parseInt(id))
+        .filter((id) => !isNaN(id));
       setSelectedGenderFilters(genderIds);
     } else {
       setSelectedGenderFilters([]);
@@ -163,7 +179,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     // Sync type filters with URL params (support multiple values separated by comma)
     const typeParam = searchParams.get("tipo");
     if (typeParam) {
-      const typeIds = typeParam.split(',').map(id => parseInt(id)).filter(id => !isNaN(id));
+      const typeIds = typeParam
+        .split(",")
+        .map((id) => parseInt(id))
+        .filter((id) => !isNaN(id));
       setSelectedTypeFilters(typeIds);
     } else {
       setSelectedTypeFilters([]);
@@ -183,7 +202,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   const handleColorFilter = (colorId: number) => {
     const newSelectedColors = selectedColorFilters.includes(colorId)
-      ? selectedColorFilters.filter(id => id !== colorId) // Remove if already selected
+      ? selectedColorFilters.filter((id) => id !== colorId) // Remove if already selected
       : [...selectedColorFilters, colorId]; // Add if not selected
 
     setSelectedColorFilters(newSelectedColors);
@@ -192,7 +211,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     if (newSelectedColors.length === 0) {
       currentParams.delete("cor");
     } else {
-      currentParams.set("cor", newSelectedColors.join(','));
+      currentParams.set("cor", newSelectedColors.join(","));
     }
 
     navigate(`/loja?${currentParams.toString()}`);
@@ -200,7 +219,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   const handleGenderFilter = (genderId: number) => {
     const newSelectedGenders = selectedGenderFilters.includes(genderId)
-      ? selectedGenderFilters.filter(id => id !== genderId) // Remove if already selected
+      ? selectedGenderFilters.filter((id) => id !== genderId) // Remove if already selected
       : [...selectedGenderFilters, genderId]; // Add if not selected
 
     setSelectedGenderFilters(newSelectedGenders);
@@ -209,7 +228,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     if (newSelectedGenders.length === 0) {
       currentParams.delete("genero");
     } else {
-      currentParams.set("genero", newSelectedGenders.join(','));
+      currentParams.set("genero", newSelectedGenders.join(","));
     }
 
     navigate(`/loja?${currentParams.toString()}`);
@@ -217,7 +236,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   const handleTypeFilter = (typeId: number) => {
     const newSelectedTypes = selectedTypeFilters.includes(typeId)
-      ? selectedTypeFilters.filter(id => id !== typeId) // Remove if already selected
+      ? selectedTypeFilters.filter((id) => id !== typeId) // Remove if already selected
       : [...selectedTypeFilters, typeId]; // Add if not selected
 
     setSelectedTypeFilters(newSelectedTypes);
@@ -226,7 +245,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     if (newSelectedTypes.length === 0) {
       currentParams.delete("tipo");
     } else {
-      currentParams.set("tipo", newSelectedTypes.join(','));
+      currentParams.set("tipo", newSelectedTypes.join(","));
     }
 
     navigate(`/loja?${currentParams.toString()}`);
@@ -243,20 +262,24 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   // Verificar se há algum filtro ativo
   const hasActiveFilters = () => {
-    return selectedColorFilters.length > 0 ||
-           selectedGenderFilters.length > 0 ||
-           selectedTypeFilters.length > 0 ||
-           searchTerm.trim() !== "";
+    return (
+      selectedColorFilters.length > 0 ||
+      selectedGenderFilters.length > 0 ||
+      selectedTypeFilters.length > 0 ||
+      searchTerm.trim() !== ""
+    );
   };
 
   // Memoized navigation links from database categories
   const navigationLinks = useMemo(() => {
-    const links = [{
-      to: "/loja",
-      label: "Todos",
-      onClick: clearAllFilters, // Sempre limpa filtros ao clicar em "Todos"
-      isClearButton: true
-    }];
+    const links = [
+      {
+        to: "/loja",
+        label: "Todos",
+        onClick: clearAllFilters, // Sempre limpa filtros ao clicar em "Todos"
+        isClearButton: true,
+      },
+    ];
 
     // Add categories that have show_in_menu = true
     categories.forEach((category) => {
@@ -350,8 +373,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           };
 
           xhr.onerror = () => reject(new Error("Network error"));
-        xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 15000; // Aumentar timeout para 15 segundos
+          xhr.ontimeout = () => reject(new Error("Request timeout"));
+          xhr.timeout = 15000; // Aumentar timeout para 15 segundos
 
           xhr.send();
         });
@@ -407,7 +430,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       const colors = await fetchWithRetry("/api/colors");
       setAvailableColors(colors);
     } catch (error) {
-      console.warn("Failed to fetch colors after all retries, continuing without color filters");
+      console.warn(
+        "Failed to fetch colors after all retries, continuing without color filters",
+      );
       setAvailableColors([]);
     }
   };
@@ -417,7 +442,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       const genders = await fetchWithRetry("/api/genders");
       setAvailableGenders(genders);
     } catch (error) {
-      console.warn("Failed to fetch genders after all retries, continuing without gender filters");
+      console.warn(
+        "Failed to fetch genders after all retries, continuing without gender filters",
+      );
       setAvailableGenders([]);
     }
   };
@@ -427,7 +454,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       const types = await fetchWithRetry("/api/types");
       setAvailableTypes(types);
     } catch (error) {
-      console.warn("Failed to fetch types after all retries, continuing without type filters");
+      console.warn(
+        "Failed to fetch types after all retries, continuing without type filters",
+      );
       setAvailableTypes([]);
     }
   };
@@ -618,26 +647,35 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <div className="px-2 space-y-3">
                   {/* Show selected filters */}
                   <div>
-                    <h4 className="text-xs font-bold text-white/90 mb-2">Filtros Ativos:</h4>
+                    <h4 className="text-xs font-bold text-white/90 mb-2">
+                      Filtros Ativos:
+                    </h4>
                     <div className="space-y-1">
                       {selectedColorFilters.length > 0 && (
                         <div className="text-xs text-white/80">
-                          <span className="font-medium">Cores:</span> {selectedColorFilters.length} selecionada{selectedColorFilters.length > 1 ? 's' : ''}
+                          <span className="font-medium">Cores:</span>{" "}
+                          {selectedColorFilters.length} selecionada
+                          {selectedColorFilters.length > 1 ? "s" : ""}
                         </div>
                       )}
                       {selectedGenderFilters.length > 0 && (
                         <div className="text-xs text-white/80">
-                          <span className="font-medium">Gêneros:</span> {selectedGenderFilters.length} selecionado{selectedGenderFilters.length > 1 ? 's' : ''}
+                          <span className="font-medium">Gêneros:</span>{" "}
+                          {selectedGenderFilters.length} selecionado
+                          {selectedGenderFilters.length > 1 ? "s" : ""}
                         </div>
                       )}
                       {selectedTypeFilters.length > 0 && (
                         <div className="text-xs text-white/80">
-                          <span className="font-medium">Tipos:</span> {selectedTypeFilters.length} selecionado{selectedTypeFilters.length > 1 ? 's' : ''}
+                          <span className="font-medium">Tipos:</span>{" "}
+                          {selectedTypeFilters.length} selecionado
+                          {selectedTypeFilters.length > 1 ? "s" : ""}
                         </div>
                       )}
                       {searchTerm.trim() && (
                         <div className="text-xs text-white/80">
-                          <span className="font-medium">Busca:</span> "{searchTerm.trim()}"
+                          <span className="font-medium">Busca:</span> "
+                          {searchTerm.trim()}"
                         </div>
                       )}
                     </div>
@@ -686,7 +724,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <>
                     <div className="grid grid-cols-6 gap-1.5 px-2">
                       {availableColors.map((color) => {
-                        const isSelected = selectedColorFilters.includes(color.id);
+                        const isSelected = selectedColorFilters.includes(
+                          color.id,
+                        );
                         return (
                           <button
                             key={color.id}
@@ -699,7 +739,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                             style={{
                               backgroundColor: color.hex_code || "#E5E7EB",
                             }}
-                            title={`${color.name} ${isSelected ? '(selecionado)' : ''}`}
+                            title={`${color.name} ${isSelected ? "(selecionado)" : ""}`}
                           >
                             {!color.hex_code && (
                               <span className="text-xs font-bold text-gray-700">
@@ -760,7 +800,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <>
                     <div className="space-y-1 px-2">
                       {availableGenders.map((gender) => {
-                        const isSelected = selectedGenderFilters.includes(gender.id);
+                        const isSelected = selectedGenderFilters.includes(
+                          gender.id,
+                        );
                         return (
                           <button
                             key={gender.id}
@@ -770,7 +812,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                                 ? "bg-white/20 text-white font-medium shadow-sm"
                                 : "text-white/80 hover:bg-white/10 hover:text-white"
                             }`}
-                            title={`${gender.name} ${isSelected ? '(selecionado)' : ''}`}
+                            title={`${gender.name} ${isSelected ? "(selecionado)" : ""}`}
                           >
                             <span>{gender.name}</span>
                             {isSelected && (
@@ -825,7 +867,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <>
                     <div className="space-y-1 px-2">
                       {availableTypes.map((type) => {
-                        const isSelected = selectedTypeFilters.includes(type.id);
+                        const isSelected = selectedTypeFilters.includes(
+                          type.id,
+                        );
                         return (
                           <button
                             key={type.id}
@@ -835,7 +879,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                                 ? "bg-white/20 text-white font-bold shadow-lg border border-white/30"
                                 : "text-white/80 hover:bg-white/15 hover:text-white border border-transparent hover:border-white/20"
                             }`}
-                            title={`${type.name} ${isSelected ? '(selecionado)' : ''}`}
+                            title={`${type.name} ${isSelected ? "(selecionado)" : ""}`}
                           >
                             <div className="flex items-center justify-between">
                               <span className="font-medium">{type.name}</span>

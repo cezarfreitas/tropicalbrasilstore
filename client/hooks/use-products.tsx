@@ -49,7 +49,7 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 // Utility to check if HMR WebSocket is ready
 const isHMRReady = () => {
-  if (typeof window === 'undefined' || !import.meta.hot) {
+  if (typeof window === "undefined" || !import.meta.hot) {
     return true; // No HMR in production
   }
 
@@ -63,7 +63,7 @@ const isHMRReady = () => {
 };
 
 // HMR guard to prevent connection issues
-if (typeof window !== 'undefined' && import.meta.hot) {
+if (typeof window !== "undefined" && import.meta.hot) {
   import.meta.hot.accept(() => {
     // Mark HMR as in progress
     if (import.meta.hot?.data) {
@@ -87,7 +87,7 @@ const customFetch = async (
 ): Promise<Response> => {
   // HMR guard to prevent issues during development
   if (import.meta.hot?.data?.hmrInvalidated) {
-    throw new Error('HMR invalidation in progress');
+    throw new Error("HMR invalidation in progress");
   }
 
   return new Promise((resolve, reject) => {

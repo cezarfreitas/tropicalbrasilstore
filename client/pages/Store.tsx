@@ -10,8 +10,6 @@ import { useProducts } from "@/hooks/use-products";
 import { LoginModal } from "@/components/LoginModal";
 import { Package, AlertCircle, Search } from "lucide-react";
 
-
-
 function Store() {
   // Authentication
   const { isAuthenticated, isApproved } = useCustomerAuth();
@@ -88,8 +86,6 @@ function Store() {
       );
     }
   };
-
-
 
   // Effect to handle search term, color filter, category filter, gender and type changes
   useEffect(() => {

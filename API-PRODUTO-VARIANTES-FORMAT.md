@@ -14,14 +14,14 @@ A API bulk foi ajustada para receber o novo formato JSON com estrutura `produto`
     "marca": "Havaianas",
     "genero": "Unissex",
     "descricao": "O chinelo mais famoso do Brasil",
-    "preco_sugerido": 39.90,
+    "preco_sugerido": 39.9,
     "vender_infinito": false,
     "tipo_estoque": "grade"
   },
   "variantes": [
     {
       "cor": "Preto",
-      "preco": 29.90,
+      "preco": 29.9,
       "foto": "https://exemplo.com/chinelo-preto.jpg",
       "grades": {
         "Infantil": 15,
@@ -29,8 +29,8 @@ A API bulk foi ajustada para receber o novo formato JSON com estrutura `produto`
       }
     },
     {
-      "cor": "Azul", 
-      "preco": 32.90,
+      "cor": "Azul",
+      "preco": 32.9,
       "foto": "https://exemplo.com/chinelo-azul.jpg",
       "grades": {
         "Infantil": 10,
@@ -117,6 +117,7 @@ A API detecta automaticamente o formato recebido e converte para o formato inter
 ## Logs de Debug
 
 Para debugar, verifique os logs do servidor que mostram:
+
 - Formato detectado
 - Dados do produto recebidos
 - Número de variantes encontradas

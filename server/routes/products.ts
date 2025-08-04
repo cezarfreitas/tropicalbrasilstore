@@ -484,7 +484,10 @@ router.post("/bulk", async (req, res) => {
     "bytes",
   );
   console.log(`[${requestId}] Request body keys:`, Object.keys(req.body || {}));
-  console.log(`[${requestId}] Request body:`, JSON.stringify(req.body, null, 2));
+  console.log(
+    `[${requestId}] Request body:`,
+    JSON.stringify(req.body, null, 2),
+  );
 
   try {
     // Support multiple formats: single product, array of products, legacy {products: [...]}, or new {produto: {...}, variantes: [...]}
@@ -508,29 +511,37 @@ router.post("/bulk", async (req, res) => {
       console.log(`[${requestId}] Found ${variantes.length} variantes`);
 
       // Convert to internal format
-      products = [{
-        codigo: produto.codigo,
-        nome: produto.nome,
-        categoria: produto.categoria,
-        tipo: produto.tipo,
-        marca: produto.marca,
-        genero: produto.genero,
-        descricao: produto.descricao,
-        preco_sugerido: produto.preco_sugerido,
-        vender_infinito: produto.vender_infinito || false,
-        tipo_estoque: produto.tipo_estoque || "grade",
-        variantes: variantes.map((variante: any, idx: number) => {
-          console.log(`[${requestId}] Processing variante ${idx + 1}:`, variante);
-          return {
-            cor: variante.cor,
-            preco: variante.preco,
-            foto: variante.foto,
-            grades: variante.grades || {}
-          };
-        })
-      }];
+      products = [
+        {
+          codigo: produto.codigo,
+          nome: produto.nome,
+          categoria: produto.categoria,
+          tipo: produto.tipo,
+          marca: produto.marca,
+          genero: produto.genero,
+          descricao: produto.descricao,
+          preco_sugerido: produto.preco_sugerido,
+          vender_infinito: produto.vender_infinito || false,
+          tipo_estoque: produto.tipo_estoque || "grade",
+          variantes: variantes.map((variante: any, idx: number) => {
+            console.log(
+              `[${requestId}] Processing variante ${idx + 1}:`,
+              variante,
+            );
+            return {
+              cor: variante.cor,
+              preco: variante.preco,
+              foto: variante.foto,
+              grades: variante.grades || {},
+            };
+          }),
+        },
+      ];
 
-      console.log(`[${requestId}] Converted to internal format:`, JSON.stringify(products[0], null, 2));
+      console.log(
+        `[${requestId}] Converted to internal format:`,
+        JSON.stringify(products[0], null, 2),
+      );
     } else if (req.body.codigo || req.body.row_number !== undefined) {
       // Single product format
       console.log(`[${requestId}] Using single product format`);
@@ -540,7 +551,8 @@ router.post("/bulk", async (req, res) => {
       return res.status(400).json({
         success: false,
         error: "Invalid request format",
-        message: "Request body must be a single product, an array of products, contain a 'products' array, or use the new produto/variantes format",
+        message:
+          "Request body must be a single product, an array of products, contain a 'products' array, or use the new produto/variantes format",
         code: "INVALID_FORMAT",
         requestId,
       });
@@ -569,20 +581,22 @@ router.post("/bulk", async (req, res) => {
       });
     }
 
-
-
     console.log(`[${requestId}] Processing ${products.length} products`);
 
     // Convert new format to internal format
     const convertedProducts = products.map((item, index) => {
       // Check if it's the new format (has row_number and direct fields)
       if (item.row_number !== undefined || item.preco) {
-        console.log(`[${requestId}] Converting new format item ${index + 1}: ${item.codigo}`);
+        console.log(
+          `[${requestId}] Converting new format item ${index + 1}: ${item.codigo}`,
+        );
 
         // Parse price from "R$ 13,60" format
         let precoNumerico = 0;
-        if (item.preco && typeof item.preco === 'string') {
-          const precoClean = item.preco.replace(/[R$\s,]/g, '').replace(',', '.');
+        if (item.preco && typeof item.preco === "string") {
+          const precoClean = item.preco
+            .replace(/[R$\s,]/g, "")
+            .replace(",", ".");
           precoNumerico = parseFloat(precoClean) || 0;
         }
 
@@ -598,14 +612,16 @@ router.post("/bulk", async (req, res) => {
           preco_sugerido: item.preco_sugerido || null,
           vender_infinito: item.vender_infinito || false,
           tipo_estoque: item.tipo_estoque || "grade",
-          variantes: [{
-            cor: item.cor,
-            preco: precoNumerico,
-            grade: item.grade,
-            foto: item.foto,
-            sku: item.sku || null,
-            estoque_grade: item.estoque_grade || 0
-          }]
+          variantes: [
+            {
+              cor: item.cor,
+              preco: precoNumerico,
+              grade: item.grade,
+              foto: item.foto,
+              sku: item.sku || null,
+              estoque_grade: item.estoque_grade || 0,
+            },
+          ],
         };
       }
 
@@ -613,7 +629,9 @@ router.post("/bulk", async (req, res) => {
       return item;
     });
 
-    console.log(`[${requestId}] Converted ${convertedProducts.length} products to internal format`);
+    console.log(
+      `[${requestId}] Converted ${convertedProducts.length} products to internal format`,
+    );
 
     const validationErrors: Array<{
       productIndex: number;
