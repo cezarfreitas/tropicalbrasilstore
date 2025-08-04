@@ -1514,7 +1514,7 @@ export default function ProductsWooCommerce() {
                                                 >
                                                   <div className="aspect-square rounded-lg border overflow-hidden bg-gray-50">
                                                     <ProductImage
-                                                      src={imageUrl}
+                                                      src={getImageUrl(imageUrl)}
                                                       alt={`Imagem ${imageIndex + 1}`}
                                                       className="w-full h-full object-cover"
                                                     />
