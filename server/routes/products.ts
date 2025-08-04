@@ -733,7 +733,7 @@ router.post("/bulk", async (req, res) => {
 
       // Processar cada variante
       for (const variante of product.variantes) {
-        console.log(`���� Processando variante: ${variante.cor} do produto: ${product.codigo}`);
+        console.log(`🎨 Processando variante: ${variante.cor} do produto: ${product.codigo}`);
 
         if (!variante.cor || variante.preco <= 0 || !variante.grade) {
           console.error(`❌ Dados inválidos para variante ${variante.cor}:`, {
@@ -836,16 +836,22 @@ router.post("/bulk", async (req, res) => {
             `  ↻ Variante de cor existente encontrada: ${variante.cor} (ID: ${colorVariantId})`,
           );
 
-          await db.execute(
-            `UPDATE product_color_variants SET price = ?, variant_name = ?, variant_sku = ?, image_url = ?, active = true WHERE id = ?`,
-            [
-              variante.preco,
-              `${product.nome} - ${variante.cor}`,
-              variantSku,
-              imageUrlForDatabase,
-              colorVariantId,
-            ],
-          );
+          try {
+            await db.execute(
+              `UPDATE product_color_variants SET price = ?, variant_name = ?, variant_sku = ?, image_url = ?, active = true WHERE id = ?`,
+              [
+                variante.preco,
+                `${product.nome} - ${variante.cor}`,
+                variantSku,
+                imageUrlForDatabase,
+                colorVariantId,
+              ],
+            );
+            console.log(`✅ Variante de cor atualizada com sucesso`);
+          } catch (updateError) {
+            console.error(`❌ Erro ao atualizar variante de cor:`, updateError);
+            throw updateError;
+          }
         } else {
           // Criar nova variante
           const [colorVariantResult] = await db.execute(
@@ -1285,7 +1291,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         const baseUrl = process.env.APP_URL || 'https://b2b.tropicalbrasilsandalias.com.br';
         imageUrlForDatabase = `${baseUrl}${localImagePath}`;
         console.log(
-          `📷 Imagem processada para ${cor}: ${imageUrlForDatabase}`,
+          `��� Imagem processada para ${cor}: ${imageUrlForDatabase}`,
         );
       }
     }
