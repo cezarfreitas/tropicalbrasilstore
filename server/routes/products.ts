@@ -436,13 +436,19 @@ router.post("/bulk", async (req, res) => {
   const startTime = Date.now();
   const requestId = Math.random().toString(36).substring(7);
 
-  console.log(`[${requestId}] Bulk API request started at ${new Date().toISOString()}`);
+  console.log(
+    `[${requestId}] Bulk API request started at ${new Date().toISOString()}`,
+  );
   console.log(`[${requestId}] Request headers:`, {
-    'content-type': req.headers['content-type'],
-    'content-length': req.headers['content-length'],
-    'user-agent': req.headers['user-agent']
+    "content-type": req.headers["content-type"],
+    "content-length": req.headers["content-length"],
+    "user-agent": req.headers["user-agent"],
   });
-  console.log(`[${requestId}] Request body size:`, JSON.stringify(req.body).length, 'bytes');
+  console.log(
+    `[${requestId}] Request body size:`,
+    JSON.stringify(req.body).length,
+    "bytes",
+  );
 
   try {
     const { products }: BulkProductsRequest = req.body;
@@ -455,31 +461,37 @@ router.post("/bulk", async (req, res) => {
         error: "Missing request body",
         message: "No data received in request body",
         code: "MISSING_BODY",
-        requestId
+        requestId,
       });
     }
 
     if (!products) {
-      console.error(`[${requestId}] No products field in request:`, Object.keys(req.body));
+      console.error(
+        `[${requestId}] No products field in request:`,
+        Object.keys(req.body),
+      );
       return res.status(400).json({
         success: false,
         error: "Missing products field",
         message: "Request body must contain a 'products' array",
         code: "MISSING_PRODUCTS_FIELD",
         receivedFields: Object.keys(req.body),
-        requestId
+        requestId,
       });
     }
 
     if (!Array.isArray(products)) {
-      console.error(`[${requestId}] Products is not an array, received:`, typeof products);
+      console.error(
+        `[${requestId}] Products is not an array, received:`,
+        typeof products,
+      );
       return res.status(400).json({
         success: false,
         error: "Invalid products format",
         message: "Products must be an array",
         code: "INVALID_PRODUCTS_TYPE",
         receivedType: typeof products,
-        requestId
+        requestId,
       });
     }
 
@@ -490,13 +502,17 @@ router.post("/bulk", async (req, res) => {
         error: "Empty products array",
         message: "Products array cannot be empty",
         code: "EMPTY_PRODUCTS_ARRAY",
-        requestId
+        requestId,
       });
     }
 
     console.log(`[${requestId}] Processing ${products.length} products`);
 
-    const validationErrors: Array<{productIndex: number, product: any, errors: string[]}> = [];
+    const validationErrors: Array<{
+      productIndex: number;
+      product: any;
+      errors: string[];
+    }> = [];
 
     // Validar todos os produtos antes de processar
     products.forEach((product, index) => {
@@ -508,7 +524,11 @@ router.post("/bulk", async (req, res) => {
       if (!product.variantes || !Array.isArray(product.variantes)) {
         errors.push("Missing or invalid variantes array");
       }
-      if (product.variantes && Array.isArray(product.variantes) && product.variantes.length === 0) {
+      if (
+        product.variantes &&
+        Array.isArray(product.variantes) &&
+        product.variantes.length === 0
+      ) {
         errors.push("Variantes array cannot be empty");
       }
 
@@ -516,20 +536,23 @@ router.post("/bulk", async (req, res) => {
         validationErrors.push({
           productIndex: index,
           product: { codigo: product.codigo, nome: product.nome },
-          errors
+          errors,
         });
       }
     });
 
     if (validationErrors.length > 0) {
-      console.error(`[${requestId}] Validation errors found:`, validationErrors);
+      console.error(
+        `[${requestId}] Validation errors found:`,
+        validationErrors,
+      );
       return res.status(422).json({
         success: false,
         error: "Validation errors",
         message: `${validationErrors.length} products have validation errors`,
         code: "VALIDATION_ERRORS",
         validationErrors,
-        requestId
+        requestId,
       });
     }
 
@@ -991,13 +1014,16 @@ router.post("/bulk", async (req, res) => {
 
     // Resposta de sucesso com logging detalhado
     const processingTime = Date.now() - startTime;
-    console.log(`[${requestId}] Bulk processing completed successfully in ${processingTime}ms`, {
-      productsProcessed: products.length,
-      newProducts: produtosNovos,
-      updatedProducts: produtosAtualizados,
-      newVariants: variantesNovas,
-      processingTime: `${processingTime}ms`
-    });
+    console.log(
+      `[${requestId}] Bulk processing completed successfully in ${processingTime}ms`,
+      {
+        productsProcessed: products.length,
+        newProducts: produtosNovos,
+        updatedProducts: produtosAtualizados,
+        newVariants: variantesNovas,
+        processingTime: `${processingTime}ms`,
+      },
+    );
 
     res.status(201).json({
       success: true,
@@ -1020,14 +1046,17 @@ router.post("/bulk", async (req, res) => {
     });
   } catch (error: any) {
     const processingTime = Date.now() - startTime;
-    console.error(`[${requestId}] Critical error in bulk product creation after ${processingTime}ms:`, {
-      errorMessage: error.message,
-      errorStack: error.stack,
-      errorCode: error.code,
-      sqlState: error.sqlState,
-      sqlMessage: error.sqlMessage,
-      processingTime: `${processingTime}ms`
-    });
+    console.error(
+      `[${requestId}] Critical error in bulk product creation after ${processingTime}ms:`,
+      {
+        errorMessage: error.message,
+        errorStack: error.stack,
+        errorCode: error.code,
+        sqlState: error.sqlState,
+        sqlMessage: error.sqlMessage,
+        processingTime: `${processingTime}ms`,
+      },
+    );
 
     res.status(500).json({
       success: false,
@@ -1042,12 +1071,12 @@ router.post("/bulk", async (req, res) => {
         // Incluir detalhes do erro SQL se disponível
         ...(error.code && { sqlErrorCode: error.code }),
         ...(error.sqlState && { sqlState: error.sqlState }),
-        ...(process.env.NODE_ENV === 'development' && {
+        ...(process.env.NODE_ENV === "development" && {
           errorMessage: error.message,
-          stack: error.stack
-        })
+          stack: error.stack,
+        }),
       },
-      requestId
+      requestId,
     });
   }
 });
