@@ -1359,11 +1359,9 @@ router.post("/single", validateApiKey, async (req, res) => {
     if (foto && isValidImageUrl(foto)) {
       const localImagePath = await downloadAndSaveImage(foto, codigo, cor);
 
-      // Construir URL completa para salvar no banco
+      // Usar URL local para salvar no banco
       if (localImagePath) {
-        const baseUrl =
-          process.env.APP_URL || "https://b2b.tropicalbrasilsandalias.com.br";
-        imageUrlForDatabase = `${baseUrl}${localImagePath}`;
+        imageUrlForDatabase = localImagePath;
         console.log(`📷 Imagem processada para ${cor}: ${imageUrlForDatabase}`);
       }
     }
