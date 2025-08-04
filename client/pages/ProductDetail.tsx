@@ -917,6 +917,7 @@ export default function ProductDetail() {
                     <div className="aspect-square relative overflow-hidden bg-white">
                       <ProductImage
                         src={getImageUrl(suggestedProduct.photo)}
+                        product={suggestedProduct}
                         alt={suggestedProduct.name}
                         className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-3"
                         loading="lazy"
