@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Aplicação principal
+  chinelos-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chinelos-api-prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+      - PORT=80
+      # Substitua pela sua URL de banco de dados
+      - DATABASE_URL=${DATABASE_URL:-mysql://tropical:805ce7692e5b4d6ced5f@5.161.52.206:3232/tropical}
+    volumes:
+      # Persistir uploads
+      - ./public/uploads:/app/public/uploads
+      - ./dist/public/uploads:/app/dist/public/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "com.docker.compose.project=chinelos-store"
+      - "com.docker.compose.service=api"
+
+  # Opcional: Nginx como proxy reverso
+  nginx:
+    image: nginx:alpine
+    container_name: chinelos-nginx
+    restart: unless-stopped
+    ports:
+      - "443:443"
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/ssl/certs:ro
+    depends_on:
+      - chinelos-api
+    profiles:
+      - nginx
+
+networks:
+  default:
+    driver: bridge
+    name: chinelos-network
+
+volumes:
+  uploads:
+    driver: local
