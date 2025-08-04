@@ -159,10 +159,10 @@ router.get("/products-paginated", async (req, res) => {
         [product.id],
       );
 
-      // Ensure all color image URLs are full URLs
+      // Ensure all color image URLs are local URLs
       const processedColorRows = (colorRows as any[]).map((color) => ({
         ...color,
-        image_url: ensureFullImageUrl(color.image_url),
+        image_url: ensureLocalImageUrl(color.image_url),
       }));
 
       console.log(
