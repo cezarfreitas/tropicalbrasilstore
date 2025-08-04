@@ -11,6 +11,12 @@ console.log(`🗂️  Serving static files from: ${staticPath}`);
 // Serve the built client files
 app.use(express.static(staticPath));
 
+// Serve static files for uploads
+app.use(
+  "/uploads",
+  express.static(path.join(process.cwd(), "public", "uploads")),
+);
+
 // Catch-all handler for SPA routing
 app.get("*", (req, res) => {
   // Don't serve index.html for API routes
