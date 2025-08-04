@@ -702,33 +702,36 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 {colorFilterOpen && (
                   <>
                     <div className="grid grid-cols-6 gap-1.5 px-2">
-                      {availableColors.map((color) => (
-                        <button
-                          key={color.id}
-                          onClick={() => handleColorFilter(color.id)}
-                          className={`w-7 h-7 rounded-lg border transition-all duration-200 ${
-                            selectedColorFilter === color.id
-                              ? "border-white border-2 scale-105"
-                              : "border-white/30 hover:border-white/60 hover:scale-105"
-                          }`}
-                          style={{
-                            backgroundColor: color.hex_code || "#E5E7EB",
-                          }}
-                          title={color.name}
-                        >
-                          {!color.hex_code && (
-                            <span className="text-xs font-bold text-gray-700">
-                              {color.name?.charAt(0)?.toUpperCase()}
-                            </span>
-                          )}
+                      {availableColors.map((color) => {
+                        const isSelected = selectedColorFilters.includes(color.id);
+                        return (
+                          <button
+                            key={color.id}
+                            onClick={() => handleColorFilter(color.id)}
+                            className={`w-7 h-7 rounded-lg border transition-all duration-200 relative ${
+                              isSelected
+                                ? "border-white border-2 scale-105 shadow-lg"
+                                : "border-white/30 hover:border-white/60 hover:scale-105"
+                            }`}
+                            style={{
+                              backgroundColor: color.hex_code || "#E5E7EB",
+                            }}
+                            title={`${color.name} ${isSelected ? '(selecionado)' : ''}`}
+                          >
+                            {!color.hex_code && (
+                              <span className="text-xs font-bold text-gray-700">
+                                {color.name?.charAt(0)?.toUpperCase()}
+                              </span>
+                            )}
 
-                          {selectedColorFilter === color.id && (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <div className="w-2 h-2 bg-white rounded-full shadow-lg"></div>
-                            </div>
-                          )}
-                        </button>
-                      ))}
+                            {isSelected && (
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-2 h-2 bg-white rounded-full shadow-lg"></div>
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
 
                     {availableColors.length === 0 && (
