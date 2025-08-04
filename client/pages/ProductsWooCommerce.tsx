@@ -249,13 +249,17 @@ export default function ProductsWooCommerce() {
         firstVariantWithImage.images &&
         firstVariantWithImage.images.length > 0
       ) {
+        const imageUrl = getImageUrl(firstVariantWithImage.images[0]);
         console.log(
-          `✅ Using first image from array: ${firstVariantWithImage.images[0]}`,
+          `✅ Using first image from array: ${firstVariantWithImage.images[0]} -> ${imageUrl}`,
         );
-        return firstVariantWithImage.images[0];
+        return imageUrl;
       }
-      console.log(`✅ Using image_url: ${firstVariantWithImage.image_url}`);
-      return firstVariantWithImage.image_url || "";
+      if (firstVariantWithImage.image_url) {
+        const imageUrl = getImageUrl(firstVariantWithImage.image_url);
+        console.log(`✅ Using image_url: ${firstVariantWithImage.image_url} -> ${imageUrl}`);
+        return imageUrl;
+      }
     }
 
     console.warn(`❌ No image found for product: ${product.name}`);
@@ -799,7 +803,7 @@ export default function ProductsWooCommerce() {
 
       toast({
         title: "Sucesso",
-        description: `${selectedProducts.length} produtos excluídos com sucesso.`,
+        description: `${selectedProducts.length} produtos exclu��dos com sucesso.`,
       });
 
       setSelectedProducts([]);
