@@ -22,32 +22,32 @@ const getColorValue = (color: any) => {
 
   // Common color name mappings for WooCommerce
   const colorMap: { [key: string]: string } = {
-    'branco': '#FFFFFF',
-    'white': '#FFFFFF',
-    'preto': '#000000',
-    'black': '#000000',
-    'azul': '#0066CC',
-    'blue': '#0066CC',
-    'vermelho': '#CC0000',
-    'red': '#CC0000',
-    'verde': '#228B22',
-    'green': '#228B22',
-    'verde brasil': '#228B22',
-    'amarelo': '#FFFF99',
-    'yellow': '#FFFF99',
-    'amarelo canário': '#FFFF99',
-    'amarelo canario': '#FFFF99',
-    'rosa': '#FF6699',
-    'pink': '#FF6699',
-    'roxo': '#9966CC',
-    'purple': '#9966CC',
-    'laranja': '#FF6600',
-    'orange': '#FF6600',
-    'marrom': '#996633',
-    'brown': '#996633',
-    'cinza': '#999999',
-    'gray': '#999999',
-    'grey': '#999999'
+    branco: "#FFFFFF",
+    white: "#FFFFFF",
+    preto: "#000000",
+    black: "#000000",
+    azul: "#0066CC",
+    blue: "#0066CC",
+    vermelho: "#CC0000",
+    red: "#CC0000",
+    verde: "#228B22",
+    green: "#228B22",
+    "verde brasil": "#228B22",
+    amarelo: "#FFFF99",
+    yellow: "#FFFF99",
+    "amarelo canário": "#FFFF99",
+    "amarelo canario": "#FFFF99",
+    rosa: "#FF6699",
+    pink: "#FF6699",
+    roxo: "#9966CC",
+    purple: "#9966CC",
+    laranja: "#FF6600",
+    orange: "#FF6600",
+    marrom: "#996633",
+    brown: "#996633",
+    cinza: "#999999",
+    gray: "#999999",
+    grey: "#999999",
   };
 
   // Try to map by color name
@@ -57,7 +57,7 @@ const getColorValue = (color: any) => {
   }
 
   // Default fallback
-  return '#E5E7EB';
+  return "#E5E7EB";
 };
 
 function Store() {
@@ -70,39 +70,54 @@ function Store() {
   // URL params for search
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get("busca") || "";
-  const colorFilter = searchParams.get("cor") ? parseInt(searchParams.get("cor")!) : null;
+  const colorFilter = searchParams.get("cor")
+    ? parseInt(searchParams.get("cor")!)
+    : null;
   const categoryFilter = searchParams.get("categoria") || null;
-  const genderFilter = searchParams.get("genero") ? parseInt(searchParams.get("genero")!) : null;
-  const typeFilter = searchParams.get("tipo") ? parseInt(searchParams.get("tipo")!) : null;
+  const genderFilter = searchParams.get("genero")
+    ? parseInt(searchParams.get("genero")!)
+    : null;
+  const typeFilter = searchParams.get("tipo")
+    ? parseInt(searchParams.get("tipo")!)
+    : null;
 
   // Products with optimized hook
   const productsPerPage = 20;
-  const { products, pagination, loading, error, fetchProducts, currentPage } = useProducts(productsPerPage);
+  const { products, pagination, loading, error, fetchProducts, currentPage } =
+    useProducts(productsPerPage);
 
   // Login modal
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Track selected variant image for each product
-  const [selectedVariantImages, setSelectedVariantImages] = useState<Record<number, string>>({});
+  const [selectedVariantImages, setSelectedVariantImages] = useState<
+    Record<number, string>
+  >({});
 
   // Debug products data - focus on missing images
   useEffect(() => {
     if (products && products.length > 0) {
       console.log(`🛍️ Store loaded ${products.length} products`);
       products.forEach((product, index) => {
-        const hasPhoto = product.photo && product.photo.trim() !== '';
-        const hasColorImages = product.available_colors?.some(c => c.image_url && c.image_url.trim() !== '');
+        const hasPhoto = product.photo && product.photo.trim() !== "";
+        const hasColorImages = product.available_colors?.some(
+          (c) => c.image_url && c.image_url.trim() !== "",
+        );
 
         if (!hasPhoto && !hasColorImages) {
           console.warn(`⚠️ Product ${product.name} has NO images:`, {
             photo: product.photo,
             available_colors: product.available_colors?.length || 0,
-            colors: product.available_colors?.map(c => ({ name: c.name, image_url: c.image_url }))
+            colors: product.available_colors?.map((c) => ({
+              name: c.name,
+              image_url: c.image_url,
+            })),
           });
         } else {
           console.log(`✅ Product ${product.name} has images:`, {
-            photo: product.photo || 'null',
-            color_images: product.available_colors?.filter(c => c.image_url).length || 0
+            photo: product.photo || "null",
+            color_images:
+              product.available_colors?.filter((c) => c.image_url).length || 0,
           });
         }
       });
@@ -116,22 +131,47 @@ function Store() {
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= (pagination?.totalPages || 1)) {
-      fetchProducts(newPage, searchTerm, colorFilter, categoryFilter, genderFilter, typeFilter);
+      fetchProducts(
+        newPage,
+        searchTerm,
+        colorFilter,
+        categoryFilter,
+        genderFilter,
+        typeFilter,
+      );
     }
   };
 
-  const handleColorVariantClick = (productId: number, variantImageUrl: string, e: React.MouseEvent) => {
+  const handleColorVariantClick = (
+    productId: number,
+    variantImageUrl: string,
+    e: React.MouseEvent,
+  ) => {
     e.stopPropagation(); // Prevent opening the product modal
-    setSelectedVariantImages(prev => ({
+    setSelectedVariantImages((prev) => ({
       ...prev,
-      [productId]: variantImageUrl
+      [productId]: variantImageUrl,
     }));
   };
 
   // Effect to handle search term, color filter, category filter, gender and type changes
   useEffect(() => {
-    fetchProducts(1, searchTerm, colorFilter, categoryFilter, genderFilter, typeFilter);
-  }, [searchTerm, colorFilter, categoryFilter, genderFilter, typeFilter, fetchProducts]);
+    fetchProducts(
+      1,
+      searchTerm,
+      colorFilter,
+      categoryFilter,
+      genderFilter,
+      typeFilter,
+    );
+  }, [
+    searchTerm,
+    colorFilter,
+    categoryFilter,
+    genderFilter,
+    typeFilter,
+    fetchProducts,
+  ]);
 
   // Use all products since we removed filtering
   const filteredProducts = products;
@@ -139,7 +179,6 @@ function Store() {
   return (
     <StoreLayout>
       <div className="w-full px-4 lg:px-6 py-3 lg:py-4 space-y-3 lg:space-y-4">
-
         {/* Search Results Indicator */}
         {searchTerm && (
           <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
@@ -147,7 +186,8 @@ function Store() {
               <div className="flex items-center gap-2">
                 <Search className="h-4 w-4 text-primary" />
                 <span className="text-sm font-medium">
-                  Resultados para: <span className="text-primary">"{searchTerm}"</span>
+                  Resultados para:{" "}
+                  <span className="text-primary">"{searchTerm}"</span>
                 </span>
               </div>
               <Link
@@ -215,7 +255,9 @@ function Store() {
               </div>
             </div>
             {/* Mobile: Mostrar menos skeletons para melhor performance */}
-            <ProductSkeleton count={window.innerWidth < 640 ? 6 : productsPerPage} />
+            <ProductSkeleton
+              count={window.innerWidth < 640 ? 6 : productsPerPage}
+            />
           </div>
         )}
 
@@ -235,7 +277,8 @@ function Store() {
                     Não encontramos produtos com o termo "{searchTerm}".
                   </p>
                   <p className="text-yellow-600 text-xs mb-4">
-                    Tente buscar por outras palavras como "chinelo", "adidas", "nike", etc.
+                    Tente buscar por outras palavras como "chinelo", "adidas",
+                    "nike", etc.
                   </p>
                 </div>
                 <div className="flex gap-3 justify-center">
@@ -265,9 +308,12 @@ function Store() {
               <Link
                 to="/loja"
                 className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 whitespace-nowrap flex-shrink-0 active:scale-95 ${
-                  !categoryFilter && !colorFilter && !genderFilter && !typeFilter
-                    ? 'bg-primary text-white border-primary'
-                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary/40'
+                  !categoryFilter &&
+                  !colorFilter &&
+                  !genderFilter &&
+                  !typeFilter
+                    ? "bg-primary text-white border-primary"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-primary/40"
                 }`}
               >
                 Todos
@@ -277,9 +323,9 @@ function Store() {
               <Link
                 to="/loja?categoria=chinelos"
                 className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 whitespace-nowrap flex-shrink-0 active:scale-95 ${
-                  categoryFilter === 'chinelos'
-                    ? 'bg-primary text-white border-primary'
-                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary/40'
+                  categoryFilter === "chinelos"
+                    ? "bg-primary text-white border-primary"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-primary/40"
                 }`}
               >
                 Chinelos
@@ -288,9 +334,9 @@ function Store() {
               <Link
                 to="/loja?categoria=sandálias"
                 className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 whitespace-nowrap flex-shrink-0 active:scale-95 ${
-                  categoryFilter === 'sandálias'
-                    ? 'bg-primary text-white border-primary'
-                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary/40'
+                  categoryFilter === "sandálias"
+                    ? "bg-primary text-white border-primary"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-primary/40"
                 }`}
               >
                 Sandálias
@@ -299,9 +345,9 @@ function Store() {
               <Link
                 to="/loja?categoria=tênis"
                 className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 whitespace-nowrap flex-shrink-0 active:scale-95 ${
-                  categoryFilter === 'tênis'
-                    ? 'bg-primary text-white border-primary'
-                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary/40'
+                  categoryFilter === "tênis"
+                    ? "bg-primary text-white border-primary"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-primary/40"
                 }`}
               >
                 Tênis
@@ -353,8 +399,15 @@ function Store() {
                                   <div
                                     key={color.id}
                                     className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-md sm:rounded-lg border-2 border-white cursor-pointer active:scale-95 sm:hover:scale-110 transition-all duration-200 shadow-md sm:shadow-lg overflow-hidden bg-gray-100 touch-manipulation"
-                                    title={`${color.name}${color.hex_code ? ` (${color.hex_code})` : ''}`}
-                                    onClick={(e) => color.image_url && handleColorVariantClick(product.id, color.image_url, e)}
+                                    title={`${color.name}${color.hex_code ? ` (${color.hex_code})` : ""}`}
+                                    onClick={(e) =>
+                                      color.image_url &&
+                                      handleColorVariantClick(
+                                        product.id,
+                                        color.image_url,
+                                        e,
+                                      )
+                                    }
                                   >
                                     {color.image_url ? (
                                       <ProductImage
@@ -368,7 +421,7 @@ function Store() {
                                       <div
                                         className="w-full h-full flex items-center justify-center text-[6px] sm:text-[7px] lg:text-[8px] font-bold text-white rounded-lg"
                                         style={{
-                                          backgroundColor: getColorValue(color)
+                                          backgroundColor: getColorValue(color),
                                         }}
                                       >
                                         {color.name?.charAt(0)?.toUpperCase()}
@@ -411,7 +464,9 @@ function Store() {
                             handleProductClick(product.id);
                           }}
                         >
-                          <span className="hidden sm:inline">Adicionar ao Carrinho</span>
+                          <span className="hidden sm:inline">
+                            Adicionar ao Carrinho
+                          </span>
                           <span className="sm:hidden">Comprar</span>
                         </Button>
                       )}
@@ -483,7 +538,9 @@ function Store() {
                         return (
                           <Button
                             key={page}
-                            variant={page === currentPage ? "default" : "outline"}
+                            variant={
+                              page === currentPage ? "default" : "outline"
+                            }
                             size="sm"
                             onClick={() => handlePageChange(page)}
                             className={

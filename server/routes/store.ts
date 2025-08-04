@@ -19,12 +19,14 @@ router.get("/products-paginated", async (req, res) => {
 
     // Special debug for product 649
     const [product649Check] = await db.execute(
-      'SELECT id, name, photo, active FROM products WHERE id = 649'
+      "SELECT id, name, photo, active FROM products WHERE id = 649",
     );
 
     if ((product649Check as any[]).length > 0) {
       const p649 = (product649Check as any[])[0];
-      console.log(`🎯 Product 649 exists: ${p649.name}, photo: ${p649.photo || 'null'}, active: ${p649.active}`);
+      console.log(
+        `🎯 Product 649 exists: ${p649.name}, photo: ${p649.photo || "null"}, active: ${p649.active}`,
+      );
 
       // Check color variants for product 649
       const [variants649] = await db.execute(`
@@ -33,13 +35,16 @@ router.get("/products-paginated", async (req, res) => {
         WHERE pcv.product_id = 649
       `);
 
-      console.log(`🎨 Product 649 has ${(variants649 as any[]).length} color variants:`);
+      console.log(
+        `🎨 Product 649 has ${(variants649 as any[]).length} color variants:`,
+      );
       (variants649 as any[]).forEach((v, i) => {
-        console.log(`  ${i + 1}. ${v.variant_name} - image_url: ${v.image_url || 'null'} - active: ${v.active}`);
+        console.log(
+          `  ${i + 1}. ${v.variant_name} - image_url: ${v.image_url || "null"} - active: ${v.active}`,
+        );
       });
-
     } else {
-      console.log('❌ Product 649 does not exist in database');
+      console.log("❌ Product 649 does not exist in database");
     }
 
     // Get total count for pagination
@@ -62,10 +67,16 @@ router.get("/products-paginated", async (req, res) => {
     const totalPages = Math.ceil(totalProducts / limit);
 
     // Debug: Check total products regardless of active status
-    const [allProductsCount] = await db.execute('SELECT COUNT(*) as total FROM products');
-    const [activeProductsCount] = await db.execute('SELECT COUNT(*) as total FROM products WHERE active = true');
+    const [allProductsCount] = await db.execute(
+      "SELECT COUNT(*) as total FROM products",
+    );
+    const [activeProductsCount] = await db.execute(
+      "SELECT COUNT(*) as total FROM products WHERE active = true",
+    );
 
-    console.log(`📊 Products status: Total=${(allProductsCount as any[])[0].total}, Active=${(activeProductsCount as any[])[0].total}, Query result=${totalProducts}`);
+    console.log(
+      `📊 Products status: Total=${(allProductsCount as any[])[0].total}, Active=${(activeProductsCount as any[])[0].total}, Query result=${totalProducts}`,
+    );
 
     // Get paginated products with enhanced data (using inline values as workaround)
     let productsQuery = `
@@ -106,23 +117,29 @@ router.get("/products-paginated", async (req, res) => {
     );
 
     // Check if product 649 is in the results
-    const product649InResults = (products as any[]).find(p => p.id === 649);
+    const product649InResults = (products as any[]).find((p) => p.id === 649);
     if (product649InResults) {
-      console.log(`✅ Product 649 IS in query results: ${product649InResults.name}`);
+      console.log(
+        `✅ Product 649 IS in query results: ${product649InResults.name}`,
+      );
     } else {
       console.log(`❌ Product 649 NOT in query results`);
     }
 
     // Debug each product's basic data
     (products as any[]).forEach((product, index) => {
-      console.log(`📦 Product ${index + 1}: ID=${product.id} ${product.name} - photo: ${product.photo || 'null'}`);
+      console.log(
+        `📦 Product ${index + 1}: ID=${product.id} ${product.name} - photo: ${product.photo || "null"}`,
+      );
     });
 
     // For each product, get available colors and variants
     const productsWithDetails = [];
     for (const product of products as any[]) {
       // Get available colors with stock info and images
-      console.log(`🎨 Getting colors for product ${product.name} (ID: ${product.id})`);
+      console.log(
+        `🎨 Getting colors for product ${product.name} (ID: ${product.id})`,
+      );
 
       const [colorRows] = await db.execute(
         `
@@ -141,8 +158,12 @@ router.get("/products-paginated", async (req, res) => {
         [product.id],
       );
 
-      console.log(`🎨 Found ${(colorRows as any[]).length} colors for ${product.name}:`,
-        (colorRows as any[]).map(c => ({ name: c.name, image_url: c.image_url }))
+      console.log(
+        `🎨 Found ${(colorRows as any[]).length} colors for ${product.name}:`,
+        (colorRows as any[]).map((c) => ({
+          name: c.name,
+          image_url: c.image_url,
+        })),
       );
 
       // Get available sizes with stock info
@@ -194,8 +215,10 @@ router.get("/products-paginated", async (req, res) => {
       // Validate image URL
       if (mainImage) {
         console.log(`🔗 Final image URL for ${product.name}: "${mainImage}"`);
-        if (!mainImage.startsWith('http') && !mainImage.startsWith('/')) {
-          console.warn(`⚠️ Image URL might be invalid (doesn't start with http or /): "${mainImage}"`);
+        if (!mainImage.startsWith("http") && !mainImage.startsWith("/")) {
+          console.warn(
+            `⚠️ Image URL might be invalid (doesn't start with http or /): "${mainImage}"`,
+          );
         }
       } else {
         console.warn(`❌ No image found for product ${product.name}`);

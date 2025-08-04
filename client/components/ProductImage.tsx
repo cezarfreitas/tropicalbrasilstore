@@ -26,8 +26,10 @@ export function ProductImage({
   const imgRef = useRef<HTMLImageElement>(null);
 
   // Debug log only for empty or problematic sources
-  if (!src || src.trim() === '' || hasError) {
-    console.log(`🖼️ ProductImage issue: src="${src}", alt="${alt}", hasError=${hasError}, shouldLoad=${shouldLoad}`);
+  if (!src || src.trim() === "" || hasError) {
+    console.log(
+      `🖼️ ProductImage issue: src="${src}", alt="${alt}", hasError=${hasError}, shouldLoad=${shouldLoad}`,
+    );
   }
 
   const iconSizes = {
@@ -81,9 +83,9 @@ export function ProductImage({
   const handleError = (event?: any) => {
     console.error(`❌ Image failed to load: "${src}"`, {
       alt,
-      error: event?.target?.error || 'Unknown error',
+      error: event?.target?.error || "Unknown error",
       naturalWidth: event?.target?.naturalWidth,
-      naturalHeight: event?.target?.naturalHeight
+      naturalHeight: event?.target?.naturalHeight,
     });
     setHasError(true);
     setIsLoading(false);
