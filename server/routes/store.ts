@@ -517,14 +517,14 @@ router.get("/products/:id", async (req, res) => {
       }
     }
 
-    // Process variant image URLs to ensure they are full URLs
+    // Process variant image URLs to ensure they are local URLs
     const processedVariants = (variantRows as any[]).map((variant) => ({
       ...variant,
-      image_url: ensureFullImageUrl(variant.image_url),
+      image_url: ensureLocalImageUrl(variant.image_url),
     }));
 
-    // Process product photo to ensure it's a full URL
-    product.photo = ensureFullImageUrl(product.photo);
+    // Process product photo to ensure it's a local URL
+    product.photo = ensureLocalImageUrl(product.photo);
     product.variants = processedVariants;
     product.available_grades = gradesWithTemplates;
 
