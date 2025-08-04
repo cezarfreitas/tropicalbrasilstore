@@ -947,7 +947,7 @@ router.post("/bulk", async (req, res) => {
                   `UPDATE product_variants
                  SET price_override = ?, image_url = COALESCE(?, image_url)
                  WHERE product_id = ? AND color_id = ? AND size_id = ?`,
-                  [variante.preco, localImageUrl, productId, colorId, sizeId],
+                  [variante.preco, imageUrlForDatabase, productId, colorId, sizeId],
                 );
               }
             }
