@@ -936,7 +936,7 @@ router.post("/bulk", async (req, res) => {
                   `INSERT INTO product_variants
                  (product_id, color_id, size_id, price_override, image_url, created_at)
                  VALUES (?, ?, ?, ?, ?, NOW())`,
-                  [productId, colorId, sizeId, variante.preco, localImageUrl],
+                  [productId, colorId, sizeId, variante.preco, imageUrlForDatabase],
                 );
               } else {
                 console.log(
