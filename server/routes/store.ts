@@ -83,6 +83,8 @@ router.get("/products-paginated", async (req, res) => {
     const productsWithDetails = [];
     for (const product of products as any[]) {
       // Get available colors with stock info and images
+      console.log(`🎨 Getting colors for product ${product.name} (ID: ${product.id})`);
+
       const [colorRows] = await db.execute(
         `
         SELECT DISTINCT
@@ -98,6 +100,10 @@ router.get("/products-paginated", async (req, res) => {
         ORDER BY co.name
       `,
         [product.id],
+      );
+
+      console.log(`🎨 Found ${(colorRows as any[]).length} colors for ${product.name}:`,
+        (colorRows as any[]).map(c => ({ name: c.name, image_url: c.image_url }))
       );
 
       // Get available sizes with stock info
