@@ -51,6 +51,57 @@ interface StoreLayoutProps {
   children: ReactNode;
 }
 
+// Utility function for XML HTTP requests with retry logic
+const fetchWithRetry = async (url: string, retryCount = 0, maxRetries = 2): Promise<any> => {
+  try {
+    const response = await new Promise<Response>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", url, true);
+      xhr.setRequestHeader("Accept", "application/json");
+
+      xhr.onload = () => {
+        const headers = new Headers();
+        xhr
+          .getAllResponseHeaders()
+          .split("\r\n")
+          .forEach((line) => {
+            const [key, value] = line.split(": ");
+            if (key && value) headers.set(key, value);
+          });
+
+        const response = new Response(xhr.responseText, {
+          status: xhr.status,
+          statusText: xhr.statusText,
+          headers: headers,
+        });
+        resolve(response);
+      };
+
+      xhr.onerror = () => reject(new Error("Network error"));
+      xhr.ontimeout = () => reject(new Error("Request timeout"));
+      xhr.timeout = 15000; // 15 second timeout
+
+      xhr.send();
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching ${url}:`, error);
+
+    if (retryCount < maxRetries) {
+      console.log(`Retrying ${url}... (attempt ${retryCount + 1}/${maxRetries + 1})`);
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+      return fetchWithRetry(url, retryCount + 1, maxRetries);
+    } else {
+      throw error; // Re-throw if all retries failed
+    }
+  }
+};
+
 export function StoreLayout({ children }: StoreLayoutProps) {
   const {
     items,
