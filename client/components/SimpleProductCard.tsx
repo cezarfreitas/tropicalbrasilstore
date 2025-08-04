@@ -38,6 +38,8 @@ export function SimpleProductCard({
   isApproved,
   index
 }: SimpleProductCardProps) {
+  console.log(`🎨 RENDERING SimpleProductCard for product ${product.id}: ${product.name}`);
+
   const [selectedColorImage, setSelectedColorImage] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
 
