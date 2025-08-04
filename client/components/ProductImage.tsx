@@ -38,21 +38,37 @@ export function ProductImage({
 
   // Function to get the best available image from product data
   const getBestAvailableImage = (): string | null => {
-    if (!product) return null;
+    console.log(`🔍 getBestAvailableImage for "${alt}":`, {
+      hasProduct: !!product,
+      photo: product?.photo,
+      variantsCount: product?.color_variants?.length || 0
+    });
+
+    if (!product) {
+      console.log(`🔍 getBestAvailableImage: no product data`);
+      return null;
+    }
 
     // First try main product photo
     if (product.photo) {
-      return getImageUrl(product.photo);
+      const imageUrl = getImageUrl(product.photo);
+      console.log(`🔍 getBestAvailableImage: using main photo: "${product.photo}" -> "${imageUrl}"`);
+      return imageUrl;
     }
 
     // Then try main catalog variant
     const mainVariant = product.color_variants?.find(v => v.is_main_catalog);
     if (mainVariant) {
+      console.log(`🔍 getBestAvailableImage: found main catalog variant:`, mainVariant);
       if (mainVariant.images && mainVariant.images.length > 0) {
-        return getImageUrl(mainVariant.images[0]);
+        const imageUrl = getImageUrl(mainVariant.images[0]);
+        console.log(`🔍 getBestAvailableImage: using main variant images[0]: "${mainVariant.images[0]}" -> "${imageUrl}"`);
+        return imageUrl;
       }
       if (mainVariant.image_url) {
-        return getImageUrl(mainVariant.image_url);
+        const imageUrl = getImageUrl(mainVariant.image_url);
+        console.log(`🔍 getBestAvailableImage: using main variant image_url: "${mainVariant.image_url}" -> "${imageUrl}"`);
+        return imageUrl;
       }
     }
 
@@ -61,14 +77,20 @@ export function ProductImage({
       v => (v.images && v.images.length > 0) || v.image_url
     );
     if (firstVariantWithImage) {
+      console.log(`🔍 getBestAvailableImage: found first variant with image:`, firstVariantWithImage);
       if (firstVariantWithImage.images && firstVariantWithImage.images.length > 0) {
-        return getImageUrl(firstVariantWithImage.images[0]);
+        const imageUrl = getImageUrl(firstVariantWithImage.images[0]);
+        console.log(`🔍 getBestAvailableImage: using first variant images[0]: "${firstVariantWithImage.images[0]}" -> "${imageUrl}"`);
+        return imageUrl;
       }
       if (firstVariantWithImage.image_url) {
-        return getImageUrl(firstVariantWithImage.image_url);
+        const imageUrl = getImageUrl(firstVariantWithImage.image_url);
+        console.log(`🔍 getBestAvailableImage: using first variant image_url: "${firstVariantWithImage.image_url}" -> "${imageUrl}"`);
+        return imageUrl;
       }
     }
 
+    console.log(`🔍 getBestAvailableImage: no image found for "${alt}"`);
     return null;
   };
 
