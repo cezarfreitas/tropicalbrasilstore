@@ -199,7 +199,7 @@ export function SimpleProductCard({
           {/* Add to Cart Button */}
           {isAuthenticated && isApproved && (
             <Button
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium h-10 rounded"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium h-10 rounded"
               onClick={(e) => {
                 e.stopPropagation();
                 onProductClick(product.id);
