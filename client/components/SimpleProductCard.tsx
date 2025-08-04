@@ -40,106 +40,36 @@ export function SimpleProductCard({
   isApproved,
   index
 }: SimpleProductCardProps) {
-  console.log(`🎨 RENDERING SimpleProductCard for product ${product.id}: ${product.name}`);
-
   const [selectedColorImage, setSelectedColorImage] = useState<string | null>(null);
-  const [imageError, setImageError] = useState(false);
 
-  // Simple local image URL construction
-  const getLocalImageUrl = (imageUrl: string | null | undefined): string | null => {
-    if (!imageUrl || typeof imageUrl !== 'string' || imageUrl.trim() === '') {
-      console.log(`❌ Invalid image URL: ${imageUrl}`);
-      return null;
-    }
-
-    const trimmedUrl = imageUrl.trim();
-
-    // Se já é uma URL completa, use como está
-    if (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://')) {
-      console.log(`🌐 Using absolute URL: ${trimmedUrl}`);
-      return trimmedUrl;
-    }
-
-    // Se começa com /uploads/, construa URL completa
-    if (trimmedUrl.startsWith('/uploads/')) {
-      const fullUrl = `${window.location.origin}${trimmedUrl}`;
-      console.log(`📁 Converting local path to full URL: ${trimmedUrl} -> ${fullUrl}`);
-      return fullUrl;
-    }
-
-    // Se é apenas um nome de arquivo, assuma que está em /uploads/products/
-    if (!trimmedUrl.includes('/')) {
-      const fullUrl = `${window.location.origin}/uploads/products/${trimmedUrl}`;
-      console.log(`📋 Converting filename to full URL: ${trimmedUrl} -> ${fullUrl}`);
-      return fullUrl;
-    }
-
-    console.log(`🔧 Using URL as-is: ${trimmedUrl}`);
-    return trimmedUrl;
-  };
-
-  // Get the best image to display - PRIORITY: color variants from product_color_variants table
-  const getDisplayImage = (): string | null => {
-    console.log(`🎯 Getting display image for product ${product.id}:`);
-    console.log(`📊 Product data:`, {
-      photo: product.photo,
-      available_colors_count: product.available_colors?.length || 0,
-      available_colors: product.available_colors
-    });
-
-    // Priority: selected color image > first available color (from product_color_variants) > product photo
+  // Use the same logic as ProductDetail page - get the best image to display
+  const getDisplayImageSrc = (): string | null => {
+    // Priority: selected color image > first available color > product photo
     if (selectedColorImage) {
-      console.log(`✅ Using selected color image: ${selectedColorImage}`);
-      return getLocalImageUrl(selectedColorImage);
+      return getImageUrl(selectedColorImage);
     }
 
-    // MAIN PRIORITY: Check available_colors (comes from product_color_variants.image_url)
+    // Check available_colors for first image (same as page product logic)
     if (product.available_colors && product.available_colors.length > 0) {
-      console.log(`🎨 Checking ${product.available_colors.length} available colors (from product_color_variants)`);
-      const firstColorWithImage = product.available_colors.find(color => {
-        const hasImage = color.image_url && color.image_url.trim() !== '';
-        console.log(`  - Color ${color.name}: ${color.image_url || 'no image'} (${hasImage ? 'valid' : 'invalid'})`);
-        return hasImage;
-      });
-
+      const firstColorWithImage = product.available_colors.find(color =>
+        color.image_url && color.image_url.trim() !== ''
+      );
       if (firstColorWithImage) {
-        console.log(`✅ Using color variant image from product_color_variants: ${firstColorWithImage.name} -> ${firstColorWithImage.image_url}`);
-        return getLocalImageUrl(firstColorWithImage.image_url);
+        return getImageUrl(firstColorWithImage.image_url);
       }
     }
 
-    // Fallback to product photo if no color variants have images
+    // Fallback to product photo
     if (product.photo && product.photo.trim()) {
-      console.log(`📷 Fallback to product photo: ${product.photo}`);
-      return getLocalImageUrl(product.photo);
+      return getImageUrl(product.photo);
     }
 
-    console.log(`❌ No image found for product ${product.id} - no available_colors with image_url and no product photo`);
     return null;
   };
-
-  const displayImageUrl = getDisplayImage();
-
-  // Debug logging - focus on product_color_variants data
-  console.log(`🖼️ SimpleProductCard for product ${product.id} (${product.name}):`, {
-    photo: product.photo,
-    available_colors_count: product.available_colors?.length || 0,
-    color_variants_with_images: product.available_colors?.filter(c => c.image_url).length || 0,
-    first_color_image: product.available_colors?.find(c => c.image_url)?.image_url,
-    all_color_images: product.available_colors?.map(c => ({name: c.name, image_url: c.image_url})) || [],
-    final_display_url: displayImageUrl,
-    selected_color_image: selectedColorImage
-  });
 
   const handleColorClick = (colorImageUrl: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedColorImage(colorImageUrl);
-    setImageError(false);
-  };
-
-  const handleImageError = () => {
-    console.error(`Failed to load image for product ${product.id}: ${displayImageUrl}`);
-    setImageError(true);
   };
 
   const getColorBackgroundColor = (color: any) => {
