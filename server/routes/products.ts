@@ -432,7 +432,7 @@ router.post("/create", validateApiKey, async (req, res) => {
 });
 
 // Bulk create products with variants and grades
-router.post("/bulk", validateApiKey, async (req, res) => {
+router.post("/bulk", async (req, res) => {
   try {
     const { products }: BulkProductsRequest = req.body;
 
