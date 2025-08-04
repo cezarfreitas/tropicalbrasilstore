@@ -25,6 +25,19 @@ router.get("/products-paginated", async (req, res) => {
     if ((product649Check as any[]).length > 0) {
       const p649 = (product649Check as any[])[0];
       console.log(`🎯 Product 649 exists: ${p649.name}, photo: ${p649.photo || 'null'}, active: ${p649.active}`);
+
+      // Check color variants for product 649
+      const [variants649] = await db.execute(`
+        SELECT pcv.id, pcv.variant_name, pcv.image_url, pcv.active
+        FROM product_color_variants pcv
+        WHERE pcv.product_id = 649
+      `);
+
+      console.log(`🎨 Product 649 has ${(variants649 as any[]).length} color variants:`);
+      (variants649 as any[]).forEach((v, i) => {
+        console.log(`  ${i + 1}. ${v.variant_name} - image_url: ${v.image_url || 'null'} - active: ${v.active}`);
+      });
+
     } else {
       console.log('❌ Product 649 does not exist in database');
     }
