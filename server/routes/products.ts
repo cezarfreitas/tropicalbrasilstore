@@ -1002,11 +1002,35 @@ router.post("/bulk", async (req, res) => {
       },
     });
   } catch (error: any) {
-    console.error("Error in bulk product creation:", error);
+    const processingTime = Date.now() - startTime;
+    console.error(`[${requestId}] Critical error in bulk product creation after ${processingTime}ms:`, {
+      errorMessage: error.message,
+      errorStack: error.stack,
+      errorCode: error.code,
+      sqlState: error.sqlState,
+      sqlMessage: error.sqlMessage,
+      processingTime: `${processingTime}ms`
+    });
+
     res.status(500).json({
       success: false,
-      error: "Erro interno do servidor",
-      message: "Não foi possível processar os produtos",
+      error: "Internal server error",
+      message: "Failed to process products due to server error",
+      code: "INTERNAL_SERVER_ERROR",
+      details: {
+        requestId,
+        processingTime: `${processingTime}ms`,
+        timestamp: new Date().toISOString(),
+        errorType: error.constructor.name,
+        // Incluir detalhes do erro SQL se disponível
+        ...(error.code && { sqlErrorCode: error.code }),
+        ...(error.sqlState && { sqlState: error.sqlState }),
+        ...(process.env.NODE_ENV === 'development' && {
+          errorMessage: error.message,
+          stack: error.stack
+        })
+      },
+      requestId
     });
   }
 });
@@ -1144,7 +1168,7 @@ router.post("/single", validateApiKey, async (req, res) => {
     if ((gradeTemplates as any[]).length > 0) {
       const sizeId = (gradeTemplates as any[])[0].size_id;
 
-      // Verificar se a variante já existe
+      // Verificar se a variante j�� existe
       const [existingVariant] = await db.execute(
         "SELECT id FROM product_variants WHERE product_id = ? AND color_id = ? AND size_id = ?",
         [productId, colorId, sizeId],
