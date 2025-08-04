@@ -949,7 +949,7 @@ router.post("/bulk", async (req, res) => {
             }
 
             console.log(
-              `  ✅ ${(gradeTemplates as any[]).length} variantes criadas para ${variante.cor} - SKU: ${variantSku}`,
+              `  ✅ ${(gradeTemplates as any[]).length} variantes criadas para ${variante.cor} - SKU: ${gradeVariantSku}`,
             );
           } else {
             console.log(
@@ -1052,7 +1052,7 @@ router.post("/bulk", async (req, res) => {
       } // fim do loop de variantes
 
       console.log(
-        `📊 Total de variantes processadas para ${product.codigo}: ${variants.length}`,
+        `�� Total de variantes processadas para ${product.codigo}: ${variants.length}`,
       );
 
       createdProducts.push({
