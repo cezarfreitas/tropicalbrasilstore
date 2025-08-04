@@ -5,6 +5,7 @@ Enquanto a nova versão não for deployada, use o formato que a produção atual
 ## 📝 Converter Formato produto/variantes → Legacy
 
 **Seu formato atual:**
+
 ```json
 {
   "produto": {
@@ -15,14 +16,14 @@ Enquanto a nova versão não for deployada, use o formato que a produção atual
     "marca": "Havaianas",
     "genero": "Unissex",
     "descricao": "O chinelo mais famoso do Brasil",
-    "preco_sugerido": 39.90,
+    "preco_sugerido": 39.9,
     "vender_infinito": false,
     "tipo_estoque": "grade"
   },
   "variantes": [
     {
       "cor": "Preto",
-      "preco": 29.90,
+      "preco": 29.9,
       "foto": "https://exemplo.com/chinelo-preto.jpg",
       "grades": {
         "Infantil": 15,
@@ -34,6 +35,7 @@ Enquanto a nova versão não for deployada, use o formato que a produção atual
 ```
 
 **Converter para formato legacy:**
+
 ```json
 {
   "products": [
@@ -45,13 +47,13 @@ Enquanto a nova versão não for deployada, use o formato que a produção atual
       "marca": "Havaianas",
       "genero": "Unissex",
       "descricao": "O chinelo mais famoso do Brasil",
-      "preco_sugerido": 39.90,
+      "preco_sugerido": 39.9,
       "vender_infinito": false,
       "tipo_estoque": "grade",
       "variantes": [
         {
           "cor": "Preto",
-          "preco": 29.90,
+          "preco": 29.9,
           "foto": "https://exemplo.com/chinelo-preto.jpg",
           "grades": {
             "Infantil": 15,
@@ -76,9 +78,9 @@ const convertedData = {
   products: [
     {
       ...input.produto,
-      variantes: input.variantes
-    }
-  ]
+      variantes: input.variantes,
+    },
+  ],
 };
 
 return [{ json: convertedData }];

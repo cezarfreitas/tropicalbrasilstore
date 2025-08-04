@@ -20,7 +20,8 @@ Este erro **não existe no código atual**. Significa que a produção est��
 
 As seguintes modificações foram feitas para suportar o novo formato:
 
-**Arquivo**: `server/routes/products.ts` 
+**Arquivo**: `server/routes/products.ts`
+
 - ✅ Adicionado suporte ao formato `{produto: {...}, variantes: [...]}`
 - ✅ Detecção automática do formato
 - ✅ Conversão para formato interno
@@ -37,6 +38,7 @@ node build-deploy.js
 ### 3. Deploy para Produção
 
 **Para Docker/Easypanel:**
+
 ```bash
 # Se usando Docker
 docker build -t chinelos-api .
@@ -47,6 +49,7 @@ docker push [REGISTRY]/chinelos-api:latest
 ```
 
 **Para servidor tradicional:**
+
 ```bash
 # Upload dos arquivos
 scp -r dist/ user@servidor:/path/to/app/
@@ -93,6 +96,7 @@ curl -X POST https://b2b.tropicalbrasilsandalias.com.br/api/products/bulk \
 ## 🔄 Formatos Suportados Após Deploy
 
 1. **✅ Novo formato (seu pedido)**:
+
 ```json
 {
   "produto": {...},
@@ -101,11 +105,13 @@ curl -X POST https://b2b.tropicalbrasilsandalias.com.br/api/products/bulk \
 ```
 
 2. **✅ Array direto**:
+
 ```json
 [{codigo: "...", variantes: [...]}]
 ```
 
 3. **✅ Formato legacy**:
+
 ```json
 {
   "products": [{codigo: "...", variantes: [...]}]
@@ -113,6 +119,7 @@ curl -X POST https://b2b.tropicalbrasilsandalias.com.br/api/products/bulk \
 ```
 
 4. **✅ Produto único**:
+
 ```json
 {codigo: "...", variantes: [...]}
 ```
@@ -131,6 +138,7 @@ curl -X POST https://b2b.tropicalbrasilsandalias.com.br/api/products/bulk \
 **Se ainda der erro após deploy:**
 
 1. **Verificar logs do servidor**:
+
 ```bash
 # PM2
 pm2 logs chinelos-api
@@ -143,14 +151,17 @@ journalctl -u chinelos-api -f
 ```
 
 2. **Verificar se o build incluiu as mudanças**:
+
 - Procurar por "produto && req.body.variantes" no código built
 
 3. **Cache de proxy/CDN**:
+
 - Limpar cache do Cloudflare/nginx se estiver usando
 
 ## 📞 Suporte
 
 Se o deploy não resolver, pode ser:
+
 - Problema de configuração do servidor
 - Cache de proxy/CDN
 - Múltiplas instâncias rodando versões diferentes
