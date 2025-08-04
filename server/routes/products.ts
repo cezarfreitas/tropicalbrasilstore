@@ -76,7 +76,7 @@ async function getOrCreateType(name: string): Promise<number> {
   return (result as any).insertId;
 }
 
-// Funç��o auxiliar para criar ou buscar marca
+// Função auxiliar para criar ou buscar marca
 async function getOrCreateBrand(name: string): Promise<number> {
   // Buscar marca existente
   const [existing] = await db.execute("SELECT id FROM brands WHERE name = ?", [
@@ -929,7 +929,7 @@ router.post("/bulk", async (req, res) => {
               // Esta imagem já foi baixada antes do loop das grades
               console.log("⚠️ Pulando download duplicado - imagem já processada");
               console.log(
-                `  📷 Imagem processada para ${variante.cor}: ${localImageUrl || "falhou"}`,
+                `  📷 Imagem já processada para ${variante.cor}`,
               );
             } else {
               console.log(`  ❌ URL de imagem inválida: ${variante.foto}`);
