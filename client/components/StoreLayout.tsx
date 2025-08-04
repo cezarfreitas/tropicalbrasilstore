@@ -299,8 +299,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           };
 
           xhr.onerror = () => reject(new Error("Network error"));
-          xhr.ontimeout = () => reject(new Error("Request timeout"));
-          xhr.timeout = 5000;
+        xhr.ontimeout = () => reject(new Error("Request timeout"));
+        xhr.timeout = 15000; // Aumentar timeout para 15 segundos
 
           xhr.send();
         });
