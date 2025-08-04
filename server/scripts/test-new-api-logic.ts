@@ -88,7 +88,7 @@ async function testNewAPILogic() {
     // Process variants
     console.log("\n🔧 Processando variantes:");
     variantRows.forEach((variant, index) => {
-      const fullImageUrl = ensureFullImageUrl(variant.image_url);
+      const localImageUrl = ensureLocalImageUrl(variant.image_url);
       console.log(`   ${index + 1}. ${variant.color_name || 'Sem cor'}`);
       console.log(`      ID: ${variant.id}`);
       console.log(`      Color ID: ${variant.color_id}`);
@@ -96,7 +96,7 @@ async function testNewAPILogic() {
       console.log(`      Stock: ${variant.stock}`);
       console.log(`      Price: ${variant.price_override}`);
       console.log(`      Image URL original: ${variant.image_url || 'null'}`);
-      console.log(`      Image URL processada: ${fullImageUrl || 'null'}`);
+      console.log(`      Image URL processada: ${localImageUrl || 'null'}`);
       console.log('');
     });
 
