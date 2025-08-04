@@ -100,25 +100,18 @@ export function SimpleProductCard({
       style={{ minHeight: "300px", display: "block" }}
     >
       <CardContent className="p-0">
-        {/* Product Image */}
-        <div className="aspect-square relative bg-white" style={{ minHeight: "200px" }}>
-          {displayImageUrl && !imageError ? (
-            <img
-              src={displayImageUrl}
-              alt={product.name}
-              className="w-full h-full object-contain p-2"
-              loading={index < 8 ? "eager" : "lazy"}
-              onError={handleImageError}
-              style={{ display: "block" }}
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-100">
-              <div className="text-4xl text-gray-400">📦</div>
-              <div className="text-sm text-gray-600 ml-2">
-                {displayImageUrl ? "Erro ao carregar" : "Sem imagem"}
-              </div>
-            </div>
-          )}
+        {/* Product Image - Using the same ProductImage component as ProductDetail page */}
+        <div className="aspect-square relative bg-white">
+          <ProductImage
+            src={getDisplayImageSrc()}
+            alt={product.name}
+            className="w-full h-full object-contain p-2"
+            loading={index < 8 ? "eager" : "lazy"}
+            product={{
+              photo: product.photo,
+              available_colors: product.available_colors
+            }}
+          />
 
           {/* Category Badge */}
           {product.category_name && (
