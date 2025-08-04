@@ -1,6 +1,7 @@
 import { Router } from "express";
 import db from "../lib/db";
 import { sendOrderNotifications } from "../lib/notification-service";
+import { ensureFullImageUrl } from "../lib/image-uploader";
 
 const router = Router();
 
@@ -75,7 +76,7 @@ router.get("/products-paginated", async (req, res) => {
     );
 
     console.log(
-      `📊 Products status: Total=${(allProductsCount as any[])[0].total}, Active=${(activeProductsCount as any[])[0].total}, Query result=${totalProducts}`,
+      `��� Products status: Total=${(allProductsCount as any[])[0].total}, Active=${(activeProductsCount as any[])[0].total}, Query result=${totalProducts}`,
     );
 
     // Get paginated products with enhanced data (using inline values as workaround)
