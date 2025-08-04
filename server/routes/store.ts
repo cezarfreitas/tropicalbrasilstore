@@ -105,9 +105,17 @@ router.get("/products-paginated", async (req, res) => {
       `📊 Store API: found ${(products as any[]).length} products for search: "${searchTerm}"`,
     );
 
+    // Check if product 649 is in the results
+    const product649InResults = (products as any[]).find(p => p.id === 649);
+    if (product649InResults) {
+      console.log(`✅ Product 649 IS in query results: ${product649InResults.name}`);
+    } else {
+      console.log(`❌ Product 649 NOT in query results`);
+    }
+
     // Debug each product's basic data
     (products as any[]).forEach((product, index) => {
-      console.log(`📦 Product ${index + 1}: ${product.name} - photo: ${product.photo || 'null'}`);
+      console.log(`📦 Product ${index + 1}: ID=${product.id} ${product.name} - photo: ${product.photo || 'null'}`);
     });
 
     // For each product, get available colors and variants
