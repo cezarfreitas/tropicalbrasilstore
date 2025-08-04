@@ -25,6 +25,9 @@ export function ProductImage({
   const [shouldLoad, setShouldLoad] = useState(priority || loading === "eager");
   const imgRef = useRef<HTMLImageElement>(null);
 
+  // Debug log
+  console.log(`🖼️ ProductImage: src="${src}", alt="${alt}", hasError=${hasError}, shouldLoad=${shouldLoad}`);
+
   const iconSizes = {
     sm: "h-8 w-8",
     md: "h-12 w-12",
