@@ -125,11 +125,19 @@ router.get("/", async (req, res) => {
         [product.id],
       );
 
-      // Convert image_url to images array for consistency
-      product.color_variants = (variantRows as any[]).map(variant => ({
-        ...variant,
-        images: variant.images || (variant.image_url ? [variant.image_url] : [])
-      }));
+      // Convert image_url to images array for consistency and debug
+      product.color_variants = (variantRows as any[]).map(variant => {
+        const images = variant.images || (variant.image_url ? [variant.image_url] : []);
+        console.log(`🖼️ Product ${product.name} - Variant ${variant.color_name}: image_url=${variant.image_url}, images=[${images.join(', ')}]`);
+        return {
+          ...variant,
+          images: images
+        };
+      });
+
+      if (product.color_variants.length === 0) {
+        console.log(`⚠️ Product ${product.name} has no color variants!`);
+      }
     }
 
     res.json({
