@@ -393,7 +393,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     }
   };
 
-  const fetchAvailableGenders = async () => {
+  const fetchAvailableGenders = async (retryCount = 0) => {
     try {
       // Use XMLHttpRequest to avoid FullStory conflicts
       const response = await new Promise<Response>((resolve, reject) => {
@@ -421,7 +421,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
         xhr.onerror = () => reject(new Error("Network error"));
         xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 5000;
+        xhr.timeout = 15000; // Aumentar timeout para 15 segundos
 
         xhr.send();
       });
@@ -429,9 +429,21 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       if (response.ok) {
         const genders = await response.json();
         setAvailableGenders(genders);
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error("Error fetching genders:", error);
+
+      // Retry logic - tentar até 3 vezes
+      if (retryCount < 2) {
+        console.log(`Retrying genders fetch... (attempt ${retryCount + 1}/3)`);
+        setTimeout(() => fetchAvailableGenders(retryCount + 1), 2000);
+      } else {
+        console.warn("Failed to fetch genders after 3 attempts, continuing without gender filters");
+        // Continuar sem filtros de gênero em vez de quebrar a aplicação
+        setAvailableGenders([]);
+      }
     }
   };
 
