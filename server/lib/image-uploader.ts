@@ -119,19 +119,20 @@ export function isValidImageUrl(url: string): boolean {
   }
 }
 
-export function ensureFullImageUrl(imageUrl: string | null): string | null {
+export function ensureLocalImageUrl(imageUrl: string | null): string | null {
   if (!imageUrl) return null;
 
-  // If already a full URL, return as is
-  if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+  // If it's already a local path, return as is
+  if (imageUrl.startsWith("/uploads/")) {
     return imageUrl;
   }
 
-  // If it's a relative path, convert to full URL
-  if (imageUrl.startsWith("/uploads/")) {
-    const baseUrl =
-      process.env.APP_URL || "https://b2b.tropicalbrasilsandalias.com.br";
-    return `${baseUrl}${imageUrl}`;
+  // If it's a full URL, convert to local path
+  if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+    const url = new URL(imageUrl);
+    if (url.pathname.startsWith("/uploads/")) {
+      return url.pathname;
+    }
   }
 
   // Return null for invalid URLs
