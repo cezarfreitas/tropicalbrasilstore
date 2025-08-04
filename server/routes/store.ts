@@ -71,8 +71,13 @@ router.get("/products-paginated", async (req, res) => {
 
     // Debug log
     console.log(
-      `📊 Query results - found ${(products as any[]).length} products for search: "${searchTerm}"`,
+      `📊 Store API: found ${(products as any[]).length} products for search: "${searchTerm}"`,
     );
+
+    // Debug each product's basic data
+    (products as any[]).forEach((product, index) => {
+      console.log(`📦 Product ${index + 1}: ${product.name} - photo: ${product.photo || 'null'}`);
+    });
 
     // For each product, get available colors and variants
     const productsWithDetails = [];
