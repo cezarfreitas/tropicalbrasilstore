@@ -243,7 +243,7 @@ router.post("/create", validateApiKey, async (req, res) => {
         success: false,
         error: "Dados inválidos",
         message:
-          "Código, nome, categoria, tipo e pelo menos uma variante são obrigatórios",
+          "Código, nome, categoria, tipo e pelo menos uma variante s��o obrigatórios",
       });
     }
 
@@ -533,6 +533,48 @@ router.post("/bulk", async (req, res) => {
 
 
     console.log(`[${requestId}] Processing ${products.length} products`);
+
+    // Convert new format to internal format
+    const convertedProducts = products.map((item, index) => {
+      // Check if it's the new format (has row_number and direct fields)
+      if (item.row_number !== undefined || item.preco) {
+        console.log(`[${requestId}] Converting new format item ${index + 1}: ${item.codigo}`);
+
+        // Parse price from "R$ 13,60" format
+        let precoNumerico = 0;
+        if (item.preco && typeof item.preco === 'string') {
+          const precoClean = item.preco.replace(/[R$\s,]/g, '').replace(',', '.');
+          precoNumerico = parseFloat(precoClean) || 0;
+        }
+
+        // Convert to internal format
+        return {
+          codigo: item.codigo,
+          nome: item.nome,
+          categoria: item.categoria,
+          tipo: item.tipo,
+          marca: item.marca,
+          genero: item.genero,
+          descricao: item.descricao,
+          preco_sugerido: item.preco_sugerido || null,
+          vender_infinito: item.vender_infinito || false,
+          tipo_estoque: item.tipo_estoque || "grade",
+          variantes: [{
+            cor: item.cor,
+            preco: precoNumerico,
+            grade: item.grade,
+            foto: item.foto,
+            sku: item.sku || null,
+            estoque_grade: item.estoque_grade || 0
+          }]
+        };
+      }
+
+      // Return as-is if already in internal format
+      return item;
+    });
+
+    console.log(`[${requestId}] Converted ${convertedProducts.length} products to internal format`);
 
     const validationErrors: Array<{
       productIndex: number;
