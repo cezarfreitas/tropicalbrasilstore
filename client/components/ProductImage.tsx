@@ -78,7 +78,13 @@ export function ProductImage({
     }
   }, [src, priority, shouldLoad]);
 
-  const handleError = () => {
+  const handleError = (event?: any) => {
+    console.error(`❌ Image failed to load: "${src}"`, {
+      alt,
+      error: event?.target?.error || 'Unknown error',
+      naturalWidth: event?.target?.naturalWidth,
+      naturalHeight: event?.target?.naturalHeight
+    });
     setHasError(true);
     setIsLoading(false);
   };
