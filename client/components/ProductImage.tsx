@@ -115,11 +115,11 @@ export function ProductImage({
 
   // Preload high priority images
   useEffect(() => {
-    if (priority && src && shouldLoad) {
+    if (priority && finalSrc && shouldLoad) {
       const link = document.createElement("link");
       link.rel = "preload";
       link.as = "image";
-      link.href = src;
+      link.href = finalSrc;
       document.head.appendChild(link);
 
       return () => {
@@ -128,7 +128,7 @@ export function ProductImage({
         }
       };
     }
-  }, [src, priority, shouldLoad]);
+  }, [finalSrc, priority, shouldLoad]);
 
   const handleError = (event?: any) => {
     const errorDetails = {
