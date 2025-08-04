@@ -75,12 +75,11 @@ export function ProductImage({
   // Get the final image source to use
   const finalSrc = src ? getImageUrl(src) : getBestAvailableImage();
 
-  // Debug log only for empty or problematic sources
-  if (!finalSrc || finalSrc.trim() === "" || hasError) {
-    console.log(
-      `🖼️ ProductImage issue: originalSrc="${src}", finalSrc="${finalSrc}", alt="${alt}", hasError=${hasError}, shouldLoad=${shouldLoad}`,
-    );
-  }
+  // Debug log for troubleshooting
+  console.log(
+    `🖼️ ProductImage debug: alt="${alt}", originalSrc="${src}", finalSrc="${finalSrc}", hasError=${hasError}, shouldLoad=${shouldLoad}`,
+    { product: product ? { id: product?.id, photo: product?.photo, variants: product?.color_variants?.length } : 'none' }
+  );
 
   const iconSizes = {
     sm: "h-8 w-8",
