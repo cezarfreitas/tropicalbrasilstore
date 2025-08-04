@@ -41,6 +41,7 @@ export function SimpleProductCard({
   index
 }: SimpleProductCardProps) {
   const [selectedColorImage, setSelectedColorImage] = useState<string | null>(null);
+  const [enhancedProductData, setEnhancedProductData] = useState<any>(null);
 
   // EXACT same logic as ProductDetail page working example
   const selectedVariantImage = selectedColorImage;
