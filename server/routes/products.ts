@@ -437,6 +437,12 @@ router.post("/bulk", async (req, res) => {
   const requestId = Math.random().toString(36).substring(7);
 
   console.log(`[${requestId}] Bulk API request started at ${new Date().toISOString()}`);
+  console.log(`[${requestId}] Request headers:`, {
+    'content-type': req.headers['content-type'],
+    'content-length': req.headers['content-length'],
+    'user-agent': req.headers['user-agent']
+  });
+  console.log(`[${requestId}] Request body size:`, JSON.stringify(req.body).length, 'bytes');
 
   try {
     const { products }: BulkProductsRequest = req.body;
