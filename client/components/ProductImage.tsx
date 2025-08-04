@@ -18,6 +18,10 @@ interface ProductImageProps {
       images?: string[];
       is_main_catalog?: boolean;
     }>;
+    available_colors?: Array<{
+      image_url?: string;
+      name?: string;
+    }>;
   };
 }
 
