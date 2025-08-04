@@ -87,6 +87,15 @@ export function SimpleProductCard({
 
   const displayImageUrl = getDisplayImage();
 
+  // Debug logging
+  console.log(`🖼️ SimpleProductCard for product ${product.id} (${product.name}):`, {
+    photo: product.photo,
+    available_colors: product.available_colors?.length || 0,
+    firstColorImage: product.available_colors?.find(c => c.image_url)?.image_url,
+    displayImageUrl,
+    selectedColorImage
+  });
+
   const handleColorClick = (colorImageUrl: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedColorImage(colorImageUrl);
