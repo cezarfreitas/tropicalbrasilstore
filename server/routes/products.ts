@@ -612,7 +612,7 @@ router.post("/bulk", async (req, res) => {
     }> = [];
 
     // Validar todos os produtos antes de processar
-    products.forEach((product, index) => {
+    convertedProducts.forEach((product, index) => {
       const errors: string[] = [];
 
       if (!product.codigo) {
