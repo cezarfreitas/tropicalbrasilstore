@@ -1,5 +1,5 @@
 import db from "../lib/db";
-import { ensureFullImageUrl } from "../lib/image-uploader";
+import { ensureLocalImageUrl } from "../lib/image-uploader";
 
 async function testNewAPILogic() {
   try {
