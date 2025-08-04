@@ -242,7 +242,7 @@ router.get("/products-paginated", async (req, res) => {
 
       productsWithDetails.push({
         ...product,
-        photo: mainImage, // Override with the determined main image
+        photo: mainImage || null, // Use validated image or null
         available_colors: colorRows,
         available_sizes: sizeRows,
         price_range: {
