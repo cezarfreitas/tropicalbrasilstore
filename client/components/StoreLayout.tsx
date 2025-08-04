@@ -648,6 +648,20 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               );
             })}
 
+            {/* Clear All Filters Button */}
+            {hasActiveFilters() && (
+              <div className="mt-4 pt-3 border-t border-white/20">
+                <div className="px-2">
+                  <button
+                    onClick={clearAllFilters}
+                    className="w-full text-center py-2 px-3 text-xs font-medium text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300 hover:shadow-md border border-white/20 hover:border-white/40"
+                  >
+                    🔄 Limpar Todos os Filtros
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Color Filter Section */}
             <div className="mt-4 pt-3 border-t border-white/20">
               <div className="space-y-4">
