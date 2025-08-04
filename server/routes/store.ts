@@ -246,7 +246,7 @@ router.get("/products-paginated", async (req, res) => {
       productsWithDetails.push({
         ...product,
         photo: mainImage || null, // Use validated image or null
-        available_colors: colorRows,
+        available_colors: processedColorRows,
         available_sizes: sizeRows,
         price_range: {
           min: product.min_price,
