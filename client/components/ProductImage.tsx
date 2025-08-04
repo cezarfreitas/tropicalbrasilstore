@@ -76,7 +76,7 @@ export function ProductImage({
       }
     }
 
-    // Finally try first variant with image
+    // Try color_variants (WooCommerce style)
     const firstVariantWithImage = product.color_variants?.find(
       v => (v.images && v.images.length > 0) || v.image_url
     );
@@ -94,7 +94,18 @@ export function ProductImage({
       }
     }
 
-    console.log(`🔍 getBestAvailableImage: no image found for "${alt}"`);
+    // Try available_colors (Store API style)
+    const firstColorWithImage = product.available_colors?.find(c => c.image_url);
+    if (firstColorWithImage && firstColorWithImage.image_url) {
+      const imageUrl = getImageUrl(firstColorWithImage.image_url);
+      console.log(`🔍 getBestAvailableImage: using first available_color image_url: "${firstColorWithImage.image_url}" -> "${imageUrl}"`);
+      return imageUrl;
+    }
+
+    console.log(`🔍 getBestAvailableImage: no image found for "${alt}"`, {
+      color_variants: product.color_variants?.length || 0,
+      available_colors: product.available_colors?.length || 0
+    });
     return null;
   };
 
