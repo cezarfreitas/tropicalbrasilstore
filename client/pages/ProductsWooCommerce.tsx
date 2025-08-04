@@ -198,7 +198,7 @@ export default function ProductsWooCommerce() {
   const { toast } = useToast();
 
   // Função para obter a imagem da variante principal ou a primeira disponível
-  const getMainVariantImage = (product: WooCommerceProduct): string => {
+  const getMainVariantImage = (product: WooCommerceProduct): string | null => {
     console.log(`🔍 Getting image for product: ${product.name}`, {
       variants: product.color_variants?.length || 0,
       variants_data: product.color_variants?.map((v) => ({
@@ -220,14 +220,16 @@ export default function ProductsWooCommerce() {
 
       // Prioriza array de imagens, depois image_url
       if (mainVariant.images && mainVariant.images.length > 0) {
+        const imageUrl = getImageUrl(mainVariant.images[0]);
         console.log(
-          `✅ Using first image from array: ${mainVariant.images[0]}`,
+          `✅ Using first image from array: ${mainVariant.images[0]} -> ${imageUrl}`,
         );
-        return mainVariant.images[0];
+        return imageUrl;
       }
       if (mainVariant.image_url) {
-        console.log(`✅ Using image_url: ${mainVariant.image_url}`);
-        return mainVariant.image_url;
+        const imageUrl = getImageUrl(mainVariant.image_url);
+        console.log(`✅ Using image_url: ${mainVariant.image_url} -> ${imageUrl}`);
+        return imageUrl;
       }
     }
 
