@@ -71,7 +71,7 @@ Content-Type: application/json
 ## Exemplo de Teste com curl
 
 ```bash
-curl -X POST http://localhost:3000/api/products/bulk \
+curl -X POST http://localhost:8080/api/products/bulk \
   -H "Content-Type: application/json" \
   -d '{
     "produto": {
