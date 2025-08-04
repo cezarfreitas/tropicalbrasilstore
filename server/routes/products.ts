@@ -678,7 +678,7 @@ router.post("/bulk", async (req, res) => {
               productId,
             ],
           );
-          console.log(`📝 Informações do produto atualizadas`);
+          console.log(`📝 Informa��ões do produto atualizadas`);
         }
       } else {
         // Produto não existe - criar novo
@@ -854,7 +854,7 @@ router.post("/bulk", async (req, res) => {
             `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}-${gradeNome}`;
 
 
-          let localImageUrl = null;
+
           if (variante.foto) {
             console.log(`��� Verificando URL da imagem: ${variante.foto}`);
             const isValid = isValidImageUrl(variante.foto);
@@ -1299,7 +1299,7 @@ router.post("/single", validateApiKey, async (req, res) => {
           [productId, colorId, sizeId, preco],
         );
       } else {
-        console.log(`⚠�� Variante já existe, atualizando preço`);
+        console.log(`⚠️ Variante já existe, atualizando preço`);
         // Atualizar preço se necess��rio
         await db.execute(
           "UPDATE product_variants SET price_override = ? WHERE product_id = ? AND color_id = ? AND size_id = ?",
