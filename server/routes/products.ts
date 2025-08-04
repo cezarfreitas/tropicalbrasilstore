@@ -243,7 +243,7 @@ router.post("/create", validateApiKey, async (req, res) => {
         success: false,
         error: "Dados inválidos",
         message:
-          "Código, nome, categoria, tipo e pelo menos uma variante s��o obrigatórios",
+          "Código, nome, categoria, tipo e pelo menos uma variante são obrigatórios",
       });
     }
 
@@ -485,23 +485,27 @@ router.post("/bulk", async (req, res) => {
   );
 
   try {
-    // Support both old format {products: [...]} and new direct array format
+    // Support multiple formats: single product, array of products, or legacy {products: [...]}
     let products: any[];
 
     if (Array.isArray(req.body)) {
-      // New direct array format
-      console.log(`[${requestId}] Using new direct array format`);
+      // Direct array format
+      console.log(`[${requestId}] Using direct array format`);
       products = req.body;
     } else if (req.body.products && Array.isArray(req.body.products)) {
-      // Old format with products wrapper
+      // Legacy format with products wrapper
       console.log(`[${requestId}] Using legacy products wrapper format`);
       products = req.body.products;
+    } else if (req.body.codigo || req.body.row_number !== undefined) {
+      // Single product format
+      console.log(`[${requestId}] Using single product format`);
+      products = [req.body];
     } else {
       console.error(`[${requestId}] Invalid request format`);
       return res.status(400).json({
         success: false,
         error: "Invalid request format",
-        message: "Request body must be an array or contain a 'products' array",
+        message: "Request body must be a single product, an array of products, or contain a 'products' array",
         code: "INVALID_FORMAT",
         requestId,
       });
