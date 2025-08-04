@@ -402,57 +402,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     fetchAvailableTypes();
   }, []);
 
-  const fetchAvailableColors = async (retryCount = 0) => {
+  const fetchAvailableColors = async () => {
     try {
-      // Use XMLHttpRequest to avoid FullStory conflicts
-      const response = await new Promise<Response>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "/api/colors", true);
-        xhr.setRequestHeader("Accept", "application/json");
-
-        xhr.onload = () => {
-          const headers = new Headers();
-          xhr
-            .getAllResponseHeaders()
-            .split("\r\n")
-            .forEach((line) => {
-              const [key, value] = line.split(": ");
-              if (key && value) headers.set(key, value);
-            });
-
-          const response = new Response(xhr.responseText, {
-            status: xhr.status,
-            statusText: xhr.statusText,
-            headers: headers,
-          });
-          resolve(response);
-        };
-
-        xhr.onerror = () => reject(new Error("Network error"));
-        xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 15000; // Aumentar timeout para 15 segundos
-
-        xhr.send();
-      });
-
-      if (response.ok) {
-        const colors = await response.json();
-        setAvailableColors(colors);
-      } else {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
+      const colors = await fetchWithRetry("/api/colors");
+      setAvailableColors(colors);
     } catch (error) {
-      console.error("Error fetching colors:", error);
-
-      // Retry logic - tentar até 3 vezes
-      if (retryCount < 2) {
-        console.log(`Retrying colors fetch... (attempt ${retryCount + 1}/3)`);
-        setTimeout(() => fetchAvailableColors(retryCount + 1), 2000);
-      } else {
-        console.warn("Failed to fetch colors after 3 attempts, continuing without color filters");
-        // Continuar sem filtros de cor em vez de quebrar a aplicação
-        setAvailableColors([]);
-      }
+      console.warn("Failed to fetch colors after all retries, continuing without color filters");
+      setAvailableColors([]);
     }
   };
 
