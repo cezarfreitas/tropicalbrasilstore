@@ -1249,7 +1249,13 @@ router.post("/single", validateApiKey, async (req, res) => {
     await db.execute(
       `INSERT INTO product_color_variants
        (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+       ON DUPLICATE KEY UPDATE
+       variant_name = VALUES(variant_name),
+       variant_sku = VALUES(variant_sku),
+       price = VALUES(price),
+       image_url = VALUES(image_url),
+       active = VALUES(active)`,
       [
         productId,
         colorId,
