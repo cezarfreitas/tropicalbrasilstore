@@ -776,6 +776,19 @@ router.post("/bulk", async (req, res) => {
           gradesToProcess,
         );
 
+        if (gradesToProcess.length === 0) {
+          console.error(`❌ Nenhuma grade válida encontrada para ${product.codigo} - ${variante.cor}`);
+          console.error(`📋 Grade original: "${variante.grade}"`);
+          return res.status(422).json({
+            success: false,
+            error: "Grade inválida",
+            message: "Pelo menos uma grade deve ser fornecida",
+            produto: product.codigo,
+            variante: variante.cor,
+            grade_original: variante.grade
+          });
+        }
+
         // Download e salvar imagem UMA VEZ antes do loop das grades
         let imageUrlForDatabase = null;
         if (variante.foto) {
@@ -951,7 +964,7 @@ router.post("/bulk", async (req, res) => {
                 );
               } else {
                 console.log(
-                  `  ⚠️ Variante ${sizeName} já existe para ${variante.cor}, atualizando preço`,
+                  `  ⚠�� Variante ${sizeName} já existe para ${variante.cor}, atualizando preço`,
                 );
                 // Atualizar preço se necessário
                 await db.execute(
