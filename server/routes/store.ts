@@ -159,6 +159,12 @@ router.get("/products-paginated", async (req, res) => {
         [product.id],
       );
 
+      // Ensure all color image URLs are full URLs
+      const processedColorRows = (colorRows as any[]).map((color) => ({
+        ...color,
+        image_url: ensureFullImageUrl(color.image_url),
+      }));
+
       console.log(
         `🎨 Found ${(colorRows as any[]).length} colors for ${product.name}:`,
         (colorRows as any[]).map((c) => ({
