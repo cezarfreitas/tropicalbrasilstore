@@ -139,7 +139,7 @@ export function SimpleProductCard({
                     >
                       {color.image_url ? (
                         <img
-                          src={getLocalImageUrl(color.image_url)}
+                          src={getImageUrl(color.image_url)}
                           alt={color.name}
                           className="w-full h-full object-contain rounded"
                           loading="lazy"
