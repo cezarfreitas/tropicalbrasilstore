@@ -263,7 +263,7 @@ export default function ProductsWooCommerce() {
     }
 
     console.warn(`❌ No image found for product: ${product.name}`);
-    return "";
+    return null;
   };
 
   // Funç��o para marcar uma variante como principal do catálogo
