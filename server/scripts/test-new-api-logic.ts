@@ -121,12 +121,12 @@ async function testNewAPILogic() {
     // Final result
     const processedVariants = variantRows.map((variant) => ({
       ...variant,
-      image_url: ensureFullImageUrl(variant.image_url),
+      image_url: ensureLocalImageUrl(variant.image_url),
     }));
 
     const processedProduct = {
       ...product,
-      photo: ensureFullImageUrl(product.photo),
+      photo: ensureLocalImageUrl(product.photo),
       variants: processedVariants,
       available_grades: gradeRows
     };
