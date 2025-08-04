@@ -983,10 +983,21 @@ router.post("/bulk", async (req, res) => {
       (p) => p.status === "updated",
     ).length;
 
-    // Resposta de sucesso
+    // Resposta de sucesso com logging detalhado
+    const processingTime = Date.now() - startTime;
+    console.log(`[${requestId}] Bulk processing completed successfully in ${processingTime}ms`, {
+      productsProcessed: products.length,
+      newProducts: produtosNovos,
+      updatedProducts: produtosAtualizados,
+      newVariants: variantesNovas,
+      processingTime: `${processingTime}ms`
+    });
+
     res.status(201).json({
       success: true,
       message: "Processamento concluído com sucesso",
+      requestId,
+      processingTime: `${processingTime}ms`,
       data: {
         produtos_processados: products.length,
         produtos_novos: produtosNovos,
@@ -1168,7 +1179,7 @@ router.post("/single", validateApiKey, async (req, res) => {
     if ((gradeTemplates as any[]).length > 0) {
       const sizeId = (gradeTemplates as any[])[0].size_id;
 
-      // Verificar se a variante j�� existe
+      // Verificar se a variante já existe
       const [existingVariant] = await db.execute(
         "SELECT id FROM product_variants WHERE product_id = ? AND color_id = ? AND size_id = ?",
         [productId, colorId, sizeId],
