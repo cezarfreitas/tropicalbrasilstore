@@ -42,39 +42,21 @@ export function ProductImage({
 
   // Function to get the best available image from product data
   const getBestAvailableImage = (): string | null => {
-    console.log(`🔍 getBestAvailableImage for "${alt}":`, {
-      hasProduct: !!product,
-      photo: product?.photo,
-      color_variants_count: product?.color_variants?.length || 0,
-      available_colors_count: product?.available_colors?.length || 0,
-      available_colors: product?.available_colors?.map(c => ({ name: c.name, image_url: c.image_url }))
-    });
-
-    if (!product) {
-      console.log(`🔍 getBestAvailableImage: no product data`);
-      return null;
-    }
+    if (!product) return null;
 
     // First try main product photo
     if (product.photo) {
-      const imageUrl = getImageUrl(product.photo);
-      console.log(`🔍 getBestAvailableImage: using main photo: "${product.photo}" -> "${imageUrl}"`);
-      return imageUrl;
+      return getImageUrl(product.photo);
     }
 
     // Then try main catalog variant
     const mainVariant = product.color_variants?.find(v => v.is_main_catalog);
     if (mainVariant) {
-      console.log(`🔍 getBestAvailableImage: found main catalog variant:`, mainVariant);
       if (mainVariant.images && mainVariant.images.length > 0) {
-        const imageUrl = getImageUrl(mainVariant.images[0]);
-        console.log(`🔍 getBestAvailableImage: using main variant images[0]: "${mainVariant.images[0]}" -> "${imageUrl}"`);
-        return imageUrl;
+        return getImageUrl(mainVariant.images[0]);
       }
       if (mainVariant.image_url) {
-        const imageUrl = getImageUrl(mainVariant.image_url);
-        console.log(`🔍 getBestAvailableImage: using main variant image_url: "${mainVariant.image_url}" -> "${imageUrl}"`);
-        return imageUrl;
+        return getImageUrl(mainVariant.image_url);
       }
     }
 
@@ -83,30 +65,26 @@ export function ProductImage({
       v => (v.images && v.images.length > 0) || v.image_url
     );
     if (firstVariantWithImage) {
-      console.log(`🔍 getBestAvailableImage: found first variant with image:`, firstVariantWithImage);
       if (firstVariantWithImage.images && firstVariantWithImage.images.length > 0) {
-        const imageUrl = getImageUrl(firstVariantWithImage.images[0]);
-        console.log(`🔍 getBestAvailableImage: using first variant images[0]: "${firstVariantWithImage.images[0]}" -> "${imageUrl}"`);
-        return imageUrl;
+        return getImageUrl(firstVariantWithImage.images[0]);
       }
       if (firstVariantWithImage.image_url) {
-        const imageUrl = getImageUrl(firstVariantWithImage.image_url);
-        console.log(`🔍 getBestAvailableImage: using first variant image_url: "${firstVariantWithImage.image_url}" -> "${imageUrl}"`);
-        return imageUrl;
+        return getImageUrl(firstVariantWithImage.image_url);
       }
     }
 
     // Try available_colors (Store API style)
     const firstColorWithImage = product.available_colors?.find(c => c.image_url);
     if (firstColorWithImage && firstColorWithImage.image_url) {
-      const imageUrl = getImageUrl(firstColorWithImage.image_url);
-      console.log(`🔍 getBestAvailableImage: using first available_color image_url: "${firstColorWithImage.image_url}" -> "${imageUrl}"`);
-      return imageUrl;
+      console.log(`🔍 Using available_colors image: "${firstColorWithImage.image_url}" for "${alt}"`);
+      return getImageUrl(firstColorWithImage.image_url);
     }
 
-    console.log(`🔍 getBestAvailableImage: no image found for "${alt}"`, {
+    console.log(`🔍 No image found for "${alt}"`, {
+      hasPhoto: !!product.photo,
       color_variants: product.color_variants?.length || 0,
-      available_colors: product.available_colors?.length || 0
+      available_colors: product.available_colors?.length || 0,
+      available_colors_with_images: product.available_colors?.filter(c => c.image_url).length || 0
     });
     return null;
   };
