@@ -1,6 +1,6 @@
 import { Router } from "express";
 import db from "../lib/db";
-import { ensureFullImageUrl } from "../lib/image-uploader";
+import { ensureLocalImageUrl } from "../lib/image-uploader";
 
 const router = Router();
 
@@ -132,7 +132,8 @@ router.get("/", async (req, res) => {
       // Convert image_url to images array for consistency and ensure full URLs
       product.color_variants = (variantRows as any[]).map((variant) => {
         const fullImageUrl = ensureFullImageUrl(variant.image_url);
-        const images = variant.images || (fullImageUrl ? [fullImageUrl] : []);
+        const images =
+          variant.images || (fullImageUrl ? [fullImageUrl] : []);
         console.log(
           `🖼️ Product ${product.name} - Variant ${variant.color_name}: image_url=${fullImageUrl}, images=[${images.join(", ")}]`,
         );
