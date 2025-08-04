@@ -530,16 +530,7 @@ router.post("/bulk", async (req, res) => {
       });
     }
 
-    if (products.length === 0) {
-      console.error(`[${requestId}] Empty products array received`);
-      return res.status(400).json({
-        success: false,
-        error: "Empty products array",
-        message: "Products array cannot be empty",
-        code: "EMPTY_PRODUCTS_ARRAY",
-        requestId,
-      });
-    }
+
 
     console.log(`[${requestId}] Processing ${products.length} products`);
 
