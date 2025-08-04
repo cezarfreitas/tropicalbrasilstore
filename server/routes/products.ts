@@ -147,7 +147,7 @@ async function getOrCreateGrade(name: string): Promise<number> {
     return (existing as any[])[0].id;
   }
 
-  // Criar nova grade com tamanhos automáticos baseados no nome
+  // Criar nova grade com tamanhos autom��ticos baseados no nome
   const [result] = await db.execute(
     "INSERT INTO grade_vendida (name, description) VALUES (?, ?)",
     [name, `Grade ${name} criada automaticamente`],
@@ -502,6 +502,9 @@ router.post("/bulk", async (req, res) => {
       const produto = req.body.produto;
       const variantes = req.body.variantes;
 
+      console.log(`[${requestId}] Produto data:`, produto);
+      console.log(`[${requestId}] Found ${variantes.length} variantes`);
+
       // Convert to internal format
       products = [{
         codigo: produto.codigo,
@@ -514,13 +517,18 @@ router.post("/bulk", async (req, res) => {
         preco_sugerido: produto.preco_sugerido,
         vender_infinito: produto.vender_infinito || false,
         tipo_estoque: produto.tipo_estoque || "grade",
-        variantes: variantes.map((variante: any) => ({
-          cor: variante.cor,
-          preco: variante.preco,
-          foto: variante.foto,
-          grades: variante.grades || {}
-        }))
+        variantes: variantes.map((variante: any, idx: number) => {
+          console.log(`[${requestId}] Processing variante ${idx + 1}:`, variante);
+          return {
+            cor: variante.cor,
+            preco: variante.preco,
+            foto: variante.foto,
+            grades: variante.grades || {}
+          };
+        })
       }];
+
+      console.log(`[${requestId}] Converted to internal format:`, JSON.stringify(products[0], null, 2));
     } else if (req.body.codigo || req.body.row_number !== undefined) {
       // Single product format
       console.log(`[${requestId}] Using single product format`);
@@ -700,7 +708,7 @@ router.post("/bulk", async (req, res) => {
           `📝 Produto existente encontrado: ${product.nome} (ID: ${productId})`,
         );
 
-        // Verificar se as novas informações são diferentes e atualizar se necessário
+        // Verificar se as novas informações s��o diferentes e atualizar se necessário
         const existing = (existingProduct as any[])[0];
 
         // Criar ou buscar entidades apenas se fornecidas
@@ -1087,7 +1095,7 @@ router.post("/bulk", async (req, res) => {
             );
           } else {
             console.log(
-              `  ⚠️ Não foi possível criar variante física para ${variante.cor} - grade sem tamanhos`,
+              `  ���️ Não foi possível criar variante física para ${variante.cor} - grade sem tamanhos`,
             );
           }
 
