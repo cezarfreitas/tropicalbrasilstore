@@ -383,30 +383,63 @@ router.get("/products/:id", async (req, res) => {
 
     const product = (productRows as any)[0];
 
-    // Get variants based on sell_without_stock setting with color variant images
-    const variantStockCondition = product.sell_without_stock
-      ? ""
-      : "AND pv.stock > 0";
-    const [variantRows] = await db.execute(
-      `SELECT
-        pv.id,
-        pv.size_id,
-        pv.color_id,
-        pv.stock,
-        COALESCE(pv.price_override, 0) as price_override,
-        s.size,
-        s.display_order,
-        c.name as color_name,
-        c.hex_code,
-        pcv.image_url
-       FROM product_variants pv
-       LEFT JOIN sizes s ON pv.size_id = s.id
-       LEFT JOIN colors c ON pv.color_id = c.id
-       LEFT JOIN product_color_variants pcv ON (pv.product_id = pcv.product_id AND pv.color_id = pcv.color_id)
-       WHERE pv.product_id = ? ${variantStockCondition}
-       ORDER BY s.display_order, c.name`,
-      [req.params.id],
+    // Get variants - for products with grades, get color variants; for others, get size variants
+    let variantRows: any[] = [];
+
+    // Check if this product has grades
+    const [hasGrades] = await db.execute(
+      "SELECT COUNT(*) as count FROM product_color_grades WHERE product_id = ?",
+      [req.params.id]
     );
+
+    if ((hasGrades as any[])[0].count > 0) {
+      // Product has grades - get color variants
+      const [colorVariantRows] = await db.execute(
+        `SELECT
+          pcv.id,
+          NULL as size_id,
+          pcv.color_id,
+          0 as stock,
+          pcv.price as price_override,
+          NULL as size,
+          NULL as display_order,
+          c.name as color_name,
+          c.hex_code,
+          pcv.image_url
+         FROM product_color_variants pcv
+         LEFT JOIN colors c ON pcv.color_id = c.id
+         WHERE pcv.product_id = ? AND pcv.active = true
+         ORDER BY c.name`,
+        [req.params.id],
+      );
+      variantRows = colorVariantRows as any[];
+    } else {
+      // Product doesn't have grades - get size variants
+      const variantStockCondition = product.sell_without_stock
+        ? ""
+        : "AND pv.stock > 0";
+      const [sizeVariantRows] = await db.execute(
+        `SELECT
+          pv.id,
+          pv.size_id,
+          pv.color_id,
+          pv.stock,
+          COALESCE(pv.price_override, 0) as price_override,
+          s.size,
+          s.display_order,
+          c.name as color_name,
+          c.hex_code,
+          pcv.image_url
+         FROM product_variants pv
+         LEFT JOIN sizes s ON pv.size_id = s.id
+         LEFT JOIN colors c ON pv.color_id = c.id
+         LEFT JOIN product_color_variants pcv ON (pv.product_id = pcv.product_id AND pv.color_id = pcv.color_id)
+         WHERE pv.product_id = ? ${variantStockCondition}
+         ORDER BY s.display_order, c.name`,
+        [req.params.id],
+      );
+      variantRows = sizeVariantRows as any[];
+    }
 
     // Get available grades for this product
     const [gradeRows] = await db.execute(
@@ -726,7 +759,7 @@ function generateWhatsAppMessage(
     message += `\n${index + 1}. *${item.productName}*\n`;
     message += `   • Grade: ${item.gradeName}\n`;
     message += `   • Cor: ${item.colorName}\n`;
-    message += `   �� Quantidade: ${item.quantity} kit(s)\n`;
+    message += `   • Quantidade: ${item.quantity} kit(s)\n`;
     message += `   • Valor: R$ ${item.totalPrice.toFixed(2)}\n`;
   });
 
