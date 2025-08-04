@@ -111,7 +111,7 @@ export function ProductImage({
     }
 
     return () => observer.disconnect();
-  }, [shouldLoad, src]);
+  }, [shouldLoad, finalSrc]);
 
   // Preload high priority images
   useEffect(() => {
