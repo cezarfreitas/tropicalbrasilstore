@@ -44,6 +44,7 @@ router.get("/products-paginated", async (req, res) => {
         p.description,
         p.base_price,
         p.active,
+        p.photo,
         c.name as category_name,
         COUNT(DISTINCT pv.id) as variant_count,
         COALESCE(SUM(pv.stock), 0) as total_stock
