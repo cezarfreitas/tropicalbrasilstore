@@ -5,8 +5,10 @@ async function checkProduct649() {
     console.log("🔍 Verificando produto 649...");
 
     // Check product 649 in products table
-    const [product] = await db.execute("SELECT id, name, photo, active FROM products WHERE id = 649");
-    
+    const [product] = await db.execute(
+      "SELECT id, name, photo, active FROM products WHERE id = 649",
+    );
+
     if ((product as any[]).length === 0) {
       console.log("❌ Produto 649 não encontrado na tabela products");
       return;
@@ -17,7 +19,7 @@ async function checkProduct649() {
       id: productData.id,
       name: productData.name,
       photo: productData.photo,
-      active: productData.active
+      active: productData.active,
     });
 
     // Check color variants for product 649
@@ -35,11 +37,13 @@ async function checkProduct649() {
 
     console.log(`🎨 Variantes de cor (${(variants as any[]).length}):`);
     (variants as any[]).forEach((variant, index) => {
-      console.log(`  ${index + 1}. ${variant.variant_name} (${variant.color_name})`);
+      console.log(
+        `  ${index + 1}. ${variant.variant_name} (${variant.color_name})`,
+      );
       console.log(`     ID: ${variant.id}`);
-      console.log(`     Image URL: ${variant.image_url || 'null'}`);
+      console.log(`     Image URL: ${variant.image_url || "null"}`);
       console.log(`     Active: ${variant.active}`);
-      console.log('');
+      console.log("");
     });
 
     // Check color grades for product 649
@@ -56,14 +60,18 @@ async function checkProduct649() {
       WHERE pcg.product_id = 649
     `);
 
-    console.log(`📊 Relações produto-cor-grade (${(colorGrades as any[]).length}):`);
+    console.log(
+      `📊 Relações produto-cor-grade (${(colorGrades as any[]).length}):`,
+    );
     (colorGrades as any[]).forEach((relation, index) => {
-      console.log(`  ${index + 1}. Cor: ${relation.color_name}, Grade: ${relation.grade_name}`);
+      console.log(
+        `  ${index + 1}. Cor: ${relation.color_name}, Grade: ${relation.grade_name}`,
+      );
     });
 
     // Check if product appears in store API
     console.log("\n🔍 Verificando se aparece na API da loja...");
-    
+
     // Simulate the store query
     const [storeProducts] = await db.execute(`
       SELECT
@@ -92,7 +100,7 @@ async function checkProduct649() {
         photo: storeData.photo,
         category: storeData.category_name,
         variants: storeData.variant_count,
-        stock: storeData.total_stock
+        stock: storeData.total_stock,
       });
     } else {
       console.log("❌ Produto 649 NÃO aparece na consulta da loja");
@@ -102,38 +110,40 @@ async function checkProduct649() {
     if (productData.photo) {
       console.log(`\n🔗 Testando URL da imagem: ${productData.photo}`);
       try {
-        const https = require('https');
-        const http = require('http');
-        const url = require('url');
-        
+        const https = require("https");
+        const http = require("http");
+        const url = require("url");
+
         const parsedUrl = url.parse(productData.photo);
-        const protocol = parsedUrl.protocol === 'https:' ? https : http;
-        
+        const protocol = parsedUrl.protocol === "https:" ? https : http;
+
         const req = protocol.request(parsedUrl, (res: any) => {
           console.log(`📡 Status HTTP: ${res.statusCode}`);
-          console.log(`📄 Content-Type: ${res.headers['content-type']}`);
-          if (res.statusCode === 200 && res.headers['content-type']?.startsWith('image/')) {
+          console.log(`📄 Content-Type: ${res.headers["content-type"]}`);
+          if (
+            res.statusCode === 200 &&
+            res.headers["content-type"]?.startsWith("image/")
+          ) {
             console.log("✅ Imagem acessível e válida");
           } else {
             console.log("❌ Imagem não acessível ou não é uma imagem válida");
           }
         });
-        
-        req.on('error', (error: any) => {
+
+        req.on("error", (error: any) => {
           console.log(`❌ Erro ao acessar imagem: ${error.message}`);
         });
-        
+
         req.setTimeout(5000, () => {
           console.log("⏰ Timeout ao acessar imagem");
           req.destroy();
         });
-        
+
         req.end();
       } catch (error) {
         console.log(`❌ Erro ao testar URL: ${(error as Error).message}`);
       }
     }
-
   } catch (error) {
     console.error("❌ Erro ao verificar produto 649:", error);
   }
