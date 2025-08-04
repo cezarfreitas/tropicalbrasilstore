@@ -484,7 +484,15 @@ router.get("/products/:id", async (req, res) => {
       }
     }
 
-    product.variants = variantRows;
+    // Process variant image URLs to ensure they are full URLs
+    const processedVariants = (variantRows as any[]).map((variant) => ({
+      ...variant,
+      image_url: ensureFullImageUrl(variant.image_url),
+    }));
+
+    // Process product photo to ensure it's a full URL
+    product.photo = ensureFullImageUrl(product.photo);
+    product.variants = processedVariants;
     product.available_grades = gradesWithTemplates;
 
     res.json(product);
@@ -718,7 +726,7 @@ function generateWhatsAppMessage(
     message += `\n${index + 1}. *${item.productName}*\n`;
     message += `   • Grade: ${item.gradeName}\n`;
     message += `   • Cor: ${item.colorName}\n`;
-    message += `   • Quantidade: ${item.quantity} kit(s)\n`;
+    message += `   �� Quantidade: ${item.quantity} kit(s)\n`;
     message += `   • Valor: R$ ${item.totalPrice.toFixed(2)}\n`;
   });
 
