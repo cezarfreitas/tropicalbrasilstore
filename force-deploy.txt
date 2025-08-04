@@ -1,0 +1,10 @@
+Force rebuild trigger for EasyPanel deployment - $(date)
+
+Changes made:
+1. Updated Dockerfile for production mode
+2. Added NODE_ENV=production
+3. Created server/production.ts for proper static file serving
+4. Fixed build process to use npm run build
+5. Using node dist/server/production.js as entry point
+
+Timestamp: 2025-01-03 22:18:00 UTC
