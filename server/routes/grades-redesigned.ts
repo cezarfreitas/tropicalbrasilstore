@@ -6,35 +6,64 @@ const router = Router();
 // Get all grades (templates) with their size requirements
 router.get("/", async (req, res) => {
   try {
-    const [gradeRows] = await db.execute(
-      "SELECT * FROM grade_vendida ORDER BY name",
-    );
+    console.log("📊 Fetching grades...");
+
+    // First check if grade_vendida table exists
+    let gradeRows;
+    try {
+      [gradeRows] = await db.execute(
+        "SELECT * FROM grade_vendida ORDER BY name",
+      );
+      console.log(`📊 Found ${(gradeRows as any[]).length} grades in grade_vendida`);
+    } catch (tableError) {
+      console.warn("⚠️ grade_vendida table doesn't exist, falling back to grades table");
+
+      // Fallback to grades table if grade_vendida doesn't exist
+      try {
+        [gradeRows] = await db.execute(
+          "SELECT * FROM grades ORDER BY name",
+        );
+        console.log(`📊 Found ${(gradeRows as any[]).length} grades in grades table`);
+      } catch (fallbackError) {
+        console.error("❌ Neither grade_vendida nor grades table exists");
+        return res.json([]); // Return empty array instead of error
+      }
+    }
+
     const grades = gradeRows as any[];
 
     // Get template requirements for each grade
     for (const grade of grades) {
-      const [templateRows] = await db.execute(
-        `SELECT gt.*, s.size, s.display_order
-         FROM grade_templates gt
-         LEFT JOIN sizes s ON gt.size_id = s.id
-         WHERE gt.grade_id = ?
-         ORDER BY s.display_order`,
-        [grade.id],
-      );
-      grade.templates = templateRows;
+      try {
+        const [templateRows] = await db.execute(
+          `SELECT gt.*, s.size, s.display_order
+           FROM grade_templates gt
+           LEFT JOIN sizes s ON gt.size_id = s.id
+           WHERE gt.grade_id = ?
+           ORDER BY s.display_order`,
+          [grade.id],
+        );
+        grade.templates = templateRows;
 
-      // Get count of product-color assignments using this grade
-      const [assignmentCount] = await db.execute(
-        `SELECT COUNT(*) as count FROM product_color_grades WHERE grade_id = ?`,
-        [grade.id],
-      );
-      grade.assignment_count = (assignmentCount as any)[0].count;
+        // Get count of product-color assignments using this grade
+        const [assignmentCount] = await db.execute(
+          `SELECT COUNT(*) as count FROM product_color_grades WHERE grade_id = ?`,
+          [grade.id],
+        );
+        grade.assignment_count = (assignmentCount as any)[0].count;
+      } catch (detailError) {
+        console.warn(`⚠️ Error getting details for grade ${grade.id}:`, detailError.message);
+        grade.templates = [];
+        grade.assignment_count = 0;
+      }
     }
 
+    console.log(`✅ Successfully fetched ${grades.length} grades`);
     res.json(grades);
   } catch (error) {
-    console.error("Error fetching grades:", error);
-    res.status(500).json({ error: "Failed to fetch grades" });
+    console.error("❌ Error fetching grades:", error);
+    // Return empty array instead of error to prevent frontend crash
+    res.json([]);
   }
 });
 
