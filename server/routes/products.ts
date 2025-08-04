@@ -433,13 +433,97 @@ router.post("/create", validateApiKey, async (req, res) => {
 
 // Bulk create products with variants and grades
 router.post("/bulk", async (req, res) => {
+  const startTime = Date.now();
+  const requestId = Math.random().toString(36).substring(7);
+
+  console.log(`[${requestId}] Bulk API request started at ${new Date().toISOString()}`);
+
   try {
     const { products }: BulkProductsRequest = req.body;
 
-    if (!products || !Array.isArray(products) || products.length === 0) {
+    // Validação inicial mais detalhada
+    if (!req.body) {
+      console.error(`[${requestId}] No request body received`);
       return res.status(400).json({
         success: false,
-        error: "Products array is required",
+        error: "Missing request body",
+        message: "No data received in request body",
+        code: "MISSING_BODY",
+        requestId
+      });
+    }
+
+    if (!products) {
+      console.error(`[${requestId}] No products field in request:`, Object.keys(req.body));
+      return res.status(400).json({
+        success: false,
+        error: "Missing products field",
+        message: "Request body must contain a 'products' array",
+        code: "MISSING_PRODUCTS_FIELD",
+        receivedFields: Object.keys(req.body),
+        requestId
+      });
+    }
+
+    if (!Array.isArray(products)) {
+      console.error(`[${requestId}] Products is not an array, received:`, typeof products);
+      return res.status(400).json({
+        success: false,
+        error: "Invalid products format",
+        message: "Products must be an array",
+        code: "INVALID_PRODUCTS_TYPE",
+        receivedType: typeof products,
+        requestId
+      });
+    }
+
+    if (products.length === 0) {
+      console.error(`[${requestId}] Empty products array received`);
+      return res.status(400).json({
+        success: false,
+        error: "Empty products array",
+        message: "Products array cannot be empty",
+        code: "EMPTY_PRODUCTS_ARRAY",
+        requestId
+      });
+    }
+
+    console.log(`[${requestId}] Processing ${products.length} products`);
+
+    const validationErrors: Array<{productIndex: number, product: any, errors: string[]}> = [];
+
+    // Validar todos os produtos antes de processar
+    products.forEach((product, index) => {
+      const errors: string[] = [];
+
+      if (!product.codigo) {
+        errors.push("Missing codigo (SKU)");
+      }
+      if (!product.variantes || !Array.isArray(product.variantes)) {
+        errors.push("Missing or invalid variantes array");
+      }
+      if (product.variantes && Array.isArray(product.variantes) && product.variantes.length === 0) {
+        errors.push("Variantes array cannot be empty");
+      }
+
+      if (errors.length > 0) {
+        validationErrors.push({
+          productIndex: index,
+          product: { codigo: product.codigo, nome: product.nome },
+          errors
+        });
+      }
+    });
+
+    if (validationErrors.length > 0) {
+      console.error(`[${requestId}] Validation errors found:`, validationErrors);
+      return res.status(422).json({
+        success: false,
+        error: "Validation errors",
+        message: `${validationErrors.length} products have validation errors`,
+        code: "VALIDATION_ERRORS",
+        validationErrors,
+        requestId
       });
     }
 
@@ -661,7 +745,7 @@ router.post("/bulk", async (req, res) => {
           // Download e salvar imagem se fornecida
           let localImageUrl = null;
           if (variante.foto) {
-            console.log(`🔍 Verificando URL da imagem: ${variante.foto}`);
+            console.log(`��� Verificando URL da imagem: ${variante.foto}`);
             const isValid = isValidImageUrl(variante.foto);
             console.log(`📋 URL é válida: ${isValid}`);
 
