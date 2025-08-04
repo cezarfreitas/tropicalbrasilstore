@@ -90,7 +90,7 @@ export function ProductImage({
 
   // Intersection Observer for smart lazy loading
   useEffect(() => {
-    if (shouldLoad || !src) return;
+    if (shouldLoad || !finalSrc) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
