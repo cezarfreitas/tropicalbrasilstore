@@ -43,6 +43,27 @@ export function SimpleProductCard({
   const [selectedColorImage, setSelectedColorImage] = useState<string | null>(null);
   const [enhancedProductData, setEnhancedProductData] = useState<any>(null);
 
+  // If no image available from listing API, try to fetch from individual product API
+  useEffect(() => {
+    const hasAnyImage = !!(product.photo || (product.available_colors && product.available_colors.some(c => c.image_url)));
+
+    if (!hasAnyImage && !enhancedProductData) {
+      console.log(`🔍 No image found for product ${product.id}, fetching enhanced data...`);
+
+      fetch(`/api/store/products/${product.id}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.variants && data.variants.length > 0) {
+            console.log(`✅ Enhanced data fetched for product ${product.id}:`, data.variants.map(v => ({ color: v.color_name, image: v.image_url })));
+            setEnhancedProductData(data);
+          }
+        })
+        .catch(error => {
+          console.error(`❌ Failed to fetch enhanced data for product ${product.id}:`, error);
+        });
+    }
+  }, [product.id, product.photo, product.available_colors, enhancedProductData]);
+
   // EXACT same logic as ProductDetail page working example
   const selectedVariantImage = selectedColorImage;
 
