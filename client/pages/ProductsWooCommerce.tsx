@@ -419,12 +419,22 @@ export default function ProductsWooCommerce() {
 
   const fetchGrades = async () => {
     try {
+      // First test if API is reachable with a simple ping
+      try {
+        const pingResponse = await fetch("/api/ping");
+        console.log("🏓 API ping status:", pingResponse.status);
+      } catch (pingError) {
+        console.warn("⚠️ API ping failed:", pingError);
+      }
+
       console.log("🔄 Fetching grades from /api/grades...");
       const response = await fetch("/api/grades", {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
+        // Add timeout and retry logic
+        signal: AbortSignal.timeout(10000), // 10 second timeout
       });
 
       console.log("📊 Grades response status:", response.status);
@@ -435,10 +445,17 @@ export default function ProductsWooCommerce() {
         setGrades(Array.isArray(data) ? data : []);
       } else {
         console.warn("⚠️ Grades response not ok:", response.status, response.statusText);
+        const errorText = await response.text();
+        console.warn("⚠️ Response body:", errorText);
         setGrades([]); // Set empty array as fallback
       }
     } catch (error) {
       console.error("❌ Error fetching grades:", error);
+      if (error.name === 'TimeoutError') {
+        console.error("🕐 Request timed out");
+      } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        console.error("🌐 Network error - possibly server is down or unreachable");
+      }
       setGrades([]); // Set empty array as fallback to prevent crashes
     }
   };
