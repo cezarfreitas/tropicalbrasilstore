@@ -917,7 +917,7 @@ router.post("/bulk", async (req, res) => {
               const sizeName = template.size;
 
               // SKU específico para cada tamanho
-              const sizeVariantSku = `${variantSku}-${sizeName}`;
+              const sizeVariantSku = `${gradeVariantSku}-${sizeName}`;
 
               // Verificar se a variante já existe
               const [existingVariant] = await db.execute(
