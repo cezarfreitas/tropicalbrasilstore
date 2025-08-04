@@ -165,7 +165,9 @@ export function SimpleProductCard({
           {/* Debug Info */}
           <div className="text-xs text-gray-500 mb-2 bg-gray-100 p-2 rounded">
             <div>ID: {product.id} | Colors: {product.available_colors?.length || 0}</div>
-            <div>Image: {getDisplayImageSrc() ? "✅" : "❌"}</div>
+            <div>Photo: {product.photo || "null"}</div>
+            <div>Best Image: {bestImageSrc || "null"}</div>
+            <div>Status: {bestImageSrc ? "✅" : "❌"}</div>
           </div>
 
           {/* Pricing */}
