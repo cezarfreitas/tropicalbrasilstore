@@ -849,12 +849,9 @@ router.post("/bulk", async (req, res) => {
               variante.cor,
             );
 
-            // Construir URL completa para salvar no banco
+            // Usar URL local para salvar no banco
             if (localImagePath) {
-              const baseUrl =
-                process.env.APP_URL ||
-                "https://b2b.tropicalbrasilsandalias.com.br";
-              imageUrlForDatabase = `${baseUrl}${localImagePath}`;
+              imageUrlForDatabase = localImagePath;
               console.log(
                 `📷 Imagem processada para ${variante.cor}: ${imageUrlForDatabase}`,
               );
