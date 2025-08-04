@@ -733,13 +733,15 @@ router.post("/bulk", async (req, res) => {
 
       // Processar cada variante
       for (const variante of product.variantes) {
-        console.log(`🎨 Processando variante: ${variante.cor} do produto: ${product.codigo}`);
+        console.log(
+          `🎨 Processando variante: ${variante.cor} do produto: ${product.codigo}`,
+        );
 
         if (!variante.cor || variante.preco <= 0 || !variante.grade) {
           console.error(`❌ Dados inválidos para variante ${variante.cor}:`, {
             cor: variante.cor,
             preco: variante.preco,
-            grade: variante.grade
+            grade: variante.grade,
           });
           return res.status(422).json({
             success: false,
@@ -747,7 +749,7 @@ router.post("/bulk", async (req, res) => {
             message:
               "Cor, preço > 0 e grade são obrigatórios para cada variante",
             produto: product.codigo,
-            variante: variante.cor
+            variante: variante.cor,
           });
         }
 
@@ -790,7 +792,9 @@ router.post("/bulk", async (req, res) => {
 
             // Construir URL completa para salvar no banco
             if (localImagePath) {
-              const baseUrl = process.env.APP_URL || 'https://b2b.tropicalbrasilsandalias.com.br';
+              const baseUrl =
+                process.env.APP_URL ||
+                "https://b2b.tropicalbrasilsandalias.com.br";
               imageUrlForDatabase = `${baseUrl}${localImagePath}`;
               console.log(
                 `📷 Imagem processada para ${variante.cor}: ${imageUrlForDatabase}`,
@@ -945,7 +949,13 @@ router.post("/bulk", async (req, res) => {
                   `INSERT INTO product_variants
                  (product_id, color_id, size_id, price_override, image_url, created_at)
                  VALUES (?, ?, ?, ?, ?, NOW())`,
-                  [productId, colorId, sizeId, variante.preco, imageUrlForDatabase],
+                  [
+                    productId,
+                    colorId,
+                    sizeId,
+                    variante.preco,
+                    imageUrlForDatabase,
+                  ],
                 );
               } else {
                 console.log(
@@ -956,7 +966,13 @@ router.post("/bulk", async (req, res) => {
                   `UPDATE product_variants
                  SET price_override = ?, image_url = COALESCE(?, image_url)
                  WHERE product_id = ? AND color_id = ? AND size_id = ?`,
-                  [variante.preco, imageUrlForDatabase, productId, colorId, sizeId],
+                  [
+                    variante.preco,
+                    imageUrlForDatabase,
+                    productId,
+                    colorId,
+                    sizeId,
+                  ],
                 );
               }
             }
@@ -1265,11 +1281,10 @@ router.post("/single", validateApiKey, async (req, res) => {
 
       // Construir URL completa para salvar no banco
       if (localImagePath) {
-        const baseUrl = process.env.APP_URL || 'https://b2b.tropicalbrasilsandalias.com.br';
+        const baseUrl =
+          process.env.APP_URL || "https://b2b.tropicalbrasilsandalias.com.br";
         imageUrlForDatabase = `${baseUrl}${localImagePath}`;
-        console.log(
-          `📷 Imagem processada para ${cor}: ${imageUrlForDatabase}`,
-        );
+        console.log(`📷 Imagem processada para ${cor}: ${imageUrlForDatabase}`);
       }
     }
 
