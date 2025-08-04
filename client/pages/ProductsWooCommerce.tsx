@@ -2075,6 +2075,7 @@ export default function ProductsWooCommerce() {
                               <ProductImage
                                 src={getMainVariantImage(product)}
                                 alt={product.name}
+                                product={product}
                                 className="w-full h-full object-cover"
                               />
                             </div>
