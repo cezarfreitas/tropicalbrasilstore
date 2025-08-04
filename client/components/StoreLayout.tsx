@@ -91,28 +91,31 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     const urlSearchTerm = searchParams.get("busca") || "";
     setSearchTerm(urlSearchTerm);
 
-    // Sync color filter with URL params
+    // Sync color filters with URL params (support multiple values separated by comma)
     const colorParam = searchParams.get("cor");
     if (colorParam) {
-      setSelectedColorFilter(parseInt(colorParam));
+      const colorIds = colorParam.split(',').map(id => parseInt(id)).filter(id => !isNaN(id));
+      setSelectedColorFilters(colorIds);
     } else {
-      setSelectedColorFilter(null);
+      setSelectedColorFilters([]);
     }
 
-    // Sync gender filter with URL params
+    // Sync gender filters with URL params (support multiple values separated by comma)
     const genderParam = searchParams.get("genero");
     if (genderParam) {
-      setSelectedGenderFilter(parseInt(genderParam));
+      const genderIds = genderParam.split(',').map(id => parseInt(id)).filter(id => !isNaN(id));
+      setSelectedGenderFilters(genderIds);
     } else {
-      setSelectedGenderFilter(null);
+      setSelectedGenderFilters([]);
     }
 
-    // Sync type filter with URL params
+    // Sync type filters with URL params (support multiple values separated by comma)
     const typeParam = searchParams.get("tipo");
     if (typeParam) {
-      setSelectedTypeFilter(parseInt(typeParam));
+      const typeIds = typeParam.split(',').map(id => parseInt(id)).filter(id => !isNaN(id));
+      setSelectedTypeFilters(typeIds);
     } else {
-      setSelectedTypeFilter(null);
+      setSelectedTypeFilters([]);
     }
   }, [searchParams]);
 
