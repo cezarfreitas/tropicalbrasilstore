@@ -376,7 +376,7 @@ router.post("/create", validateApiKey, async (req, res) => {
           // Verificar se a variante já existe antes de inserir
           const [existingVariant] = await db.execute(
             `SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?`,
-            [productId, colorId]
+            [productId, colorId],
           );
 
           if ((existingVariant as any[]).length > 0) {
@@ -384,9 +384,16 @@ router.post("/create", validateApiKey, async (req, res) => {
             colorVariantId = (existingVariant as any[])[0].id;
             await db.execute(
               `UPDATE product_color_variants SET variant_name = ?, price = ?, stock_total = ?, active = true WHERE id = ?`,
-              [variante.cor, variante.preco, variante.estoque_grade || 0, colorVariantId]
+              [
+                variante.cor,
+                variante.preco,
+                variante.estoque_grade || 0,
+                colorVariantId,
+              ],
             );
-            console.log(`↻ Variante existente atualizada: ${variante.cor} (ID: ${colorVariantId})`);
+            console.log(
+              `↻ Variante existente atualizada: ${variante.cor} (ID: ${colorVariantId})`,
+            );
           } else {
             // Criar nova variante
             const [variantResult] = await db.execute(
@@ -405,7 +412,9 @@ router.post("/create", validateApiKey, async (req, res) => {
               ],
             );
             colorVariantId = (variantResult as any).insertId;
-            console.log(`✅ Nova variante criada: ${variante.cor} (ID: ${colorVariantId})`);
+            console.log(
+              `✅ Nova variante criada: ${variante.cor} (ID: ${colorVariantId})`,
+            );
           }
         }
 
@@ -839,19 +848,25 @@ router.post("/bulk", async (req, res) => {
           // Verificar se a variante de cor já existe
           const [existingColorVariant] = await db.execute(
             `SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?`,
-            [productId, colorId]
+            [productId, colorId],
           );
 
           let colorVariantId;
           if ((existingColorVariant as any[]).length > 0) {
             // Variante já existe - atualizar se necessário
             colorVariantId = (existingColorVariant as any[])[0].id;
-            console.log(`  ↻ Variante de cor existente encontrada: ${variante.cor} (ID: ${colorVariantId})`);
+            console.log(
+              `  ↻ Variante de cor existente encontrada: ${variante.cor} (ID: ${colorVariantId})`,
+            );
 
             // Atualizar preço se diferente
             await db.execute(
               `UPDATE product_color_variants SET price = ?, variant_name = ?, active = true WHERE id = ?`,
-              [`${product.nome} - ${variante.cor} - ${gradeNome}`, variante.preco, colorVariantId]
+              [
+                `${product.nome} - ${variante.cor} - ${gradeNome}`,
+                variante.preco,
+                colorVariantId,
+              ],
             );
           } else {
             // Criar nova variante
@@ -871,7 +886,9 @@ router.post("/bulk", async (req, res) => {
               ],
             );
             colorVariantId = (colorVariantResult as any).insertId;
-            console.log(`  ✅ Nova variante de cor criada: ${variante.cor} - ${gradeNome} (ID: ${colorVariantId})`);
+            console.log(
+              `  ✅ Nova variante de cor criada: ${variante.cor} - ${gradeNome} (ID: ${colorVariantId})`,
+            );
           }
 
           console.log(
