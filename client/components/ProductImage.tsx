@@ -132,7 +132,8 @@ export function ProductImage({
 
   const handleError = (event?: any) => {
     const errorDetails = {
-      src,
+      originalSrc: src,
+      finalSrc,
       alt,
       currentSrc: event?.target?.currentSrc,
       complete: event?.target?.complete,
@@ -142,18 +143,18 @@ export function ProductImage({
       errorMessage: event?.message,
     };
 
-    console.error(`❌ Image failed to load: "${src}"`, errorDetails);
+    console.error(`❌ Image failed to load: "${finalSrc}"`, errorDetails);
 
     // Test if the URL is accessible
-    if (src) {
-      fetch(src, { method: "HEAD" })
+    if (finalSrc) {
+      fetch(finalSrc, { method: "HEAD" })
         .then((response) => {
           console.log(
-            `🔗 Image URL test for "${src}": ${response.status} ${response.statusText}`,
+            `🔗 Image URL test for "${finalSrc}": ${response.status} ${response.statusText}`,
           );
         })
         .catch((fetchError) => {
-          console.error(`🌐 Network error for "${src}":`, fetchError.message);
+          console.error(`🌐 Network error for "${finalSrc}":`, fetchError.message);
         });
     }
 
