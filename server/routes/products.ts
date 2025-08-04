@@ -247,7 +247,7 @@ router.post("/create", validateApiKey, async (req, res) => {
       });
     }
 
-    // Verificar se produto com código já existe
+    // Verificar se produto com c��digo já existe
     const [existingProduct] = await db.execute(
       "SELECT id FROM products WHERE sku = ? OR parent_sku = ?",
       [productData.codigo, productData.codigo],
@@ -483,6 +483,8 @@ router.post("/bulk", async (req, res) => {
     JSON.stringify(req.body).length,
     "bytes",
   );
+  console.log(`[${requestId}] Request body keys:`, Object.keys(req.body || {}));
+  console.log(`[${requestId}] Request body:`, JSON.stringify(req.body, null, 2));
 
   try {
     // Support multiple formats: single product, array of products, legacy {products: [...]}, or new {produto: {...}, variantes: [...]}
