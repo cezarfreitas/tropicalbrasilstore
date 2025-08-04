@@ -116,13 +116,15 @@ export function SimpleProductCard({
 
   const displayImageUrl = getDisplayImage();
 
-  // Debug logging
+  // Debug logging - focus on product_color_variants data
   console.log(`🖼️ SimpleProductCard for product ${product.id} (${product.name}):`, {
     photo: product.photo,
-    available_colors: product.available_colors?.length || 0,
-    firstColorImage: product.available_colors?.find(c => c.image_url)?.image_url,
-    displayImageUrl,
-    selectedColorImage
+    available_colors_count: product.available_colors?.length || 0,
+    color_variants_with_images: product.available_colors?.filter(c => c.image_url).length || 0,
+    first_color_image: product.available_colors?.find(c => c.image_url)?.image_url,
+    all_color_images: product.available_colors?.map(c => ({name: c.name, image_url: c.image_url})) || [],
+    final_display_url: displayImageUrl,
+    selected_color_image: selectedColorImage
   });
 
   const handleColorClick = (colorImageUrl: string, e: React.MouseEvent) => {
