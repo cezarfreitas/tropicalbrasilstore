@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ProductImage } from "@/components/ProductImage";
 import { ColorThemeShowcase } from "@/components/ColorThemeShowcase";
+import { getImageUrl } from "@/lib/image-utils";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { ProductSkeleton } from "@/components/ProductSkeleton";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
