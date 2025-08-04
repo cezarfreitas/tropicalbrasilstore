@@ -45,7 +45,9 @@ export function ProductImage({
     console.log(`🔍 getBestAvailableImage for "${alt}":`, {
       hasProduct: !!product,
       photo: product?.photo,
-      variantsCount: product?.color_variants?.length || 0
+      color_variants_count: product?.color_variants?.length || 0,
+      available_colors_count: product?.available_colors?.length || 0,
+      available_colors: product?.available_colors?.map(c => ({ name: c.name, image_url: c.image_url }))
     });
 
     if (!product) {
