@@ -212,16 +212,32 @@ router.get("/products-paginated", async (req, res) => {
         `🖼️ Product ${product.name}: photo=${product.photo}, mainImage=${mainImage}, colors with images: ${(colorRows as any[]).filter((c) => c.image_url).length}`,
       );
 
-      // Validate image URL
+      // Validate image URL and check if file exists
       if (mainImage) {
         console.log(`🔗 Final image URL for ${product.name}: "${mainImage}"`);
-        if (!mainImage.startsWith("http") && !mainImage.startsWith("/")) {
+
+        // Check if it's a local file and validate it exists
+        if (mainImage.startsWith("/uploads/")) {
+          const fs = require('fs');
+          const path = require('path');
+          const filePath = path.join(process.cwd(), 'public', mainImage);
+
+          if (!fs.existsSync(filePath)) {
+            console.warn(`❌ Image file does not exist: ${filePath}`);
+            mainImage = null; // Clear invalid image URL
+          } else {
+            console.log(`✅ Image file verified: ${mainImage}`);
+          }
+        } else if (!mainImage.startsWith("http") && !mainImage.startsWith("/")) {
           console.warn(
             `⚠️ Image URL might be invalid (doesn't start with http or /): "${mainImage}"`,
           );
+          mainImage = null; // Clear invalid image URL
         }
-      } else {
-        console.warn(`❌ No image found for product ${product.name}`);
+      }
+
+      if (!mainImage) {
+        console.warn(`❌ No valid image found for product ${product.name}`);
       }
 
       productsWithDetails.push({
