@@ -419,13 +419,27 @@ export default function ProductsWooCommerce() {
 
   const fetchGrades = async () => {
     try {
-      const response = await fetch("/api/grades");
+      console.log("🔄 Fetching grades from /api/grades...");
+      const response = await fetch("/api/grades", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log("📊 Grades response status:", response.status);
+
       if (response.ok) {
         const data = await response.json();
-        setGrades(data);
+        console.log("📊 Grades data received:", data);
+        setGrades(Array.isArray(data) ? data : []);
+      } else {
+        console.warn("⚠️ Grades response not ok:", response.status, response.statusText);
+        setGrades([]); // Set empty array as fallback
       }
     } catch (error) {
-      console.error("Error fetching grades:", error);
+      console.error("❌ Error fetching grades:", error);
+      setGrades([]); // Set empty array as fallback to prevent crashes
     }
   };
 
