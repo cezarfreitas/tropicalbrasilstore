@@ -854,25 +854,40 @@ router.post("/bulk", async (req, res) => {
           }
         } else {
           // Criar nova variante
-          const [colorVariantResult] = await db.execute(
-            `INSERT INTO product_color_variants
-           (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [
+          try {
+            console.log(`🆕 Criando nova variante de cor para ${product.nome} - ${variante.cor}`);
+            const [colorVariantResult] = await db.execute(
+              `INSERT INTO product_color_variants
+             (product_id, color_id, variant_name, variant_sku, price, image_url, stock_total, active)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+              [
+                productId,
+                colorId,
+                `${product.nome} - ${variante.cor}`,
+                variantSku,
+                variante.preco,
+                imageUrlForDatabase,
+                0,
+                true,
+              ],
+            );
+            colorVariantId = (colorVariantResult as any).insertId;
+            console.log(
+              `✅ Nova variante de cor criada: ${variante.cor} (ID: ${colorVariantId})`,
+            );
+          } catch (insertError) {
+            console.error(`❌ Erro ao criar variante de cor:`, insertError);
+            console.error(`📋 Dados que falharam:`, {
               productId,
               colorId,
-              `${product.nome} - ${variante.cor}`,
+              nome: product.nome,
+              cor: variante.cor,
               variantSku,
-              variante.preco,
-              imageUrlForDatabase,
-              0,
-              true,
-            ],
-          );
-          colorVariantId = (colorVariantResult as any).insertId;
-          console.log(
-            `  ✅ Nova variante de cor criada: ${variante.cor} (ID: ${colorVariantId})`,
-          );
+              preco: variante.preco,
+              imageUrl: imageUrlForDatabase
+            });
+            throw insertError;
+          }
         }
 
         // SEGUNDO: Associar cada grade �� variante de cor criada acima
@@ -1291,7 +1306,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         const baseUrl = process.env.APP_URL || 'https://b2b.tropicalbrasilsandalias.com.br';
         imageUrlForDatabase = `${baseUrl}${localImagePath}`;
         console.log(
-          `��� Imagem processada para ${cor}: ${imageUrlForDatabase}`,
+          `📷 Imagem processada para ${cor}: ${imageUrlForDatabase}`,
         );
       }
     }
