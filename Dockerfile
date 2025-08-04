@@ -1,4 +1,4 @@
-# Dockerfile para EasyPanel - Modo Desenvolvimento
+# Dockerfile para EasyPanel - Modo Produção
 FROM node:22-alpine
 
 WORKDIR /app
@@ -18,11 +18,12 @@ COPY . .
 # Criar diretórios de upload
 RUN mkdir -p public/uploads/logos public/uploads/products
 
+# Build do projeto para produção
+RUN npm run build
+
 # Porta 80 para EasyPanel
 ENV PORT=80
-ENV NODE_ENV=development
-ENV VITE_HOST=0.0.0.0
-ENV VITE_PORT=80
+ENV NODE_ENV=production
 ENV DATABASE_URL=mysql://tropical:805ce7692e5b4d6ced5f@5.161.52.206:3232/tropical
 
 EXPOSE 80
@@ -31,5 +32,5 @@ EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:80/health || exit 1
 
-# Iniciar em modo desenvolvimento com host permitido
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "80", "--clearScreen", "false"]
+# Iniciar servidor de produção
+CMD ["node", "dist/server/index.js"]
