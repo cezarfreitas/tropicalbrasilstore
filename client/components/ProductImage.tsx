@@ -114,11 +114,13 @@ export function ProductImage({
   // Get the final image source to use
   const finalSrc = src ? getImageUrl(src) : getBestAvailableImage();
 
-  // Debug log for troubleshooting
-  console.log(
-    `🖼️ ProductImage debug: alt="${alt}", originalSrc="${src}", finalSrc="${finalSrc}", hasError=${hasError}, shouldLoad=${shouldLoad}`,
-    { product: product ? { id: product?.id, photo: product?.photo, variants: product?.color_variants?.length } : 'none' }
-  );
+  // Debug log for troubleshooting (only when there are issues)
+  if (!finalSrc || hasError) {
+    console.log(
+      `🖼️ ProductImage issue: alt="${alt}", originalSrc="${src}", finalSrc="${finalSrc}", hasError=${hasError}`,
+      { product: product ? { id: product?.id, photo: product?.photo, color_variants: product?.color_variants?.length, available_colors: product?.available_colors?.length } : 'none' }
+    );
+  }
 
   const iconSizes = {
     sm: "h-8 w-8",
