@@ -118,3 +118,21 @@ export function isValidImageUrl(url: string): boolean {
     return false;
   }
 }
+
+export function ensureFullImageUrl(imageUrl: string | null): string | null {
+  if (!imageUrl) return null;
+
+  // If already a full URL, return as is
+  if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+    return imageUrl;
+  }
+
+  // If it's a relative path, convert to full URL
+  if (imageUrl.startsWith("/uploads/")) {
+    const baseUrl = process.env.APP_URL || "https://b2b.tropicalbrasilsandalias.com.br";
+    return `${baseUrl}${imageUrl}`;
+  }
+
+  // Return null for invalid URLs
+  return null;
+}
