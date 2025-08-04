@@ -1512,7 +1512,7 @@ export default function ProductsWooCommerce() {
                                                   className="relative group"
                                                 >
                                                   <div className="aspect-square rounded-lg border overflow-hidden bg-gray-50">
-                                                    <img
+                                                    <ProductImage
                                                       src={imageUrl}
                                                       alt={`Imagem ${imageIndex + 1}`}
                                                       className="w-full h-full object-cover"
