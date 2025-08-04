@@ -187,7 +187,7 @@ export function ProductImage({
       )}
       {shouldLoad && (
         <img
-          src={src}
+          src={finalSrc}
           alt={alt}
           className={className}
           loading={loading}
