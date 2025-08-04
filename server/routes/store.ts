@@ -1,7 +1,7 @@
 import { Router } from "express";
 import db from "../lib/db";
 import { sendOrderNotifications } from "../lib/notification-service";
-import { ensureFullImageUrl } from "../lib/image-uploader";
+import { ensureLocalImageUrl } from "../lib/image-uploader";
 
 const router = Router();
 
