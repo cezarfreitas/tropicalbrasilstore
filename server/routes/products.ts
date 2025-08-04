@@ -733,7 +733,7 @@ router.post("/bulk", async (req, res) => {
 
       // Processar cada variante
       for (const variante of product.variantes) {
-        console.log(`🎨 Processando variante: ${variante.cor} do produto: ${product.codigo}`);
+        console.log(`���� Processando variante: ${variante.cor} do produto: ${product.codigo}`);
 
         if (!variante.cor || variante.preco <= 0 || !variante.grade) {
           console.error(`❌ Dados inválidos para variante ${variante.cor}:`, {
@@ -817,10 +817,12 @@ router.post("/bulk", async (req, res) => {
         }
 
         // PRIMEIRO: Criar/encontrar a variante de cor (uma por produto+cor)
+        console.log(`🔍 Verificando variante de cor existente para produto ${productId}, cor ${colorId}`);
         const [existingColorVariant] = await db.execute(
           `SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?`,
           [productId, colorId],
         );
+        console.log(`📋 Resultado da busca:`, existingColorVariant);
 
         let colorVariantId;
         const variantSku =
@@ -964,7 +966,7 @@ router.post("/bulk", async (req, res) => {
                 );
               } else {
                 console.log(
-                  `  ⚠�� Variante ${sizeName} já existe para ${variante.cor}, atualizando preço`,
+                  `  ⚠️ Variante ${sizeName} já existe para ${variante.cor}, atualizando preço`,
                 );
                 // Atualizar preço se necessário
                 await db.execute(
