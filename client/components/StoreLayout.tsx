@@ -72,17 +72,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [availableColors, setAvailableColors] = useState<any[]>([]);
-  const [selectedColorFilter, setSelectedColorFilter] = useState<number | null>(
-    null,
-  );
+  const [selectedColorFilters, setSelectedColorFilters] = useState<number[]>([]);
   const [availableGenders, setAvailableGenders] = useState<any[]>([]);
-  const [selectedGenderFilter, setSelectedGenderFilter] = useState<
-    number | null
-  >(null);
+  const [selectedGenderFilters, setSelectedGenderFilters] = useState<number[]>([]);
   const [availableTypes, setAvailableTypes] = useState<any[]>([]);
-  const [selectedTypeFilter, setSelectedTypeFilter] = useState<number | null>(
-    null,
-  );
+  const [selectedTypeFilters, setSelectedTypeFilters] = useState<number[]>([]);
 
   // Accordion states for filter sections - sempre abertos por padrão
   const [colorFilterOpen, setColorFilterOpen] = useState(true);
