@@ -163,9 +163,9 @@ export function SimpleProductCard({
 
   return (
     <Card
-      className="cursor-pointer border border-gray-200 rounded-lg overflow-hidden bg-white"
+      className="cursor-pointer border-4 border-red-500 rounded-lg overflow-hidden bg-yellow-100"
       onClick={() => onProductClick(product.id)}
-      style={{ minHeight: "300px", display: "block" }}
+      style={{ minHeight: "300px", display: "block", backgroundColor: "yellow", border: "3px solid red" }}
     >
       <CardContent className="p-0">
         {/* Product Image */}
