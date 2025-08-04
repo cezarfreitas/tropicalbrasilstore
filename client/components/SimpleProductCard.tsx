@@ -42,24 +42,35 @@ export function SimpleProductCard({
 
   // Simple local image URL construction
   const getLocalImageUrl = (imageUrl: string | null | undefined): string | null => {
-    if (!imageUrl) return null;
-    
+    if (!imageUrl || typeof imageUrl !== 'string' || imageUrl.trim() === '') {
+      console.log(`❌ Invalid image URL: ${imageUrl}`);
+      return null;
+    }
+
+    const trimmedUrl = imageUrl.trim();
+
     // Se já é uma URL completa, use como está
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      return imageUrl;
+    if (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://')) {
+      console.log(`🌐 Using absolute URL: ${trimmedUrl}`);
+      return trimmedUrl;
     }
-    
+
     // Se começa com /uploads/, construa URL completa
-    if (imageUrl.startsWith('/uploads/')) {
-      return `${window.location.origin}${imageUrl}`;
+    if (trimmedUrl.startsWith('/uploads/')) {
+      const fullUrl = `${window.location.origin}${trimmedUrl}`;
+      console.log(`📁 Converting local path to full URL: ${trimmedUrl} -> ${fullUrl}`);
+      return fullUrl;
     }
-    
+
     // Se é apenas um nome de arquivo, assuma que está em /uploads/products/
-    if (!imageUrl.includes('/')) {
-      return `${window.location.origin}/uploads/products/${imageUrl}`;
+    if (!trimmedUrl.includes('/')) {
+      const fullUrl = `${window.location.origin}/uploads/products/${trimmedUrl}`;
+      console.log(`📋 Converting filename to full URL: ${trimmedUrl} -> ${fullUrl}`);
+      return fullUrl;
     }
-    
-    return imageUrl;
+
+    console.log(`🔧 Using URL as-is: ${trimmedUrl}`);
+    return trimmedUrl;
   };
 
   // Get the best image to display
