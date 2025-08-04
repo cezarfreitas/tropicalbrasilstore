@@ -73,36 +73,43 @@ export function SimpleProductCard({
     return trimmedUrl;
   };
 
-  // Get the best image to display
+  // Get the best image to display - PRIORITY: color variants from product_color_variants table
   const getDisplayImage = (): string | null => {
     console.log(`🎯 Getting display image for product ${product.id}:`);
+    console.log(`📊 Product data:`, {
+      photo: product.photo,
+      available_colors_count: product.available_colors?.length || 0,
+      available_colors: product.available_colors
+    });
 
-    // Priority: selected color image > product photo > first color with image
+    // Priority: selected color image > first available color (from product_color_variants) > product photo
     if (selectedColorImage) {
       console.log(`✅ Using selected color image: ${selectedColorImage}`);
       return getLocalImageUrl(selectedColorImage);
     }
 
-    if (product.photo && product.photo.trim()) {
-      console.log(`✅ Using product photo: ${product.photo}`);
-      return getLocalImageUrl(product.photo);
-    }
-
+    // MAIN PRIORITY: Check available_colors (comes from product_color_variants.image_url)
     if (product.available_colors && product.available_colors.length > 0) {
-      console.log(`🎨 Checking ${product.available_colors.length} available colors for images`);
+      console.log(`🎨 Checking ${product.available_colors.length} available colors (from product_color_variants)`);
       const firstColorWithImage = product.available_colors.find(color => {
-        const hasImage = color.image_url && color.image_url.trim();
+        const hasImage = color.image_url && color.image_url.trim() !== '';
         console.log(`  - Color ${color.name}: ${color.image_url || 'no image'} (${hasImage ? 'valid' : 'invalid'})`);
         return hasImage;
       });
 
       if (firstColorWithImage) {
-        console.log(`✅ Using first color with image: ${firstColorWithImage.name} -> ${firstColorWithImage.image_url}`);
+        console.log(`✅ Using color variant image from product_color_variants: ${firstColorWithImage.name} -> ${firstColorWithImage.image_url}`);
         return getLocalImageUrl(firstColorWithImage.image_url);
       }
     }
 
-    console.log(`❌ No image found for product ${product.id}`);
+    // Fallback to product photo if no color variants have images
+    if (product.photo && product.photo.trim()) {
+      console.log(`📷 Fallback to product photo: ${product.photo}`);
+      return getLocalImageUrl(product.photo);
+    }
+
+    console.log(`❌ No image found for product ${product.id} - no available_colors with image_url and no product photo`);
     return null;
   };
 
