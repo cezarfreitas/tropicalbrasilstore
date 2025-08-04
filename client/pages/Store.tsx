@@ -372,6 +372,7 @@ function Store() {
                     <div className="aspect-square relative overflow-hidden bg-white">
                       <ProductImage
                         src={getImageUrl(selectedVariantImages[product.id] || product.photo)}
+                        product={product}
                         alt={product.name}
                         className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-2 sm:p-3"
                         priority={index < 8}
