@@ -130,40 +130,52 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     [searchTerm, navigate],
   );
 
-  const handleColorFilter = (colorId: number | null) => {
-    setSelectedColorFilter(colorId);
+  const handleColorFilter = (colorId: number) => {
+    const newSelectedColors = selectedColorFilters.includes(colorId)
+      ? selectedColorFilters.filter(id => id !== colorId) // Remove if already selected
+      : [...selectedColorFilters, colorId]; // Add if not selected
+
+    setSelectedColorFilters(newSelectedColors);
     const currentParams = new URLSearchParams(searchParams);
 
-    if (colorId === null) {
+    if (newSelectedColors.length === 0) {
       currentParams.delete("cor");
     } else {
-      currentParams.set("cor", colorId.toString());
+      currentParams.set("cor", newSelectedColors.join(','));
     }
 
     navigate(`/loja?${currentParams.toString()}`);
   };
 
-  const handleGenderFilter = (genderId: number | null) => {
-    setSelectedGenderFilter(genderId);
+  const handleGenderFilter = (genderId: number) => {
+    const newSelectedGenders = selectedGenderFilters.includes(genderId)
+      ? selectedGenderFilters.filter(id => id !== genderId) // Remove if already selected
+      : [...selectedGenderFilters, genderId]; // Add if not selected
+
+    setSelectedGenderFilters(newSelectedGenders);
     const currentParams = new URLSearchParams(searchParams);
 
-    if (genderId === null) {
+    if (newSelectedGenders.length === 0) {
       currentParams.delete("genero");
     } else {
-      currentParams.set("genero", genderId.toString());
+      currentParams.set("genero", newSelectedGenders.join(','));
     }
 
     navigate(`/loja?${currentParams.toString()}`);
   };
 
-  const handleTypeFilter = (typeId: number | null) => {
-    setSelectedTypeFilter(typeId);
+  const handleTypeFilter = (typeId: number) => {
+    const newSelectedTypes = selectedTypeFilters.includes(typeId)
+      ? selectedTypeFilters.filter(id => id !== typeId) // Remove if already selected
+      : [...selectedTypeFilters, typeId]; // Add if not selected
+
+    setSelectedTypeFilters(newSelectedTypes);
     const currentParams = new URLSearchParams(searchParams);
 
-    if (typeId === null) {
+    if (newSelectedTypes.length === 0) {
       currentParams.delete("tipo");
     } else {
-      currentParams.set("tipo", typeId.toString());
+      currentParams.set("tipo", newSelectedTypes.join(','));
     }
 
     navigate(`/loja?${currentParams.toString()}`);
