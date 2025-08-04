@@ -192,7 +192,7 @@ router.get("/products-paginated", async (req, res) => {
       );
 
       // Determine main product image
-      let mainImage = ensureFullImageUrl(product.photo);
+      let mainImage = ensureLocalImageUrl(product.photo);
 
       // If no photo in products table, try to get from main variant or first available variant
       if (!mainImage && processedColorRows && processedColorRows.length > 0) {
@@ -205,14 +205,14 @@ router.get("/products-paginated", async (req, res) => {
         );
 
         if (mainVariantRows && (mainVariantRows as any[]).length > 0) {
-          mainImage = ensureFullImageUrl(
+          mainImage = ensureLocalImageUrl(
             (mainVariantRows as any[])[0].image_url,
           );
         } else {
           // If no main variant, use first color with image
           const colorWithImage = processedColorRows.find((c) => c.image_url);
           if (colorWithImage) {
-            mainImage = ensureFullImageUrl(colorWithImage.image_url);
+            mainImage = ensureLocalImageUrl(colorWithImage.image_url);
           }
         }
       }
