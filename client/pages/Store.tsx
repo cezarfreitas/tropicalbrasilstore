@@ -3,17 +3,12 @@ import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { StoreLayout } from "@/components/StoreLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ProductImage } from "@/components/ProductImage";
-import { ColorThemeShowcase } from "@/components/ColorThemeShowcase";
-import { getImageUrl } from "@/lib/image-utils";
-import { ProductCard } from "@/components/ProductCard";
-import { PriceDisplay } from "@/components/PriceDisplay";
 import { ProductSkeleton } from "@/components/ProductSkeleton";
+import { SimpleProductCard } from "@/components/SimpleProductCard";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { useProducts } from "@/hooks/use-products";
 import { LoginModal } from "@/components/LoginModal";
-import { Package, AlertCircle, ShoppingCart, Search } from "lucide-react";
+import { Package, AlertCircle, Search } from "lucide-react";
 
 // Function to get proper color value from different sources
 const getColorValue = (color: any) => {
