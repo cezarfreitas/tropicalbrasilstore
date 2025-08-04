@@ -58,7 +58,7 @@ export function SimpleProductCard({
     }
   }
 
-  console.log(`���� CARD DEBUG Product ${product.id}:`, {
+  console.log(`🔧 CARD DEBUG Product ${product.id}:`, {
     selectedVariantImage,
     productPhoto: product.photo,
     finalImageSrc,
@@ -100,10 +100,10 @@ export function SimpleProductCard({
       style={{ minHeight: "300px", display: "block" }}
     >
       <CardContent className="p-0">
-        {/* Product Image - Using the same ProductImage component as ProductDetail page */}
+        {/* Product Image - Using EXACT same pattern as ProductDetail page */}
         <div className="aspect-square relative bg-white">
           <ProductImage
-            src={getDisplayImageSrc()}
+            src={bestImageSrc}
             alt={product.name}
             className="w-full h-full object-contain p-2"
             loading={index < 8 ? "eager" : "lazy"}
