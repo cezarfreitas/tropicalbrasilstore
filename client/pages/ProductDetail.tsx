@@ -11,6 +11,7 @@ import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { ProductImage } from "@/components/ProductImage";
 import { LoginModal } from "@/components/LoginModal";
+import { getImageUrl } from "@/lib/image-utils";
 import {
   ShoppingCart,
   Package,
