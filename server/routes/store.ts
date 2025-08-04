@@ -195,7 +195,7 @@ router.get("/products-paginated", async (req, res) => {
       let mainImage = ensureFullImageUrl(product.photo);
 
       // If no photo in products table, try to get from main variant or first available variant
-      if (!mainImage && colorRows && colorRows.length > 0) {
+      if (!mainImage && processedColorRows && processedColorRows.length > 0) {
         // First try to find the main catalog variant
         const [mainVariantRows] = await db.execute(
           `SELECT image_url FROM product_color_variants
