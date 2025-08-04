@@ -766,21 +766,27 @@ router.post("/bulk", async (req, res) => {
         );
 
         // Download e salvar imagem UMA VEZ antes do loop das grades
-        let localImageUrl = null;
+        let imageUrlForDatabase = null;
         if (variante.foto) {
           console.log(`🔍 Verificando URL da imagem: ${variante.foto}`);
           const isValid = isValidImageUrl(variante.foto);
           console.log(`📋 URL é válida: ${isValid}`);
 
           if (isValid) {
-            localImageUrl = await downloadAndSaveImage(
+            const localImagePath = await downloadAndSaveImage(
               variante.foto,
               product.codigo,
               variante.cor,
             );
-            console.log(
-              `📷 Imagem processada para ${variante.cor}: ${localImageUrl || "falhou"}`,
-            );
+
+            // Construir URL completa para salvar no banco
+            if (localImagePath) {
+              const baseUrl = process.env.APP_URL || 'https://b2b.tropicalbrasilsandalias.com.br';
+              imageUrlForDatabase = `${baseUrl}${localImagePath}`;
+              console.log(
+                `📷 Imagem processada para ${variante.cor}: ${imageUrlForDatabase}`,
+              );
+            }
           } else {
             console.log(`❌ URL de imagem inválida: ${variante.foto}`);
           }
