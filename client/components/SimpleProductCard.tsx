@@ -135,7 +135,7 @@ export function SimpleProductCard({
 
           {/* Category Badge */}
           {product.category_name && (
-            <Badge className="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 text-xs">
+            <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground px-2 py-1 text-xs">
               {product.category_name}
             </Badge>
           )}
