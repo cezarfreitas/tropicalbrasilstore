@@ -351,7 +351,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     fetchAvailableTypes();
   }, []);
 
-  const fetchAvailableColors = async () => {
+  const fetchAvailableColors = async (retryCount = 0) => {
     try {
       // Use XMLHttpRequest to avoid FullStory conflicts
       const response = await new Promise<Response>((resolve, reject) => {
@@ -379,7 +379,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
         xhr.onerror = () => reject(new Error("Network error"));
         xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 5000;
+        xhr.timeout = 15000; // Aumentar timeout para 15 segundos
 
         xhr.send();
       });
@@ -387,9 +387,21 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       if (response.ok) {
         const colors = await response.json();
         setAvailableColors(colors);
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error("Error fetching colors:", error);
+
+      // Retry logic - tentar até 3 vezes
+      if (retryCount < 2) {
+        console.log(`Retrying colors fetch... (attempt ${retryCount + 1}/3)`);
+        setTimeout(() => fetchAvailableColors(retryCount + 1), 2000);
+      } else {
+        console.warn("Failed to fetch colors after 3 attempts, continuing without color filters");
+        // Continuar sem filtros de cor em vez de quebrar a aplicação
+        setAvailableColors([]);
+      }
     }
   };
 
