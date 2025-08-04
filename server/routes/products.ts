@@ -920,7 +920,7 @@ router.post("/bulk", async (req, res) => {
               const sizeId = template.size_id;
               const sizeName = template.size;
 
-              // SKU específico para cada tamanho
+              // SKU espec��fico para cada tamanho
               const sizeVariantSku = `${gradeVariantSku}-${sizeName}`;
 
               // Verificar se a variante já existe
@@ -1281,7 +1281,7 @@ router.post("/single", validateApiKey, async (req, res) => {
         `${nome} - ${cor}`,
         variantSku,
         preco,
-        localImageUrl,
+        imageUrlForDatabase,
         0, // stock_total inicial
         true,
       ],
