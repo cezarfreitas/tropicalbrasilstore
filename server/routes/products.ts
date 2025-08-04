@@ -1250,12 +1250,18 @@ router.post("/single", validateApiKey, async (req, res) => {
     const variantSku = `${codigo}-${cor.toUpperCase().replace(/\s+/g, "-")}`;
 
     // Download e salvar imagem se fornecida
-    let localImageUrl = null;
+    let imageUrlForDatabase = null;
     if (foto && isValidImageUrl(foto)) {
-      localImageUrl = await downloadAndSaveImage(foto, codigo, cor);
-      console.log(
-        `📷 Imagem processada para ${cor}: ${localImageUrl || "falhou"}`,
-      );
+      const localImagePath = await downloadAndSaveImage(foto, codigo, cor);
+
+      // Construir URL completa para salvar no banco
+      if (localImagePath) {
+        const baseUrl = process.env.APP_URL || 'https://b2b.tropicalbrasilsandalias.com.br';
+        imageUrlForDatabase = `${baseUrl}${localImagePath}`;
+        console.log(
+          `📷 Imagem processada para ${cor}: ${imageUrlForDatabase}`,
+        );
+      }
     }
 
     // Criar entrada na tabela product_color_variants para compatibilidade com admin WooCommerce
