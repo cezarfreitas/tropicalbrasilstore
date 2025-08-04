@@ -668,7 +668,7 @@ export default function ProductDetail() {
                       <div className="w-8 h-8 rounded-lg border border-gray-200 overflow-hidden bg-gray-100">
                         {color.image_url ? (
                           <ProductImage
-                            src={color.image_url}
+                            src={getImageUrl(color.image_url)}
                             alt={color.name}
                             className="w-full h-full object-contain"
                             loading="lazy"
