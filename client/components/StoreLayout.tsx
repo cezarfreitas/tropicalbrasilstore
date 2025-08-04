@@ -191,7 +191,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
   // Memoized navigation links from database categories
   const navigationLinks = useMemo(() => {
-    const links = [{ to: "/loja", label: "Todos" }];
+    const links = [{
+      to: "/loja",
+      label: "Todos",
+      onClick: clearAllFilters, // Sempre limpa filtros ao clicar em "Todos"
+      isClearButton: true
+    }];
 
     // Add categories that have show_in_menu = true
     categories.forEach((category) => {
