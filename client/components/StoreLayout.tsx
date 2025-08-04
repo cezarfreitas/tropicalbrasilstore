@@ -172,6 +172,23 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     navigate(`/loja?${currentParams.toString()}`);
   };
 
+  // Função para limpar todos os filtros e voltar à página inicial
+  const clearAllFilters = () => {
+    setSelectedColorFilter(null);
+    setSelectedGenderFilter(null);
+    setSelectedTypeFilter(null);
+    setSearchTerm("");
+    navigate("/loja");
+  };
+
+  // Verificar se há algum filtro ativo
+  const hasActiveFilters = () => {
+    return selectedColorFilter !== null ||
+           selectedGenderFilter !== null ||
+           selectedTypeFilter !== null ||
+           searchTerm.trim() !== "";
+  };
+
   // Memoized navigation links from database categories
   const navigationLinks = useMemo(() => {
     const links = [{ to: "/loja", label: "Todos" }];
