@@ -301,13 +301,25 @@ export default function ProductsWooCommerce() {
 
   // Load static data only once
   useEffect(() => {
-    fetchCategories();
-    fetchGenders();
-    fetchTypes();
-    fetchBrands();
-    fetchColors();
-    fetchSizes();
-    fetchGrades();
+    const loadStaticData = async () => {
+      try {
+        // Load all static data with proper error handling
+        await Promise.allSettled([
+          fetchCategories(),
+          fetchGenders(),
+          fetchTypes(),
+          fetchBrands(),
+          fetchColors(),
+          fetchSizes(),
+          fetchGrades(), // This one was causing issues
+        ]);
+        console.log("✅ All static data loaded");
+      } catch (error) {
+        console.error("❌ Error loading static data:", error);
+      }
+    };
+
+    loadStaticData();
   }, []); // Only run once on mount
 
   // Load products when filters change
