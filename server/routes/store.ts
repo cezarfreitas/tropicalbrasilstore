@@ -383,12 +383,12 @@ router.get("/products/:id", async (req, res) => {
 
     const product = (productRows as any)[0];
 
-    // Get variants based on sell_without_stock setting
+    // Get variants based on sell_without_stock setting with color variant images
     const variantStockCondition = product.sell_without_stock
       ? ""
       : "AND pv.stock > 0";
     const [variantRows] = await db.execute(
-      `SELECT 
+      `SELECT
         pv.id,
         pv.size_id,
         pv.color_id,
@@ -397,10 +397,12 @@ router.get("/products/:id", async (req, res) => {
         s.size,
         s.display_order,
         c.name as color_name,
-        c.hex_code
+        c.hex_code,
+        pcv.image_url
        FROM product_variants pv
        LEFT JOIN sizes s ON pv.size_id = s.id
        LEFT JOIN colors c ON pv.color_id = c.id
+       LEFT JOIN product_color_variants pcv ON (pv.product_id = pcv.product_id AND pv.color_id = pcv.color_id)
        WHERE pv.product_id = ? ${variantStockCondition}
        ORDER BY s.display_order, c.name`,
       [req.params.id],
