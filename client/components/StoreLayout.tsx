@@ -841,22 +841,28 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 {typeFilterOpen && (
                   <>
                     <div className="space-y-1 px-2">
-                      {availableTypes.map((type) => (
-                        <button
-                          key={type.id}
-                          onClick={() => handleTypeFilter(type.id)}
-                          className={`w-full text-left p-2 rounded-xl text-xs transition-all duration-300 group ${
-                            selectedTypeFilter === type.id
-                              ? "bg-white/20 text-white font-bold shadow-lg border border-white/30"
-                              : "text-white/80 hover:bg-white/15 hover:text-white border border-transparent hover:border-white/20"
-                          }`}
-                          title={type.description}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">{type.name}</span>
-                          </div>
-                        </button>
-                      ))}
+                      {availableTypes.map((type) => {
+                        const isSelected = selectedTypeFilters.includes(type.id);
+                        return (
+                          <button
+                            key={type.id}
+                            onClick={() => handleTypeFilter(type.id)}
+                            className={`w-full text-left p-2 rounded-xl text-xs transition-all duration-300 group ${
+                              isSelected
+                                ? "bg-white/20 text-white font-bold shadow-lg border border-white/30"
+                                : "text-white/80 hover:bg-white/15 hover:text-white border border-transparent hover:border-white/20"
+                            }`}
+                            title={`${type.name} ${isSelected ? '(selecionado)' : ''}`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium">{type.name}</span>
+                              {isSelected && (
+                                <div className="w-2 h-2 bg-white rounded-full"></div>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
 
                     {availableTypes.length === 0 && (
