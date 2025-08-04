@@ -565,7 +565,7 @@ router.post("/bulk", async (req, res) => {
 
     // Processar cada produto
     for (const product of products) {
-      // Validações básicas
+      // Valida��ões básicas
       if (
         !product.codigo ||
         !product.variantes ||
@@ -995,7 +995,7 @@ router.post("/bulk", async (req, res) => {
           }
 
           variants.push({
-            id: (colorVariantResult as any).insertId,
+            id: colorVariantId,
             cor: variante.cor,
             sku: variantSku,
             grade: gradeNome,
