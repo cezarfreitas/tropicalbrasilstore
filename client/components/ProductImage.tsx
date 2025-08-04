@@ -81,12 +81,28 @@ export function ProductImage({
   }, [src, priority, shouldLoad]);
 
   const handleError = (event?: any) => {
-    console.error(`❌ Image failed to load: "${src}"`, {
+    const errorDetails = {
+      src,
       alt,
-      error: event?.target?.error || "Unknown error",
+      currentSrc: event?.target?.currentSrc,
+      complete: event?.target?.complete,
       naturalWidth: event?.target?.naturalWidth,
       naturalHeight: event?.target?.naturalHeight,
-    });
+      errorType: event?.type,
+      errorMessage: event?.message,
+    };
+
+    console.error(`❌ Image failed to load: "${src}"`, errorDetails);
+
+    // Test if the URL is accessible
+    if (src) {
+      fetch(src, { method: 'HEAD' }).then(response => {
+        console.log(`🔗 Image URL test for "${src}": ${response.status} ${response.statusText}`);
+      }).catch(fetchError => {
+        console.error(`🌐 Network error for "${src}":`, fetchError.message);
+      });
+    }
+
     setHasError(true);
     setIsLoading(false);
   };
