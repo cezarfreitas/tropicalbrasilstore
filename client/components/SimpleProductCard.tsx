@@ -97,7 +97,10 @@ export function SimpleProductCard({
     finalImageSrc,
     bestImageSrc,
     availableColors: product.available_colors?.length || 0,
-    firstColorImage: product.available_colors?.find(c => c.image_url)?.image_url || null
+    firstColorImage: product.available_colors?.find(c => c.image_url)?.image_url || null,
+    enhancedDataLoaded: !!enhancedProductData,
+    enhancedVariants: enhancedProductData?.variants?.length || 0,
+    enhancedFirstImage: enhancedProductData?.variants?.find(v => v.image_url)?.image_url || null
   });
 
   const handleColorClick = (colorImageUrl: string, e: React.MouseEvent) => {
