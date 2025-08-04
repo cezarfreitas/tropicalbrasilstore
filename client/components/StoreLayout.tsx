@@ -422,57 +422,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     }
   };
 
-  const fetchAvailableTypes = async (retryCount = 0) => {
+  const fetchAvailableTypes = async () => {
     try {
-      // Use XMLHttpRequest to avoid FullStory conflicts
-      const response = await new Promise<Response>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "/api/types", true);
-        xhr.setRequestHeader("Accept", "application/json");
-
-        xhr.onload = () => {
-          const headers = new Headers();
-          xhr
-            .getAllResponseHeaders()
-            .split("\r\n")
-            .forEach((line) => {
-              const [key, value] = line.split(": ");
-              if (key && value) headers.set(key, value);
-            });
-
-          const response = new Response(xhr.responseText, {
-            status: xhr.status,
-            statusText: xhr.statusText,
-            headers: headers,
-          });
-          resolve(response);
-        };
-
-        xhr.onerror = () => reject(new Error("Network error"));
-        xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 15000; // Aumentar timeout para 15 segundos
-
-        xhr.send();
-      });
-
-      if (response.ok) {
-        const types = await response.json();
-        setAvailableTypes(types);
-      } else {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
+      const types = await fetchWithRetry("/api/types");
+      setAvailableTypes(types);
     } catch (error) {
-      console.error("Error fetching types:", error);
-
-      // Retry logic - tentar até 3 vezes
-      if (retryCount < 2) {
-        console.log(`Retrying types fetch... (attempt ${retryCount + 1}/3)`);
-        setTimeout(() => fetchAvailableTypes(retryCount + 1), 2000);
-      } else {
-        console.warn("Failed to fetch types after 3 attempts, continuing without type filters");
-        // Continuar sem filtros de tipo em vez de quebrar a aplicação
-        setAvailableTypes([]);
-      }
+      console.warn("Failed to fetch types after all retries, continuing without type filters");
+      setAvailableTypes([]);
     }
   };
 
