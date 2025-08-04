@@ -216,7 +216,7 @@ router.get("/products-paginated", async (req, res) => {
       }
 
       console.log(
-        `🖼️ Product ${product.name}: photo=${product.photo}, mainImage=${mainImage}, colors with images: ${(colorRows as any[]).filter((c) => c.image_url).length}`,
+        `🖼️ Product ${product.name}: photo=${product.photo}, mainImage=${mainImage}, colors with images: ${processedColorRows.filter((c) => c.image_url).length}`,
       );
 
       // Validate image URL and check if file exists (only for local files)
