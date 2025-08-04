@@ -109,9 +109,31 @@ router.get("/", async (req, res) => {
     `;
 
     const [rows] = await db.execute(query, params);
+    const products = rows as any[];
+
+    // For each product, get its color variants with images
+    for (const product of products) {
+      const [variantRows] = await db.execute(
+        `SELECT
+          pcv.*,
+          c.name as color_name,
+          c.hex_code
+         FROM product_color_variants pcv
+         LEFT JOIN colors c ON pcv.color_id = c.id
+         WHERE pcv.product_id = ?
+         ORDER BY c.name`,
+        [product.id],
+      );
+
+      // Convert image_url to images array for consistency
+      product.color_variants = (variantRows as any[]).map(variant => ({
+        ...variant,
+        images: variant.images || (variant.image_url ? [variant.image_url] : [])
+      }));
+    }
 
     res.json({
-      data: rows,
+      data: products,
       pagination: {
         page,
         limit,
