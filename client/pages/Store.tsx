@@ -412,7 +412,7 @@ function Store() {
                                   >
                                     {color.image_url ? (
                                       <ProductImage
-                                        src={color.image_url}
+                                        src={getImageUrl(color.image_url)}
                                         alt={color.name}
                                         className="w-full h-full object-contain"
                                         loading="lazy"
