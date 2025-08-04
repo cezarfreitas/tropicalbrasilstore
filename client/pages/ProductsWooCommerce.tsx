@@ -60,6 +60,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { ProductImage } from "@/components/ProductImage";
 import { CompactImageUpload } from "@/components/CompactImageUpload";
+import { getImageUrl, getMainProductImage } from "@/lib/image-utils";
 
 interface SizeStock {
   size_id: number;
