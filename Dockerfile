@@ -21,6 +21,12 @@ RUN mkdir -p public/uploads/logos public/uploads/products
 # Build do projeto para produção
 RUN npm run build
 
+# Copiar pasta uploads para o build se existir
+RUN if [ -d "public/uploads" ]; then \
+      mkdir -p dist/public && \
+      cp -r public/uploads dist/public/; \
+    fi
+
 # Porta 80 para EasyPanel
 ENV PORT=80
 ENV NODE_ENV=production
