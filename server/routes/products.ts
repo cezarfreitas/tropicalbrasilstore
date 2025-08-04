@@ -765,6 +765,27 @@ router.post("/bulk", async (req, res) => {
           gradesToProcess,
         );
 
+        // Download e salvar imagem UMA VEZ antes do loop das grades
+        let localImageUrl = null;
+        if (variante.foto) {
+          console.log(`🔍 Verificando URL da imagem: ${variante.foto}`);
+          const isValid = isValidImageUrl(variante.foto);
+          console.log(`📋 URL é válida: ${isValid}`);
+
+          if (isValid) {
+            localImageUrl = await downloadAndSaveImage(
+              variante.foto,
+              product.codigo,
+              variante.cor,
+            );
+            console.log(
+              `📷 Imagem processada para ${variante.cor}: ${localImageUrl || "falhou"}`,
+            );
+          } else {
+            console.log(`❌ URL de imagem inválida: ${variante.foto}`);
+          }
+        }
+
         // PRIMEIRO: Criar/encontrar a variante de cor (uma por produto+cor)
         const [existingColorVariant] = await db.execute(
           `SELECT id FROM product_color_variants WHERE product_id = ? AND color_id = ?`,
@@ -784,11 +805,12 @@ router.post("/bulk", async (req, res) => {
           );
 
           await db.execute(
-            `UPDATE product_color_variants SET price = ?, variant_name = ?, variant_sku = ?, active = true WHERE id = ?`,
+            `UPDATE product_color_variants SET price = ?, variant_name = ?, variant_sku = ?, image_url = ?, active = true WHERE id = ?`,
             [
               variante.preco,
               `${product.nome} - ${variante.cor}`,
               variantSku,
+              localImageUrl,
               colorVariantId,
             ],
           );
@@ -815,7 +837,7 @@ router.post("/bulk", async (req, res) => {
           );
         }
 
-        // SEGUNDO: Associar cada grade à variante de cor criada acima
+        // SEGUNDO: Associar cada grade �� variante de cor criada acima
         for (const gradeNome of gradesToProcess) {
           console.log(`🔄 Processando grade: ${gradeNome}`);
           const gradeId = await getOrCreateGrade(gradeNome);
