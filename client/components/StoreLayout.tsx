@@ -763,12 +763,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                       }`}
                     />
                   </button>
-                  {selectedGenderFilter && (
+                  {selectedGenderFilters.length > 0 && (
                     <button
-                      onClick={() => handleGenderFilter(null)}
+                      onClick={() => setSelectedGenderFilters([])}
                       className="text-xs text-white/70 hover:text-white bg-white/10 hover:bg-white/20 px-2 py-1 rounded-full transition-all duration-300"
                     >
-                      Limpar
+                      Limpar ({selectedGenderFilters.length})
                     </button>
                   )}
                 </div>
