@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { useGlobalStoreSettings } from "@/hooks/use-global-store-settings";
+import { DynamicTitle } from "@/components/DynamicTitle";
 import {
   Package,
   Palette,
