@@ -180,38 +180,22 @@ function getDirectoryStructure(dirPath, maxDepth = 3, currentDepth = 0) {
   }
 }
 
-// Catch-all handler for SPA routing
+// SPA fallback - serve index.html for all non-API routes
 app.get("*", (req, res) => {
-  // Don't serve index.html for API routes or uploads
+  // Don't serve index.html for API routes
   if (req.path.startsWith("/api/")) {
-    return res.status(404).json({ error: "Not Found" });
+    return res.status(404).json({ error: "API route not found" });
   }
 
-  // Don't intercept upload routes - they are handled by static middleware above
+  // Don't serve index.html for uploads
   if (req.path.startsWith("/uploads/")) {
-    return res.status(404).json({ error: "File not found" });
+    return res.status(404).json({ error: "Upload not found" });
   }
 
-  // Don't intercept asset files
-  if (req.path.startsWith("/assets/")) {
-    return res.status(404).json({ error: "Asset not found" });
-  }
-
-  // Enhanced HTML serving with proper headers
+  // Serve index.html for all other routes (SPA routing)
   const indexPath = path.join(staticPath, "index.html");
-
-  if (fs.existsSync(indexPath)) {
-    res.set({
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "no-cache, no-store, must-revalidate",
-      Pragma: "no-cache",
-      Expires: "0",
-    });
-    res.sendFile(indexPath);
-  } else {
-    console.error(`❌ Index.html not found at: ${indexPath}`);
-    res.status(404).send("Index file not found");
-  }
+  console.log(`📄 Serving index.html for: ${req.path}`);
+  res.sendFile(indexPath);
 });
 
 const PORT = process.env.PORT || 80;
