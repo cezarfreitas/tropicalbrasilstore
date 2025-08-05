@@ -14,8 +14,8 @@ COPY vite.config.ts ./
 COPY vite.config.server.ts ./
 COPY build.js ./
 
-# Instalar todas as dependências
-RUN npm ci
+# Instalar todas as dependências (resolver conflitos de peer dependencies)
+RUN npm ci --legacy-peer-deps
 
 # Copiar código fonte
 COPY client/ ./client/
