@@ -23,14 +23,21 @@ app.use((req, res, next) => {
 // Serve the built client files with proper headers for JS and CSS
 app.use(
   express.static(staticPath, {
-    setHeaders: (res, path, stat) => {
-      if (path.endsWith(".js")) {
-        res.set("Content-Type", "application/javascript");
+    setHeaders: (res, filePath, stat) => {
+      if (filePath.endsWith(".js")) {
+        res.set("Content-Type", "application/javascript; charset=utf-8");
+        res.set("Cache-Control", "public, max-age=31536000, immutable");
       }
-      if (path.endsWith(".css")) {
-        res.set("Content-Type", "text/css");
+      if (filePath.endsWith(".css")) {
+        res.set("Content-Type", "text/css; charset=utf-8");
+        res.set("Cache-Control", "public, max-age=31536000, immutable");
       }
+      // CORS headers for assets
+      res.set("Access-Control-Allow-Origin", "*");
+      res.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
     },
+    maxAge: "1y",
+    immutable: true,
   }),
 );
 
