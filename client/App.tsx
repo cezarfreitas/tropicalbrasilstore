@@ -335,8 +335,30 @@ const App = () => (
 
 const rootElement = document.getElementById("root")!;
 
-// Apenas renderiza uma vez - hot reload é gerenciado pelo Vite
-if (!rootElement.hasAttribute("data-react-root")) {
-  rootElement.setAttribute("data-react-root", "true");
-  createRoot(rootElement).render(<App />);
+// Debug logs for production
+console.log("🚀 React App initializing...");
+console.log("📦 Root element found:", !!rootElement);
+
+// Error handling for production
+try {
+  // Apenas renderiza uma vez - hot reload é gerenciado pelo Vite
+  if (!rootElement.hasAttribute("data-react-root")) {
+    console.log("🎯 Rendering React app...");
+    rootElement.setAttribute("data-react-root", "true");
+    createRoot(rootElement).render(<App />);
+    console.log("✅ React app rendered successfully");
+  } else {
+    console.log("⚠️ React app already rendered");
+  }
+} catch (error) {
+  console.error("❌ Failed to render React app:", error);
+  // Fallback content
+  rootElement.innerHTML = `
+    <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+      <h1>❌ Erro no carregamento</h1>
+      <p>Falha ao carregar a aplicação React.</p>
+      <p>Erro: ${error instanceof Error ? error.message : 'Desconhecido'}</p>
+      <button onclick="window.location.reload()">🔄 Recarregar página</button>
+    </div>
+  `;
 }
