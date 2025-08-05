@@ -153,12 +153,12 @@ export function SimpleProductCard({
       onClick={() => onProductClick(product.id)}
     >
       <CardContent className="p-0 h-full flex flex-col">
-        {/* Product Image Container - Optimized for square photos */}
-        <div className="aspect-square relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+        {/* Product Image Container - No margins, optimized for square photos */}
+        <div className="aspect-square relative bg-white overflow-hidden">
           <ProductImage
             src={bestImageSrc}
             alt={product.name}
-            className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
             loading={index < 8 ? "eager" : "lazy"}
             product={{
               photo: product.photo,
@@ -169,9 +169,9 @@ export function SimpleProductCard({
           {/* Image overlay for better contrast on hover */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 pointer-events-none" />
 
-          {/* Category Badge - Modern design */}
+          {/* Category Badge - Smaller, more compact */}
           {product.category_name && (
-            <Badge className="absolute top-3 left-3 bg-primary/90 backdrop-blur-sm text-white px-2 py-1 text-xs font-medium rounded-full shadow-md">
+            <Badge className="absolute top-1.5 left-1.5 bg-primary/90 backdrop-blur-sm text-white px-1.5 py-0.5 text-[10px] font-medium rounded shadow-sm">
               {product.category_name}
             </Badge>
           )}
