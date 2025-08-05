@@ -223,46 +223,46 @@ export function SimpleProductCard({
 
         {/* Product Info - Reduced padding and spacing */}
         <div className="p-2.5 flex-1 flex flex-col">
-          <h3 className="font-semibold text-sm text-gray-900 mb-3 line-clamp-2 leading-tight group-hover:text-primary transition-colors duration-200">
+          <h3 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2 leading-tight group-hover:text-primary transition-colors duration-200">
             {product.name}
           </h3>
 
-          {/* Pricing - Enhanced design */}
+          {/* Pricing - Compact design */}
           {product.base_price && (
-            <div className="bg-gray-50 rounded-lg p-3 mb-3 border border-gray-100">
+            <div className="bg-gray-50 rounded-md p-2 mb-2">
               <PriceDisplay
                 price={product.base_price}
                 suggestedPrice={product.suggested_price}
                 variant="default"
                 onLoginClick={onLoginClick}
-                className="[&>div:first-child]:text-base [&>div:first-child]:font-bold"
+                className="[&>div:first-child]:text-sm [&>div:first-child]:font-semibold"
               />
             </div>
           )}
 
-          {/* Add to Cart Button - Improved design */}
+          {/* Button - More compact design */}
           <div className="mt-auto">
             {isAuthenticated && isApproved ? (
               <Button
-                className="w-full bg-primary hover:bg-primary/90 text-white text-sm font-medium h-10 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 group-hover:scale-[1.02]"
+                className="w-full bg-primary hover:bg-primary/90 text-white text-xs font-medium h-8 rounded-md transition-colors duration-200"
                 onClick={(e) => {
                   e.stopPropagation();
                   onProductClick(product.id);
                 }}
               >
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Ver Produto
+                <ShoppingCart className="w-3 h-3 mr-1" />
+                Ver
               </Button>
             ) : (
               <Button
                 variant="outline"
-                className="w-full border-gray-200 text-gray-600 hover:border-primary hover:text-primary text-sm font-medium h-10 rounded-lg transition-all duration-200"
+                className="w-full border-gray-200 text-gray-600 hover:border-primary hover:text-primary text-xs font-medium h-8 rounded-md transition-colors duration-200"
                 onClick={(e) => {
                   e.stopPropagation();
                   onProductClick(product.id);
                 }}
               >
-                Ver Detalhes
+                Detalhes
               </Button>
             )}
           </div>
