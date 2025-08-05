@@ -149,17 +149,16 @@ export function SimpleProductCard({
 
   return (
     <Card
-      className="cursor-pointer border border-gray-200 rounded-lg overflow-hidden bg-white"
+      className="group cursor-pointer border border-gray-200 rounded-xl overflow-hidden bg-white hover:shadow-lg transition-all duration-300 hover:border-primary/40 hover:-translate-y-1"
       onClick={() => onProductClick(product.id)}
-      style={{ minHeight: "300px", display: "block" }}
     >
-      <CardContent className="p-0">
-        {/* Product Image - Using EXACT same pattern as ProductDetail page */}
-        <div className="aspect-square relative bg-white">
+      <CardContent className="p-0 h-full flex flex-col">
+        {/* Product Image Container - Optimized for square photos */}
+        <div className="aspect-square relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
           <ProductImage
             src={bestImageSrc}
             alt={product.name}
-            className="w-full h-full object-contain p-2"
+            className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300"
             loading={index < 8 ? "eager" : "lazy"}
             product={{
               photo: product.photo,
@@ -167,21 +166,26 @@ export function SimpleProductCard({
             }}
           />
 
-          {/* Category Badge */}
+          {/* Image overlay for better contrast on hover */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 pointer-events-none" />
+
+          {/* Category Badge - Modern design */}
           {product.category_name && (
-            <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground px-2 py-1 text-xs">
+            <Badge className="absolute top-3 left-3 bg-primary/90 backdrop-blur-sm text-white px-2 py-1 text-xs font-medium rounded-full shadow-md">
               {product.category_name}
             </Badge>
           )}
 
-          {/* Color Variants - Simplificado */}
+          {/* Color Variants - Enhanced design */}
           {product.available_colors && product.available_colors.length > 0 && (
-            <div className="absolute bottom-2 right-2">
-              <div className="flex gap-1">
-                {product.available_colors.slice(0, 2).map((color) => (
+            <div className="absolute bottom-3 right-3">
+              <div className="flex gap-1.5">
+                {product.available_colors.slice(0, 3).map((color, idx) => (
                   <div
                     key={color.id}
-                    className="w-6 h-6 rounded border-2 border-white cursor-pointer bg-gray-100"
+                    className={`w-7 h-7 rounded-full border-2 border-white shadow-md cursor-pointer bg-gray-100 hover:scale-110 transition-transform duration-200 ${
+                      idx > 1 ? 'hidden sm:block' : ''
+                    }`}
                     title={color.name}
                     onClick={(e) =>
                       color.image_url && handleColorClick(color.image_url, e)
@@ -192,51 +196,83 @@ export function SimpleProductCard({
                       <img
                         src={getImageUrl(color.image_url)}
                         alt={color.name}
-                        className="w-full h-full object-contain rounded"
+                        className="w-full h-full object-contain rounded-full"
                         loading="lazy"
                       />
                     ) : (
-                      <span className="text-xs font-bold text-white">
-                        {color.name?.charAt(0)?.toUpperCase()}
-                      </span>
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="text-xs font-bold text-white">
+                          {color.name?.charAt(0)?.toUpperCase()}
+                        </span>
+                      </div>
                     )}
                   </div>
                 ))}
+                {/* Show count if more than 3 colors */}
+                {product.available_colors.length > 3 && (
+                  <div className="w-7 h-7 rounded-full bg-gray-800/80 backdrop-blur-sm border-2 border-white shadow-md flex items-center justify-center">
+                    <span className="text-xs font-bold text-white">
+                      +{product.available_colors.length - 3}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           )}
+
+          {/* Quick view indicator on hover */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+            <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium text-gray-800 shadow-lg">
+              Ver Detalhes
+            </div>
+          </div>
         </div>
 
-        {/* Product Info - Simplificado */}
-        <div className="p-3">
-          <h3 className="font-medium text-sm text-gray-900 mb-2">
+        {/* Product Info - Better spacing and typography */}
+        <div className="p-4 flex-1 flex flex-col">
+          <h3 className="font-semibold text-sm text-gray-900 mb-3 line-clamp-2 leading-tight group-hover:text-primary transition-colors duration-200">
             {product.name}
           </h3>
 
-          {/* Pricing */}
+          {/* Pricing - Enhanced design */}
           {product.base_price && (
-            <div className="bg-gray-50 rounded p-2 mb-2">
+            <div className="bg-gray-50 rounded-lg p-3 mb-3 border border-gray-100">
               <PriceDisplay
                 price={product.base_price}
                 suggestedPrice={product.suggested_price}
                 variant="default"
                 onLoginClick={onLoginClick}
+                className="[&>div:first-child]:text-base [&>div:first-child]:font-bold"
               />
             </div>
           )}
 
-          {/* Add to Cart Button */}
-          {isAuthenticated && isApproved && (
-            <Button
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium h-10 rounded"
-              onClick={(e) => {
-                e.stopPropagation();
-                onProductClick(product.id);
-              }}
-            >
-              Adicionar ao Carrinho
-            </Button>
-          )}
+          {/* Add to Cart Button - Improved design */}
+          <div className="mt-auto">
+            {isAuthenticated && isApproved ? (
+              <Button
+                className="w-full bg-primary hover:bg-primary/90 text-white text-sm font-medium h-10 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 group-hover:scale-[1.02]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onProductClick(product.id);
+                }}
+              >
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Ver Produto
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                className="w-full border-gray-200 text-gray-600 hover:border-primary hover:text-primary text-sm font-medium h-10 rounded-lg transition-all duration-200"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onProductClick(product.id);
+                }}
+              >
+                Ver Detalhes
+              </Button>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>
