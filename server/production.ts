@@ -8,6 +8,14 @@ const app = createServer();
 const staticPath = path.join(process.cwd(), "dist", "spa");
 console.log(`🗂️  Serving static files from: ${staticPath}`);
 
+// Log asset requests for debugging
+app.use((req, res, next) => {
+  if (req.path.startsWith('/assets/') || req.path.endsWith('.js') || req.path.endsWith('.css')) {
+    console.log(`📦 Asset request: ${req.method} ${req.path}`);
+  }
+  next();
+});
+
 // Serve the built client files with proper headers for JS and CSS
 app.use(express.static(staticPath, {
   setHeaders: (res, path, stat) => {
