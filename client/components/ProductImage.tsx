@@ -186,7 +186,7 @@ export function ProductImage({
 
   if (!finalSrc || hasError) {
     return (
-      <div className="flex items-center justify-center w-full h-full bg-muted/50">
+      <div className="flex items-center justify-center w-full h-full">
         <Package
           className={`${iconSizes[fallbackIconSize]} text-muted-foreground/50`}
         />
