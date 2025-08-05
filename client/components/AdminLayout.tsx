@@ -129,7 +129,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 <Package className="h-6 w-6 text-primary-foreground" />
               </div>
               <span className="text-xl font-bold text-primary">
-                Chinelos Admin
+                {storeSettings?.store_name || "Chinelos"} Admin
               </span>
             </div>
             <Button
