@@ -1,40 +1,29 @@
 import express from "express";
 import path from "path";
 import { createServer } from "./index.js";
+import fs from "fs";
 
 const app = createServer();
 
 // Production static file serving
 const staticPath = path.join(process.cwd(), "dist", "spa");
-console.log(`🗂️  Serving static files from: ${staticPath}`);
+console.log(`🗂️ Static path: ${staticPath}`);
+console.log(`📁 Static path exists: ${fs.existsSync(staticPath)}`);
 
-// Security and CORS headers for production
-app.use((req, res, next) => {
-  // Security headers
-  res.set({
-    "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "DENY",
-    "X-XSS-Protection": "1; mode=block",
-    "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
-  });
-
-  // CORS headers for assets
-  if (
-    req.path.startsWith("/assets/") ||
-    req.path.endsWith(".js") ||
-    req.path.endsWith(".css")
-  ) {
-    res.set({
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "Origin, X-Requested-With, Content-Type, Accept",
-      "Cross-Origin-Resource-Policy": "cross-origin",
-    });
+// Log static files for debugging
+if (fs.existsSync(staticPath)) {
+  console.log(`📄 Static files:`, fs.readdirSync(staticPath));
+  const assetsPath = path.join(staticPath, "assets");
+  if (fs.existsSync(assetsPath)) {
+    console.log(`📦 Assets:`, fs.readdirSync(assetsPath));
   }
+}
 
-  console.log(`🌐 Request: ${req.method} ${req.path}`);
+// Simple request logging
+app.use((req, res, next) => {
+  if (req.path.startsWith("/assets/") || req.path === "/") {
+    console.log(`🌐 ${req.method} ${req.path}`);
+  }
   next();
 });
 
