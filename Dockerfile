@@ -33,7 +33,7 @@ RUN if [ -d "public/uploads" ]; then \
 
 # Verificar se o build incluiu as mudanças da API
 RUN echo "✅ Verificando build da API..." && \
-    grep -q "produto.*variantes" dist/server/routes/products.js && \
+    grep -q "produto.*variantes" dist/server/production.js && \
     echo "✅ API produto/variantes incluída no build" || \
     echo "❌ ERRO: API produto/variantes não encontrada no build"
 
