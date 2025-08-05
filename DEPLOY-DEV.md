@@ -5,12 +5,14 @@ Este guia descreve como fazer deploy da aplicação em ambiente de desenvolvimen
 ## Arquivos Criados
 
 ### Configuração de Ambiente
+
 - **`.env.development`** - Variáveis de ambiente para desenvolvimento
 - **`docker-compose.dev.yml`** - Configuração Docker Compose para desenvolvimento
 - **`Dockerfile.dev`** - Dockerfile otimizado para desenvolvimento
 - **`easypanel.dev.json`** - Configuração EasyPanel para desenvolvimento
 
 ### Scripts
+
 - **`build-dev.js`** - Script de build para desenvolvimento
 - **`deploy-dev.sh`** - Script automatizado de deploy
 
@@ -48,6 +50,7 @@ npm run start:dev
 ## Diferenças do Ambiente de Desenvolvimento
 
 ### Características
+
 - **Porta**: 8080 (em vez de 80)
 - **Hot Reload**: Habilitado
 - **Debug Mode**: Ativo
@@ -55,6 +58,7 @@ npm run start:dev
 - **Cache**: Desabilitado para desenvolvimento
 
 ### Variáveis de Ambiente
+
 ```bash
 NODE_ENV=development
 PORT=8080
@@ -88,6 +92,7 @@ docker-compose -f docker-compose.dev.yml ps
 ## Troubleshooting
 
 ### Container não inicia
+
 ```bash
 # Verificar logs
 docker-compose -f docker-compose.dev.yml logs
@@ -97,6 +102,7 @@ netstat -tulpn | grep 8080
 ```
 
 ### Build falha
+
 ```bash
 # Limpar cache do npm
 npm cache clean --force
@@ -107,6 +113,7 @@ npm install
 ```
 
 ### Health check falha
+
 ```bash
 # Teste manual
 curl http://localhost:8080/health
@@ -126,6 +133,7 @@ docker-compose -f docker-compose.dev.yml ps
 ## Próximos Passos
 
 Após confirmar que o desenvolvimento está funcionando:
+
 1. Testar todas as funcionalidades
 2. Verificar logs para erros
 3. Fazer ajustes se necessário

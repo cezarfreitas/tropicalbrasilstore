@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useGlobalStoreSettings } from '@/hooks/use-global-store-settings';
+import { useEffect } from "react";
+import { useGlobalStoreSettings } from "@/hooks/use-global-store-settings";
 
 interface DynamicTitleProps {
   suffix?: string;
@@ -7,7 +7,7 @@ interface DynamicTitleProps {
 
 export function DynamicTitle({ suffix = "" }: DynamicTitleProps) {
   const storeSettings = useGlobalStoreSettings();
-  
+
   useEffect(() => {
     const storeName = storeSettings?.store_name || "Chinelos Store";
     const fullTitle = suffix ? `${suffix} - ${storeName}` : storeName;
