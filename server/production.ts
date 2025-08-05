@@ -150,6 +150,16 @@ app.get("*", (req, res) => {
 
   // Serve index.html for all other routes (SPA routing)
   const indexPath = path.join(staticPath, "index.html");
+
+  // Set headers for HTML compatibility with proxies
+  res.set({
+    "Content-Type": "text/html; charset=utf-8",
+    "Cache-Control": "no-cache, no-store, must-revalidate",
+    "Pragma": "no-cache",
+    "Expires": "0",
+    "X-Frame-Options": "SAMEORIGIN"
+  });
+
   console.log(`📄 Serving index.html for: ${req.path}`);
   res.sendFile(indexPath);
 });
