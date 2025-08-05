@@ -2,6 +2,11 @@
 
 ## ✅ **TODOS OS ARQUIVOS PREPARADOS PARA PRODUÇÃO**
 
+### 🔧 **Correção do Dockerfile (RESOLVIDO)**
+- ❌ Erro: `server/tsconfig.json` não existe
+- ✅ **Corrigido**: Removida compilação redundante do TypeScript
+- ✅ **Corrigido**: Verificação da API ajustada para `production.js`
+
 ### 📦 **Build Verificado**
 
 - ✅ `dist/server/production.js` → 420 KB (servidor)
