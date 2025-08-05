@@ -31,11 +31,11 @@ RUN if [ -d "public/uploads" ]; then \
       cp -r public/uploads dist/public/; \
     fi
 
-# Verificar se o build incluiu as mudanças da API
-RUN echo "✅ Verificando build da API..." && \
-    grep -q "produto.*variantes" dist/server/production.js && \
-    echo "✅ API produto/variantes incluída no build" || \
-    echo "❌ ERRO: API produto/variantes não encontrada no build"
+# Verificar se os arquivos de build foram criados
+RUN echo "✅ Verificando arquivos de build..." && \
+    ls -la dist/server/production.js && \
+    ls -la dist/spa/index.html && \
+    echo "✅ Build concluído com sucesso"
 
 # Configurar ambiente
 ENV PORT=80
