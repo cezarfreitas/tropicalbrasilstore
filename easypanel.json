@@ -1,12 +1,12 @@
 {
-  "name": "chinelos-store-dev",
+  "name": "chinelos-store-prod",
   "type": "app",
   "build": {
     "type": "dockerfile",
     "dockerfile": "./Dockerfile"
   },
   "env": {
-    "NODE_ENV": "development",
+    "NODE_ENV": "production",
     "PORT": "80"
   },
   "healthcheck": {
