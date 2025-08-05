@@ -1,36 +1,30 @@
-# Dockerfile Ultra-Simplificado para Produção
+# Dockerfile Extremamente Simples
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Instalar curl para health check
+# Instalar dependências do sistema
 RUN apk add --no-cache curl
 
-# Copiar package.json primeiro (para cache de dependências)
+# Copiar e instalar dependências
 COPY package*.json ./
-
-# Instalar dependências com flag para resolver conflitos
 RUN npm ci --legacy-peer-deps
 
-# Copiar todo o código source
+# Copiar código fonte
 COPY . .
 
-# Build da aplicação
+# Build
 RUN npm run build
 
-# Limpar cache npm para reduzir tamanho
-RUN npm cache clean --force
-
-# Configurações de ambiente
+# Configurações
 ENV NODE_ENV=production
 ENV PORT=80
 
-# Expor porta
 EXPOSE 80
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
     CMD curl -f http://localhost:80/api/ping || exit 1
 
-# Comando de start
+# Start
 CMD ["node", "dist/server/production.js"]
