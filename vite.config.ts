@@ -41,9 +41,9 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react(),
-      isDev ? expressPlugin() : null,
-      isDev ? null : buildPlugin(),
-    ].filter(Boolean),
+      // Só carregar plugins do servidor em desenvolvimento
+      ...(isDev ? [createExpressPlugin()] : [createBuildPlugin()])
+    ],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./client"),
@@ -53,68 +53,46 @@ export default defineConfig(({ mode }) => {
   };
 });
 
-function expressPlugin(): Plugin {
+function createExpressPlugin(): Plugin {
   return {
     name: "express-plugin",
     apply: "serve",
     async configureServer(server) {
-      // Só carregar o servidor em desenvolvimento
-      try {
-        const { createServer } = await import("./server/index.js");
-        const app = createServer();
+      // Só em desenvolvimento, importar dinamicamente sem resolver na fase de config
+      const serverModule = await import("./server/index.js").catch(() => {
+        console.warn("Failed to load server in dev mode");
+        return null;
+      });
+      
+      if (serverModule?.createServer) {
+        const app = serverModule.createServer();
         server.middlewares.use(app);
-      } catch (error) {
-        console.warn("Failed to load server in dev mode:", error);
       }
     },
     transformIndexHtml: {
       order: "pre",
       handler: async (html) => {
-        const injection = `
-    <script>
-      window.__STORE_SETTINGS__ = null;
-
-      (async function() {
-        try {
-          const response = await fetch('/api/settings');
-          if (response.ok) {
-            const settings = await response.json();
-            window.__STORE_SETTINGS__ = {
-              store_name: settings.store_name,
-              logo_url: settings.logo_url,
-              primary_color: settings.primary_color,
-              secondary_color: settings.secondary_color,
-              accent_color: settings.accent_color,
-              background_color: settings.background_color,
-              text_color: settings.text_color
-            };
-            window.dispatchEvent(new CustomEvent('storeSettingsLoaded', {
-              detail: window.__STORE_SETTINGS__
-            }));
-          }
-        } catch (error) {
-          console.warn('Failed to load store settings:', error);
-        }
-      })();
-    </script>`;
-
-        return html.replace(
-          '<div id="root"></div>',
-          `<div id="root"></div>${injection}`,
-        );
+        return addStoreSettingsScript(html);
       },
     },
   };
 }
 
-function buildPlugin(): Plugin {
+function createBuildPlugin(): Plugin {
   return {
     name: "build-plugin",
     apply: "build",
     transformIndexHtml: {
       order: "pre",
       handler: async (html) => {
-        const injection = `
+        return addStoreSettingsScript(html);
+      },
+    },
+  };
+}
+
+function addStoreSettingsScript(html: string): string {
+  const injection = `
     <script>
       window.__STORE_SETTINGS__ = null;
 
@@ -142,11 +120,8 @@ function buildPlugin(): Plugin {
       })();
     </script>`;
 
-        return html.replace(
-          '<div id="root"></div>',
-          `<div id="root"></div>${injection}`,
-        );
-      },
-    },
-  };
+  return html.replace(
+    '<div id="root"></div>',
+    `<div id="root"></div>${injection}`,
+  );
 }
