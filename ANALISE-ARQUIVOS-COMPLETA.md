@@ -3,35 +3,42 @@
 ## 📋 **Scripts de Diagnóstico Criados:**
 
 ### 🥇 **1. Diagnóstico Completo**
+
 ```bash
 chmod +x diagnostico-completo.sh
 ./diagnostico-completo.sh
 ```
+
 **Faz:** Verifica TODOS os arquivos necessários
 
 ### 🥈 **2. Criação Automática**
+
 ```bash
 chmod +x criar-arquivos-faltantes.sh
 ./criar-arquivos-faltantes.sh
 ```
+
 **Faz:** Cria automaticamente arquivos faltantes
 
 ## 📁 **Arquivos Essenciais Verificados:**
 
 ### ⚡ **Críticos (precisam existir):**
+
 - ✅ `package.json` - Configuração NPM
-- ✅ `server/index.ts` - Servidor principal  
+- ✅ `server/index.ts` - Servidor principal
 - ✅ `server/production.ts` - Entrada de produção
 - ✅ `dist/server/production.js` - Servidor compilado
 - ✅ `dist/spa/index.html` - Frontend compilado
 
 ### 🔧 **Configuração (importantes):**
+
 - ✅ `tsconfig.json` - TypeScript config
 - ✅ `vite.config.ts` - Build config
 - ✅ `build.js` - Script de build
 - ✅ `.env` - Variáveis de ambiente
 
 ### 🚀 **Deploy (opcionais mas úteis):**
+
 - 🔄 `start-now.sh` - Script simples de start
 - 🔄 `Dockerfile.basic` - Container básico
 - 🔄 `docker-compose.basic.yml` - Orquestração
@@ -39,32 +46,41 @@ chmod +x criar-arquivos-faltantes.sh
 ## 🎯 **Processo de Correção:**
 
 ### **Passo 1: Diagnóstico**
+
 ```bash
 ./diagnostico-completo.sh
 ```
+
 Mostra exatamente o que está faltando
 
-### **Passo 2: Correção Automática** 
+### **Passo 2: Correção Automática**
+
 ```bash
 ./criar-arquivos-faltantes.sh
 ```
+
 Cria todos os arquivos faltantes automaticamente
 
 ### **Passo 3: Verificação**
+
 ```bash
 ./diagnostico-completo.sh
 ```
+
 Confirma que tudo está OK
 
 ### **Passo 4: Deploy**
+
 ```bash
 ./start-now.sh
 ```
+
 Inicia a aplicação
 
 ## 📊 **Status Atual (baseado na verificação):**
 
 ✅ **Arquivos principais existem:**
+
 - `dist/server/production.js` - 420KB
 - `dist/spa/index.html` - 1KB
 - `package.json`, `tsconfig.json`, `index.html`
@@ -82,6 +98,7 @@ Inicia a aplicação
 ## 🔧 **Soluções Automáticas Criadas:**
 
 ### **Script `start-now.sh`** (será criado):
+
 ```bash
 # Build automático se necessário
 # Configuração de ambiente
@@ -89,6 +106,7 @@ Inicia a aplicação
 ```
 
 ### **Docker básico** (será criado):
+
 ```bash
 # Dockerfile.basic - container simples
 # docker-compose.basic.yml - orquestração
@@ -100,7 +118,7 @@ Inicia a aplicação
 # 1. Diagnóstico completo
 chmod +x diagnostico-completo.sh && ./diagnostico-completo.sh
 
-# 2. Correção automática  
+# 2. Correção automática
 chmod +x criar-arquivos-faltantes.sh && ./criar-arquivos-faltantes.sh
 
 # 3. Start da aplicação
