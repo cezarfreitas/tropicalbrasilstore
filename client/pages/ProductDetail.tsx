@@ -834,9 +834,17 @@ export default function ProductDetail() {
                       </div>
 
                       {/* Color Name */}
-                      <span className="font-medium text-gray-900">
-                        {color.name}
-                      </span>
+                      <div className="flex items-center gap-1">
+                        <span className="font-medium text-gray-900">
+                          {color.name}
+                        </span>
+                        {/* Multiple images indicator */}
+                        {color.images && color.images.length > 1 && (
+                          <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
+                            {color.images.length}
+                          </span>
+                        )}
+                      </div>
                     </button>
                   ))}
                 </div>
