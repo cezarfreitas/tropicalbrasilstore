@@ -16,9 +16,9 @@ if (fs.existsSync(staticPath)) {
   const assetsPath = path.join(staticPath, "assets");
   if (fs.existsSync(assetsPath)) {
     console.log(`📦 Assets:`, fs.readdirSync(assetsPath));
-    
+
     // Log each asset file size
-    fs.readdirSync(assetsPath).forEach(file => {
+    fs.readdirSync(assetsPath).forEach((file) => {
       const filePath = path.join(assetsPath, file);
       const stats = fs.statSync(filePath);
       console.log(`📄 ${file}: ${stats.size} bytes`);
@@ -37,19 +37,24 @@ app.use((req, res, next) => {
 });
 
 // Serve static files from spa directory (this handles /assets automatically)
-app.use(express.static(staticPath, {
-  setHeaders: (res, filePath) => {
-    if (filePath.endsWith(".js")) {
-      res.set("Content-Type", "application/javascript; charset=utf-8");
-    }
-    if (filePath.endsWith(".css")) {
-      res.set("Content-Type", "text/css; charset=utf-8");
-    }
-  }
-}));
+app.use(
+  express.static(staticPath, {
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith(".js")) {
+        res.set("Content-Type", "application/javascript; charset=utf-8");
+      }
+      if (filePath.endsWith(".css")) {
+        res.set("Content-Type", "text/css; charset=utf-8");
+      }
+    },
+  }),
+);
 
 // Serve uploads directory
-app.use("/uploads", express.static(path.join(process.cwd(), "public", "uploads")));
+app.use(
+  "/uploads",
+  express.static(path.join(process.cwd(), "public", "uploads")),
+);
 
 // Serve public files (manifest, etc)
 app.use(express.static(path.join(process.cwd(), "public")));
@@ -58,7 +63,7 @@ app.use(express.static(path.join(process.cwd(), "public")));
 app.get("/debug/status", (req, res) => {
   const indexPath = path.join(staticPath, "index.html");
   const assetsPath = path.join(staticPath, "assets");
-  
+
   const debugInfo = {
     status: "ok",
     timestamp: new Date().toISOString(),
@@ -69,7 +74,7 @@ app.get("/debug/status", (req, res) => {
     staticFiles: fs.existsSync(staticPath) ? fs.readdirSync(staticPath) : [],
     assetFiles: fs.existsSync(assetsPath) ? fs.readdirSync(assetsPath) : [],
   };
-  
+
   res.json(debugInfo);
 });
 
