@@ -738,6 +738,12 @@ export default function ProductDetail() {
                   <h1 className="text-3xl font-bold text-gray-900 mb-1.5 leading-tight">
                     {product.name}
                   </h1>
+                  {/* Product SKU */}
+                  {product.sku && (
+                    <div className="text-sm text-gray-500 mb-3">
+                      <span className="font-medium">SKU:</span> {product.sku}
+                    </div>
+                  )}
                 </div>
 
                 {/* Action Buttons */}
