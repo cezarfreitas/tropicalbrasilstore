@@ -1,15 +1,20 @@
 # Chinelos Store - Sistema B2B
 
-## 🚀 Início Rápido
+Sistema de e-commerce B2B para venda de chinelos com funcionalidades completas de catálogo, carrinho e administração.
+
+## 🚀 Desenvolvimento
 
 ```bash
-# 1. Instalar dependências
+# Instalar dependências
 npm install
 
-# 2. Fazer build
+# Desenvolvimento
+npm run dev
+
+# Build
 npm run build
 
-# 3. Executar
+# Produção
 npm start
 ```
 
@@ -17,57 +22,50 @@ npm start
 
 ```
 ├── client/          # Frontend React + TypeScript
-├── server/          # Backend Node.js + Express
-├── shared/          # Tipos e utilitários compartilhados
+├── server/          # Backend Node.js + Express  
+├── shared/          # Tipos compartilhados
 ├── public/          # Assets públicos
-├── dist/            # Build de produção
-└── package.json     # Configuração do projeto
+└── dist/            # Build de produção
 ```
 
 ## ⚙️ Scripts
 
-- `npm start` - Executa aplicação em produção
-- `npm run dev` - Executa em desenvolvimento
-- `npm run build` - Build completo (client + server)
-- `npm run build:client` - Build apenas frontend
-- `npm run build:server` - Build apenas backend
-
-## 🌐 Acesso
-
-- **Aplicação**: http://localhost (porta via env PORT)
-- **Health Check**: `/health`
-- **API**: `/api/*`
+- `npm run dev` - Desenvolvimento com hot reload
+- `npm run build` - Build completo
+- `npm start` - Executar produção
+- `npm run build:client` - Build frontend
+- `npm run build:server` - Build backend
 
 ## 🔧 Configuração
 
-Configure no arquivo `.env`:
+Arquivo `.env`:
 
 ```env
-NODE_ENV=production
-PORT=80
+NODE_ENV=development
+PORT=8080
 DATABASE_URL=mysql://user:pass@host:port/db
 JWT_SECRET=sua_chave_secreta
-CORS_ORIGIN=https://seu-dominio.com
 ```
 
-## 📦 Funcionalidades
+## 🌐 URLs
 
-- ✅ Sistema B2B completo
-- ✅ API bulk com formato produto/variantes
-- ✅ Galeria de imagens por produto
-- ✅ Sistema de grades (tamanhos/cores)
-- ✅ Carrinho e checkout
-- ✅ Autenticação e autorização
-- ✅ Painel administrativo
-- ✅ Interface de loja
+- **App**: http://localhost:8080
+- **Health**: http://localhost:8080/health
+- **API**: http://localhost:8080/api
 
-## 🏗️ Tecnologias
+## 📦 Stack
 
 - **Frontend**: React, TypeScript, Vite, TailwindCSS
 - **Backend**: Node.js, Express, TypeScript
-- **Banco**: MySQL
-- **Build**: Vite + TypeScript
+- **Database**: MySQL
+- **Build**: Vite
 
-## 📄 Licença
+## 🎯 Funcionalidades
 
-Proprietary - Todos os direitos reservados
+- Sistema B2B completo
+- API bulk produto/variantes
+- Galeria de imagens
+- Sistema de grades
+- Carrinho e checkout
+- Autenticação
+- Painel admin
