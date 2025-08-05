@@ -271,4 +271,54 @@
       height: 5rem;
     }
   }
+
+  /* Square photo optimizations for product cards */
+  .aspect-square img {
+    object-fit: contain;
+    object-position: center;
+  }
+
+  /* Enhanced card hover effects */
+  .group {
+    transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+  }
+
+  .group:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Better text truncation */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Smooth image loading transitions */
+  img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  img[loading="lazy"].loaded,
+  img[loading="eager"] {
+    opacity: 1;
+  }
+
+  /* Grid layout optimizations */
+  @supports (aspect-ratio: 1 / 1) {
+    .aspect-square {
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  /* Fallback for older browsers */
+  @supports not (aspect-ratio: 1 / 1) {
+    .aspect-square::before {
+      content: "";
+      display: block;
+      padding-bottom: 100%;
+    }
+  }
 }
