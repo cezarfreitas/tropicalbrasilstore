@@ -543,18 +543,40 @@ router.get("/products/:id", async (req, res) => {
       }
     }
 
-    // Extract unique colors for the available_colors field
+    // Get additional images from variant_images table
+    const [allVariantImages] = await db.execute(
+      `SELECT vi.*, pcv.color_id
+       FROM variant_images vi
+       INNER JOIN product_color_variants pcv ON vi.color_variant_id = pcv.id
+       WHERE pcv.product_id = ?
+       ORDER BY pcv.color_id, vi.display_order`,
+      [req.params.id]
+    );
+
+    // Extract unique colors for the available_colors field and include all images
     const uniqueColors = [];
     const seenColorIds = new Set();
 
     for (const variant of variantRows as any[]) {
       if (variant.color_id && !seenColorIds.has(variant.color_id)) {
         seenColorIds.add(variant.color_id);
+
+        // Get all images for this color variant
+        const colorImages = (allVariantImages as any[])
+          .filter(img => img.color_id === variant.color_id)
+          .map(img => img.image_url);
+
+        // If no variant images, use the main image_url
+        if (colorImages.length === 0 && variant.image_url) {
+          colorImages.push(variant.image_url);
+        }
+
         uniqueColors.push({
           id: variant.color_id,
           name: variant.color_name,
           hex_code: variant.hex_code,
-          image_url: variant.image_url,
+          image_url: variant.image_url, // Main image
+          images: colorImages, // All images array
         });
       }
     }
