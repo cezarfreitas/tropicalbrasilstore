@@ -61,7 +61,7 @@ Abrir DevTools e verificar:
 - **CSS**: `index-DB6PNSre.css` (97.40 kB)
 - **JS Principal**: `index-1rT4xWQV.js` (1,229.74 kB)
 - **React Vendor**: `react-vendor-DMgL90Fv.js` (313.79 kB)
-- **Router**: `router-vendor-MjnBEFtt.js` (31.65 kB)
+- **Router**: `router-vendor-MjnBEFtt.js` (31.65 kB)s
 - **UI**: `ui-vendor-B1OMpgPT.js` (87.11 kB)
 
 ## 🚨 **Se Ainda Não Funcionar**
