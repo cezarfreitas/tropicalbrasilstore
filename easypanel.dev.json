@@ -1,0 +1,30 @@
+{
+  "name": "chinelos-store-dev",
+  "type": "app",
+  "build": {
+    "type": "dockerfile",
+    "dockerfile": "./Dockerfile.dev"
+  },
+  "env": {
+    "NODE_ENV": "development",
+    "PORT": "8080",
+    "DEBUG_MODE": "true",
+    "HOT_RELOAD": "true"
+  },
+  "ports": [
+    {
+      "published": 8080,
+      "target": 8080
+    }
+  ],
+  "healthcheck": {
+    "path": "/health",
+    "interval": 30
+  },
+  "volumes": [
+    {
+      "source": "./public/uploads",
+      "target": "/app/public/uploads"
+    }
+  ]
+}
