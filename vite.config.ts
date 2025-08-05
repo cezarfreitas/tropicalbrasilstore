@@ -12,12 +12,14 @@ export default defineConfig(({ mode }) => {
       port: 3000,
       strictPort: true,
     },
+    base: "/",
     build: {
       outDir: "dist/spa",
       chunkSizeWarningLimit: 1000,
       reportCompressedSize: false,
       minify: "esbuild",
       sourcemap: isDev,
+      assetsDir: "assets",
       rollupOptions: {
         output: {
           manualChunks: {
