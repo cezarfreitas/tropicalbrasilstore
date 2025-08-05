@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
   return {
     server: {
       host: "0.0.0.0",
-      port: 8080,
+      port: 8085,
       strictPort: true,
       allowedHosts: [
         "localhost",
