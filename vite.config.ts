@@ -40,9 +40,9 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [
-      react(), 
-      isDev ? expressPlugin() : null, 
-      isDev ? null : buildPlugin()
+      react(),
+      isDev ? expressPlugin() : null,
+      isDev ? null : buildPlugin(),
     ].filter(Boolean),
     resolve: {
       alias: {
