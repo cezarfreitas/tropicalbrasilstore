@@ -50,6 +50,24 @@ app.use(
 // Serve manifest and other assets from public
 app.use(express.static(path.join(process.cwd(), "public")));
 
+// Explicit handler for assets - ensure they're served correctly
+app.get("/assets/*", (req, res, next) => {
+  const filePath = path.join(staticPath, req.path);
+  console.log(`🎯 Direct asset request: ${req.path} -> ${filePath}`);
+
+  if (fs.existsSync(filePath)) {
+    if (req.path.endsWith(".js")) {
+      res.set("Content-Type", "application/javascript; charset=utf-8");
+    } else if (req.path.endsWith(".css")) {
+      res.set("Content-Type", "text/css; charset=utf-8");
+    }
+    res.sendFile(filePath);
+  } else {
+    console.log(`❌ Asset not found: ${filePath}`);
+    res.status(404).json({ error: "Asset not found" });
+  }
+});
+
 // Catch-all handler for SPA routing
 app.get("*", (req, res) => {
   // Don't serve index.html for API routes or uploads
