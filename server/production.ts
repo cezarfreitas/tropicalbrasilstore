@@ -51,9 +51,21 @@ app.get("*", (req, res) => {
 
 const PORT = process.env.PORT || 80;
 
+// Log static path verification
+import fs from "fs";
+console.log(`🗂️ Static path exists: ${fs.existsSync(staticPath)}`);
+if (fs.existsSync(staticPath)) {
+  console.log(`📁 Static files:`, fs.readdirSync(staticPath));
+  const assetsPath = path.join(staticPath, "assets");
+  if (fs.existsSync(assetsPath)) {
+    console.log(`📦 Assets files:`, fs.readdirSync(assetsPath));
+  }
+}
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Production server running on port ${PORT}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
+  console.log(`🗂️ Serving static from: ${staticPath}`);
   console.log(
     `💾 Database: ${process.env.DATABASE_URL ? "Connected" : "No URL set"}`,
   );
