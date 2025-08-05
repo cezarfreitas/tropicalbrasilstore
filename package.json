@@ -16,7 +16,6 @@
     "build": "node build.js",
     "build:client": "vite build",
     "build:server": "vite build --config vite.config.server.ts",
-
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc"

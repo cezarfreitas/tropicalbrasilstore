@@ -22,7 +22,7 @@ npm start
 
 ```
 ├── client/          # Frontend React + TypeScript
-├── server/          # Backend Node.js + Express  
+├── server/          # Backend Node.js + Express
 ├── shared/          # Tipos compartilhados
 ├── public/          # Assets públicos
 └── dist/            # Build de produção
