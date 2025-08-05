@@ -797,9 +797,13 @@ export default function ProductDetail() {
                   {getAvailableColors().map((color) => (
                     <button
                       key={color.id}
-                      onClick={() =>
-                        handleColorSelect(color.id, color.image_url)
-                      }
+                      onClick={() => {
+                        handleColorSelect(color.id, color.image_url);
+                        // If this color has specific images, update gallery
+                        if (color.images && color.images.length > 0) {
+                          setSelectedImageIndex(0);
+                        }
+                      }}
                       className={`flex items-center gap-1.5 p-1.5 rounded-lg transition-all ${
                         selectedColor === color.id
                           ? "bg-primary/10 border-2 border-primary"
