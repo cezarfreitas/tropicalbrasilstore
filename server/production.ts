@@ -27,41 +27,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve the built client files with proper headers for JS and CSS
-app.use(
-  express.static(staticPath, {
-    setHeaders: (res, filePath, stat) => {
-      // Enhanced headers for JavaScript modules
-      if (filePath.endsWith(".js")) {
-        res.set({
-          "Content-Type": "application/javascript; charset=utf-8",
-          "Cache-Control": "public, max-age=31536000, immutable",
-          "Cross-Origin-Embedder-Policy": "unsafe-none",
-          "Cross-Origin-Opener-Policy": "same-origin",
-        });
-      }
-
-      // CSS headers
-      if (filePath.endsWith(".css")) {
-        res.set({
-          "Content-Type": "text/css; charset=utf-8",
-          "Cache-Control": "public, max-age=31536000, immutable",
-        });
-      }
-
-      // General asset headers
-      res.set({
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
-        Vary: "Accept-Encoding",
-      });
-    },
-    maxAge: "1y",
-    immutable: true,
-    etag: true,
-    lastModified: true,
-  }),
-);
+// Serve static files from spa directory
+app.use(express.static(staticPath, {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith(".js")) {
+      res.set("Content-Type", "application/javascript; charset=utf-8");
+    }
+    if (filePath.endsWith(".css")) {
+      res.set("Content-Type", "text/css; charset=utf-8");
+    }
+  }
+}));
 
 // Serve static files for uploads
 app.use(
