@@ -227,45 +227,34 @@ export function SimpleProductCard({
             {product.name}
           </h3>
 
-          {/* Pricing - Compact design */}
+          {/* Pricing with cart icon - Compact design */}
           {product.base_price && (
-            <div className="bg-gray-50 rounded-md p-2 mb-2">
-              <PriceDisplay
-                price={product.base_price}
-                suggestedPrice={product.suggested_price}
-                variant="default"
-                onLoginClick={onLoginClick}
-                className="[&>div:first-child]:text-sm [&>div:first-child]:font-semibold"
-              />
+            <div className="bg-gray-50 rounded-md p-2 flex items-center justify-between">
+              <div className="flex-1">
+                <PriceDisplay
+                  price={product.base_price}
+                  suggestedPrice={product.suggested_price}
+                  variant="default"
+                  onLoginClick={onLoginClick}
+                  className="[&>div:first-child]:text-sm [&>div:first-child]:font-semibold"
+                />
+              </div>
+
+              {/* Cart Icon Button */}
+              {isAuthenticated && isApproved && (
+                <button
+                  className="ml-2 p-1.5 bg-primary hover:bg-primary/90 text-white rounded-md transition-colors duration-200 flex-shrink-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onProductClick(product.id);
+                  }}
+                  title="Adicionar ao carrinho"
+                >
+                  <ShoppingCart className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           )}
-
-          {/* Button - More compact design */}
-          <div className="mt-auto">
-            {isAuthenticated && isApproved ? (
-              <Button
-                className="w-full bg-primary hover:bg-primary/90 text-white text-xs font-medium h-8 rounded-md transition-colors duration-200"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onProductClick(product.id);
-                }}
-              >
-                <ShoppingCart className="w-3 h-3 mr-1" />
-                Ver
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                className="w-full border-gray-200 text-gray-600 hover:border-primary hover:text-primary text-xs font-medium h-8 rounded-md transition-colors duration-200"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onProductClick(product.id);
-                }}
-              >
-                Detalhes
-              </Button>
-            )}
-          </div>
         </div>
       </CardContent>
     </Card>
