@@ -60,6 +60,7 @@ interface AvailableGrade {
 interface ProductDetail {
   id: number;
   name: string;
+  sku?: string;
   description?: string;
   base_price?: number;
   suggested_price?: number;
