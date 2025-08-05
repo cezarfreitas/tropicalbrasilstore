@@ -80,6 +80,38 @@ app.use(
 // Serve public files (manifest, etc)
 app.use(express.static(path.join(process.cwd(), "public")));
 
+// Explicit assets handler for proxy compatibility
+app.get("/assets/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(staticPath, "assets", filename);
+
+  console.log(`🎯 Direct asset request: ${filename}`);
+
+  if (fs.existsSync(filePath)) {
+    const stats = fs.statSync(filePath);
+    console.log(`✅ Serving ${filename} (${stats.size} bytes)`);
+
+    // Set headers based on file type
+    if (filename.endsWith(".js")) {
+      res.set({
+        "Content-Type": "text/javascript; charset=utf-8",
+        "Cache-Control": "public, max-age=31536000",
+        "Access-Control-Allow-Origin": "*"
+      });
+    } else if (filename.endsWith(".css")) {
+      res.set({
+        "Content-Type": "text/css; charset=utf-8",
+        "Cache-Control": "public, max-age=31536000"
+      });
+    }
+
+    res.sendFile(filePath);
+  } else {
+    console.log(`❌ Asset not found: ${filename}`);
+    res.status(404).json({ error: "Asset not found", file: filename });
+  }
+});
+
 // Debug endpoint
 app.get("/debug/status", (req, res) => {
   const indexPath = path.join(staticPath, "index.html");
@@ -94,6 +126,11 @@ app.get("/debug/status", (req, res) => {
     assetsExists: fs.existsSync(assetsPath),
     staticFiles: fs.existsSync(staticPath) ? fs.readdirSync(staticPath) : [],
     assetFiles: fs.existsSync(assetsPath) ? fs.readdirSync(assetsPath) : [],
+    headers: {
+      userAgent: req.get('User-Agent'),
+      acceptEncoding: req.get('Accept-Encoding'),
+      host: req.get('Host')
+    }
   };
 
   res.json(debugInfo);
