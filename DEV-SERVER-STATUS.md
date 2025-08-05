@@ -50,7 +50,7 @@
 # Ver logs em tempo real
 DevServerControl get_logs
 
-# Reiniciar se necessário  
+# Reiniciar se necessário
 DevServerControl restart
 
 # Alterar porta novamente (se necessário)
@@ -59,7 +59,8 @@ DevServerControl set_proxy_port [NOVA_PORTA]
 
 ## ✅ **Conclusão:**
 
-**DESENVOLVIMENTO FUNCIONANDO NA PORTA 8085!** 
+**DESENVOLVIMENTO FUNCIONANDO NA PORTA 8085!**
+
 - Servidor ativo e responsivo
 - Database conectado
 - Interface disponível
