@@ -338,31 +338,40 @@ const App = () => (
 
 const rootElement = document.getElementById("root")!;
 
-// Add immediate debug output
-document.body.style.backgroundColor = "red";
-console.log("🚀 JavaScript is executing!");
+// Production-ready initialization
+console.log("🚀 React App initializing...");
 
-// Show immediate feedback
 if (rootElement) {
-  rootElement.innerHTML = "<h1 style='color: green;'>JavaScript carregou!</h1>";
+  console.log("📦 Root element found, rendering React...");
 
-  setTimeout(() => {
-    try {
-      console.log("🎯 Attempting to render React...");
-      createRoot(rootElement).render(<App />);
-      console.log("✅ React rendered!");
-    } catch (error) {
-      console.error("❌ React error:", error);
-      rootElement.innerHTML = `
-        <div style="padding: 20px; background: yellow; border: 2px solid red;">
-          <h1>❌ Erro React</h1>
-          <p>JavaScript carregou mas React falhou</p>
-          <pre>${error}</pre>
-        </div>
-      `;
-    }
-  }, 100);
+  try {
+    // Create and render React app
+    const root = createRoot(rootElement);
+    root.render(<App />);
+    console.log("✅ React app rendered successfully");
+  } catch (error) {
+    console.error("❌ Failed to render React app:", error);
+    // Fallback for production errors
+    rootElement.innerHTML = `
+      <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; border: 1px solid #ccc; border-radius: 8px;">
+        <h1 style="color: #e74c3c;">⚠️ Erro na Aplicação</h1>
+        <p>Ocorreu um erro ao carregar a aplicação. Por favor, tente recarregar a página.</p>
+        <button onclick="window.location.reload()" style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">
+          🔄 Recarregar Página
+        </button>
+        <details style="margin-top: 20px; text-align: left;">
+          <summary style="cursor: pointer;">Detalhes do erro (para desenvolvedores)</summary>
+          <pre style="background: #f8f9fa; padding: 10px; border-radius: 4px; overflow: auto; font-size: 12px;">${error instanceof Error ? error.message : 'Erro desconhecido'}</pre>
+        </details>
+      </div>
+    `;
+  }
 } else {
-  document.body.innerHTML =
-    "<h1 style='color: red;'>Root element não encontrado!</h1>";
+  console.error("❌ Root element not found!");
+  document.body.innerHTML = `
+    <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+      <h1 style="color: #e74c3c;">❌ Erro Crítico</h1>
+      <p>Elemento root não encontrado. Verifique se o HTML contém &lt;div id="root"&gt;&lt;/div&gt;</p>
+    </div>
+  `;
 }
