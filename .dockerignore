@@ -1,15 +1,63 @@
+# Node
 node_modules
-npm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+dist
+build
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Git
 .git
 .gitignore
-README.md
-.env
-.nyc_output
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Documentation
+*.md
+docs/
+
+# Test files
 coverage
 .nyc_output
-.DS_Store
-*.md
-.vscode
-dist
-deploy-ready
-prepare-deploy.js
+test/
+tests/
+__tests__/
+
+# Development files
+src/
+public/
+client/
+server/routes/
+server/lib/
+shared/
+
+# Keep only essentials for build
+!package*.json
+!tsconfig.json
+!vite.config*.ts
+!tailwind.config.ts
+!postcss.config.js
+!build.js
+!index.html
+!components.json
