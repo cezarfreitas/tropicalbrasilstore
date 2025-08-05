@@ -1,9 +1,0 @@
-Nome do Produto,Categoria,Preço Base,Preço de Venda,URL da Foto,Grupo de Tamanhos,Cor (uma por linha),SKU,SKU Pai,Descrição,Preço Sugerido,Estoque por Variante
-Chinelo Havaianas Top,1,18.50,25.90,https://example.com/havaianas-top.jpg,1,azul,HAV001-AZUL,HAV001,Chinelo clássico Havaianas Top,35.90,100
-Chinelo Havaianas Top,1,18.50,25.90,https://example.com/havaianas-top.jpg,1,branco,HAV001-BRANCO,HAV001,Chinelo clássico Havaianas Top,35.90,100
-Chinelo Havaianas Top,1,18.50,25.90,https://example.com/havaianas-top.jpg,1,preto,HAV001-PRETO,HAV001,Chinelo clássico Havaianas Top,35.90,100
-Sandália Adidas Slide,1,85.00,120.00,https://example.com/adidas-slide.jpg,2,preto,ADI001-PRETO,ADI001,Sandália esportiva Adidas,150.00,50
-Sandália Adidas Slide,1,85.00,120.00,https://example.com/adidas-slide.jpg,2,branco,ADI001-BRANCO,ADI001,Sandália esportiva Adidas,150.00,50
-Tênis Nike Air Max,2,199.99,299.99,https://example.com/nike-air.jpg,2,preto,NIK001-PRETO,NIK001,Tênis esportivo Nike Air Max,399.99,25
-Tênis Nike Air Max,2,199.99,299.99,https://example.com/nike-air.jpg,2,branco,NIK001-BRANCO,NIK001,Tênis esportivo Nike Air Max,399.99,25
-Tênis Nike Air Max,2,199.99,299.99,https://example.com/nike-air.jpg,2,vermelho,NIK001-VERMELHO,NIK001,Tênis esportivo Nike Air Max,399.99,25
