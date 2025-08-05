@@ -9,14 +9,17 @@ RUN apk add --no-cache curl
 # Copiar package.json
 COPY package*.json ./
 
-# Instalar dependências (forçar resolução de conflitos)
-RUN npm install --legacy-peer-deps --omit=dev
+# Instalar TODAS as dependências (incluindo dev para build)
+RUN npm install --legacy-peer-deps
 
 # Copiar código source
 COPY . .
 
 # Build da aplicação
 RUN npm run build
+
+# Remover devDependencies após build para reduzir tamanho
+RUN npm prune --production --legacy-peer-deps
 
 # Configurações
 ENV NODE_ENV=production
