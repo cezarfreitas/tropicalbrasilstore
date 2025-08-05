@@ -37,7 +37,7 @@ RUN test -f dist/spa/index.html || (echo "❌ index.html não encontrado" && exi
 
 # Remover node_modules e reinstalar só produção
 RUN rm -rf node_modules
-RUN npm ci --only=production
+RUN npm ci --only=production --legacy-peer-deps
 
 # Configurar ambiente
 ENV NODE_ENV=production
