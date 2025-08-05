@@ -114,7 +114,7 @@ export function ProductCard({
           {product.base_price && (
             <div className="bg-gray-50 rounded-md sm:rounded-lg p-1.5 sm:p-2">
               <PriceDisplay
-                basePrice={product.base_price}
+                price={product.base_price || 0}
                 className="text-[10px] sm:text-xs md:text-sm font-semibold text-primary"
               />
             </div>
