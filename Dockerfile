@@ -17,8 +17,9 @@ COPY tailwind.config.ts ./
 COPY postcss.config.js ./
 COPY build.js ./
 COPY components.json ./
+COPY .npmrc ./
 
-# Instalar TODAS as dependências (incluindo dev para build)
+# Instalar TODAS as dependências (usar install para sincronizar lock file)
 RUN npm install --legacy-peer-deps --no-audit --no-fund
 
 # Verificar se dependências críticas estão instaladas
@@ -59,9 +60,12 @@ RUN addgroup -g 1001 -S nodejs && \
 
 WORKDIR /app
 
-# Copiar package.json e instalar apenas deps de produção
+# Copiar package.json e .npmrc
 COPY package*.json ./
-RUN npm ci --omit=dev --legacy-peer-deps --no-audit --no-fund && \
+COPY .npmrc ./
+
+# Instalar apenas deps de produção (usar install para sincronizar)
+RUN npm install --omit=dev --legacy-peer-deps --no-audit --no-fund && \
     npm cache clean --force
 
 # Copiar arquivos buildados do stage anterior
