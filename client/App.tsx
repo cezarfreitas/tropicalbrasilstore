@@ -363,5 +363,6 @@ if (rootElement) {
     }
   }, 100);
 } else {
-  document.body.innerHTML = "<h1 style='color: red;'>Root element não encontrado!</h1>";
+  document.body.innerHTML =
+    "<h1 style='color: red;'>Root element não encontrado!</h1>";
 }
