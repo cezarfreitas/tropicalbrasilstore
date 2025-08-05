@@ -2,28 +2,42 @@
 
 🚀 **Instruções para fazer deploy da aplicação no seu computador**
 
-## Opção 1: Docker (Recomendado)
+## ⚡ Opção Rápida: Script Automático
 
-### 1. Build da imagem Docker
+```bash
+# Dar permissão e executar
+chmod +x deploy-local-simple.sh
+./deploy-local-simple.sh
+```
+
+## Opção 1: Docker (Manual)
+
+### 1. Build da aplicação
+```bash
+npm run build
+```
+
+### 2. Build da imagem Docker
 ```bash
 docker build -t chinelos-store .
 ```
 
-### 2. Executar o container
+### 3. Executar o container
 ```bash
 docker run -d \
   --name chinelos-store \
+  --restart unless-stopped \
   -p 80:80 \
   -e NODE_ENV=production \
   -e PORT=80 \
   -e DATABASE_URL="mysql://tropical:805ce7692e5b4d6ced5f@5.161.52.206:3232/tropical" \
-  -e JWT_SECRET=tropical-brasil-secret-key-2025 \
-  -e CORS_ORIGIN=http://localhost \
-  -v $(pwd)/public/uploads:/app/public/uploads \
+  -e JWT_SECRET="tropical-brasil-secret-key-2025" \
+  -e CORS_ORIGIN="http://localhost" \
+  -v "$(pwd)/public/uploads:/app/public/uploads" \
   chinelos-store
 ```
 
-### 3. Verificar se está funcionando
+### 4. Verificar se está funcionando
 ```bash
 # Ver logs
 docker logs chinelos-store
