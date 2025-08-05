@@ -280,7 +280,9 @@
 
   /* Enhanced card hover effects */
   .group {
-    transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+    transition:
+      transform 150ms ease-out,
+      box-shadow 150ms ease-out;
   }
 
   .group:hover {

@@ -550,7 +550,7 @@ router.get("/products/:id", async (req, res) => {
        INNER JOIN product_color_variants pcv ON vi.color_variant_id = pcv.id
        WHERE pcv.product_id = ?
        ORDER BY pcv.color_id, vi.display_order`,
-      [req.params.id]
+      [req.params.id],
     );
 
     // Extract unique colors for the available_colors field and include all images
@@ -563,8 +563,8 @@ router.get("/products/:id", async (req, res) => {
 
         // Get all images for this color variant
         const colorImages = (allVariantImages as any[])
-          .filter(img => img.color_id === variant.color_id)
-          .map(img => img.image_url);
+          .filter((img) => img.color_id === variant.color_id)
+          .map((img) => img.image_url);
 
         // If no variant images, use the main image_url
         if (colorImages.length === 0 && variant.image_url) {

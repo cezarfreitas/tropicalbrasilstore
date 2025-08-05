@@ -313,24 +313,29 @@ export default function ProductDetail() {
 
     // Add images from selected color if available
     if (selectedColor && product?.available_colors) {
-      const selectedColorData = product.available_colors.find(c => c.id === selectedColor);
+      const selectedColorData = product.available_colors.find(
+        (c) => c.id === selectedColor,
+      );
       if (selectedColorData?.images && selectedColorData.images.length > 0) {
         // Add unique images only
-        selectedColorData.images.forEach(img => {
+        selectedColorData.images.forEach((img) => {
           if (img && !images.includes(img)) {
             images.push(img);
           }
         });
-      } else if (selectedColorData?.image_url && !images.includes(selectedColorData.image_url)) {
+      } else if (
+        selectedColorData?.image_url &&
+        !images.includes(selectedColorData.image_url)
+      ) {
         images.push(selectedColorData.image_url);
       }
     }
 
     // If no color selected or no color images, add all available images
     if ((!selectedColor || images.length <= 1) && product?.available_colors) {
-      product.available_colors.forEach(color => {
+      product.available_colors.forEach((color) => {
         if (color.images && color.images.length > 0) {
-          color.images.forEach(img => {
+          color.images.forEach((img) => {
             if (img && !images.includes(img)) {
               images.push(img);
             }
@@ -341,7 +346,7 @@ export default function ProductDetail() {
       });
     }
 
-    return images.filter(img => img && img.trim() !== '');
+    return images.filter((img) => img && img.trim() !== "");
   };
 
   const getAvailableColors = (productData = product) => {
@@ -561,14 +566,14 @@ export default function ProductDetail() {
       switch (event.key) {
         case "ArrowLeft":
           event.preventDefault();
-          setSelectedImageIndex(prev =>
-            prev > 0 ? prev - 1 : images.length - 1
+          setSelectedImageIndex((prev) =>
+            prev > 0 ? prev - 1 : images.length - 1,
           );
           break;
         case "ArrowRight":
           event.preventDefault();
-          setSelectedImageIndex(prev =>
-            prev < images.length - 1 ? prev + 1 : 0
+          setSelectedImageIndex((prev) =>
+            prev < images.length - 1 ? prev + 1 : 0,
           );
           break;
       }
@@ -645,8 +650,8 @@ export default function ProductDetail() {
                   <ProductImage
                     src={getImageUrl(
                       getAllAvailableImages()[selectedImageIndex] ||
-                      selectedVariantImage ||
-                      product.photo
+                        selectedVariantImage ||
+                        product.photo,
                     )}
                     product={product}
                     alt={`${product.name} - Imagem ${selectedImageIndex + 1}`}
@@ -657,7 +662,8 @@ export default function ProductDetail() {
                   {/* Image Counter */}
                   {getAllAvailableImages().length > 1 && (
                     <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs">
-                      {selectedImageIndex + 1} / {getAllAvailableImages().length}
+                      {selectedImageIndex + 1} /{" "}
+                      {getAllAvailableImages().length}
                     </div>
                   )}
 
@@ -665,17 +671,25 @@ export default function ProductDetail() {
                   {getAllAvailableImages().length > 1 && (
                     <>
                       <button
-                        onClick={() => setSelectedImageIndex(prev =>
-                          prev > 0 ? prev - 1 : getAllAvailableImages().length - 1
-                        )}
+                        onClick={() =>
+                          setSelectedImageIndex((prev) =>
+                            prev > 0
+                              ? prev - 1
+                              : getAllAvailableImages().length - 1,
+                          )
+                        }
                         className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all"
                       >
                         <ArrowLeft className="h-4 w-4" />
                       </button>
                       <button
-                        onClick={() => setSelectedImageIndex(prev =>
-                          prev < getAllAvailableImages().length - 1 ? prev + 1 : 0
-                        )}
+                        onClick={() =>
+                          setSelectedImageIndex((prev) =>
+                            prev < getAllAvailableImages().length - 1
+                              ? prev + 1
+                              : 0,
+                          )
+                        }
                         className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all"
                       >
                         <ArrowLeft className="h-4 w-4 rotate-180" />
@@ -714,7 +728,9 @@ export default function ProductDetail() {
                   <div className="aspect-square flex items-center justify-center bg-gray-50 rounded-lg">
                     <div className="text-center">
                       <ImageIcon className="h-16 w-16 text-gray-300 mx-auto mb-2" />
-                      <p className="text-sm text-gray-500">Nenhuma imagem disponível</p>
+                      <p className="text-sm text-gray-500">
+                        Nenhuma imagem disponível
+                      </p>
                     </div>
                   </div>
                 )}

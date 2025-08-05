@@ -184,7 +184,7 @@ export function SimpleProductCard({
                   <div
                     key={color.id}
                     className={`w-5 h-5 rounded-full border border-white shadow-sm cursor-pointer bg-gray-100 hover:scale-110 transition-transform duration-200 ${
-                      idx > 1 ? 'hidden sm:block' : ''
+                      idx > 1 ? "hidden sm:block" : ""
                     }`}
                     title={color.name}
                     onClick={(e) =>

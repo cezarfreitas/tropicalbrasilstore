@@ -50,7 +50,7 @@ export function ProductImage({
     }
 
     // Then try main catalog variant
-    const mainVariant = product.color_variants?.find(v => v.is_main_catalog);
+    const mainVariant = product.color_variants?.find((v) => v.is_main_catalog);
     if (mainVariant) {
       if (mainVariant.images && mainVariant.images.length > 0) {
         return getImageUrl(mainVariant.images[0]);
@@ -62,10 +62,13 @@ export function ProductImage({
 
     // Try color_variants (WooCommerce style)
     const firstVariantWithImage = product.color_variants?.find(
-      v => (v.images && v.images.length > 0) || v.image_url
+      (v) => (v.images && v.images.length > 0) || v.image_url,
     );
     if (firstVariantWithImage) {
-      if (firstVariantWithImage.images && firstVariantWithImage.images.length > 0) {
+      if (
+        firstVariantWithImage.images &&
+        firstVariantWithImage.images.length > 0
+      ) {
         return getImageUrl(firstVariantWithImage.images[0]);
       }
       if (firstVariantWithImage.image_url) {
@@ -74,9 +77,13 @@ export function ProductImage({
     }
 
     // Try available_colors (Store API style)
-    const firstColorWithImage = product.available_colors?.find(c => c.image_url);
+    const firstColorWithImage = product.available_colors?.find(
+      (c) => c.image_url,
+    );
     if (firstColorWithImage && firstColorWithImage.image_url) {
-      console.log(`🔍 Using available_colors image: "${firstColorWithImage.image_url}" for "${alt}"`);
+      console.log(
+        `🔍 Using available_colors image: "${firstColorWithImage.image_url}" for "${alt}"`,
+      );
       return getImageUrl(firstColorWithImage.image_url);
     }
 
@@ -84,7 +91,8 @@ export function ProductImage({
       hasPhoto: !!product.photo,
       color_variants: product.color_variants?.length || 0,
       available_colors: product.available_colors?.length || 0,
-      available_colors_with_images: product.available_colors?.filter(c => c.image_url).length || 0
+      available_colors_with_images:
+        product.available_colors?.filter((c) => c.image_url).length || 0,
     });
     return null;
   };
@@ -96,7 +104,16 @@ export function ProductImage({
   if (!finalSrc || hasError) {
     console.log(
       `🖼️ ProductImage issue: alt="${alt}", originalSrc="${src}", finalSrc="${finalSrc}", hasError=${hasError}`,
-      { product: product ? { id: product?.id, photo: product?.photo, color_variants: product?.color_variants?.length, available_colors: product?.available_colors?.length } : 'none' }
+      {
+        product: product
+          ? {
+              id: product?.id,
+              photo: product?.photo,
+              color_variants: product?.color_variants?.length,
+              available_colors: product?.available_colors?.length,
+            }
+          : "none",
+      },
     );
   }
 
@@ -172,7 +189,10 @@ export function ProductImage({
           );
         })
         .catch((fetchError) => {
-          console.error(`🌐 Network error for "${finalSrc}":`, fetchError.message);
+          console.error(
+            `🌐 Network error for "${finalSrc}":`,
+            fetchError.message,
+          );
         });
     }
 
