@@ -273,6 +273,8 @@ export default function ProductDetail() {
           setSelectedColor(null);
           setSelectedVariantImage(null);
         }
+        // Reset gallery to first image
+        setSelectedImageIndex(0);
         setSelectedGrade(null);
         setSelectedSize(null);
         setQuantity(1);
