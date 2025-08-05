@@ -16,7 +16,7 @@ app.get("/health", (_req, res) => {
     timestamp: new Date().toISOString(),
     version: "1.0.0-simple",
     environment: process.env.NODE_ENV || "development",
-    mode: "simple"
+    mode: "simple",
   });
 });
 
@@ -30,24 +30,24 @@ const mockProducts = [
   {
     id: 1,
     name: "Chinelo Exemplo",
-    price: 29.90,
-    photo: "/placeholder.svg"
-  }
+    price: 29.9,
+    photo: "/placeholder.svg",
+  },
 ];
 
 app.get("/api/store/products", (_req, res) => {
   res.json({
     products: mockProducts,
-    message: "Dados de demonstração - conecte o banco para dados reais"
+    message: "Dados de demonstração - conecte o banco para dados reais",
   });
 });
 
 // Outras APIs retornam dados de exemplo
 app.get("/api/*", (req, res) => {
-  res.json({ 
+  res.json({
     message: "API em modo demonstração",
     endpoint: req.path,
-    note: "Conecte o banco de dados para funcionalidade completa"
+    note: "Conecte o banco de dados para funcionalidade completa",
   });
 });
 
@@ -56,7 +56,10 @@ const staticPath = path.join(process.cwd(), "dist", "spa");
 console.log(`🗂️  Serving static files from: ${staticPath}`);
 
 app.use(express.static(staticPath));
-app.use("/uploads", express.static(path.join(process.cwd(), "public", "uploads")));
+app.use(
+  "/uploads",
+  express.static(path.join(process.cwd(), "public", "uploads")),
+);
 
 // Catch-all para SPA
 app.get("*", (req, res) => {
