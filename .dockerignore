@@ -1,12 +1,6 @@
 # Node
 node_modules
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Build artifacts
-dist
-build
 
 # Environment files
 .env
@@ -33,7 +27,7 @@ Thumbs.db
 logs
 *.log
 
-# Documentation
+# Documentation que não é essencial
 *.md
 docs/
 
@@ -44,20 +38,14 @@ test/
 tests/
 __tests__/
 
-# Development files
-src/
-public/
-client/
-server/routes/
-server/lib/
-shared/
+# Arquivos temporários e de deploy
+dist
+build
+deploy-ready
+prepare-deploy.js
+docker-compose.prod.yml
+build-production.js
+package.production.json
 
-# Keep only essentials for build
-!package*.json
-!tsconfig.json
-!vite.config*.ts
-!tailwind.config.ts
-!postcss.config.js
-!build.js
-!index.html
-!components.json
+# Manter apenas os essenciais para build
+# NÃO excluir client/, server/, shared/
