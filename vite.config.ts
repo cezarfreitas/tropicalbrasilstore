@@ -32,7 +32,9 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    plugins: [react(), expressPlugin(), isDev ? null : buildPlugin()].filter(Boolean),
+    plugins: [react(), expressPlugin(), isDev ? null : buildPlugin()].filter(
+      Boolean,
+    ),
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./client"),
