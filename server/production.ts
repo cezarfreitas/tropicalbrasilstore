@@ -8,21 +8,28 @@ const app = createServer();
 const staticPath = path.join(process.cwd(), "dist", "spa");
 console.log(`🗂️  Serving static files from: ${staticPath}`);
 
-// Log ALL requests for debugging
+// Security and CORS headers for production
 app.use((req, res, next) => {
-  console.log(`🌐 Request: ${req.method} ${req.path}`);
+  // Security headers
+  res.set({
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'X-XSS-Protection': '1; mode=block',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+  });
 
-  if (
-    req.path.startsWith("/assets/") ||
-    req.path.endsWith(".js") ||
-    req.path.endsWith(".css")
-  ) {
-    console.log(`📦 ASSET REQUEST: ${req.method} ${req.path}`);
-    console.log(`📁 Static path: ${staticPath}`);
-    const fullPath = path.join(staticPath, req.path);
-    console.log(`🎯 Full file path: ${fullPath}`);
-    console.log(`📋 File exists: ${fs.existsSync(fullPath)}`);
+  // CORS headers for assets
+  if (req.path.startsWith("/assets/") || req.path.endsWith(".js") || req.path.endsWith(".css")) {
+    res.set({
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+      'Cross-Origin-Resource-Policy': 'cross-origin',
+    });
   }
+
+  console.log(`🌐 Request: ${req.method} ${req.path}`);
   next();
 });
 
@@ -112,6 +119,6 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
   console.log(`🗂️ Serving static from: ${staticPath}`);
   console.log(
-    `💾 Database: ${process.env.DATABASE_URL ? "Connected" : "No URL set"}`,
+    `�� Database: ${process.env.DATABASE_URL ? "Connected" : "No URL set"}`,
   );
 });
