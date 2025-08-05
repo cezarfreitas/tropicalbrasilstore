@@ -1,6 +1,6 @@
 # Chinelos Store - Sistema B2B
 
-Sistema de e-commerce B2B para venda de chinelos com funcionalidades completas de catálogo, carrinho e administração.
+Sistema de e-commerce B2B para venda de chinelos com funcionalidades completas.
 
 ## 🚀 Desenvolvimento
 
@@ -8,10 +8,10 @@ Sistema de e-commerce B2B para venda de chinelos com funcionalidades completas d
 # Instalar dependências
 npm install
 
-# Desenvolvimento
+# Desenvolvimento (hot reload)
 npm run dev
 
-# Build
+# Build completo
 npm run build
 
 # Produção
@@ -22,7 +22,7 @@ npm start
 
 ```
 ├── client/          # Frontend React + TypeScript
-├── server/          # Backend Node.js + Express
+├── server/          # Backend Node.js + Express  
 ├── shared/          # Tipos compartilhados
 ├── public/          # Assets públicos
 └── dist/            # Build de produção
@@ -30,16 +30,14 @@ npm start
 
 ## ⚙️ Scripts
 
-- `npm run dev` - Desenvolvimento com hot reload
-- `npm run build` - Build completo
+- `npm run dev` - Desenvolvimento na porta 8080
+- `npm run build` - Build completo (client + server)
 - `npm start` - Executar produção
-- `npm run build:client` - Build frontend
-- `npm run build:server` - Build backend
+- `npm run typecheck` - Verificar tipos
 
 ## 🔧 Configuração
 
 Arquivo `.env`:
-
 ```env
 NODE_ENV=development
 PORT=8080
@@ -49,8 +47,8 @@ JWT_SECRET=sua_chave_secreta
 
 ## 🌐 URLs
 
-- **App**: http://localhost:8080
-- **Health**: http://localhost:8080/health
+- **Desenvolvimento**: http://localhost:8080
+- **Health Check**: http://localhost:8080/health
 - **API**: http://localhost:8080/api
 
 ## 📦 Stack
@@ -58,7 +56,7 @@ JWT_SECRET=sua_chave_secreta
 - **Frontend**: React, TypeScript, Vite, TailwindCSS
 - **Backend**: Node.js, Express, TypeScript
 - **Database**: MySQL
-- **Build**: Vite
+- **Build**: Vite + SWC
 
 ## 🎯 Funcionalidades
 
@@ -68,4 +66,4 @@ JWT_SECRET=sua_chave_secreta
 - Sistema de grades
 - Carrinho e checkout
 - Autenticação
-- Painel admin
+- Painel administrativo
