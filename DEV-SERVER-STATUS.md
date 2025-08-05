@@ -1,27 +1,27 @@
-# ✅ Servidor de Desenvolvimento - PORTA 8085
+# ✅ Servidor de Desenvolvimento - PORTA 3000
 
-## 🎉 **Status: FUNCIONANDO NA PORTA 8085**
+## 🎉 **Status: FUNCIONANDO NA PORTA 3000**
 
 ### **✅ Configuração Atualizada:**
 
-- **Porta alterada**: 8080 → **8085**
+- **Porta alterada**: 8085 → **3000**
 - **Vite configurado** para nova porta
-- **Variáveis de ambiente** atualizadas
+- **Proxy configurado** para porta 3000
 - **Servidor reiniciado** com sucesso
 
 ### **🚀 Servidor Ativo:**
 
 ```
-✅ VITE v6.3.5 ready in 842ms
-✅ Local:   http://localhost:8085/
-✅ Network: http://172.19.10.42:8085/
-✅ Network: http://172.19.10.43:8085/
+✅ VITE v6.3.5 ready in 785ms
+✅ Local:   http://localhost:3000/
+✅ Network: http://172.19.9.130:3000/
+✅ Network: http://172.19.9.131:3000/
 ✅ Database: Connected and initialized
 ```
 
 ### **📊 Sistema Completo:**
 
-- ✅ Frontend React rodando na porta 8085
+- ✅ Frontend React rodando na porta 3000
 - ✅ Backend Node.js integrado
 - ✅ Database MySQL conectado
 - ✅ Todas as tabelas criadas
@@ -30,19 +30,19 @@
 
 ### **🌐 URLs Atualizadas:**
 
-- **Desenvolvimento**: http://localhost:8085/
-- **Rede Local**: http://172.19.10.42:8085/
-- **Rede Externa**: http://172.19.10.43:8085/
+- **Desenvolvimento**: http://localhost:3000/
+- **Rede Local**: http://172.19.9.130:3000/
+- **Rede Externa**: http://172.19.9.131:3000/
 
 ### **🔧 Configurações Alteradas:**
 
-1. **vite.config.ts**: `port: 8085`
-2. **Variável PORT**: `8085`
+1. **vite.config.ts**: `port: 3000`
+2. **Proxy Port**: `3000`
 3. **DevServer**: Reiniciado na nova porta
 
 ## 🎯 **Para Desenvolver:**
 
-**Nova URL**: http://localhost:8085/
+**Nova URL**: http://localhost:3000/
 
 ### **Comandos Úteis:**
 
@@ -59,11 +59,11 @@ DevServerControl set_proxy_port [NOVA_PORTA]
 
 ## ✅ **Conclusão:**
 
-**DESENVOLVIMENTO FUNCIONANDO NA PORTA 8085!**
+**DESENVOLVIMENTO FUNCIONANDO NA PORTA 3000!**
 
 - Servidor ativo e responsivo
 - Database conectado
 - Interface disponível
 - Sistema completo operacional
 
-🎉 **Acesse http://localhost:8085/ para desenvolver!**
+🎉 **Acesse http://localhost:3000/ para desenvolver!**

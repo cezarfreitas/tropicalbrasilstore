@@ -30,7 +30,7 @@ npm start
 
 ## ⚙️ Scripts
 
-- `npm run dev` - Desenvolvimento na porta 8080
+- `npm run dev` - Desenvolvimento na porta 3000
 - `npm run build` - Build completo (client + server)
 - `npm start` - Executar produção
 - `npm run typecheck` - Verificar tipos
@@ -41,16 +41,16 @@ Arquivo `.env`:
 
 ```env
 NODE_ENV=development
-PORT=8080
+PORT=3000
 DATABASE_URL=mysql://user:pass@host:port/db
 JWT_SECRET=sua_chave_secreta
 ```
 
 ## 🌐 URLs
 
-- **Desenvolvimento**: http://localhost:8080
-- **Health Check**: http://localhost:8080/health
-- **API**: http://localhost:8080/api
+- **Desenvolvimento**: http://localhost:3000
+- **Health Check**: http://localhost:3000/health
+- **API**: http://localhost:3000/api
 
 ## 📦 Stack
 
