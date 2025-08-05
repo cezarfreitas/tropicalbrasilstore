@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "chinelos-dev",
-      script: "dist/server/production.js",
+      script: "./dist/server/production.js",
       cwd: "./",
       instances: 1,
       exec_mode: "fork",
