@@ -607,19 +607,88 @@ export default function ProductDetail() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-6 xl:gap-8">
-          {/* Product Image Section */}
+          {/* Product Image Gallery Section */}
           <div>
             <div className="sticky top-2">
               <div className="rounded-2xl p-4 max-w-xl mx-auto">
-                <div className="aspect-square relative">
+                {/* Main Image Display */}
+                <div className="aspect-square relative mb-4">
                   <ProductImage
-                    src={getImageUrl(selectedVariantImage || product.photo)}
+                    src={getImageUrl(
+                      getAllAvailableImages()[selectedImageIndex] ||
+                      selectedVariantImage ||
+                      product.photo
+                    )}
                     product={product}
-                    alt={product.name}
+                    alt={`${product.name} - Imagem ${selectedImageIndex + 1}`}
                     className="w-full h-full object-contain"
                     priority={true}
                   />
+
+                  {/* Image Counter */}
+                  {getAllAvailableImages().length > 1 && (
+                    <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs">
+                      {selectedImageIndex + 1} / {getAllAvailableImages().length}
+                    </div>
+                  )}
+
+                  {/* Navigation Arrows */}
+                  {getAllAvailableImages().length > 1 && (
+                    <>
+                      <button
+                        onClick={() => setSelectedImageIndex(prev =>
+                          prev > 0 ? prev - 1 : getAllAvailableImages().length - 1
+                        )}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all"
+                      >
+                        <ArrowLeft className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => setSelectedImageIndex(prev =>
+                          prev < getAllAvailableImages().length - 1 ? prev + 1 : 0
+                        )}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all"
+                      >
+                        <ArrowLeft className="h-4 w-4 rotate-180" />
+                      </button>
+                    </>
+                  )}
                 </div>
+
+                {/* Thumbnail Gallery */}
+                {getAllAvailableImages().length > 1 && (
+                  <div className="grid grid-cols-4 gap-2">
+                    {getAllAvailableImages().map((image, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImageIndex(index)}
+                        className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                          selectedImageIndex === index
+                            ? "border-primary ring-2 ring-primary/20"
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
+                      >
+                        <ProductImage
+                          src={getImageUrl(image)}
+                          alt={`${product.name} - Miniatura ${index + 1}`}
+                          className="w-full h-full object-contain"
+                          loading="lazy"
+                          sizes="120px"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* No Images Fallback */}
+                {getAllAvailableImages().length === 0 && (
+                  <div className="aspect-square flex items-center justify-center bg-gray-50 rounded-lg">
+                    <div className="text-center">
+                      <ImageIcon className="h-16 w-16 text-gray-300 mx-auto mb-2" />
+                      <p className="text-sm text-gray-500">Nenhuma imagem disponível</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -856,7 +925,7 @@ export default function ProductDetail() {
                   </h3>
                   <p className="text-sm text-gray-600 mb-3">
                     Para ver {hasGrades() ? "as grades" : "os tamanhos"}{" "}
-                    dispon��veis e adicionar ao carrinho, você precisa estar
+                    disponíveis e adicionar ao carrinho, você precisa estar
                     logado.
                   </p>
                   <Button
