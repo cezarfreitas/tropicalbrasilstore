@@ -83,7 +83,7 @@ function expressPlugin(): Plugin {
 
         return html.replace(
           '<div id="root"></div>',
-          `<div id="root"></div>${injection}`
+          `<div id="root"></div>${injection}`,
         );
       },
     },
