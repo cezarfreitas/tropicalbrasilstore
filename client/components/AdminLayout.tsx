@@ -183,7 +183,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               <Package className="h-8 w-8 text-primary-foreground" />
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold text-primary">Chinelos</span>
+              <span className="text-2xl font-bold text-primary">
+                {storeSettings?.store_name || "Chinelos"}
+              </span>
               <span className="text-sm text-muted-foreground">Admin Panel</span>
             </div>
           </Link>
