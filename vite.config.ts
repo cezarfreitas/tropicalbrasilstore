@@ -1,7 +1,6 @@
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { createServer } from "./server";
 
 export default defineConfig(({ mode }) => {
   const isDev = mode === "development";
@@ -21,7 +20,7 @@ export default defineConfig(({ mode }) => {
       minify: "esbuild",
       sourcemap: isDev,
       assetsDir: "assets",
-      target: "es2015", // More compatible target for older proxies
+      target: "es2015",
       rollupOptions: {
         output: {
           format: "es",
@@ -34,16 +33,17 @@ export default defineConfig(({ mode }) => {
               "@radix-ui/react-tabs",
             ],
           },
-          // Ensure consistent asset naming for proxy compatibility
           assetFileNames: "assets/[name]-[hash].[ext]",
           chunkFileNames: "assets/[name]-[hash].js",
           entryFileNames: "assets/[name]-[hash].js",
         },
       },
     },
-    plugins: [react(), expressPlugin(), isDev ? null : buildPlugin()].filter(
-      Boolean,
-    ),
+    plugins: [
+      react(), 
+      isDev ? expressPlugin() : null, 
+      isDev ? null : buildPlugin()
+    ].filter(Boolean),
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./client"),
@@ -57,9 +57,15 @@ function expressPlugin(): Plugin {
   return {
     name: "express-plugin",
     apply: "serve",
-    configureServer(server) {
-      const app = createServer();
-      server.middlewares.use(app);
+    async configureServer(server) {
+      // Só carregar o servidor em desenvolvimento
+      try {
+        const { createServer } = await import("./server/index.js");
+        const app = createServer();
+        server.middlewares.use(app);
+      } catch (error) {
+        console.warn("Failed to load server in dev mode:", error);
+      }
     },
     transformIndexHtml: {
       order: "pre",
