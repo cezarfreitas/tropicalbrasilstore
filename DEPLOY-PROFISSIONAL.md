@@ -5,12 +5,14 @@
 ### 🏗️ **Arquitetura de Produção**
 
 1. **Multi-stage Dockerfile**
+
    - Build isolado com todas as dependências
    - Produção apenas com deps necessárias
    - Usuário não-root para segurança
    - dumb-init para gestão de processos
 
 2. **Servidor Express Otimizado**
+
    - Compression gzip automática
    - Headers de segurança (Helmet)
    - Cache otimizado para assets
@@ -26,24 +28,28 @@
 ## 🔧 **Recursos Implementados**
 
 ### ✅ **Segurança**
+
 - Headers de segurança (CSP, HSTS, etc.)
 - Usuário não-root no container
 - Validação de entrada
 - Error handling sem exposição de dados
 
 ### ✅ **Performance**
+
 - Compression gzip/brotli
 - Cache headers otimizados
 - Assets com immutable cache
 - Minificação e bundling
 
 ### ✅ **Monitoramento**
+
 - Health check endpoint (`/health`)
 - Debug status endpoint (`/debug/status`)
 - Logs estruturados
 - Métricas de memória e uptime
 
 ### ✅ **Robustez**
+
 - Graceful shutdown
 - Process isolation
 - Resource limits
@@ -52,6 +58,7 @@
 ## 🚀 **Deploy no EasyPanel**
 
 ### **1. Configuração Automática**
+
 ```bash
 # Push para repositório
 git add .
@@ -60,6 +67,7 @@ git push origin main
 ```
 
 ### **2. Variáveis de Ambiente**
+
 ```env
 NODE_ENV=production
 PORT=80
@@ -68,6 +76,7 @@ JWT_SECRET=sua_chave_secreta_muito_forte
 ```
 
 ### **3. Configurações EasyPanel**
+
 - **Docker Build**: Automático via Dockerfile
 - **Target Stage**: `production`
 - **Port**: 80
@@ -76,6 +85,7 @@ JWT_SECRET=sua_chave_secreta_muito_forte
 ## 📊 **Endpoints de Monitoramento**
 
 ### **Health Check** - `/health`
+
 ```json
 {
   "status": "healthy",
@@ -87,6 +97,7 @@ JWT_SECRET=sua_chave_secreta_muito_forte
 ```
 
 ### **Debug Status** - `/debug/status`
+
 ```json
 {
   "status": "ok",
@@ -100,6 +111,7 @@ JWT_SECRET=sua_chave_secreta_muito_forte
 ```
 
 ### **API Ping** - `/api/ping`
+
 ```json
 {
   "message": "pong",
@@ -111,6 +123,7 @@ JWT_SECRET=sua_chave_secreta_muito_forte
 ## 🔍 **Verificação Pós-Deploy**
 
 ### **Teste Automático**
+
 ```bash
 # Executar health check
 ./scripts/health-check.sh [host] [port]
@@ -121,6 +134,7 @@ JWT_SECRET=sua_chave_secreta_muito_forte
 ```
 
 ### **Teste Manual**
+
 1. ✅ Homepage carrega: `https://yourdomain.com/`
 2. ✅ API funciona: `https://yourdomain.com/api/ping`
 3. ✅ Assets carregam: DevTools → Network
@@ -129,6 +143,7 @@ JWT_SECRET=sua_chave_secreta_muito_forte
 ## 🐛 **Troubleshooting Profissional**
 
 ### **Logs Estruturados**
+
 ```bash
 # Ver logs no EasyPanel
 docker logs [container-id] --tail 100 -f
@@ -138,6 +153,7 @@ docker-compose -f docker-compose.prod.yml logs -f
 ```
 
 ### **Debug Endpoints**
+
 - `/debug/status` - Status completo da aplicação
 - `/health` - Health check básico
 - `/api/ping` - Teste de API
@@ -145,11 +161,13 @@ docker-compose -f docker-compose.prod.yml logs -f
 ### **Problemas Comuns**
 
 1. **Assets não carregam**
+
    - Verificar `/debug/status`
    - Verificar logs de build
    - Confirmar estrutura `dist/spa/assets/`
 
 2. **React não inicia**
+
    - Verificar console do navegador
    - Verificar se index.html carrega
    - Confirmar assets JS/CSS
@@ -162,23 +180,27 @@ docker-compose -f docker-compose.prod.yml logs -f
 ## 🎯 **Características Profissionais**
 
 ### ✅ **Escalabilidade**
+
 - Resource limits configurados
 - Load balancing ready
 - Stateless design
 
 ### ✅ **Segurança**
+
 - CSP headers
 - CORS configurado
 - Input validation
 - Non-root user
 
 ### ✅ **Observabilidade**
+
 - Health checks
 - Structured logging
 - Performance metrics
 - Error tracking
 
 ### ✅ **Reliability**
+
 - Graceful shutdown
 - Auto-restart
 - Circuit breakers
@@ -187,6 +209,7 @@ docker-compose -f docker-compose.prod.yml logs -f
 ## 🔄 **CI/CD Ready**
 
 O deploy está preparado para:
+
 - ✅ GitHub Actions
 - ✅ GitLab CI/CD
 - ✅ Docker Hub
@@ -206,6 +229,7 @@ O deploy está preparado para:
 ## 🎉 **Deploy Profissional Completo!**
 
 Sua aplicação agora tem:
+
 - ✅ **Segurança enterprise-grade**
 - ✅ **Performance otimizada**
 - ✅ **Monitoramento completo**
