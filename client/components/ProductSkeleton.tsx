@@ -34,14 +34,10 @@ function SingleProductSkeleton() {
             <div className="h-3.5 bg-gray-200 rounded animate-pulse w-3/5" />
           </div>
 
-          {/* Price Container - Compact */}
-          <div className="bg-gray-50 rounded-md p-2">
+          {/* Price Container with cart icon - Compact */}
+          <div className="bg-gray-50 rounded-md p-2 flex items-center justify-between">
             <div className="h-4 bg-primary/20 rounded animate-pulse w-16" />
-          </div>
-
-          {/* Button - Compact */}
-          <div className="mt-auto">
-            <div className="h-8 bg-primary/20 rounded-md animate-pulse w-full" />
+            <div className="w-7 h-7 bg-primary/20 rounded-md animate-pulse flex-shrink-0" />
           </div>
         </div>
       </CardContent>
