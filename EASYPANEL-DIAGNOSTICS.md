@@ -1,9 +1,11 @@
 # 🔍 EasyPanel - Diagnóstico Completo
 
 ## 🚨 **Problema Confirmado**
+
 O arquivo `https://b2b.tropicalbrasilsandalias.com.br/assets/index-1rT4xWQV.js` retorna **404 Not Found**.
 
 ## ✅ **Build Local Confirmado**
+
 - ✅ Arquivo existe localmente: `dist/spa/assets/index-1rT4xWQV.js` (1,229.74 kB)
 - ✅ Todas as dependências criadas corretamente
 - ✅ HTML referencia o arquivo correto
@@ -11,16 +13,19 @@ O arquivo `https://b2b.tropicalbrasilsandalias.com.br/assets/index-1rT4xWQV.js` 
 ## 🔧 **Correções Aplicadas**
 
 ### **1. Logs Detalhados no Container**
+
 - ✅ Verificação de caminhos e permissões
 - ✅ Lista completa de arquivos assets
 - ✅ Estrutura de diretórios
 
 ### **2. Endpoint de Diagnóstico Completo**
+
 ```
 https://b2b.tropicalbrasilsandalias.com.br/debug/status
 ```
 
 ### **3. Dockerfile Melhorado**
+
 - ✅ Verificação detalhada dos assets durante build
 - ✅ Permissões e tamanhos de arquivos
 - ✅ Estrutura completa do diretório
@@ -28,17 +33,21 @@ https://b2b.tropicalbrasilsandalias.com.br/debug/status
 ## 🎯 **Diagnóstico Imediato Após Deploy**
 
 ### **1. Teste o Endpoint de Debug**
+
 ```bash
 curl https://b2b.tropicalbrasilsandalias.com.br/debug/status
 ```
 
 **Verificar:**
+
 - `existence.assetsExists: true/false`
 - `files.assets: [array de arquivos]`
 - `files.assetDetails: [detalhes dos arquivos]`
 
 ### **2. Verificar Logs do Container**
+
 Nos logs do EasyPanel, procurar por:
+
 ```
 🗂️ Static path: /app/dist/spa
 📁 Static path exists: true
@@ -46,6 +55,7 @@ Nos logs do EasyPanel, procurar por:
 ```
 
 ### **3. Testar Asset Específico**
+
 ```bash
 curl -I https://b2b.tropicalbrasilsandalias.com.br/assets/index-1rT4xWQV.js
 ```
@@ -53,18 +63,22 @@ curl -I https://b2b.tropicalbrasilsandalias.com.br/assets/index-1rT4xWQV.js
 ## 🐛 **Possíveis Problemas e Soluções**
 
 ### **Problema 1: Assets não copiados no build**
+
 **Sintomas:** `/debug/status` mostra `assetsExists: false`
 **Solução:** Verificar logs do Docker build para erros na etapa `npm run build`
 
 ### **Problema 2: Permissões incorretas**
+
 **Sintomas:** Assets existem mas retornam 403/404
 **Solução:** Verificar permissões nos logs do Docker
 
 ### **Problema 3: Proxy/Nginx bloqueando**
+
 **Sintomas:** Assets existem no container mas 404 no navegador
 **Solução:** Configuração do proxy do EasyPanel
 
 ### **Problema 4: Caminhos incorretos**
+
 **Sintomas:** Servidor procura arquivos no local errado
 **Solução:** Verificar `/debug/status` para caminhos utilizados
 
@@ -95,12 +109,15 @@ curl -I https://b2b.tropicalbrasilsandalias.com.br/assets/index-1rT4xWQV.js
 ## 📞 **Resolução Por Categoria**
 
 ### **Se `/debug/status` mostra `assetsExists: false`**
+
 ➡️ **Problema no build**: Verificar logs do `npm run build` no container
 
 ### **Se assets existem mas 404 no navegador**
+
 ➡️ **Problema no proxy**: Configuração do EasyPanel/nginx
 
 ### **Se assets existem mas permissões incorretas**
+
 ➡️ **Problema de permissões**: Verificar usuário do container
 
 ---

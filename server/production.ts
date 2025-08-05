@@ -12,20 +12,25 @@ console.log(`🗂️  Serving static files from: ${staticPath}`);
 app.use((req, res, next) => {
   // Security headers
   res.set({
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'DENY',
-    'X-XSS-Protection': '1; mode=block',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "X-XSS-Protection": "1; mode=block",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
   });
 
   // CORS headers for assets
-  if (req.path.startsWith("/assets/") || req.path.endsWith(".js") || req.path.endsWith(".css")) {
+  if (
+    req.path.startsWith("/assets/") ||
+    req.path.endsWith(".js") ||
+    req.path.endsWith(".css")
+  ) {
     res.set({
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
-      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-      'Cross-Origin-Resource-Policy': 'cross-origin',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
+      "Access-Control-Allow-Headers":
+        "Origin, X-Requested-With, Content-Type, Accept",
+      "Cross-Origin-Resource-Policy": "cross-origin",
     });
   }
 
@@ -59,7 +64,7 @@ app.use(
       res.set({
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
-        "Vary": "Accept-Encoding",
+        Vary: "Accept-Encoding",
       });
     },
     maxAge: "1y",
@@ -114,7 +119,7 @@ app.get("/assets/*", (req, res, next) => {
       error: "Asset not found",
       requested: req.path,
       fullPath: filePath,
-      staticPath: staticPath
+      staticPath: staticPath,
     });
   }
 });
@@ -153,7 +158,7 @@ app.get("/debug/status", (req, res) => {
     debugInfo.files.assets = assetFiles;
 
     // Get file stats
-    debugInfo.files.assetDetails = assetFiles.map(file => {
+    debugInfo.files.assetDetails = assetFiles.map((file) => {
       const filePath = path.join(assetsPath, file);
       const stats = fs.statSync(filePath);
       return {
@@ -167,7 +172,7 @@ app.get("/debug/status", (req, res) => {
 
   // Check index.html content
   if (fs.existsSync(indexPath)) {
-    const content = fs.readFileSync(indexPath, 'utf8');
+    const content = fs.readFileSync(indexPath, "utf8");
     debugInfo.files.indexContent = content.substring(0, 1000);
     debugInfo.files.indexSize = content.length;
   }
@@ -189,12 +194,16 @@ function getDirectoryStructure(dirPath, maxDepth = 3, currentDepth = 0) {
     const items = fs.readdirSync(dirPath);
     const structure = {};
 
-    items.forEach(item => {
+    items.forEach((item) => {
       const itemPath = path.join(dirPath, item);
       const stats = fs.statSync(itemPath);
 
       if (stats.isDirectory()) {
-        structure[item + "/"] = getDirectoryStructure(itemPath, maxDepth, currentDepth + 1);
+        structure[item + "/"] = getDirectoryStructure(
+          itemPath,
+          maxDepth,
+          currentDepth + 1,
+        );
       } else {
         structure[item] = `${stats.size} bytes`;
       }
@@ -228,10 +237,10 @@ app.get("*", (req, res) => {
 
   if (fs.existsSync(indexPath)) {
     res.set({
-      'Content-Type': 'text/html; charset=utf-8',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0',
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
     });
     res.sendFile(indexPath);
   } else {
@@ -261,7 +270,7 @@ if (fs.existsSync(staticPath)) {
     console.log(`📦 Assets files:`, assetFiles);
 
     // Check specific file
-    assetFiles.forEach(file => {
+    assetFiles.forEach((file) => {
       const filePath = path.join(assetsPath, file);
       const stats = fs.statSync(filePath);
       console.log(`📄 ${file}: ${stats.size} bytes, ${stats.mode.toString(8)}`);
@@ -275,8 +284,10 @@ if (fs.existsSync(staticPath)) {
     path.join(process.cwd(), "build"),
   ];
 
-  altPaths.forEach(altPath => {
-    console.log(`🔍 Checking alternative path: ${altPath} - exists: ${fs.existsSync(altPath)}`);
+  altPaths.forEach((altPath) => {
+    console.log(
+      `🔍 Checking alternative path: ${altPath} - exists: ${fs.existsSync(altPath)}`,
+    );
   });
 }
 

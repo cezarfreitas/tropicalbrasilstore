@@ -361,7 +361,7 @@ if (rootElement) {
         </button>
         <details style="margin-top: 20px; text-align: left;">
           <summary style="cursor: pointer;">Detalhes do erro (para desenvolvedores)</summary>
-          <pre style="background: #f8f9fa; padding: 10px; border-radius: 4px; overflow: auto; font-size: 12px;">${error instanceof Error ? error.message : 'Erro desconhecido'}</pre>
+          <pre style="background: #f8f9fa; padding: 10px; border-radius: 4px; overflow: auto; font-size: 12px;">${error instanceof Error ? error.message : "Erro desconhecido"}</pre>
         </details>
       </div>
     `;
