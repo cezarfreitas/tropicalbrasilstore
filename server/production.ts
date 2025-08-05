@@ -40,10 +40,11 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   // Permissive CSP headers for EasyPanel
   res.set({
-    'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'SAMEORIGIN',
-    'Referrer-Policy': 'strict-origin-when-cross-origin'
+    "Content-Security-Policy":
+      "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
   });
   next();
 });
@@ -58,13 +59,13 @@ app.use(
           "Content-Type": "text/javascript; charset=utf-8",
           "Cache-Control": "public, max-age=31536000",
           "Access-Control-Allow-Origin": "*",
-          "X-Content-Type-Options": "nosniff"
+          "X-Content-Type-Options": "nosniff",
         });
       }
       if (filePath.endsWith(".css")) {
         res.set({
           "Content-Type": "text/css; charset=utf-8",
-          "Cache-Control": "public, max-age=31536000"
+          "Cache-Control": "public, max-age=31536000",
         });
       }
     },
@@ -96,12 +97,12 @@ app.get("/assets/:filename", (req, res) => {
       res.set({
         "Content-Type": "text/javascript; charset=utf-8",
         "Cache-Control": "public, max-age=31536000",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
       });
     } else if (filename.endsWith(".css")) {
       res.set({
         "Content-Type": "text/css; charset=utf-8",
-        "Cache-Control": "public, max-age=31536000"
+        "Cache-Control": "public, max-age=31536000",
       });
     }
 
@@ -127,10 +128,10 @@ app.get("/debug/status", (req, res) => {
     staticFiles: fs.existsSync(staticPath) ? fs.readdirSync(staticPath) : [],
     assetFiles: fs.existsSync(assetsPath) ? fs.readdirSync(assetsPath) : [],
     headers: {
-      userAgent: req.get('User-Agent'),
-      acceptEncoding: req.get('Accept-Encoding'),
-      host: req.get('Host')
-    }
+      userAgent: req.get("User-Agent"),
+      acceptEncoding: req.get("Accept-Encoding"),
+      host: req.get("Host"),
+    },
   };
 
   res.json(debugInfo);
@@ -155,9 +156,9 @@ app.get("*", (req, res) => {
   res.set({
     "Content-Type": "text/html; charset=utf-8",
     "Cache-Control": "no-cache, no-store, must-revalidate",
-    "Pragma": "no-cache",
-    "Expires": "0",
-    "X-Frame-Options": "SAMEORIGIN"
+    Pragma: "no-cache",
+    Expires: "0",
+    "X-Frame-Options": "SAMEORIGIN",
   });
 
   console.log(`📄 Serving index.html for: ${req.path}`);
