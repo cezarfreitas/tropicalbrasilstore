@@ -148,15 +148,42 @@ app.get("*", (req, res) => {
 
 const PORT = process.env.PORT || 80;
 
-// Log static path verification
+// Log static path verification with detailed info
 import fs from "fs";
-console.log(`🗂️ Static path exists: ${fs.existsSync(staticPath)}`);
+console.log(`🗂️ Static path: ${staticPath}`);
+console.log(`📁 Static path exists: ${fs.existsSync(staticPath)}`);
+console.log(`📁 Current working directory: ${process.cwd()}`);
+
 if (fs.existsSync(staticPath)) {
-  console.log(`📁 Static files:`, fs.readdirSync(staticPath));
+  const staticFiles = fs.readdirSync(staticPath);
+  console.log(`📄 Static files:`, staticFiles);
+
   const assetsPath = path.join(staticPath, "assets");
+  console.log(`📦 Assets path: ${assetsPath}`);
+  console.log(`📦 Assets path exists: ${fs.existsSync(assetsPath)}`);
+
   if (fs.existsSync(assetsPath)) {
-    console.log(`📦 Assets files:`, fs.readdirSync(assetsPath));
+    const assetFiles = fs.readdirSync(assetsPath);
+    console.log(`📦 Assets files:`, assetFiles);
+
+    // Check specific file
+    assetFiles.forEach(file => {
+      const filePath = path.join(assetsPath, file);
+      const stats = fs.statSync(filePath);
+      console.log(`📄 ${file}: ${stats.size} bytes, ${stats.mode.toString(8)}`);
+    });
   }
+} else {
+  // Try alternative paths
+  const altPaths = [
+    path.join(process.cwd(), "spa"),
+    path.join(process.cwd(), "client", "dist"),
+    path.join(process.cwd(), "build"),
+  ];
+
+  altPaths.forEach(altPath => {
+    console.log(`🔍 Checking alternative path: ${altPath} - exists: ${fs.existsSync(altPath)}`);
+  });
 }
 
 app.listen(PORT, "0.0.0.0", () => {
