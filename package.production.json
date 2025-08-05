@@ -1,0 +1,26 @@
+{
+  "name": "chinelos-store",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/server/production.js",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build",
+    "build:server": "vite build --config vite.config.server.ts"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "mysql2": "^3.14.2",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
+    "nodemailer": "^6.9.8",
+    "sharp": "^0.34.3",
+    "node-fetch": "^2.7.0",
+    "csv-parser": "^3.2.0",
+    "xlsx": "^0.18.5",
+    "zod": "^3.23.8",
+    "axios": "^1.10.0"
+  }
+}
