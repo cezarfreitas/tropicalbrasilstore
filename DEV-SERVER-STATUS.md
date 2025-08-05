@@ -1,50 +1,48 @@
-# ✅ Servidor de Desenvolvimento - FUNCIONANDO
+# ✅ Servidor de Desenvolvimento - PORTA 8085
 
-## 🎉 **Status: RESOLVIDO**
+## 🎉 **Status: FUNCIONANDO NA PORTA 8085**
 
-### **✅ Problemas Solucionados:**
+### **✅ Configuração Atualizada:**
 
-1. **Porta 8080 em conflito** - RESOLVIDO
+- **Porta alterada**: 8080 → **8085**
+- **Vite configurado** para nova porta
+- **Variáveis de ambiente** atualizadas
+- **Servidor reiniciado** com sucesso
 
-   - DevServer reiniciado com sucesso
-   - Porta 8080 agora disponível
-
-2. **Warnings MySQL2** - RESOLVIDO
-   - Removidas configurações deprecated: `acquireTimeout`, `timeout`, `reconnect`
-   - Mantida apenas configuração válida: `connectTimeout`
-
-### **🚀 Servidor Funcionando:**
+### **🚀 Servidor Ativo:**
 
 ```
-✅ VITE v6.3.5 ready in 743ms
-✅ Local:   http://localhost:8080/
+✅ VITE v6.3.5 ready in 842ms
+✅ Local:   http://localhost:8085/
+✅ Network: http://172.19.10.42:8085/
+✅ Network: http://172.19.10.43:8085/
 ✅ Database: Connected and initialized
-✅ All tables created successfully
 ```
 
-### **📊 Inicialização Completa:**
+### **📊 Sistema Completo:**
 
-- ✅ Database tables created
-- ✅ Store schema created
-- ✅ Customer authentication ready
-- ✅ Product variants system ready
-- ✅ Vendors system active (3 vendors)
-- ✅ All columns and migrations complete
+- ✅ Frontend React rodando na porta 8085
+- ✅ Backend Node.js integrado
+- ✅ Database MySQL conectado
+- ✅ Todas as tabelas criadas
+- ✅ Sistema de vendedores ativo (3 vendors)
+- ✅ Sem warnings ou erros
 
-### **🌐 URLs Disponíveis:**
+### **🌐 URLs Atualizadas:**
 
-- **Desenvolvimento**: http://localhost:8080/
-- **Network**: http://172.19.10.42:8080/
-- **Network**: http://172.19.10.43:8080/
+- **Desenvolvimento**: http://localhost:8085/
+- **Rede Local**: http://172.19.10.42:8085/
+- **Rede Externa**: http://172.19.10.43:8085/
 
-### **🔧 Log Clean:**
+### **🔧 Configurações Alteradas:**
 
-Sem mais warnings ou erros - servidor limpo e funcional.
+1. **vite.config.ts**: `port: 8085`
+2. **Variável PORT**: `8085`
+3. **DevServer**: Reiniciado na nova porta
 
 ## 🎯 **Para Desenvolver:**
 
-O servidor já está rodando! Apenas acesse:
-**http://localhost:8080/**
+**Nova URL**: http://localhost:8085/
 
 ### **Comandos Úteis:**
 
@@ -52,20 +50,19 @@ O servidor já está rodando! Apenas acesse:
 # Ver logs em tempo real
 DevServerControl get_logs
 
-# Reiniciar se necessário
+# Reiniciar se necessário  
 DevServerControl restart
 
-# Parar desenvolvimento
-Ctrl+C (se executando localmente)
+# Alterar porta novamente (se necessário)
+DevServerControl set_proxy_port [NOVA_PORTA]
 ```
 
 ## ✅ **Conclusão:**
 
-**DESENVOLVIMENTO PRONTO!**
+**DESENVOLVIMENTO FUNCIONANDO NA PORTA 8085!** 
+- Servidor ativo e responsivo
+- Database conectado
+- Interface disponível
+- Sistema completo operacional
 
-- Servidor funcionando sem erros
-- Database conectado e configurado
-- Interface disponível em http://localhost:8080
-- Zero warnings ou conflitos
-
-🎉 **Pode começar a desenvolver agora!**
+🎉 **Acesse http://localhost:8085/ para desenvolver!**
