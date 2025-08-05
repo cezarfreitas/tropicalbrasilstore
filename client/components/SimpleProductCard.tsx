@@ -176,14 +176,14 @@ export function SimpleProductCard({
             </Badge>
           )}
 
-          {/* Color Variants - Enhanced design */}
+          {/* Color Variants - Smaller and positioned closer to edge */}
           {product.available_colors && product.available_colors.length > 0 && (
-            <div className="absolute bottom-3 right-3">
-              <div className="flex gap-1.5">
+            <div className="absolute bottom-1.5 right-1.5">
+              <div className="flex gap-1">
                 {product.available_colors.slice(0, 3).map((color, idx) => (
                   <div
                     key={color.id}
-                    className={`w-7 h-7 rounded-full border-2 border-white shadow-md cursor-pointer bg-gray-100 hover:scale-110 transition-transform duration-200 ${
+                    className={`w-5 h-5 rounded-full border border-white shadow-sm cursor-pointer bg-gray-100 hover:scale-110 transition-transform duration-200 ${
                       idx > 1 ? 'hidden sm:block' : ''
                     }`}
                     title={color.name}
@@ -201,7 +201,7 @@ export function SimpleProductCard({
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-xs font-bold text-white">
+                        <span className="text-[8px] font-bold text-white">
                           {color.name?.charAt(0)?.toUpperCase()}
                         </span>
                       </div>
@@ -210,8 +210,8 @@ export function SimpleProductCard({
                 ))}
                 {/* Show count if more than 3 colors */}
                 {product.available_colors.length > 3 && (
-                  <div className="w-7 h-7 rounded-full bg-gray-800/80 backdrop-blur-sm border-2 border-white shadow-md flex items-center justify-center">
-                    <span className="text-xs font-bold text-white">
+                  <div className="w-5 h-5 rounded-full bg-gray-800/80 border border-white shadow-sm flex items-center justify-center">
+                    <span className="text-[8px] font-bold text-white">
                       +{product.available_colors.length - 3}
                     </span>
                   </div>
@@ -219,17 +219,10 @@ export function SimpleProductCard({
               </div>
             </div>
           )}
-
-          {/* Quick view indicator on hover */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-            <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium text-gray-800 shadow-lg">
-              Ver Detalhes
-            </div>
-          </div>
         </div>
 
-        {/* Product Info - Better spacing and typography */}
-        <div className="p-4 flex-1 flex flex-col">
+        {/* Product Info - Reduced padding and spacing */}
+        <div className="p-2.5 flex-1 flex flex-col">
           <h3 className="font-semibold text-sm text-gray-900 mb-3 line-clamp-2 leading-tight group-hover:text-primary transition-colors duration-200">
             {product.name}
           </h3>
