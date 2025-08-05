@@ -36,15 +36,36 @@ app.use((req, res, next) => {
   next();
 });
 
+// Headers compatibility middleware for nginx/proxy
+app.use((req, res, next) => {
+  // Permissive CSP headers for EasyPanel
+  res.set({
+    'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'SAMEORIGIN',
+    'Referrer-Policy': 'strict-origin-when-cross-origin'
+  });
+  next();
+});
+
 // Serve static files from spa directory (this handles /assets automatically)
 app.use(
   express.static(staticPath, {
     setHeaders: (res, filePath) => {
+      // Use text/javascript for better proxy compatibility
       if (filePath.endsWith(".js")) {
-        res.set("Content-Type", "application/javascript; charset=utf-8");
+        res.set({
+          "Content-Type": "text/javascript; charset=utf-8",
+          "Cache-Control": "public, max-age=31536000",
+          "Access-Control-Allow-Origin": "*",
+          "X-Content-Type-Options": "nosniff"
+        });
       }
       if (filePath.endsWith(".css")) {
-        res.set("Content-Type", "text/css; charset=utf-8");
+        res.set({
+          "Content-Type": "text/css; charset=utf-8",
+          "Cache-Control": "public, max-age=31536000"
+        });
       }
     },
   }),
