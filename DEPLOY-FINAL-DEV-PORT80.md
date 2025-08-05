@@ -5,28 +5,34 @@
 ## 🎯 **Opções Otimizadas para Desenvolvimento:**
 
 ### 🥇 **Opção 1: Script Otimizado** (Mais Rápido)
+
 ```bash
 chmod +x dev-port80-optimized.sh
 sudo ./dev-port80-optimized.sh
 ```
+
 - ✅ **Build rápido**
 - ✅ **Setup automático de ambiente**
 - ✅ **Para/reinicia processos automaticamente**
 
 ### 🥈 **Opção 2: PM2** (Mais Profissional)
+
 ```bash
 chmod +x start-dev-pm2.sh
 sudo ./start-dev-pm2.sh
 ```
+
 - ✅ **Gerenciamento avançado de processos**
 - ✅ **Logs organizados**
 - ✅ **Auto-restart em caso de crash**
 - ✅ **Monitoramento em tempo real**
 
 ### 🥉 **Opção 3: Docker** (Isolamento Completo)
+
 ```bash
 ./docker-dev-port80.sh
 ```
+
 - ✅ **Ambiente isolado**
 - ✅ **Fácil cleanup**
 
