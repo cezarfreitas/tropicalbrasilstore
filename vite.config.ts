@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
       strictPort: true,
     },
     base: "/",
+    publicDir: "public",
     build: {
       outDir: "dist/spa",
       chunkSizeWarningLimit: 1000,
