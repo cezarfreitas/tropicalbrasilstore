@@ -102,6 +102,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { logout } = useAuth();
   const { toast } = useToast();
+  const storeSettings = useGlobalStoreSettings();
 
   const handleLogout = () => {
     logout();
