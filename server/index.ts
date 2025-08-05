@@ -99,8 +99,10 @@ export function createServer() {
   );
 
   // Initialize database on startup - run sequentially to avoid dependency issues
+  // Continue serving frontend even if database fails
   (async () => {
     try {
+      console.log("🔄 Initializing database...");
       await initDatabase(); // This creates base tables and seeds data
       await createStoreSchema(); // This creates store-specific tables (customers, orders, order_items)
       await createCustomerAuthTable(); // Authentication tables
@@ -130,7 +132,10 @@ export function createServer() {
       await checkAndFixTables(); // Final table structure checks
       console.log("✅ All database initialization completed successfully");
     } catch (error) {
-      console.error("❌ Database initialization failed:", error);
+      console.error("⚠️ Banco de dados não conectado:", error.message);
+      console.log("🚀 Continuando a servir o frontend mesmo sem backend...");
+      console.log("📱 Frontend funcionará com dados mock/locais");
+      // continuar renderizando o frontend mesmo sem backend
     }
   })();
 
