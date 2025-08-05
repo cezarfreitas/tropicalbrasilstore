@@ -68,7 +68,10 @@ const AppContent = () => (
       {/* Customer Authentication Routes */}
       <Route path="/login" element={<CustomerLogin />} />
       <Route path="/cadastro" element={<CustomerRegister />} />
-      <Route path="/cadastro/vendedor/:vendorId" element={<VendorReferralRegister />} />
+      <Route
+        path="/cadastro/vendedor/:vendorId"
+        element={<VendorReferralRegister />}
+      />
       <Route path="/change-password" element={<CustomerChangePassword />} />
 
       {/* Admin Login Route (Public) */}
@@ -357,7 +360,7 @@ try {
     <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
       <h1>❌ Erro no carregamento</h1>
       <p>Falha ao carregar a aplicação React.</p>
-      <p>Erro: ${error instanceof Error ? error.message : 'Desconhecido'}</p>
+      <p>Erro: ${error instanceof Error ? error.message : "Desconhecido"}</p>
       <button onclick="window.location.reload()">🔄 Recarregar página</button>
     </div>
   `;

@@ -1,11 +1,13 @@
 # 🔧 EasyPanel Debug - React não carregando
 
 ## 🚨 **Problema Identificado**
+
 O React não está carregando no EasyPanel, mostrando apenas HTML estático.
 
 ## ✅ **Correções Aplicadas**
 
 ### 1. **Servidor de Produção Melhorado**
+
 - Headers corretos para JavaScript (`application/javascript; charset=utf-8`)
 - CORS habilitado para assets
 - Cache otimizado para arquivos estáticos
@@ -13,11 +15,13 @@ O React não está carregando no EasyPanel, mostrando apenas HTML estático.
 - Logs detalhados para debug
 
 ### 2. **Error Handling no React**
+
 - Logs de inicialização do React
 - Fallback em caso de erro
 - Melhor debugging no console
 
 ### 3. **Build Verificado**
+
 - Assets gerados corretamente: `index-CDoZQLRv.js`
 - CSS funcionando: `index-DB6PNSre.css`
 - HTML com scripts injetados
@@ -25,7 +29,9 @@ O React não está carregando no EasyPanel, mostrando apenas HTML estático.
 ## 🔍 **Como debugar no EasyPanel**
 
 ### **1. Verificar Logs do Container**
+
 Procure por estas mensagens nos logs:
+
 ```
 🚀 Production server running on port 80
 🗂️ Static files: [array de arquivos]
@@ -33,19 +39,25 @@ Procure por estas mensagens nos logs:
 ```
 
 ### **2. Verificar Requisições de Assets**
+
 Nos logs, procure por:
+
 ```
 📦 Asset request: GET /assets/index-CDoZQLRv.js
 🎯 Direct asset request: /assets/index-CDoZQLRv.js
 ```
 
 ### **3. Teste Manual dos Assets**
+
 Acesse diretamente no navegador:
+
 - `https://seu-dominio.com/assets/index-CDoZQLRv.js`
 - `https://seu-dominio.com/assets/index-DB6PNSre.css`
 
 ### **4. Console do Navegador**
+
 Abra DevTools e procure por:
+
 ```
 🚀 React App initializing...
 📦 Root element found: true
@@ -56,24 +68,29 @@ Abra DevTools e procure por:
 ## 🐛 **Possíveis Problemas e Soluções**
 
 ### **Problema 1: Assets retornam 404**
+
 **Sintomas:** JavaScript não carrega, 404 nos assets
 **Solução:** Verificar se `dist/spa/assets/` existe no container
 
 ### **Problema 2: MIME type incorreto**
+
 **Sintomas:** `Refused to execute script due to MIME type`
 **Solução:** Verificar headers HTTP dos assets
 
 ### **Problema 3: CORS bloqueado**
+
 **Sintomas:** CORS error no console
 **Solução:** Verificar se headers CORS estão sendo aplicados
 
 ### **Problema 4: JavaScript carrega mas React não inicializa**
+
 **Sintomas:** Assets carregam (200), mas #root vazio
 **Solução:** Verificar logs do console para erros do React
 
 ## 🔧 **Comandos de Verificação no Container**
 
 Se você tiver acesso ao container:
+
 ```bash
 # Verificar se assets existem
 ls -la /app/dist/spa/assets/
