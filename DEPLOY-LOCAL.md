@@ -13,16 +13,19 @@ chmod +x deploy-local-simple.sh
 ## Opção 1: Docker (Manual)
 
 ### 1. Build da aplicação
+
 ```bash
 npm run build
 ```
 
 ### 2. Build da imagem Docker
+
 ```bash
 docker build -t chinelos-store .
 ```
 
 ### 3. Executar o container
+
 ```bash
 docker run -d \
   --name chinelos-store \
@@ -38,6 +41,7 @@ docker run -d \
 ```
 
 ### 4. Verificar se está funcionando
+
 ```bash
 # Ver logs
 docker logs chinelos-store
@@ -49,11 +53,13 @@ curl http://localhost/health
 ## Opção 2: Docker Compose
 
 ### 1. Usar o arquivo de produção
+
 ```bash
 docker-compose -f docker-compose.prod.yml up -d
 ```
 
 ### 2. Ver logs
+
 ```bash
 docker-compose -f docker-compose.prod.yml logs -f
 ```
@@ -61,11 +67,13 @@ docker-compose -f docker-compose.prod.yml logs -f
 ## Opção 3: Node.js Direto
 
 ### 1. Build da aplicação
+
 ```bash
 npm run build
 ```
 
 ### 2. Configurar variáveis de ambiente
+
 ```bash
 export NODE_ENV=production
 export PORT=80
@@ -74,6 +82,7 @@ export JWT_SECRET=tropical-brasil-secret-key-2025
 ```
 
 ### 3. Executar
+
 ```bash
 # Com sudo para porta 80
 sudo npm start
@@ -93,6 +102,7 @@ npm start
 ## Comandos Úteis
 
 ### Para parar containers
+
 ```bash
 # Docker run
 docker stop chinelos-store
@@ -103,6 +113,7 @@ docker-compose -f docker-compose.prod.yml down
 ```
 
 ### Para ver logs
+
 ```bash
 # Docker
 docker logs chinelos-store
@@ -112,6 +123,7 @@ docker-compose -f docker-compose.prod.yml logs -f
 ```
 
 ### Para rebuild
+
 ```bash
 # Rebuild imagem
 docker build -t chinelos-store . --no-cache
@@ -125,6 +137,7 @@ docker rm chinelos-store
 ## Troubleshooting
 
 ### Porta 80 em uso
+
 ```bash
 # Ver o que está usando a porta
 sudo netstat -tulpn | grep :80
@@ -134,6 +147,7 @@ docker run -p 8080:80 ...
 ```
 
 ### Problemas de permissão
+
 ```bash
 # Para porta 80, use sudo
 sudo docker run ...
@@ -143,6 +157,7 @@ docker run -p 8080:80 ...
 ```
 
 ### Container não inicia
+
 ```bash
 # Ver logs detalhados
 docker logs chinelos-store
