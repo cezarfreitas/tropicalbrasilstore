@@ -59,11 +59,13 @@ Crie este package.json na raiz do ZIP:
 ## ⚙️ Configuração no EasyPanel
 
 ### **1. Criar Serviço:**
+
 - Tipo: **Node.js**
 - Upload: **ZIP file**
 - Start Command: `npm start`
 
 ### **2. Variáveis de Ambiente:**
+
 ```env
 NODE_ENV=production
 PORT=80
@@ -72,6 +74,7 @@ JWT_SECRET=your_secret_here
 ```
 
 ### **3. Build Commands:**
+
 ```bash
 npm install --production
 ```
@@ -79,6 +82,7 @@ npm install --production
 ## ✅ Verificação
 
 Após deploy, teste:
+
 - `/` - Homepage
 - `/api/ping` - Health check
 - `/debug/status` - Status dos assets
@@ -86,6 +90,7 @@ Após deploy, teste:
 ## 🚨 Troubleshooting
 
 Se der erro:
+
 1. Verificar logs no EasyPanel
 2. Confirmar estrutura do ZIP
 3. Verificar variáveis de ambiente
