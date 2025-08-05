@@ -530,6 +530,8 @@ export default function ProductDetail() {
     // Reset size/grade selection when color changes
     setSelectedGrade(null);
     setSelectedSize(null);
+    // Reset image gallery to first image
+    setSelectedImageIndex(0);
   };
 
   // Auto-select single options
@@ -854,7 +856,7 @@ export default function ProductDetail() {
                   </h3>
                   <p className="text-sm text-gray-600 mb-3">
                     Para ver {hasGrades() ? "as grades" : "os tamanhos"}{" "}
-                    disponíveis e adicionar ao carrinho, você precisa estar
+                    dispon��veis e adicionar ao carrinho, você precisa estar
                     logado.
                   </p>
                   <Button
