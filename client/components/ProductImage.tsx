@@ -197,7 +197,7 @@ export function ProductImage({
   return (
     <div ref={imgRef} className="relative w-full h-full">
       {isLoading && shouldLoad && (
-        <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
+        <div className="absolute inset-0 flex items-center justify-center">
           <div
             className={`${iconSizes[fallbackIconSize]} rounded bg-muted-foreground/20 animate-pulse`}
           />
