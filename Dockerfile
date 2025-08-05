@@ -35,7 +35,12 @@ RUN if [ -d "public/uploads" ]; then \
 RUN echo "✅ Verificando arquivos de build..." && \
     ls -la dist/server/production.js && \
     ls -la dist/spa/index.html && \
+    ls -la dist/spa/assets/ && \
     echo "✅ Build concluído com sucesso"
+
+# Verificar conteúdo do index.html para debug
+RUN echo "📄 Conteúdo do index.html:" && \
+    head -20 dist/spa/index.html
 
 # Configurar ambiente
 ENV PORT=80
