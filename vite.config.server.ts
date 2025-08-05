@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import path from "path";
 
-// Server build configuration
 export default defineConfig({
   build: {
     lib: {
@@ -13,46 +12,26 @@ export default defineConfig({
     outDir: "dist/server",
     target: "node18",
     ssr: true,
-    reportCompressedSize: false, // Skip size analysis to speed up build
+    reportCompressedSize: false,
     rollupOptions: {
       external: [
         // Node.js built-ins
-        "fs",
-        "path",
-        "url",
-        "http",
-        "https",
-        "os",
-        "crypto",
-        "stream",
-        "util",
-        "events",
-        "buffer",
-        "querystring",
+        "fs", "path", "url", "http", "https", "os", "crypto", 
+        "stream", "util", "events", "buffer", "querystring",
         "child_process",
-        // External dependencies that should not be bundled
-        "express",
-        "cors",
-        "mysql2",
-        "nodemailer",
-        "sharp",
-        "axios",
-        "bcryptjs",
-        "jsonwebtoken",
-        "multer",
-        "csv-parser",
-        "xlsx",
-        "zod",
-        "node-fetch",
-        /^node:.*/, // All Node.js built-in modules
+        // Dependencies
+        "express", "cors", "mysql2", "nodemailer", "sharp",
+        "axios", "bcryptjs", "jsonwebtoken", "multer", 
+        "csv-parser", "xlsx", "zod", "node-fetch",
+        /^node:.*/,
       ],
       output: {
         format: "es",
         entryFileNames: "[name].js",
       },
     },
-    minify: false, // Keep readable for debugging
-    sourcemap: false, // Disable sourcemap for faster build
+    minify: false,
+    sourcemap: false,
   },
   resolve: {
     alias: {

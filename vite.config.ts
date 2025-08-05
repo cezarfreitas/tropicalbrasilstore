@@ -3,38 +3,21 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { createServer } from "./server";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const isDeployBuild =
-    process.env.VITE_BUILD_FAST === "true" || process.env.CI === "true";
+  const isDev = mode === "development";
 
   return {
     server: {
       host: "0.0.0.0",
       port: 8080,
       strictPort: true,
-      allowedHosts: [
-        "localhost",
-        ".easypanel.host",
-        ".jzo3qo.easypanel.host",
-        "ide-testeloja.jzo3qo.easypanel.host",
-        "b2b.tropicalbrasilsandalias.com.br",
-        ".tropicalbrasilsandalias.com.br",
-      ],
-      hmr:
-        mode === "development"
-          ? {
-              clientPort: 80,
-              host: "b2b.tropicalbrasilsandalias.com.br",
-            }
-          : false,
     },
     build: {
       outDir: "dist/spa",
       chunkSizeWarningLimit: 1000,
-      reportCompressedSize: false, // Skip gzip analysis for faster build
-      minify: "esbuild", // Use esbuild for all builds (faster and no extra deps)
-      sourcemap: isDeployBuild ? false : true, // Skip sourcemaps for deploy
+      reportCompressedSize: false,
+      minify: "esbuild",
+      sourcemap: isDev,
       rollupOptions: {
         output: {
           manualChunks: {
@@ -62,23 +45,18 @@ export default defineConfig(({ mode }) => {
 function expressPlugin(): Plugin {
   return {
     name: "express-plugin",
-    apply: "serve", // Only apply during development (serve mode)
+    apply: "serve",
     configureServer(server) {
       const app = createServer();
-
-      // Add Express app as middleware to Vite dev server
       server.middlewares.use(app);
     },
     transformIndexHtml: {
       order: "pre",
-      handler: async (html, context) => {
-        // Inject store settings script into HTML
+      handler: async (html) => {
         const injection = `
     <script>
-      // Store settings will be injected here by the server
       window.__STORE_SETTINGS__ = null;
-
-      // Try to fetch settings immediately
+      
       (async function() {
         try {
           const response = await fetch('/api/settings');
@@ -93,19 +71,19 @@ function expressPlugin(): Plugin {
               background_color: settings.background_color,
               text_color: settings.text_color
             };
-
-            // Dispatch event for components to update
-            window.dispatchEvent(new CustomEvent('storeSettingsLoaded', { detail: window.__STORE_SETTINGS__ }));
+            window.dispatchEvent(new CustomEvent('storeSettingsLoaded', { 
+              detail: window.__STORE_SETTINGS__ 
+            }));
           }
         } catch (error) {
-          console.warn('Failed to load initial store settings:', error);
+          console.warn('Failed to load store settings:', error);
         }
       })();
     </script>`;
 
         return html.replace(
           '<div id="root"></div>',
-          `<div id="root"></div>${injection}`,
+          `<div id="root"></div>${injection}`
         );
       },
     },
