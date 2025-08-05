@@ -33,6 +33,7 @@ import {
   useGlobalStoreSettings,
   getGlobalStoreSettings,
 } from "@/hooks/use-global-store-settings";
+import { DynamicTitle } from "@/components/DynamicTitle";
 import {
   DropdownMenu,
   DropdownMenuContent,
