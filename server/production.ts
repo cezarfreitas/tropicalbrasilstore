@@ -8,14 +8,20 @@ const app = createServer();
 const staticPath = path.join(process.cwd(), "dist", "spa");
 console.log(`🗂️  Serving static files from: ${staticPath}`);
 
-// Log asset requests for debugging
+// Log ALL requests for debugging
 app.use((req, res, next) => {
+  console.log(`🌐 Request: ${req.method} ${req.path}`);
+
   if (
     req.path.startsWith("/assets/") ||
     req.path.endsWith(".js") ||
     req.path.endsWith(".css")
   ) {
-    console.log(`📦 Asset request: ${req.method} ${req.path}`);
+    console.log(`📦 ASSET REQUEST: ${req.method} ${req.path}`);
+    console.log(`📁 Static path: ${staticPath}`);
+    const fullPath = path.join(staticPath, req.path);
+    console.log(`🎯 Full file path: ${fullPath}`);
+    console.log(`📋 File exists: ${fs.existsSync(fullPath)}`);
   }
   next();
 });
