@@ -300,6 +300,47 @@ export default function ProductDetail() {
     }
   };
 
+  const getAllAvailableImages = () => {
+    const images: string[] = [];
+
+    // Add main product photo first
+    if (product?.photo) {
+      images.push(product.photo);
+    }
+
+    // Add images from selected color if available
+    if (selectedColor && product?.available_colors) {
+      const selectedColorData = product.available_colors.find(c => c.id === selectedColor);
+      if (selectedColorData?.images && selectedColorData.images.length > 0) {
+        // Add unique images only
+        selectedColorData.images.forEach(img => {
+          if (img && !images.includes(img)) {
+            images.push(img);
+          }
+        });
+      } else if (selectedColorData?.image_url && !images.includes(selectedColorData.image_url)) {
+        images.push(selectedColorData.image_url);
+      }
+    }
+
+    // If no color selected or no color images, add all available images
+    if ((!selectedColor || images.length <= 1) && product?.available_colors) {
+      product.available_colors.forEach(color => {
+        if (color.images && color.images.length > 0) {
+          color.images.forEach(img => {
+            if (img && !images.includes(img)) {
+              images.push(img);
+            }
+          });
+        } else if (color.image_url && !images.includes(color.image_url)) {
+          images.push(color.image_url);
+        }
+      });
+    }
+
+    return images.filter(img => img && img.trim() !== '');
+  };
+
   const getAvailableColors = (productData = product) => {
     if (!productData?.variants) return [];
 
