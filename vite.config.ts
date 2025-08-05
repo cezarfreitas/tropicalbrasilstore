@@ -42,7 +42,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       // Só carregar plugins do servidor em desenvolvimento
-      ...(isDev ? [createExpressPlugin()] : [createBuildPlugin()])
+      ...(isDev ? [createExpressPlugin()] : [createBuildPlugin()]),
     ],
     resolve: {
       alias: {
@@ -63,7 +63,7 @@ function createExpressPlugin(): Plugin {
         console.warn("Failed to load server in dev mode");
         return null;
       });
-      
+
       if (serverModule?.createServer) {
         const app = serverModule.createServer();
         server.middlewares.use(app);
