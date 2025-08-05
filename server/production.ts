@@ -96,6 +96,22 @@ app.get("/assets/*", (req, res, next) => {
   }
 });
 
+// Debug endpoint for EasyPanel
+app.get("/debug/status", (req, res) => {
+  const indexPath = path.join(staticPath, "index.html");
+  const assetsPath = path.join(staticPath, "assets");
+
+  res.json({
+    status: "ok",
+    staticPath,
+    indexExists: fs.existsSync(indexPath),
+    assetsExists: fs.existsSync(assetsPath),
+    assets: fs.existsSync(assetsPath) ? fs.readdirSync(assetsPath) : [],
+    indexContent: fs.existsSync(indexPath) ? fs.readFileSync(indexPath, 'utf8').substring(0, 500) + "..." : "NOT FOUND",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Catch-all handler for SPA routing
 app.get("*", (req, res) => {
   // Don't serve index.html for API routes or uploads
@@ -113,7 +129,21 @@ app.get("*", (req, res) => {
     return res.status(404).json({ error: "Asset not found" });
   }
 
-  res.sendFile(path.join(staticPath, "index.html"));
+  // Enhanced HTML serving with proper headers
+  const indexPath = path.join(staticPath, "index.html");
+
+  if (fs.existsSync(indexPath)) {
+    res.set({
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    });
+    res.sendFile(indexPath);
+  } else {
+    console.error(`❌ Index.html not found at: ${indexPath}`);
+    res.status(404).send("Index file not found");
+  }
 });
 
 const PORT = process.env.PORT || 80;
