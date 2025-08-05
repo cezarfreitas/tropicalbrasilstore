@@ -21,8 +21,10 @@ export default defineConfig(({ mode }) => {
       minify: "esbuild",
       sourcemap: isDev,
       assetsDir: "assets",
+      target: "es2015", // More compatible target for older proxies
       rollupOptions: {
         output: {
+          format: "es",
           manualChunks: {
             "react-vendor": ["react", "react-dom"],
             "router-vendor": ["react-router-dom"],
@@ -32,6 +34,10 @@ export default defineConfig(({ mode }) => {
               "@radix-ui/react-tabs",
             ],
           },
+          // Ensure consistent asset naming for proxy compatibility
+          assetFileNames: "assets/[name]-[hash].[ext]",
+          chunkFileNames: "assets/[name]-[hash].js",
+          entryFileNames: "assets/[name]-[hash].js",
         },
       },
     },
