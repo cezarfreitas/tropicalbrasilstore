@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     server: {
-      host: "0.0.0.0", 
+      host: "0.0.0.0",
       port: 3000,
       strictPort: true,
     },
@@ -61,16 +61,16 @@ function devServerPlugin(): Plugin {
     configureServer(server) {
       // Carrega o servidor apenas quando necessário e de forma assíncrona
       server.middlewares.use(async (req, res, next) => {
-        if (req.url?.startsWith('/api/')) {
+        if (req.url?.startsWith("/api/")) {
           try {
             // Import dinâmico apenas para requisições de API
-            const serverModule = await import('./server/index.js');
+            const serverModule = await import("./server/index.js");
             if (serverModule.createServer) {
               const app = serverModule.createServer();
               return app(req, res, next);
             }
           } catch (error) {
-            console.warn('Server not available in dev mode:', error.message);
+            console.warn("Server not available in dev mode:", error.message);
           }
         }
         next();
@@ -85,7 +85,7 @@ function devServerPlugin(): Plugin {
 // Plugin para build - apenas injeta script no HTML
 function buildHtmlPlugin(): Plugin {
   return {
-    name: "build-html-plugin", 
+    name: "build-html-plugin",
     apply: "build",
     transformIndexHtml(html) {
       return addStoreSettingsScript(html);
