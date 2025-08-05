@@ -35,16 +35,29 @@ RUN if [ -d "public/uploads" ]; then \
 RUN echo "✅ Verificando arquivos de build..." && \
     ls -la dist/server/production.js && \
     ls -la dist/spa/index.html && \
-    ls -la dist/spa/assets/ && \
     echo "✅ Build concluído com sucesso"
+
+# Verificar assets em detalhes
+RUN echo "📦 Verificando assets em detalhes:" && \
+    ls -la dist/spa/ && \
+    echo "📦 Conteúdo da pasta assets:" && \
+    ls -la dist/spa/assets/ && \
+    echo "📦 Tamanho dos arquivos assets:" && \
+    du -h dist/spa/assets/*
 
 # Verificar conteúdo do index.html para debug
 RUN echo "📄 Conteúdo do index.html:" && \
-    head -20 dist/spa/index.html
+    cat dist/spa/index.html
 
 # Verificar estrutura completa para debug
-RUN echo "🗂️ Estrutura do diretório dist:" && \
-    find dist -type f -name "*.html" -o -name "*.js" -o -name "*.css" | head -20
+RUN echo "🗂️ Estrutura completa do diretório dist:" && \
+    find dist -type f -ls
+
+# Verificar permissões dos arquivos
+RUN echo "🔐 Verificando permissões:" && \
+    ls -la dist/spa/assets/ && \
+    echo "🔐 Permissões detalhadas:" && \
+    stat dist/spa/assets/*
 
 # Configurar ambiente
 ENV PORT=80
