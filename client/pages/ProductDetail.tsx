@@ -150,6 +150,7 @@ export default function ProductDetail() {
   const [selectedVariantImage, setSelectedVariantImage] = useState<
     string | null
   >(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [suggestedProducts, setSuggestedProducts] = useState<any[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const { addItem } = useCart();
