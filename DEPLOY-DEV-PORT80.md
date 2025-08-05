@@ -3,23 +3,28 @@
 ## 📋 Opções de Deploy Criadas:
 
 ### 🥇 **Opção 1: Docker Compose** (Recomendado)
+
 ```bash
 chmod +x docker-dev-port80.sh
 ./docker-dev-port80.sh
 ```
+
 - ✅ **Isolamento completo**
 - ✅ **Fácil de parar/reiniciar**
 - ✅ **Logs organizados**
 
 ### 🥈 **Opção 2: Script Direto** (Precisa sudo)
+
 ```bash
 chmod +x deploy-dev-port80.sh
 sudo ./deploy-dev-port80.sh
 ```
+
 - ✅ **Execução direta**
 - ⚠️ **Requer privilégios de administrador**
 
 ### 🥉 **Opção 3: NPM Scripts**
+
 ```bash
 # Build primeiro
 npm run build
@@ -56,6 +61,7 @@ CORS_ORIGIN=http://localhost
 ## 🛠️ Comandos Úteis:
 
 ### Docker
+
 ```bash
 # Ver logs
 docker logs chinelos-dev-port80
@@ -68,6 +74,7 @@ docker-compose -f docker-compose.dev-port80.yml up --build --force-recreate
 ```
 
 ### NPM
+
 ```bash
 # Deploy via Docker
 npm run docker:dev:port80
@@ -82,6 +89,7 @@ sudo npm run deploy:dev:port80
 ## 🔍 Troubleshooting:
 
 ### Porta 80 em uso
+
 ```bash
 # Ver o que está usando
 sudo netstat -tulpn | grep :80
@@ -92,6 +100,7 @@ sudo systemctl stop nginx
 ```
 
 ### Permissões
+
 ```bash
 # Para porta 80, sempre use sudo
 sudo ./deploy-dev-port80.sh
@@ -101,6 +110,7 @@ sudo ./deploy-dev-port80.sh
 ```
 
 ### Container não inicia
+
 ```bash
 # Ver logs detalhados
 docker logs chinelos-dev-port80
@@ -116,11 +126,12 @@ docker ps -a
 ✅ **Compressão desabilitada**  
 ✅ **Logs detalhados**  
 ✅ **Hot reload (se suportado)**  
-✅ **Health check funcional**  
+✅ **Health check funcional**
 
 ## 🎯 Recomendação:
 
 **Use a Opção 1** (Docker):
+
 ```bash
 chmod +x docker-dev-port80.sh
 ./docker-dev-port80.sh
