@@ -22,11 +22,8 @@ COPY . .
 # Criar diretórios necessários
 RUN mkdir -p public/uploads/logos public/uploads/products
 
-# Build completo do projeto
+# Build completo do projeto (já inclui compilação do servidor)
 RUN npm run build
-
-# Compilar TypeScript do servidor
-RUN npx tsc -p server/tsconfig.json
 
 # Copiar uploads para dist se existir
 RUN if [ -d "public/uploads" ]; then \
