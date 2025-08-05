@@ -8,8 +8,8 @@ RUN apk add --no-cache curl
 # Copiar package.json e package-lock.json
 COPY package*.json ./
 
-# Instalar dependências
-RUN npm ci --only=production
+# Instalar todas as dependências (necessárias para build)
+RUN npm ci
 
 # Copiar código fonte
 COPY . .
