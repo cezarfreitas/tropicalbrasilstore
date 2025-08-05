@@ -124,16 +124,87 @@ app.get("/debug/status", (req, res) => {
   const indexPath = path.join(staticPath, "index.html");
   const assetsPath = path.join(staticPath, "assets");
 
-  res.json({
+  const debugInfo = {
     status: "ok",
-    staticPath,
-    indexExists: fs.existsSync(indexPath),
-    assetsExists: fs.existsSync(assetsPath),
-    assets: fs.existsSync(assetsPath) ? fs.readdirSync(assetsPath) : [],
-    indexContent: fs.existsSync(indexPath) ? fs.readFileSync(indexPath, 'utf8').substring(0, 500) + "..." : "NOT FOUND",
     timestamp: new Date().toISOString(),
-  });
+    paths: {
+      cwd: process.cwd(),
+      staticPath,
+      indexPath,
+      assetsPath,
+    },
+    existence: {
+      staticPathExists: fs.existsSync(staticPath),
+      indexExists: fs.existsSync(indexPath),
+      assetsExists: fs.existsSync(assetsPath),
+    },
+    files: {},
+    permissions: {},
+  };
+
+  // List static directory
+  if (fs.existsSync(staticPath)) {
+    debugInfo.files.staticDir = fs.readdirSync(staticPath);
+  }
+
+  // List assets directory
+  if (fs.existsSync(assetsPath)) {
+    const assetFiles = fs.readdirSync(assetsPath);
+    debugInfo.files.assets = assetFiles;
+
+    // Get file stats
+    debugInfo.files.assetDetails = assetFiles.map(file => {
+      const filePath = path.join(assetsPath, file);
+      const stats = fs.statSync(filePath);
+      return {
+        name: file,
+        size: stats.size,
+        mode: stats.mode.toString(8),
+        readable: fs.constants.R_OK & stats.mode ? true : false,
+      };
+    });
+  }
+
+  // Check index.html content
+  if (fs.existsSync(indexPath)) {
+    const content = fs.readFileSync(indexPath, 'utf8');
+    debugInfo.files.indexContent = content.substring(0, 1000);
+    debugInfo.files.indexSize = content.length;
+  }
+
+  // Try to find dist directory structure
+  const distPath = path.join(process.cwd(), "dist");
+  if (fs.existsSync(distPath)) {
+    debugInfo.files.distStructure = getDirectoryStructure(distPath);
+  }
+
+  res.json(debugInfo);
 });
+
+// Helper function to get directory structure
+function getDirectoryStructure(dirPath, maxDepth = 3, currentDepth = 0) {
+  if (currentDepth >= maxDepth) return "...";
+
+  try {
+    const items = fs.readdirSync(dirPath);
+    const structure = {};
+
+    items.forEach(item => {
+      const itemPath = path.join(dirPath, item);
+      const stats = fs.statSync(itemPath);
+
+      if (stats.isDirectory()) {
+        structure[item + "/"] = getDirectoryStructure(itemPath, maxDepth, currentDepth + 1);
+      } else {
+        structure[item] = `${stats.size} bytes`;
+      }
+    });
+
+    return structure;
+  } catch (error) {
+    return `Error: ${error.message}`;
+  }
+}
 
 // Catch-all handler for SPA routing
 app.get("*", (req, res) => {
@@ -179,7 +250,7 @@ console.log(`📁 Current working directory: ${process.cwd()}`);
 
 if (fs.existsSync(staticPath)) {
   const staticFiles = fs.readdirSync(staticPath);
-  console.log(`📄 Static files:`, staticFiles);
+  console.log(`���� Static files:`, staticFiles);
 
   const assetsPath = path.join(staticPath, "assets");
   console.log(`📦 Assets path: ${assetsPath}`);
