@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    plugins: [react(), expressPlugin()],
+    plugins: [react(), expressPlugin(), isDev ? null : buildPlugin()].filter(Boolean),
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./client"),
@@ -56,7 +56,7 @@ function expressPlugin(): Plugin {
         const injection = `
     <script>
       window.__STORE_SETTINGS__ = null;
-      
+
       (async function() {
         try {
           const response = await fetch('/api/settings');
@@ -71,8 +71,52 @@ function expressPlugin(): Plugin {
               background_color: settings.background_color,
               text_color: settings.text_color
             };
-            window.dispatchEvent(new CustomEvent('storeSettingsLoaded', { 
-              detail: window.__STORE_SETTINGS__ 
+            window.dispatchEvent(new CustomEvent('storeSettingsLoaded', {
+              detail: window.__STORE_SETTINGS__
+            }));
+          }
+        } catch (error) {
+          console.warn('Failed to load store settings:', error);
+        }
+      })();
+    </script>`;
+
+        return html.replace(
+          '<div id="root"></div>',
+          `<div id="root"></div>${injection}`,
+        );
+      },
+    },
+  };
+}
+
+function buildPlugin(): Plugin {
+  return {
+    name: "build-plugin",
+    apply: "build",
+    transformIndexHtml: {
+      order: "pre",
+      handler: async (html) => {
+        const injection = `
+    <script>
+      window.__STORE_SETTINGS__ = null;
+
+      (async function() {
+        try {
+          const response = await fetch('/api/settings');
+          if (response.ok) {
+            const settings = await response.json();
+            window.__STORE_SETTINGS__ = {
+              store_name: settings.store_name,
+              logo_url: settings.logo_url,
+              primary_color: settings.primary_color,
+              secondary_color: settings.secondary_color,
+              accent_color: settings.accent_color,
+              background_color: settings.background_color,
+              text_color: settings.text_color
+            };
+            window.dispatchEvent(new CustomEvent('storeSettingsLoaded', {
+              detail: window.__STORE_SETTINGS__
             }));
           }
         } catch (error) {
