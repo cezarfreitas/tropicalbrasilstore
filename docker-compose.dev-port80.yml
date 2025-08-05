@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  chinelos-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev-port80
+    container_name: chinelos-dev-port80
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      NODE_ENV: development
+      PORT: 80
+      DATABASE_URL: "mysql://tropical:805ce7692e5b4d6ced5f@5.161.52.206:3232/tropical"
+      JWT_SECRET: "tropical-brasil-secret-key-2025-dev"
+      CORS_ORIGIN: "http://localhost"
+      DEBUG_MODE: "true"
+      ENABLE_COMPRESSION: "false"
+      ENABLE_CACHING: "false"
+    volumes:
+      - "./public/uploads:/app/public/uploads"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "project=chinelos-dev"
+      - "environment=development"
+      - "port=80"
