@@ -13,8 +13,9 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=80
-      # Substitua pela sua URL de banco de dados
       - DATABASE_URL=${DATABASE_URL:-mysql://tropical:805ce7692e5b4d6ced5f@5.161.52.206:3232/tropical}
+      - JWT_SECRET=${JWT_SECRET:-tropical-brasil-secret-key-2025}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost}
     volumes:
       # Persistir uploads
       - ./public/uploads:/app/public/uploads
