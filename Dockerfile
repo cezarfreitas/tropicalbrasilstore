@@ -42,6 +42,10 @@ RUN echo "✅ Verificando arquivos de build..." && \
 RUN echo "📄 Conteúdo do index.html:" && \
     head -20 dist/spa/index.html
 
+# Verificar estrutura completa para debug
+RUN echo "🗂️ Estrutura do diretório dist:" && \
+    find dist -type f -name "*.html" -o -name "*.js" -o -name "*.css" | head -20
+
 # Configurar ambiente
 ENV PORT=80
 ENV NODE_ENV=production
