@@ -10,19 +10,24 @@
 ## 🎯 3 Maneiras de Fazer Deploy:
 
 ### Opção 1: Node.js Direto (Mais Simples)
+
 ```bash
 chmod +x deploy-node-direct.sh
 ./deploy-node-direct.sh
 ```
+
 **URL**: http://localhost:8080
 
 ### Opção 2: Docker Compose Simplificado
+
 ```bash
 docker-compose -f docker-compose.simple.yml up -d
 ```
+
 **URL**: http://localhost
 
 ### Opção 3: Docker Manual
+
 ```bash
 npm run build
 docker build -t chinelos-store .
@@ -31,6 +36,7 @@ docker run -d --name chinelos-store -p 80:80 \
   -e DATABASE_URL="mysql://tropical:805ce7692e5b4d6ced5f@5.161.52.206:3232/tropical" \
   chinelos-store
 ```
+
 **URL**: http://localhost
 
 ## 🔧 Arquivos Disponíveis:
@@ -44,11 +50,13 @@ docker run -d --name chinelos-store -p 80:80 \
 ## ⚡ Recomendação:
 
 **Use a Opção 1** (Node.js direto) se:
+
 - Quer testar rapidamente
 - Não tem Docker instalado
 - Prefere simplicidade
 
 **Use a Opção 2** (Docker Compose) se:
+
 - Quer isolamento completo
 - Tem Docker funcionando
 - Quer deploy "de produção"
@@ -75,6 +83,6 @@ node dist/server/production.js
 ✅ Cards otimizados  
 ✅ SKU na página de detalhes  
 ✅ Nome da loja dinâmico  
-✅ Health check funcionando  
+✅ Health check funcionando
 
 Todos os problemas foram identificados e corrigidos!
