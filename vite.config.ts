@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     server: {
-      host: "0.0.0.0",
+      host: "0.0.0.0", 
       port: 3000,
       strictPort: true,
     },
@@ -41,8 +41,8 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react(),
-      // Só carregar plugins do servidor em desenvolvimento
-      ...(isDev ? [createExpressPlugin()] : [createBuildPlugin()]),
+      // Plugin para desenvolvimento (só carrega quando necessário)
+      isDev ? devServerPlugin() : buildHtmlPlugin(),
     ],
     resolve: {
       alias: {
@@ -53,75 +53,90 @@ export default defineConfig(({ mode }) => {
   };
 });
 
-function createExpressPlugin(): Plugin {
+// Plugin para desenvolvimento - carrega servidor dinamicamente
+function devServerPlugin(): Plugin {
   return {
-    name: "express-plugin",
+    name: "dev-server-plugin",
     apply: "serve",
-    async configureServer(server) {
-      // Só em desenvolvimento, importar dinamicamente sem resolver na fase de config
-      const serverModule = await import("./server/index.js").catch(() => {
-        console.warn("Failed to load server in dev mode");
-        return null;
+    configureServer(server) {
+      // Carrega o servidor apenas quando necessário e de forma assíncrona
+      server.middlewares.use(async (req, res, next) => {
+        if (req.url?.startsWith('/api/')) {
+          try {
+            // Import dinâmico apenas para requisições de API
+            const serverModule = await import('./server/index.js');
+            if (serverModule.createServer) {
+              const app = serverModule.createServer();
+              return app(req, res, next);
+            }
+          } catch (error) {
+            console.warn('Server not available in dev mode:', error.message);
+          }
+        }
+        next();
       });
-
-      if (serverModule?.createServer) {
-        const app = serverModule.createServer();
-        server.middlewares.use(app);
-      }
     },
-    transformIndexHtml: {
-      order: "pre",
-      handler: async (html) => {
-        return addStoreSettingsScript(html);
-      },
+    transformIndexHtml(html) {
+      return addStoreSettingsScript(html);
     },
   };
 }
 
-function createBuildPlugin(): Plugin {
+// Plugin para build - apenas injeta script no HTML
+function buildHtmlPlugin(): Plugin {
   return {
-    name: "build-plugin",
+    name: "build-html-plugin", 
     apply: "build",
-    transformIndexHtml: {
-      order: "pre",
-      handler: async (html) => {
-        return addStoreSettingsScript(html);
-      },
+    transformIndexHtml(html) {
+      return addStoreSettingsScript(html);
     },
   };
 }
 
+// Função para injetar script de configurações da loja
 function addStoreSettingsScript(html: string): string {
-  const injection = `
+  const storeScript = `
     <script>
       window.__STORE_SETTINGS__ = null;
 
-      (async function() {
+      (async function loadStoreSettings() {
         try {
           const response = await fetch('/api/settings');
           if (response.ok) {
             const settings = await response.json();
             window.__STORE_SETTINGS__ = {
-              store_name: settings.store_name,
-              logo_url: settings.logo_url,
-              primary_color: settings.primary_color,
-              secondary_color: settings.secondary_color,
-              accent_color: settings.accent_color,
-              background_color: settings.background_color,
-              text_color: settings.text_color
+              store_name: settings.store_name || 'Loja',
+              logo_url: settings.logo_url || '',
+              primary_color: settings.primary_color || '#1d4ed8',
+              secondary_color: settings.secondary_color || '#3b82f6',
+              accent_color: settings.accent_color || '#60a5fa',
+              background_color: settings.background_color || '#ffffff',
+              text_color: settings.text_color || '#000000'
             };
+            
+            // Disparar evento customizado
             window.dispatchEvent(new CustomEvent('storeSettingsLoaded', {
               detail: window.__STORE_SETTINGS__
             }));
           }
         } catch (error) {
           console.warn('Failed to load store settings:', error);
+          // Configurações padrão em caso de erro
+          window.__STORE_SETTINGS__ = {
+            store_name: 'Loja',
+            logo_url: '',
+            primary_color: '#1d4ed8',
+            secondary_color: '#3b82f6', 
+            accent_color: '#60a5fa',
+            background_color: '#ffffff',
+            text_color: '#000000'
+          };
         }
       })();
     </script>`;
 
   return html.replace(
     '<div id="root"></div>',
-    `<div id="root"></div>${injection}`,
+    `<div id="root"></div>${storeScript}`,
   );
 }
