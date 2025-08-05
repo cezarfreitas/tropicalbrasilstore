@@ -28,9 +28,9 @@ try {
 
   // Build do servidor (backend)
   console.log("🚀 Buildando backend...");
-  execSync("npx vite build --config vite.config.server.ts", { 
+  execSync("npx vite build --config vite.config.server.ts", {
     stdio: "inherit",
-    env: { ...process.env, NODE_ENV: "production" }
+    env: { ...process.env, NODE_ENV: "production" },
   });
 
   // Verificar se backend foi buildado
@@ -41,13 +41,10 @@ try {
 
   // Verificar estrutura final
   console.log("📁 Verificando estrutura final...");
-  
-  const expectedFiles = [
-    "dist/spa/index.html",
-    "dist/server/production.js"
-  ];
 
-  expectedFiles.forEach(file => {
+  const expectedFiles = ["dist/spa/index.html", "dist/server/production.js"];
+
+  expectedFiles.forEach((file) => {
     if (!fs.existsSync(file)) {
       throw new Error(`❌ Arquivo obrigatório não encontrado: ${file}`);
     }
@@ -59,17 +56,18 @@ try {
   const assetsDir = "dist/spa/assets";
   if (fs.existsSync(assetsDir)) {
     const assets = fs.readdirSync(assetsDir);
-    const jsFiles = assets.filter(f => f.endsWith('.js'));
-    const cssFiles = assets.filter(f => f.endsWith('.css'));
-    
-    console.log(`📦 Assets encontrados: ${jsFiles.length} JS, ${cssFiles.length} CSS`);
+    const jsFiles = assets.filter((f) => f.endsWith(".js"));
+    const cssFiles = assets.filter((f) => f.endsWith(".css"));
+
+    console.log(
+      `📦 Assets encontrados: ${jsFiles.length} JS, ${cssFiles.length} CSS`,
+    );
   }
 
   console.log("🎉 Build de produção concluído com sucesso!");
   console.log("📋 Estrutura final:");
   console.log("   dist/spa/     - Frontend (HTML, CSS, JS)");
   console.log("   dist/server/  - Backend (Node.js)");
-
 } catch (error) {
   console.error("❌ Erro no build:", error.message);
   process.exit(1);

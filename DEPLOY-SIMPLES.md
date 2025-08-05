@@ -10,12 +10,14 @@
 ## 🏗️ Deploy no EasyPanel (Recomendado)
 
 ### 1. **Preparação Local**
+
 ```bash
 # Build local (opcional, para testar)
 node build-production.js
 ```
 
 ### 2. **Push para Git**
+
 ```bash
 git add .
 git commit -m "Deploy de produção otimizado"
@@ -27,6 +29,7 @@ git push origin main
 **Dockerfile**: ✅ Já configurado (ultra-simplificado)
 
 **Variáveis de Ambiente**:
+
 ```env
 NODE_ENV=production
 PORT=80
@@ -41,18 +44,21 @@ JWT_SECRET=sua_chave_secreta_aqui
 ## 🎯 Otimizações Aplicadas
 
 ### ✅ **Dockerfile Simplificado**
+
 - Node 20 Alpine (mais estável)
 - `--legacy-peer-deps` resolve conflitos automaticamente
 - `--omit=dev` instala só dependências de produção
 - Health check funcional
 
 ### ✅ **Build Robusto**
+
 - Verificação de arquivos obrigatórios
 - Logs detalhados do processo
 - Falha rápida se algo der errado
 - Informações sobre assets gerados
 
 ### ✅ **Dependências Mínimas**
+
 - Removidas todas as dependências de desenvolvimento
 - Apenas o essencial para produção
 - Sem conflitos de peer dependencies
@@ -76,6 +82,7 @@ docker-compose -f docker-compose.prod.yml up --build
 ## 🚨 Troubleshooting
 
 ### **Se build falhar:**
+
 ```bash
 # Testar build local
 node build-production.js
@@ -84,11 +91,13 @@ node build-production.js
 ```
 
 ### **Se app não iniciar:**
+
 1. Verificar variáveis de ambiente
 2. Verificar logs do container no EasyPanel
 3. Testar health check: `curl /api/ping`
 
 ### **Se database não conectar:**
+
 1. Verificar `DATABASE_URL`
 2. Verificar firewall/rede
 3. Testar conexão manual
@@ -107,6 +116,7 @@ dist/
 ## 🎉 Deploy Pronto!
 
 O deploy está otimizado para:
+
 - ✅ Sem conflitos de dependências
 - ✅ Build rápido e confiável
 - ✅ Tamanho mínimo da imagem
