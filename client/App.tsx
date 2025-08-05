@@ -338,30 +338,30 @@ const App = () => (
 
 const rootElement = document.getElementById("root")!;
 
-// Debug logs for production
-console.log("🚀 React App initializing...");
-console.log("📦 Root element found:", !!rootElement);
+// Add immediate debug output
+document.body.style.backgroundColor = "red";
+console.log("🚀 JavaScript is executing!");
 
-// Error handling for production
-try {
-  // Apenas renderiza uma vez - hot reload é gerenciado pelo Vite
-  if (!rootElement.hasAttribute("data-react-root")) {
-    console.log("🎯 Rendering React app...");
-    rootElement.setAttribute("data-react-root", "true");
-    createRoot(rootElement).render(<App />);
-    console.log("✅ React app rendered successfully");
-  } else {
-    console.log("⚠️ React app already rendered");
-  }
-} catch (error) {
-  console.error("❌ Failed to render React app:", error);
-  // Fallback content
-  rootElement.innerHTML = `
-    <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
-      <h1>❌ Erro no carregamento</h1>
-      <p>Falha ao carregar a aplicação React.</p>
-      <p>Erro: ${error instanceof Error ? error.message : "Desconhecido"}</p>
-      <button onclick="window.location.reload()">🔄 Recarregar página</button>
-    </div>
-  `;
+// Show immediate feedback
+if (rootElement) {
+  rootElement.innerHTML = "<h1 style='color: green;'>JavaScript carregou!</h1>";
+
+  setTimeout(() => {
+    try {
+      console.log("🎯 Attempting to render React...");
+      createRoot(rootElement).render(<App />);
+      console.log("✅ React rendered!");
+    } catch (error) {
+      console.error("❌ React error:", error);
+      rootElement.innerHTML = `
+        <div style="padding: 20px; background: yellow; border: 2px solid red;">
+          <h1>❌ Erro React</h1>
+          <p>JavaScript carregou mas React falhou</p>
+          <pre>${error}</pre>
+        </div>
+      `;
+    }
+  }, 100);
+} else {
+  document.body.innerHTML = "<h1 style='color: red;'>Root element não encontrado!</h1>";
 }
