@@ -19,11 +19,13 @@
 ## Para fazer o deploy:
 
 ### Opção 1: EasyPanel (Recomendado)
+
 1. Fazer push do código: **Use o botão "Push" no canto superior direito**
 2. No EasyPanel, usar o arquivo `easypanel.json`
 3. Configurar variáveis de ambiente necessárias
 
 ### Opção 2: Docker direto
+
 ```bash
 # Build da imagem
 docker build -t chinelos-store .
@@ -37,6 +39,7 @@ docker run -d -p 80:80 \
 ```
 
 ### Opção 3: Docker Compose
+
 ```bash
 docker-compose -f docker-compose.prod.yml up -d
 ```
@@ -58,7 +61,7 @@ CORS_ORIGIN=https://seu-dominio.com
 ✅ **Cards otimizados** para fotos quadradas  
 ✅ **SKU na página de detalhes**  
 ✅ **Nome da loja dinâmico** no frontend  
-✅ **Interface compacta** e otimizada  
+✅ **Interface compacta** e otimizada
 
 ## URLs após deploy:
 
