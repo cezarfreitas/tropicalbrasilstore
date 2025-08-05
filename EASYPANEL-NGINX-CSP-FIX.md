@@ -3,27 +3,32 @@
 ## 🎯 **Problemas Identificados & Corrigidos**
 
 ### **1. ✅ Nginx/Proxy Bloqueando Módulos ES6**
+
 **Problema**: Proxy pode estar bloqueando `application/javascript`
 **Solução**: Mudança para `text/javascript` (mais compatível)
 
 ### **2. ✅ Content Security Policy (CSP) Restritivo**
+
 **Problema**: CSP pode estar bloqueando scripts inline/eval
 **Solução**: Headers CSP permissivos adicionados
 
 ## 🔧 **Correções Aplicadas**
 
 ### **1. Headers Compatíveis com Proxy**
+
 ```javascript
 // Mudança de MIME type para compatibilidade
 "Content-Type": "text/javascript; charset=utf-8"  // Em vez de application/javascript
 ```
 
 ### **2. CSP Permissivo**
+
 ```javascript
 'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
 ```
 
 ### **3. Handler Direto de Assets**
+
 ```javascript
 // Bypass do static middleware para assets específicos
 app.get("/assets/:filename", (req, res) => {
@@ -32,6 +37,7 @@ app.get("/assets/:filename", (req, res) => {
 ```
 
 ### **4. Target ES2015 para Compatibilidade**
+
 ```javascript
 // vite.config.ts
 build: {
@@ -42,6 +48,7 @@ build: {
 ## 🚀 **Novo Build Gerado**
 
 ### **Assets Atualizados (com hash novo):**
+
 - `index-Dueb8Fnn.js` ← **Novo arquivo principal!**
 - `index-DynhxqX3.css`
 - `react-vendor-DgitYnsx.js`
@@ -51,21 +58,27 @@ build: {
 ## 🔍 **Testes Imediatos no EasyPanel**
 
 ### **1. Teste do novo asset:**
+
 ```
 https://b2b.tropicalbrasilsandalias.com.br/assets/index-Dueb8Fnn.js
 ```
+
 **Deve retornar**: Código JavaScript (não 404)
 
 ### **2. Teste do handler direto:**
+
 ```
 curl -H "Accept: text/javascript" https://b2b.tropicalbrasilsandalias.com.br/assets/index-Dueb8Fnn.js
 ```
 
 ### **3. Verificar headers:**
+
 ```bash
 curl -I https://b2b.tropicalbrasilsandalias.com.br/assets/index-Dueb8Fnn.js
 ```
+
 **Deve mostrar**:
+
 ```
 Content-Type: text/javascript; charset=utf-8
 Access-Control-Allow-Origin: *
@@ -73,9 +86,11 @@ X-Content-Type-Options: nosniff
 ```
 
 ### **4. Debug status:**
+
 ```
 https://b2b.tropicalbrasilsandalias.com.br/debug/status
 ```
+
 **Deve mostrar o novo arquivo**: `index-Dueb8Fnn.js`
 
 ## 📊 **Logs Esperados no EasyPanel**
@@ -89,12 +104,15 @@ https://b2b.tropicalbrasilsandalias.com.br/debug/status
 ## 🐛 **Se Ainda Não Funcionar**
 
 ### **Problema: CSP ainda bloqueando**
+
 **Solução**: Verificar se EasyPanel tem CSP próprio configurado
 
 ### **Problema: Nginx ainda bloqueando ES6**
+
 **Solução**: O target ES2015 deve resolver isso
 
 ### **Problema: Proxy cache**
+
 **Solução**: Limpar cache do proxy/CDN no EasyPanel
 
 ## ⚡ **Melhorias Implementadas**

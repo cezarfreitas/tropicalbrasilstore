@@ -79,7 +79,7 @@ export function createServer() {
 
   // Configure charset to UTF-8 for proper encoding of special characters
   app.use((req, res, next) => {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
     next();
   });
 
