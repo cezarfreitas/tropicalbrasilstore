@@ -551,6 +551,32 @@ export default function ProductDetail() {
     }
   }, [selectedColor, product]);
 
+  // Keyboard navigation for gallery
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const images = getAllAvailableImages();
+      if (images.length <= 1) return;
+
+      switch (event.key) {
+        case "ArrowLeft":
+          event.preventDefault();
+          setSelectedImageIndex(prev =>
+            prev > 0 ? prev - 1 : images.length - 1
+          );
+          break;
+        case "ArrowRight":
+          event.preventDefault();
+          setSelectedImageIndex(prev =>
+            prev < images.length - 1 ? prev + 1 : 0
+          );
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [getAllAvailableImages().length]);
+
   if (loading) {
     return (
       <StoreLayout>
