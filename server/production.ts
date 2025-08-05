@@ -37,20 +37,35 @@ app.use((req, res, next) => {
 app.use(
   express.static(staticPath, {
     setHeaders: (res, filePath, stat) => {
+      // Enhanced headers for JavaScript modules
       if (filePath.endsWith(".js")) {
-        res.set("Content-Type", "application/javascript; charset=utf-8");
-        res.set("Cache-Control", "public, max-age=31536000, immutable");
+        res.set({
+          "Content-Type": "application/javascript; charset=utf-8",
+          "Cache-Control": "public, max-age=31536000, immutable",
+          "Cross-Origin-Embedder-Policy": "unsafe-none",
+          "Cross-Origin-Opener-Policy": "same-origin",
+        });
       }
+
+      // CSS headers
       if (filePath.endsWith(".css")) {
-        res.set("Content-Type", "text/css; charset=utf-8");
-        res.set("Cache-Control", "public, max-age=31536000, immutable");
+        res.set({
+          "Content-Type": "text/css; charset=utf-8",
+          "Cache-Control": "public, max-age=31536000, immutable",
+        });
       }
-      // CORS headers for assets
-      res.set("Access-Control-Allow-Origin", "*");
-      res.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
+
+      // General asset headers
+      res.set({
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
+        "Vary": "Accept-Encoding",
+      });
     },
     maxAge: "1y",
     immutable: true,
+    etag: true,
+    lastModified: true,
   }),
 );
 
@@ -119,6 +134,6 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
   console.log(`🗂️ Serving static from: ${staticPath}`);
   console.log(
-    `�� Database: ${process.env.DATABASE_URL ? "Connected" : "No URL set"}`,
+    `💾 Database: ${process.env.DATABASE_URL ? "Connected" : "No URL set"}`,
   );
 });
