@@ -81,18 +81,41 @@ app.use(express.static(path.join(process.cwd(), "public")));
 // Explicit handler for assets - ensure they're served correctly
 app.get("/assets/*", (req, res, next) => {
   const filePath = path.join(staticPath, req.path);
-  console.log(`🎯 Direct asset request: ${req.path} -> ${filePath}`);
+  const fileName = path.basename(req.path);
+
+  console.log(`🎯 ASSET REQUEST: ${req.path}`);
+  console.log(`📁 Full path: ${filePath}`);
+  console.log(`📋 File exists: ${fs.existsSync(filePath)}`);
 
   if (fs.existsSync(filePath)) {
+    const stats = fs.statSync(filePath);
+    console.log(`✅ File found: ${fileName} (${stats.size} bytes)`);
+
     if (req.path.endsWith(".js")) {
       res.set("Content-Type", "application/javascript; charset=utf-8");
     } else if (req.path.endsWith(".css")) {
       res.set("Content-Type", "text/css; charset=utf-8");
     }
+
     res.sendFile(filePath);
   } else {
     console.log(`❌ Asset not found: ${filePath}`);
-    res.status(404).json({ error: "Asset not found" });
+
+    // List what files actually exist in assets directory
+    const assetsDir = path.join(staticPath, "assets");
+    if (fs.existsSync(assetsDir)) {
+      const availableFiles = fs.readdirSync(assetsDir);
+      console.log(`📂 Available assets:`, availableFiles);
+    } else {
+      console.log(`📂 Assets directory does not exist: ${assetsDir}`);
+    }
+
+    res.status(404).json({
+      error: "Asset not found",
+      requested: req.path,
+      fullPath: filePath,
+      staticPath: staticPath
+    });
   }
 });
 
