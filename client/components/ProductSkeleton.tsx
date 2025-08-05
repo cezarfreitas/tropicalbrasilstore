@@ -6,38 +6,44 @@ interface ProductSkeletonProps {
 
 function SingleProductSkeleton() {
   return (
-    <Card className="overflow-hidden border border-border/50 rounded-lg sm:rounded-xl">
-      <CardContent className="p-0 relative">
-        {/* Image Skeleton */}
+    <Card className="overflow-hidden border border-gray-200 rounded-xl bg-white">
+      <CardContent className="p-0 h-full flex flex-col">
+        {/* Image Skeleton - Optimized for square photos */}
         <div className="aspect-square relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
           <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse" />
 
           {/* Category Badge Skeleton */}
-          <div className="absolute top-1 left-1 sm:top-1.5 sm:left-1.5">
-            <div className="h-4 w-12 sm:w-16 bg-primary/20 rounded-full animate-pulse" />
+          <div className="absolute top-3 left-3">
+            <div className="h-5 w-16 bg-primary/20 rounded-full animate-pulse" />
           </div>
 
           {/* Variant Colors Skeleton */}
-          <div className="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5">
-            <div className="flex gap-0.5 sm:gap-1">
-              <div className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 rounded-md sm:rounded-lg bg-gray-300 animate-pulse" />
-              <div className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 rounded-md sm:rounded-lg bg-gray-300 animate-pulse" />
+          <div className="absolute bottom-3 right-3">
+            <div className="flex gap-1.5">
+              <div className="w-7 h-7 rounded-full bg-gray-300 animate-pulse" />
+              <div className="w-7 h-7 rounded-full bg-gray-300 animate-pulse" />
+              <div className="w-7 h-7 rounded-full bg-gray-300 animate-pulse" />
             </div>
           </div>
         </div>
 
         {/* Product Info Skeleton */}
-        <div className="p-2 sm:p-2.5 md:p-3 space-y-1 sm:space-y-1.5 md:space-y-2">
-          {/* Product Name */}
-          <div className="h-3 sm:h-4 bg-gray-200 rounded animate-pulse w-4/5" />
+        <div className="p-4 flex-1 flex flex-col space-y-3">
+          {/* Product Name - Two lines */}
+          <div className="space-y-2">
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-4/5" />
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-3/5" />
+          </div>
 
           {/* Price Container */}
-          <div className="bg-gray-50 rounded-md sm:rounded-lg p-1.5 sm:p-2">
-            <div className="h-4 sm:h-5 bg-primary/20 rounded animate-pulse w-16 sm:w-20" />
+          <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+            <div className="h-5 bg-primary/20 rounded animate-pulse w-20" />
           </div>
 
           {/* Add to Cart Button */}
-          <div className="h-8 sm:h-10 md:h-12 bg-primary/20 rounded-md sm:rounded-lg animate-pulse w-full" />
+          <div className="mt-auto">
+            <div className="h-10 bg-primary/20 rounded-lg animate-pulse w-full" />
+          </div>
         </div>
       </CardContent>
     </Card>
