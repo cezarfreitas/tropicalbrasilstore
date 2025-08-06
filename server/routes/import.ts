@@ -529,7 +529,7 @@ async function processGradeImport(data: any[]) {
           [
             item.name,
             item.description || null,
-            parseInt(item.category_id),
+            categoryId,
             parseFloat(item.base_price),
             item.sale_price ? parseFloat(item.sale_price) : null,
             item.suggested_price ? parseFloat(item.suggested_price) : null,
