@@ -118,7 +118,7 @@ export default function CustomerChangePassword() {
       toast({
         title: "Senha alterada!",
         description:
-          "Sua senha foi alterada com sucesso. Bem-vindo à Chinelos Store!",
+          "Sua senha foi alterada com sucesso. Bem-vindo à Tropical Brasil Sandálias!",
       });
       navigate("/");
     } else {
