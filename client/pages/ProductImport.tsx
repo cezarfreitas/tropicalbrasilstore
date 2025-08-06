@@ -807,22 +807,23 @@ export default function ProductImport() {
         "Marca ABC",                                  // brand_name
         "Unissex",                                    // gender_name
         "Chinelo",                                    // type_name
-        "size", // Tipo de Estoque
-        "", // Estoque por Grade (vazio para estoque por tamanho)
-        "5", // Tam 37
-        "8", // Tam 38
-        "12", // Tam 39
-        "10", // Tam 40
-        "6", // Tam 41
-        "4", // Tam 42
-        "2", // Tam 43
-        "1", // Tam 44
-        "NIKE001-PRETO-V1", // SKU da Variante
-        "", // Preço da Cor
-        "", // Preço Promocional da Cor
-        "https://example.com/nike-preto.jpg", // Imagem da Cor
-        "0", // Vender Sem Estoque
-        "100",
+        "grade",                                      // stock_type (grade ou size)
+        "2549",                                       // grade_name (nome da grade)
+        "25",                                         // grade_stock (estoque da grade)
+        "",                                           // size_37 (vazio para grade)
+        "",                                           // size_38 (vazio para grade)
+        "",                                           // size_39 (vazio para grade)
+        "",                                           // size_40 (vazio para grade)
+        "",                                           // size_41 (vazio para grade)
+        "",                                           // size_42 (vazio para grade)
+        "",                                           // size_43 (vazio para grade)
+        "",                                           // size_44 (vazio para grade)
+        "GRADE001-PRETO-V1",                          // variant_sku
+        "",                                           // color_price
+        "",                                           // color_sale_price
+        "https://example.com/chinelo-grade-preto.jpg", // color_image_url
+        "0",                                          // sell_without_stock
+        "",                                           // stock_per_variant (deprecated)
       ],
       [
         "Chinelo Havaianas Top",
