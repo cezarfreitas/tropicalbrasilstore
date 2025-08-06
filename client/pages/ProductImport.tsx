@@ -212,13 +212,22 @@ export default function ProductImport() {
     const fetchData = async () => {
       try {
         console.log("Starting to fetch data...");
-        await Promise.allSettled([
+        const results = await Promise.allSettled([
           fetchCategories(),
           fetchSizeGroups(),
           fetchColors(),
           fetchProductCount(),
           fetchExportStats()
         ]);
+
+        // Log any failures but don't block the UI
+        results.forEach((result, index) => {
+          const endpoints = ['categories', 'size-groups', 'colors', 'product-count', 'export-stats'];
+          if (result.status === 'rejected') {
+            console.warn(`Failed to fetch ${endpoints[index]}:`, result.reason);
+          }
+        });
+
         console.log("All data fetching completed");
       } catch (error) {
         console.error("Error in useEffect:", error);
