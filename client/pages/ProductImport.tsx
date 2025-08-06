@@ -1159,7 +1159,7 @@ export default function ProductImport() {
                 <ul className="text-sm text-yellow-700 space-y-1">
                   <li><strong>Completo:</strong> Produtos com múltiplas cores, preços e tipos de venda diferentes</li>
                   <li><strong>1 Cor + Tamanho:</strong> Venda individual por tamanho - cliente escolhe tam 37, 38, etc. (ex: sapatos, tênis)</li>
-                  <li><strong>1 Cor + Grade:</strong> Venda por grade completa - cliente compra a grade inteira com todos os tamanhos (ex: atacado)</li>
+                  <li><strong>1 Cor + Grade:</strong> Venda por grade completa - especifique qual grade usar. Cliente compra a grade inteira (ex: atacado)</li>
                 </ul>
               </div>
             </div>
