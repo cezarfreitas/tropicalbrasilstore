@@ -70,8 +70,6 @@ export default function Cart() {
           </div>
         </div>
 
-        {/* Debug component - remover após verificação */}
-        <DebugMinimumOrder />
       </StoreLayout>
     );
   }
