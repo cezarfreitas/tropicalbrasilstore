@@ -559,10 +559,10 @@ export default function GradeImport() {
                     {mapping.required && <span className="text-red-500 ml-1">*</span>}
                   </Label>
                   <Select
-                    value={mapping.csvColumn}
+                    value={mapping.csvColumn || "__NONE__"}
                     onValueChange={(value) => {
                       const newMappings = [...columnMappings];
-                      newMappings[index].csvColumn = value;
+                      newMappings[index].csvColumn = value === "__NONE__" ? "" : value;
                       setColumnMappings(newMappings);
                     }}
                   >
