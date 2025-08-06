@@ -42,6 +42,7 @@ async function getStoreSettings(): Promise<StoreSettings> {
         accent_color: settingsData.accent_color || '#fed7aa',
         background_color: settingsData.background_color || '#ffffff',
         text_color: settingsData.text_color || '#1f2937',
+        minimum_order_value: settingsData.minimum_order_value || 0,
       };
     } else {
       // Default settings if none exist
