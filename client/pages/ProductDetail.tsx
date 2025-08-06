@@ -861,14 +861,11 @@ export default function ProductDetail() {
                           />
                         ) : (
                           <div
-                            className="w-full h-full flex items-center justify-center text-sm font-medium"
+                            className="w-full h-full rounded"
                             style={{
                               backgroundColor: getColorValue(color),
-                              color: getTextColor(getColorValue(color)),
                             }}
-                          >
-                            {color.name?.charAt(0).toUpperCase()}
-                          </div>
+                          ></div>
                         )}
                       </div>
 
