@@ -8,10 +8,15 @@ export const DebugMinimumOrder: React.FC = () => {
   const [customerData, setCustomerData] = useState<any>(null);
 
   useEffect(() => {
-    if (customer?.email === 'cezarfreitas2011@gmail.com') {
+    if (customer?.email) {
       // Buscar dados completos do cliente via API
       fetch(`/api/admin/customers/${encodeURIComponent(customer.email)}`)
-        .then(res => res.json())
+        .then(res => {
+          if (res.ok) {
+            return res.json();
+          }
+          throw new Error(`HTTP ${res.status}`);
+        })
         .then(data => setCustomerData(data))
         .catch(err => console.error('Erro ao buscar dados do cliente:', err));
     }
