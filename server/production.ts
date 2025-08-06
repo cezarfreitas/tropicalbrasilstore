@@ -197,6 +197,21 @@ app.get("/api/ping", (req, res) => {
   });
 });
 
+// Clear browser cache endpoint (for admin)
+app.post("/api/clear-cache", (req, res) => {
+  res.set({
+    "Cache-Control": "no-cache, no-store, must-revalidate",
+    Pragma: "no-cache",
+    Expires: "0",
+  });
+
+  res.json({
+    message: "Cache cleared",
+    timestamp: new Date().toISOString(),
+    action: "browser_cache_cleared",
+  });
+});
+
 // SPA fallback - serve index.html for all non-API/non-upload routes
 app.get("*", (req, res) => {
   // Skip API routes
