@@ -161,10 +161,23 @@ export default function ProductDetail() {
 
   // Redirect to login if not authenticated
   useEffect(() => {
+    console.log('🔐 ProductDetail Auth Check:', { isAuthenticated, isApproved });
+
     if (!isAuthenticated) {
+      console.log('❌ User not authenticated, redirecting to login...');
       navigate('/login', { replace: true });
+      return;
     }
-  }, [isAuthenticated, navigate]);
+
+    if (!isApproved) {
+      console.log('⚠️ User authenticated but not approved');
+    }
+  }, [isAuthenticated, isApproved, navigate]);
+
+  // Don't render anything if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
 
   useEffect(() => {
     if (id) {
