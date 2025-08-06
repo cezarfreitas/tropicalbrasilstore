@@ -132,7 +132,7 @@ export function CheckoutDebug() {
               <li>2. Senão: usa storeSettings.minimum_order_value</li>
               <li>3. Cliente: {authCustomer?.minimum_order || "undefined"}</li>
               <li>4. Global: {storeSettings?.minimum_order_value || "undefined"}</li>
-              <li>5. Resultado: R$ {minimumOrderValue.toFixed(2)}</li>
+              <li>5. Resultado: {formatCurrency(minimumOrderValue)}</li>
             </ol>
           </div>
 
