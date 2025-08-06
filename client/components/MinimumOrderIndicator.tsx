@@ -63,7 +63,7 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
 
       {/* Barra de progresso */}
       <div className="relative">
-        <div className="w-full bg-gray-200 rounded-full h-3 mb-2 overflow-hidden">
+        <div className={`w-full rounded-full h-3 mb-2 overflow-hidden ${theme === 'sidebar' ? 'bg-white/20' : 'bg-gray-200'}`}>
           <div 
             className={`h-full rounded-full transition-all duration-500 ease-out ${
               isCompleted 
