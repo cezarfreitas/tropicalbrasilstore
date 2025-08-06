@@ -547,7 +547,10 @@ async function processGradeImport(data: any[]) {
 
   for (const item of data) {
     try {
-      console.log(`\n▶️ Produto ${processedItems + 1}: ${item.name || 'Sem nome'}`);
+      console.log(`\n📋 === PROCESSANDO ITEM ${processedItems + 1}/${data.length} ===`);
+      console.log(`📦 Produto: ${item.name || 'Sem nome'}`);
+      console.log(`🎨 Cor: ${item.color}`);
+      console.log(`📊 Grade: ${item.grade_name || 'Não informada'}`);
 
       importProgress.current = item.name || `Produto ${processedItems + 1}`;
       await connection.beginTransaction();
@@ -557,16 +560,20 @@ async function processGradeImport(data: any[]) {
         throw new Error("Campos obrigatórios: name, category_id, base_price, color");
       }
 
-      // Buscar ou criar categoria simples
+      // ETAPA 0: Processar categoria
       let categoryId = 1; // Default
       try {
         const [catResult] = await connection.execute("SELECT id FROM categories WHERE LOWER(name) = LOWER(?) LIMIT 1", [item.category_id]);
         if ((catResult as any[]).length > 0) {
           categoryId = (catResult as any[])[0].id;
         }
+        console.log(`✅ Categoria: ${item.category_id} - ID: ${categoryId}`);
       } catch (error) {
         console.log("⚠️ Usando categoria padrão");
       }
+
+      // ETAPA 1: CRIAR/ATUALIZAR PRODUTO
+      console.log(`\n🔸 ETAPA 1: PROCESSANDO PRODUTO ${item.name}`);
 
       // Processar marca se fornecida
       let brandId = null;
