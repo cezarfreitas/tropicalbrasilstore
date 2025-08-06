@@ -464,6 +464,9 @@ export default function Settings() {
           <p className="text-muted-foreground">
             Configure as informações e preferências da loja
           </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            💡 Use "Atualizar Loja" se as mudanças não aparecerem automaticamente na home
+          </p>
         </div>
         <div className="flex gap-2">
           <Button
