@@ -635,13 +635,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
         {/* Navigation */}
         <nav
-          className="flex-1 px-4 py-3 overflow-y-auto"
+          className="flex-1 px-3 py-2 overflow-y-auto"
           role="navigation"
           aria-label="Categorias principais"
         >
-          <div className="space-y-1">
-            <div className="px-2 mb-3">
-              <h3 className="text-sm font-bold text-white/90 uppercase tracking-wider">
+          <div className="space-y-0.5">
+            <div className="px-1 mb-2">
+              <h3 className="text-xs font-semibold text-white/80 uppercase tracking-wide">
                 Categorias
               </h3>
             </div>
@@ -652,10 +652,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <button
                     key={link.to}
                     onClick={link.onClick}
-                    className="group flex items-center w-full text-left text-sm font-medium text-white/80 hover:text-white hover:bg-white/15 rounded-xl px-3 py-2 transition-all duration-300 hover:shadow-lg border border-transparent hover:border-white/20 backdrop-blur-sm hover:backdrop-blur-md"
+                    className="group flex items-center w-full text-left text-sm text-white/80 hover:text-white hover:bg-white/10 rounded-lg px-2 py-1.5 transition-all duration-200"
                   >
                     <span className="flex-1">{link.label}</span>
-                    <ChevronDown className="h-4 w-4 text-white/40 group-hover:text-white/80 rotate-[-90deg] transition-all duration-300" />
+                    <ChevronDown className="h-3 w-3 text-white/40 group-hover:text-white/60 rotate-[-90deg] transition-all duration-200" />
                   </button>
                 );
               }
@@ -664,10 +664,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="group flex items-center text-sm font-medium text-white/80 hover:text-white hover:bg-white/15 rounded-xl px-3 py-2 transition-all duration-300 hover:shadow-lg border border-transparent hover:border-white/20 backdrop-blur-sm hover:backdrop-blur-md"
+                  className="group flex items-center text-sm text-white/80 hover:text-white hover:bg-white/10 rounded-lg px-2 py-1.5 transition-all duration-200"
                 >
                   <span className="flex-1">{link.label}</span>
-                  <ChevronDown className="h-4 w-4 text-white/40 group-hover:text-white/80 rotate-[-90deg] transition-all duration-300" />
+                  <ChevronDown className="h-3 w-3 text-white/40 group-hover:text-white/60 rotate-[-90deg] transition-all duration-200" />
                 </Link>
               );
             })}
