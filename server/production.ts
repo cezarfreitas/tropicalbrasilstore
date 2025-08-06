@@ -191,14 +191,7 @@ app.get("/debug/status", (req, res) => {
   res.json(debugInfo);
 });
 
-// API ping endpoint
-app.get("/api/ping", (req, res) => {
-  res.json({
-    message: "pong",
-    timestamp: new Date().toISOString(),
-    server: "production",
-  });
-});
+// Production-specific API endpoints (non-conflicting with main server)
 
 // Clear browser cache endpoint (for admin)
 app.post("/api/clear-cache", (req, res) => {
