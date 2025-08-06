@@ -27,7 +27,7 @@ export function ProductCard({
   return (
     <Card
       key={product.id}
-      className="group cursor-pointer hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 relative border border-gray-200 hover:border-primary/40 rounded-lg sm:rounded-xl overflow-hidden bg-white active:scale-[0.98] sm:hover:-translate-y-1 touch-manipulation"
+      className="group cursor-pointer hover:shadow-md transition-all duration-200 relative border border-gray-200 hover:border-gray-300 rounded-lg overflow-hidden bg-white active:scale-[0.99] touch-manipulation"
       onClick={() => onProductClick(product.id)}
     >
       <CardContent className="p-0 relative">
@@ -37,7 +37,7 @@ export function ProductCard({
             <img
               src={productImageUrl}
               alt={product.name}
-              className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-2 sm:p-3"
+              className="w-full h-full object-contain group-hover:scale-102 transition-all duration-200 p-1.5 sm:p-2"
               loading={index < 8 ? "eager" : "lazy"}
               onError={(e) => {
                 console.error(`Failed to load image for product ${product.id}: ${productImageUrl}`);
@@ -54,7 +54,7 @@ export function ProductCard({
           {product.category_name && (
             <Badge
               variant="secondary"
-              className="absolute top-1 left-1 sm:top-1.5 sm:left-1.5 text-[9px] sm:text-[10px] md:text-xs bg-primary text-white px-1 sm:px-1.5 py-0.5 rounded-full shadow-md font-medium"
+              className="absolute top-1 left-1 text-[8px] sm:text-[9px] bg-primary text-white px-1 py-0.5 rounded font-medium"
             >
               {product.category_name}
             </Badge>
@@ -62,12 +62,12 @@ export function ProductCard({
 
           {/* Variant Thumbnails - Mobile friendly */}
           {product.available_colors && product.available_colors.length > 0 && (
-            <div className="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5">
-              <div className="flex gap-0.5 sm:gap-1">
+            <div className="absolute bottom-1 right-1">
+              <div className="flex gap-0.5">
                 {product.available_colors.slice(0, 2).map((color) => (
                   <div
                     key={color.id}
-                    className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-md sm:rounded-lg border-2 border-white cursor-pointer active:scale-95 sm:hover:scale-110 transition-all duration-200 shadow-md sm:shadow-lg overflow-hidden bg-gray-100 touch-manipulation"
+                    className="w-4 h-4 sm:w-5 sm:h-5 rounded border border-white cursor-pointer active:scale-95 transition-all duration-200 overflow-hidden bg-gray-100 touch-manipulation"
                     title={`${color.name}${color.hex_code ? ` (${color.hex_code})` : ""}`}
                     onClick={(e) =>
                       color.image_url &&
@@ -87,13 +87,11 @@ export function ProductCard({
                       />
                     ) : (
                       <div
-                        className="w-full h-full flex items-center justify-center text-[6px] sm:text-[7px] lg:text-[8px] font-bold text-white rounded-lg"
+                        className="w-full h-full rounded"
                         style={{
                           backgroundColor: getColorValue(color),
                         }}
-                      >
-                        {color.name?.charAt(0)?.toUpperCase()}
-                      </div>
+                      ></div>
                     )}
                   </div>
                 ))}
@@ -103,32 +101,32 @@ export function ProductCard({
         </div>
 
         {/* Product Info - Responsivo */}
-        <div className="p-2 sm:p-2.5 md:p-3 space-y-1 sm:space-y-1.5 md:space-y-2">
+        <div className="p-1.5 sm:p-2 space-y-1">
           <div>
-            <h3 className="font-medium text-xs sm:text-sm md:text-base text-gray-900 line-clamp-2 leading-tight">
+            <h3 className="font-medium text-xs sm:text-sm text-gray-900 line-clamp-2 leading-tight">
               {product.name}
             </h3>
           </div>
 
           {/* Pricing - Mobile friendly */}
           {product.base_price && (
-            <div className="bg-gray-50 rounded-md sm:rounded-lg p-1.5 sm:p-2">
+            <div className="bg-gray-50 rounded p-1">
               <PriceDisplay
                 price={product.base_price || 0}
-                className="text-[10px] sm:text-xs md:text-sm font-semibold text-primary"
+                className="text-[10px] sm:text-xs font-semibold text-primary"
               />
             </div>
           )}
 
           {/* Stock indicator */}
-          <div className="flex items-center gap-1 sm:gap-1.5">
+          <div className="flex items-center gap-1">
             <div
-              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
+              className={`w-1.5 h-1.5 rounded-full ${
                 product.total_stock > 0 ? "bg-green-500" : "bg-orange-500"
               }`}
             />
-            <span className="text-[9px] sm:text-[10px] md:text-xs text-gray-600">
-              {product.total_stock > 0 ? "Em estoque" : "Consulte disponibilidade"}
+            <span className="text-[9px] sm:text-[10px] text-gray-600">
+              {product.total_stock > 0 ? "Em estoque" : "Consulte"}
             </span>
           </div>
         </div>
