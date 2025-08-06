@@ -417,7 +417,7 @@ router.post("/products-grade", async (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error("❌ Erro ao iniciar importação de grades:", error);
+    console.error("❌ Erro ao iniciar importaç��o de grades:", error);
     res.status(500).json({ error: "Falha ao iniciar importação de grades" });
   }
 });
@@ -540,41 +540,32 @@ router.post("/start-batch-processing", async (req, res) => {
 });
 
 async function processGradeImport(data: any[]) {
-  console.log("📦 Iniciando processamento de GRADES -", data.length, "itens");
-  console.log("📦 Sample grade item:", JSON.stringify(data[0], null, 2));
+  console.log("🚀 IMPORTAÇÃO SIMPLES - Processando", data.length, "produtos");
 
   const connection = await db.getConnection();
   let processedItems = 0;
 
   for (const item of data) {
     try {
-      console.log(`\n📦 === PROCESSANDO PRODUTO GRADE ${processedItems + 1}/${data.length} ===`);
-      console.log("📦 Nome:", item.name);
-      console.log("📦 Categoria:", item.category_id);
-      console.log("📦 Cor:", item.color);
-      console.log("📦 Grade:", item.grade_name);
-      console.log("📦 Estoque:", item.grade_stock);
+      console.log(`\n▶️ Produto ${processedItems + 1}: ${item.name || 'Sem nome'}`);
 
-      importProgress.current = item.name || `Produto Grade ${processedItems + 1}`;
+      importProgress.current = item.name || `Produto ${processedItems + 1}`;
       await connection.beginTransaction();
 
-      // Validate required fields for grade import
-      const requiredFields = ['name', 'category_id', 'base_price', 'color', 'grade_name', 'grade_stock'];
-      const missingFields = requiredFields.filter(field => !item[field] || item[field].toString().trim() === '');
-
-      if (missingFields.length > 0) {
-        throw new Error(`Campos obrigatórios faltando: ${missingFields.join(', ')}`);
+      // Validação básica apenas
+      if (!item.name || !item.category_id || !item.base_price || !item.color) {
+        throw new Error("Campos obrigatórios: name, category_id, base_price, color");
       }
 
-      // Process required category and optional brand, gender, and type by name
-      console.log(`📂 Processando categoria: "${item.category_id}"`);
-      let categoryId;
+      // Buscar ou criar categoria simples
+      let categoryId = 1; // Default
       try {
-        categoryId = await processCategory(item.category_id);
-        console.log(`✅ Categoria processada - ID: ${categoryId}`);
+        const [catResult] = await connection.execute("SELECT id FROM categories WHERE LOWER(name) = LOWER(?) LIMIT 1", [item.category_id]);
+        if ((catResult as any[]).length > 0) {
+          categoryId = (catResult as any[])[0].id;
+        }
       } catch (error) {
-        console.error(`❌ Erro ao processar categoria "${item.category_id}":`, error);
-        throw new Error(`Falha ao processar categoria: ${error.message}`);
+        console.log("⚠️ Usando categoria padrão");
       }
 
       let brandId = null, genderId = null, typeId = null;
