@@ -446,7 +446,7 @@ router.post("/products", async (req, res) => {
     if (!data || !Array.isArray(data)) {
       console.error("❌ Formato de dados inválido. Data:", data);
       console.error("❌ Tipo de data:", typeof data);
-      console.error("❌ É array?", Array.isArray(data));
+      console.error("��� É array?", Array.isArray(data));
       return res.status(400).json({ error: "Invalid data format" });
     }
 
@@ -548,7 +548,7 @@ async function processGradeImport(data: any[]) {
 
   // Limitar o tamanho dos dados para evitar problemas de memória
   if (data.length > 100) {
-    console.log("⚠️ Limitando importação a 100 itens para evitar problemas de mem��ria");
+    console.log("⚠️ Limitando importação a 100 itens para evitar problemas de memória");
     data = data.slice(0, 100);
   }
 
@@ -736,32 +736,27 @@ async function processGradeImport(data: any[]) {
             [productId, sizeId, colorId]
           );
 
+          // Usar REPLACE INTO para garantir criação/atualização sempre
+          await connection.execute(
+            `REPLACE INTO product_variants (product_id, size_id, color_id, stock, image_url, price_override)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [
+              productId,
+              sizeId,
+              colorId,
+              0, // Estoque controlado pela grade
+              colorImagePath,
+              item.color_price ? parseFloat(item.color_price) : null
+            ]
+          );
+
           if ((existingVariant as any[]).length > 0) {
-            // Variante existe - ATUALIZAR
-            await connection.execute(
-              "UPDATE product_variants SET image_url = ?, price_override = ? WHERE id = ?",
-              [
-                colorImagePath,
-                item.color_price ? parseFloat(item.color_price) : null,
-                (existingVariant as any[])[0].id
-              ]
-            );
             variantsUpdated++;
           } else {
-            // Variante não existe - CRIAR
-            await connection.execute(
-              "INSERT INTO product_variants (product_id, size_id, color_id, stock, image_url, price_override) VALUES (?, ?, ?, ?, ?, ?)",
-              [
-                productId,
-                sizeId,
-                colorId,
-                0, // Estoque controlado pela grade
-                colorImagePath,
-                item.color_price ? parseFloat(item.color_price) : null
-              ]
-            );
             variantsCreated++;
           }
+
+          console.log(`     ✅ Variante processada: Produto ${productId} | Tamanho ${sizeValue} | Cor ${colorId}`);
         } catch (error) {
           console.warn(`⚠️ Erro na variante tamanho ${sizeValue}:`, error.message);
         }
