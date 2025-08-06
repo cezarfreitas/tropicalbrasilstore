@@ -88,6 +88,14 @@ app.use("/api", (req, res, next) => {
 // The main server from index.ts already includes all API routes
 // We don't need to redefine them here, just add production-specific ones
 
+// Debug middleware to log all requests
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api/")) {
+    console.log(`🔍 API Request: ${req.method} ${req.path}`);
+  }
+  next();
+});
+
 // Static file serving with optimized headers
 app.use(
   express.static(staticPath, {
@@ -345,7 +353,7 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log(
     `📊 Memory usage: ${JSON.stringify(process.memoryUsage(), null, 2)}`,
   );
-  console.log(`⚡ Node.js version: ${process.version}`);
+  console.log(`��� Node.js version: ${process.version}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/health`);
   console.log(`🔍 Debug status: http://localhost:${PORT}/debug/status`);
 });
