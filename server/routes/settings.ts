@@ -218,6 +218,7 @@ router.patch("/", async (req, res) => {
       postal_code,
       shipping_fee,
       free_shipping_threshold,
+      minimum_order_value,
       payment_methods,
       social_instagram,
       social_facebook,
