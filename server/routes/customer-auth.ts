@@ -102,11 +102,15 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "WhatsApp deve ter 11 dígitos" });
     }
 
-    // Find customer by WhatsApp
-    const [customerRows] = await db.execute(
-      "SELECT * FROM customer_auth WHERE whatsapp = ?",
-      [cleanWhatsapp]
-    );
+    // Find customer by WhatsApp and get minimum_order from customers table
+    const [customerRows] = await db.execute(`
+      SELECT
+        ca.*,
+        c.minimum_order
+      FROM customer_auth ca
+      LEFT JOIN customers c ON ca.email = c.email
+      WHERE ca.whatsapp = ?
+    `, [cleanWhatsapp]);
 
     if ((customerRows as any[]).length === 0) {
       return res.status(401).json({ error: "WhatsApp não encontrado" });
