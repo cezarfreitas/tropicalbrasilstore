@@ -599,12 +599,21 @@ router.post("/orders", async (req, res) => {
     // Calculate total order value
     const totalOrderValue = items.reduce((sum: number, item: any) => sum + item.totalPrice, 0);
 
-    // Get store settings to check minimum order value
-    const [storeSettings] = await connection.execute(`
-      SELECT minimum_order_value FROM store_settings ORDER BY id LIMIT 1
-    `);
+    // Check customer's specific minimum order value first
+    const [customerData] = await connection.execute(`
+      SELECT minimum_order FROM customers WHERE email = ? LIMIT 1
+    `, [customer.email]);
 
-    const minimumOrderValue = (storeSettings as any[])[0]?.minimum_order_value || 0;
+    const customerMinimumOrder = (customerData as any[])[0]?.minimum_order || 0;
+
+    // If customer doesn't have a specific minimum order, get global setting
+    let minimumOrderValue = customerMinimumOrder;
+    if (minimumOrderValue <= 0) {
+      const [storeSettings] = await connection.execute(`
+        SELECT minimum_order_value FROM store_settings ORDER BY id LIMIT 1
+      `);
+      minimumOrderValue = (storeSettings as any[])[0]?.minimum_order_value || 0;
+    }
 
     // Validate minimum order value
     if (minimumOrderValue > 0 && totalOrderValue < minimumOrderValue) {
