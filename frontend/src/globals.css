@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * Tailwind CSS theme
+   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
+   */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+
+    --primary: 220 100% 27%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 220 100% 85%;
+    --secondary-foreground: 220 100% 20%;
+
+    --muted: 220 100% 95%;
+    --muted-foreground: 25 5.3% 44.7%;
+
+    --accent: 220 100% 85%;
+    --accent-foreground: 220 100% 20%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 32 28% 88%;
+    --input: 32 28% 88%;
+    --ring: 220 100% 27%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 20 14.3% 4.1%;
+    --sidebar-primary: 220 100% 27%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 220 100% 95%;
+    --sidebar-accent-foreground: 220 100% 20%;
+    --sidebar-border: 32 28% 88%;
+    --sidebar-ring: 220 100% 27%;
+  }
+
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: 0 0% 95%;
+
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 220 100% 60%;
+    --primary-foreground: 20 14.3% 4.1%;
+
+    --secondary: 220 100% 25%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 30 5% 15%;
+    --muted-foreground: 24 5.4% 63.9%;
+
+    --accent: 220 100% 25%;
+    --accent-foreground: 0 0% 95%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 30 5% 15%;
+    --input: 30 5% 15%;
+    --ring: 220 100% 60%;
+    
+    --sidebar-background: 20 14.3% 4.1%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 220 100% 60%;
+    --sidebar-primary-foreground: 20 14.3% 4.1%;
+    --sidebar-accent: 220 100% 25%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 30 5% 15%;
+    --sidebar-ring: 220 100% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    html {
+      font-size: 16px; /* Prevent zoom on input focus on iOS */
+    }
+
+    /* Better touch targets */
+    button,
+    [role="button"],
+    a {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Improve scrolling on mobile */
+    * {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Fix viewport issues on mobile */
+    body {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Optimize touch interactions */
+    .touch-manipulation {
+      touch-action: manipulation;
+    }
+
+    /* Better card spacing on small screens */
+    .grid {
+      gap: 0.75rem; /* 12px */
+    }
+
+    /* Optimize text for mobile readability */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      text-rendering: optimizeLegibility;
+    }
+
+    /* Improve tap highlight */
+    * {
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  /* Hide scrollbar utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+
+  /* Fix input zoom on iOS */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
