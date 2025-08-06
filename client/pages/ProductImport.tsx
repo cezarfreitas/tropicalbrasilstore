@@ -978,11 +978,12 @@ export default function ProductImport() {
 
           <div className="p-3 bg-yellow-50 rounded border border-yellow-200">
             <p className="text-sm text-yellow-800">
-              <strong>💡 Dicas:</strong><br/>
+              <strong>💡 Dicas Importantes:</strong><br/>
               • Se não especificar o "Tipo de Estoque", será usado "grade" por padrão<br/>
-              • IDs de marca, gênero e tipo são opcionais, mas ajudam na organização<br/>
+              • <strong>Marca, Gênero e Tipo agora aceitam NOMES</strong> - são criados automaticamente se não existirem<br/>
               • Variantes de cor com imagens específicas aparecem automaticamente no catálogo<br/>
-              • Use "Vender Sem Estoque = 1" para permitir vendas mesmo sem estoque
+              • Use "Vender Sem Estoque = 1" para permitir vendas mesmo sem estoque<br/>
+              • Nomes de marcas/gêneros/tipos são case-insensitive (maiúscula/minúscula não importa)
             </p>
           </div>
         </CardContent>
