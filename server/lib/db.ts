@@ -6,9 +6,15 @@ const createConnection = () => {
   return mysql.createPool({
     uri: "mysql://tropical:ceb404856425cc1f8472@148.230.78.129:3399/tropical",
     waitForConnections: true,
-    connectionLimit: 3,
-    queueLimit: 0,
+    connectionLimit: 10, // Increased from 3 to 10
+    queueLimit: 50, // Increased from 0 to 50
+    acquireTimeout: 8000, // 8 second timeout for acquiring connections
+    timeout: 10000, // 10 second timeout for queries
     charset: "utf8mb4",
+    // Add reconnection settings
+    reconnect: true,
+    idleTimeout: 300000, // 5 minutes
+    maxIdle: 5, // Maximum idle connections
   });
 };
 
