@@ -29,6 +29,7 @@ import { settingsRouter } from "./routes/settings";
 import { debugMinimumOrderRouter } from "./routes/debug-minimum-order";
 import { debugDatabaseRouter } from "./routes/debug-database";
 import { debugThemeRouter } from "./routes/debug-theme";
+import { setCustomerMinimumRouter } from "./routes/set-customer-minimum";
 import { fixColorsRouter } from "./routes/fix-colors";
 import { notificationsRouter } from "./routes/notifications";
 import { customerAuthRouter } from "./routes/customer-auth";
