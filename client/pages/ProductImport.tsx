@@ -148,6 +148,9 @@ const customFetch = async (url: string, options?: RequestInit): Promise<Response
     }
 
     xhr.onload = () => {
+      console.log("📥 Response received:", xhr.status, xhr.statusText);
+      console.log("📄 Response text:", xhr.responseText);
+
       // Parse response headers
       const responseHeaders: Record<string, string> = {};
       const headerText = xhr.getAllResponseHeaders();
