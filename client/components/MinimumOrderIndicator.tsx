@@ -14,10 +14,13 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
   globalMinimumValue,
   currency = 'R$'
 }) => {
+  // Convert all values to numbers to ensure safe calculations
+  const safeCurrentValue = Number(currentValue) || 0;
+  const safeCustomerMinimum = Number(customerMinimumValue) || 0;
+  const safeGlobalMinimum = Number(globalMinimumValue) || 0;
+
   // Usa o valor do cliente se existir e for maior que 0, senão usa o valor global
-  const minimumValue = (customerMinimumValue && customerMinimumValue > 0)
-    ? customerMinimumValue
-    : (globalMinimumValue || 0);
+  const minimumValue = (safeCustomerMinimum > 0) ? safeCustomerMinimum : safeGlobalMinimum;
 
   // Debug temporário
   console.log('🔍 MinimumOrderIndicator Debug:', {
