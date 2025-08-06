@@ -94,22 +94,8 @@ export default function CustomerLogin() {
     <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center p-3 sm:p-4">
       <div className="w-full max-w-sm sm:max-w-md">
         <div className="text-center mb-6 sm:mb-8">
-          {/* Logo Section */}
           <div className="mb-6">
-            {logoUrl ? (
-              <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-2xl p-3 mb-4 shadow-xl">
-                <img
-                  src={logoUrl}
-                  alt={`Logo - ${storeName}`}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-            ) : (
-              <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-2xl mb-4 shadow-xl">
-                <Package className="h-8 w-8 sm:h-10 sm:w-10 text-blue-600" />
-              </div>
-            )}
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">{storeName}</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-2">{storeName}</h1>
             <p className="text-blue-100 text-sm sm:text-base">
               Entre para acessar sua área exclusiva
             </p>
