@@ -63,8 +63,8 @@ async function debugAdmin() {
     // 4. Verificar categorias
     console.log("\n📂 CATEGORIAS:");
     const [categories] = await db.execute(`
-      SELECT id, name, active, show_in_menu
-      FROM categories 
+      SELECT id, name, show_in_menu
+      FROM categories
       ORDER BY name
     `);
     
@@ -161,7 +161,7 @@ async function debugAdmin() {
     if (fs.existsSync(productsDir)) {
       const files = fs.readdirSync(productsDir);
       console.log(`📸 Total de arquivos: ${files.length}`);
-      console.log(`📸 ��ltimos 5 arquivos:`, files.slice(-5));
+      console.log(`📸 Últimos 5 arquivos:`, files.slice(-5));
     }
 
     // 11. Estatísticas gerais
