@@ -82,6 +82,12 @@ export default function Cart() {
           </Link>
         </div>
 
+        {/* Minimum Order Indicator */}
+        <MinimumOrderIndicator
+          currentValue={totalPrice}
+          minimumValue={storeSettings?.minimum_order_value || 0}
+        />
+
         <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
           {/* Cart Items - Mobile and Desktop */}
           <div className="lg:col-span-8 space-y-4">
