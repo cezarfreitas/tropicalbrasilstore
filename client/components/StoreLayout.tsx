@@ -1369,11 +1369,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     </Button>
                   </div>
                 ) : (
-                  <div className="p-4 space-y-4">
+                  <div className="p-3 space-y-3">
                     {items.map((item, index) => (
                       <div
                         key={item.id}
-                        className="group bg-gray-50 hover:bg-gray-100 rounded-xl p-4 transition-all duration-200 border border-gray-100 hover:border-gray-200"
+                        className="group bg-gray-50 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 border border-gray-100 hover:border-gray-200"
                       >
                         <div className="flex items-start gap-4">
                           {/* Product Image */}
