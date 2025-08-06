@@ -24,9 +24,9 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
 
   // Debug temporário
   console.log('🔍 MinimumOrderIndicator Debug:', {
-    currentValue,
-    customerMinimumValue,
-    globalMinimumValue,
+    currentValue: safeCurrentValue,
+    customerMinimumValue: safeCustomerMinimum,
+    globalMinimumValue: safeGlobalMinimum,
     minimumValue,
     willRender: minimumValue > 0
   });
@@ -37,16 +37,16 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
       <div className="bg-yellow-100 border border-yellow-400 rounded-lg p-3 mb-4">
         <p className="text-sm text-yellow-800">
           🔍 <strong>Debug:</strong> Nenhum pedido mínimo configurado
-          (Cliente: {formatPrice(customerMinimumValue || 0)},
-          Global: {formatPrice(globalMinimumValue || 0)})
+          (Cliente: {formatPrice(safeCustomerMinimum)},
+          Global: {formatPrice(safeGlobalMinimum)})
         </p>
       </div>
     );
   }
 
-  const progress = Math.min((currentValue / minimumValue) * 100, 100);
-  const remaining = Math.max(minimumValue - currentValue, 0);
-  const isCompleted = currentValue >= minimumValue;
+  const progress = Math.min((safeCurrentValue / minimumValue) * 100, 100);
+  const remaining = Math.max(minimumValue - safeCurrentValue, 0);
+  const isCompleted = safeCurrentValue >= minimumValue;
 
   const formatPrice = (price: any) => {
     const num = Number(price) || 0;
