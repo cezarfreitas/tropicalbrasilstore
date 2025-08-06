@@ -444,6 +444,151 @@ router.post("/start-batch-processing", async (req, res) => {
   }
 });
 
+async function processGradeImport(data: any[]) {
+  console.log("📦 Iniciando processamento de GRADES -", data.length, "itens");
+  console.log("📦 Sample grade item:", JSON.stringify(data[0], null, 2));
+
+  const connection = await db.getConnection();
+  let processedItems = 0;
+
+  for (const item of data) {
+    try {
+      console.log("📦 Processando produto grade:", item.name);
+
+      importProgress.current = item.name || `Produto Grade ${processedItems + 1}`;
+      await connection.beginTransaction();
+
+      // Validate required fields for grade import
+      if (!item.name || !item.category_id || !item.base_price || !item.color || !item.grade_name || !item.grade_stock) {
+        throw new Error("Missing required grade fields: name, category_id, base_price, color, grade_name, grade_stock");
+      }
+
+      // Process optional brand, gender, and type by name
+      let brandId = null, genderId = null, typeId = null;
+
+      if (item.brand_name && item.brand_name.trim()) {
+        brandId = await processBrand(item.brand_name);
+      }
+      if (item.gender_name && item.gender_name.trim()) {
+        genderId = await processGender(item.gender_name);
+      }
+      if (item.type_name && item.type_name.trim()) {
+        typeId = await processType(item.type_name);
+      }
+
+      // Check if product already exists
+      let productId: number;
+      const searchKey = item.parent_sku || item.name;
+      const searchField = item.parent_sku ? "parent_sku" : "name";
+
+      const [existingProduct] = await connection.execute(
+        `SELECT id FROM products WHERE ${searchField} = ?`,
+        [searchKey],
+      );
+
+      if ((existingProduct as any[]).length > 0) {
+        productId = (existingProduct as any[])[0].id;
+
+        // Update existing product
+        await connection.execute(
+          `UPDATE products SET
+            name = ?, description = ?, category_id = ?, base_price = ?,
+            sale_price = ?, suggested_price = ?, sku = ?,
+            brand_id = ?, gender_id = ?, type_id = ?, stock_type = ?
+          WHERE id = ?`,
+          [
+            item.name,
+            item.description || null,
+            parseInt(item.category_id),
+            parseFloat(item.base_price),
+            item.sale_price ? parseFloat(item.sale_price) : null,
+            item.suggested_price ? parseFloat(item.suggested_price) : null,
+            item.sku || null,
+            brandId, genderId, typeId,
+            'grade', // Force grade stock type
+            productId,
+          ],
+        );
+      } else {
+        // Create new product with grade stock type
+        const [productResult] = await connection.execute(
+          `INSERT INTO products (
+            name, description, category_id, base_price, sale_price, suggested_price,
+            sku, parent_sku, photo, active, stock_type, brand_id, gender_id, type_id
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            item.name,
+            item.description || null,
+            parseInt(item.category_id),
+            parseFloat(item.base_price),
+            item.sale_price ? parseFloat(item.sale_price) : null,
+            item.suggested_price ? parseFloat(item.suggested_price) : null,
+            item.sku || null,
+            item.parent_sku || null,
+            null, // photo - will be updated later if provided
+            true,
+            'grade', // Force grade stock type
+            brandId, genderId, typeId,
+          ],
+        );
+        productId = (productResult as any).insertId;
+      }
+
+      // Process color
+      const colorId = await processColor(item.color);
+
+      // Create or update grade
+      let gradeId;
+      const [gradeResult] = await connection.execute(
+        `SELECT id FROM grade_vendida WHERE name = ? LIMIT 1`,
+        [item.grade_name]
+      );
+
+      if ((gradeResult as any[]).length === 0) {
+        // Create new grade
+        const [newGrade] = await connection.execute(
+          `INSERT INTO grade_vendida (name, description, active) VALUES (?, ?, ?)`,
+          [item.grade_name, `Grade automática: ${item.grade_name}`, 1]
+        );
+        gradeId = (newGrade as any).insertId;
+      } else {
+        gradeId = (gradeResult as any[])[0].id;
+      }
+
+      // Create/update product-color-grade relationship with stock
+      await connection.execute(
+        `INSERT INTO product_color_grades (product_id, color_id, grade_id, stock_quantity)
+         VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE stock_quantity = VALUES(stock_quantity)`,
+        [productId, colorId, gradeId, parseInt(item.grade_stock)]
+      );
+
+      await connection.commit();
+      importProgress.success++;
+      processedItems++;
+
+    } catch (error) {
+      await connection.rollback();
+      console.error(`Error processing grade product ${item.name}:`, error);
+
+      importProgress.errorDetails.push({
+        row: processedItems + 1,
+        productName: item.name || `Produto Grade ${processedItems + 1}`,
+        error: error instanceof Error ? error.message : String(error)
+      });
+
+      importProgress.errors++;
+      processedItems++;
+    }
+
+    importProgress.processed = processedItems;
+  }
+
+  connection.release();
+  importProgress.isRunning = false;
+  importProgress.current = "";
+  console.log("📦 Processamento de grades concluído!");
+}
+
 async function processImport(data: any[]) {
   console.log("🔄 Iniciando processamento de", data.length, "itens");
   console.log("📋 Sample item:", JSON.stringify(data[0], null, 2));
