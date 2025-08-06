@@ -42,6 +42,7 @@ import {
   Pause,
   RotateCcw,
   Loader2,
+  Grid3X3,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
