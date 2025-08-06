@@ -10,7 +10,9 @@ import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/use-cart";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { useToast } from "@/hooks/use-toast";
+import { useGlobalStoreSettings } from "@/hooks/use-global-store-settings";
 import { ProductImage } from "@/components/ProductImage";
+import { MinimumOrderIndicator } from "@/components/MinimumOrderIndicator";
 import {
   ShoppingCart,
   User,
