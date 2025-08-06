@@ -13,7 +13,8 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
   currentValue,
   customerMinimumValue,
   globalMinimumValue,
-  currency = 'R$'
+  currency = 'R$',
+  theme = 'default'
 }) => {
   // Convert all values to numbers to ensure safe calculations
   const safeCurrentValue = Number(currentValue) || 0;
