@@ -171,10 +171,19 @@ export function SimpleProductCard({
     return colorName && colorMap[colorName] ? colorMap[colorName] : "#E5E7EB";
   };
 
+  // Handle product click - check authentication first
+  const handleProductClick = () => {
+    if (isAuthenticated) {
+      onProductClick(product.id);
+    } else {
+      onLoginClick();
+    }
+  };
+
   return (
     <Card
       className="group cursor-pointer border border-gray-200 rounded-xl overflow-hidden bg-white hover:shadow-lg transition-all duration-300 hover:border-primary/40 hover:-translate-y-1"
-      onClick={() => onProductClick(product.id)}
+      onClick={handleProductClick}
     >
       <CardContent className="p-0 h-full flex flex-col">
         {/* Product Image Container - No margins, optimized for square photos */}
