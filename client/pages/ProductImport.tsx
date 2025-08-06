@@ -120,7 +120,10 @@ const customFetch = async (url: string, options?: RequestInit): Promise<Response
 
     // Set default headers
     xhr.setRequestHeader('Accept', 'application/json');
-    if (method !== 'GET' && method !== 'HEAD') {
+
+    // Only set Content-Type to JSON if body is not FormData
+    // FormData will automatically set the correct multipart/form-data content-type
+    if (method !== 'GET' && method !== 'HEAD' && !(options?.body instanceof FormData)) {
       xhr.setRequestHeader('Content-Type', 'application/json');
     }
 
