@@ -513,12 +513,19 @@ export function ProductModal({
                     <Lock className="h-12 w-12 text-muted-foreground" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Login necessário
+                    <h3 className="text-lg font-semibold text-blue-700">
+                      🔐 Acesso Exclusivo para Clientes
                     </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Faça login para ver preços e adicionar produtos ao carrinho
-                    </p>
+                    <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 mt-3">
+                      <p className="text-sm font-medium text-blue-700 mb-1">
+                        Entre para desbloquear:
+                      </p>
+                      <ul className="text-xs text-blue-600 space-y-1">
+                        <li>💰 Preços especiais com desconto</li>
+                        <li>🛒 Compras com facilidade</li>
+                        <li>📦 Histórico de pedidos</li>
+                      </ul>
+                    </div>
                   </div>
                   <Button
                     className="bg-primary hover:bg-primary/90 text-primary-foreground"
