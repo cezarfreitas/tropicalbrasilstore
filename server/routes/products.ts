@@ -841,7 +841,7 @@ router.post("/bulk", async (req, res) => {
         }
 
         if (isNaN(precoNumerico) || precoNumerico <= 0) {
-          validationErrors.push(`preço é inválido (${variante.preco}) - deve ser um número maior que 0`);
+          validationErrors.push(`preço é inv��lido (${variante.preco}) - deve ser um número maior que 0`);
         }
 
         if (!variante.grade) {
@@ -957,21 +957,21 @@ router.post("/bulk", async (req, res) => {
         let colorVariantId;
         const variantSku =
           variante.sku ||
-          `${product.codigo}-${variante.cor.toUpperCase().replace(/\s+/g, "-")}`;
+          `${product.codigo}-${corLimpa.toUpperCase().replace(/\s+/g, "-")}`;
 
         if ((existingColorVariant as any[]).length > 0) {
           // Variante já existe - atualizar
           colorVariantId = (existingColorVariant as any[])[0].id;
           console.log(
-            `  ↻ Variante de cor existente encontrada: ${variante.cor} (ID: ${colorVariantId})`,
+            `  ↻ [${requestId}] Variante de cor existente encontrada: ${corLimpa} (ID: ${colorVariantId})`,
           );
 
           try {
             await db.execute(
               `UPDATE product_color_variants SET price = ?, variant_name = ?, variant_sku = ?, image_url = ?, active = true WHERE id = ?`,
               [
-                variante.preco,
-                `${product.nome} - ${variante.cor}`,
+                precoNumerico,
+                `${product.nome} - ${corLimpa}`,
                 variantSku,
                 imageUrlForDatabase,
                 colorVariantId,
