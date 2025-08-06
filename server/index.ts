@@ -26,6 +26,7 @@ import { adminOrdersRouter } from "./routes/admin-orders";
 import { adminCustomersRouter } from "./routes/admin-customers";
 import { expandedSeedRouter } from "./routes/expanded-seed";
 import { settingsRouter } from "./routes/settings";
+import { debugMinimumOrderRouter } from "./routes/debug-minimum-order";
 import { fixColorsRouter } from "./routes/fix-colors";
 import { notificationsRouter } from "./routes/notifications";
 import { customerAuthRouter } from "./routes/customer-auth";
