@@ -1,0 +1,3 @@
+Nome do Produto,Categoria,Preço Base,Preço de Venda,URL da Foto,Cor,SKU,SKU Pai,Descrição,Preço Sugerido,Marca,Gênero,Tipo de Produto,Nome da Grade,Estoque da Grade,SKU da Variante,Preço da Cor,Preço Promocional da Cor,Imagem da Cor,Vender Sem Estoque (0/1)
+Chinelo ABC Grade Completa,Chinelos,15.00,25.90,https://exemplo.com/chinelo-abc.jpg,preto,ABC001-PRETO,ABC001,Chinelo ABC vendido por grade completa,29.90,ABC,Unissex,Chinelo,2549,30,ABC001-PRETO-GRADE,,https://exemplo.com/chinelo-abc-preto.jpg,0
+Sandália XYZ Grade Premium,Sandálias,35.00,55.90,https://exemplo.com/sandalia-xyz.jpg,marrom,XYZ002-MARROM,XYZ002,Sandália XYZ premium vendida por grade,65.90,XYZ Premium,Feminino,Sandália,2550,15,XYZ002-MARROM-GRADE,49.90,45.90,https://exemplo.com/sandalia-xyz-marrom.jpg,0
