@@ -546,6 +546,18 @@ async function processGradeImport(data: any[]) {
           ],
         );
       } else {
+        // Download main product image if URL provided
+        let photoPath = null;
+        if (item.photo_url) {
+          console.log(`📸 Downloading main product image: ${item.photo_url}`);
+          photoPath = await downloadImage(item.photo_url, item.name);
+          if (photoPath) {
+            console.log(`✅ Main image downloaded: ${photoPath}`);
+          } else {
+            console.log(`❌ Failed to download main image: ${item.photo_url}`);
+          }
+        }
+
         // Create new product with grade stock type
         const [productResult] = await connection.execute(
           `INSERT INTO products (
@@ -561,7 +573,7 @@ async function processGradeImport(data: any[]) {
             item.suggested_price ? parseFloat(item.suggested_price) : null,
             item.sku || null,
             item.parent_sku || null,
-            null, // photo - will be updated later if provided
+            photoPath, // Downloaded photo path
             true,
             'grade', // Force grade stock type
             brandId, genderId, typeId,
