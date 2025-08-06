@@ -630,7 +630,12 @@ async function processGradeImport(data: any[]) {
       }
 
       await connection.commit();
-      console.log(`✅ Produto grade criado com sucesso: ${item.name} (Product ID: ${productId})`);
+      console.log(`✅ Produto grade criado com sucesso: ${item.name}`);
+      console.log(`   📦 Product ID: ${productId}`);
+      console.log(`   🎨 Cor: ${item.color} (Color ID: ${colorId})`);
+      console.log(`   📊 Grade: ${item.grade_name} (Grade ID: ${gradeId})`);
+      console.log(`   📦 Estoque: ${item.grade_stock} grades`);
+      console.log(`   🎯 Variantes: ${(defaultSizes as any[]).length} tamanhos criados`);
       importProgress.success++;
       processedItems++;
 
@@ -654,7 +659,7 @@ async function processGradeImport(data: any[]) {
   connection.release();
   importProgress.isRunning = false;
   importProgress.current = "";
-  console.log("���� Processamento de grades concluído!");
+  console.log("📦 Processamento de grades concluído!");
 }
 
 async function processImport(data: any[]) {
