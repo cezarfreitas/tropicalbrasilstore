@@ -656,13 +656,13 @@ export default function ProductDetail() {
           </Button>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-6 xl:gap-8">
+        <div className="grid lg:grid-cols-2 gap-4 lg:gap-5">
           {/* Product Image Gallery Section */}
           <div>
             <div className="sticky top-2">
-              <div className="rounded-2xl p-4 max-w-xl mx-auto">
+              <div className="rounded-lg p-2 max-w-xl mx-auto">
                 {/* Main Image Display */}
-                <div className="aspect-square relative mb-4">
+                <div className="aspect-square relative mb-2">
                   <ProductImage
                     src={getImageUrl(
                       getAllAvailableImages()[selectedImageIndex] ||
@@ -677,7 +677,7 @@ export default function ProductDetail() {
 
                   {/* Image Counter */}
                   {getAllAvailableImages().length > 1 && (
-                    <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs">
+                    <div className="absolute top-1 right-1 bg-black/70 text-white px-1.5 py-0.5 rounded text-[10px]">
                       {selectedImageIndex + 1} /{" "}
                       {getAllAvailableImages().length}
                     </div>
@@ -694,9 +694,9 @@ export default function ProductDetail() {
                               : getAllAvailableImages().length - 1,
                           )
                         }
-                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all"
+                        className="absolute left-1 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-1.5 rounded-full shadow transition-all duration-200"
                       >
-                        <ArrowLeft className="h-4 w-4" />
+                        <ArrowLeft className="h-3 w-3" />
                       </button>
                       <button
                         onClick={() =>
@@ -706,9 +706,9 @@ export default function ProductDetail() {
                               : 0,
                           )
                         }
-                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-1.5 rounded-full shadow transition-all duration-200"
                       >
-                        <ArrowLeft className="h-4 w-4 rotate-180" />
+                        <ArrowLeft className="h-3 w-3 rotate-180" />
                       </button>
                     </>
                   )}
