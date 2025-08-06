@@ -51,6 +51,27 @@ export function ThemeDebug() {
     }
   };
 
+  const initializeSettings = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/init-settings", {
+        method: "POST"
+      });
+      const data = await response.json();
+      alert(`Settings initialized: ${data.message}`);
+      // Refresh debug info
+      await fetchDebugInfo();
+      // Refresh page to reload theme
+      if (data.action === "created") {
+        window.location.reload();
+      }
+    } catch (error) {
+      alert("Error initializing settings: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const testSettingsEndpoint = async () => {
     try {
       const response = await fetch("/api/settings");
