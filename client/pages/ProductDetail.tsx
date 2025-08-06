@@ -825,14 +825,14 @@ export default function ProductDetail() {
             </div>
 
             {/* Color Variants Section */}
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-gray-900">
+            <div className="space-y-1.5">
+              <h3 className="text-base font-semibold text-gray-900">
                 Cores Disponíveis
               </h3>
               {getAvailableColors().length === 0 ? (
-                <p className="text-gray-500">Nenhuma cor disponível</p>
+                <p className="text-sm text-gray-500">Nenhuma cor disponível</p>
               ) : (
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1">
                   {getAvailableColors().map((color) => (
                     <button
                       key={color.id}
