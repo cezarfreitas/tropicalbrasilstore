@@ -578,151 +578,45 @@ async function processGradeImport(data: any[]) {
       productId = (productResult as any).insertId;
       console.log(`✅ Produto criado - ID: ${productId}`);
 
-      // Process color
-      console.log(`🎨 Processando cor: "${item.color}"`);
+      // Criar cor simples
       let colorId;
-      try {
-        colorId = await processColor(item.color);
-        console.log(`✅ Cor processada - ID: ${colorId}`);
-      } catch (error) {
-        console.error(`❌ Erro ao processar cor "${item.color}":`, error);
-        throw new Error(`Falha ao processar cor: ${error.message}`);
-      }
-
-      // Create or update grade
-      console.log(`📊 Processando grade: "${item.grade_name}"`);
-      let gradeId;
-      try {
-        const [gradeResult] = await connection.execute(
-          `SELECT id FROM grade_vendida WHERE name = ? LIMIT 1`,
-          [item.grade_name]
-        );
-
-        if ((gradeResult as any[]).length === 0) {
-          // Create new grade
-          console.log(`➕ Criando nova grade: "${item.grade_name}"`);
-          const [newGrade] = await connection.execute(
-            `INSERT INTO grade_vendida (name, description, active) VALUES (?, ?, ?)`,
-            [item.grade_name, `Grade automática: ${item.grade_name}`, 1]
-          );
-          gradeId = (newGrade as any).insertId;
-          console.log(`✅ Grade criada - ID: ${gradeId}`);
-        } else {
-          gradeId = (gradeResult as any[])[0].id;
-          console.log(`✅ Grade encontrada - ID: ${gradeId}`);
-        }
-      } catch (error) {
-        console.error(`❌ Erro ao processar grade "${item.grade_name}":`, error);
-        throw new Error(`Falha ao processar grade: ${error.message}`);
-      }
-
-      // Create/update product-color-grade relationship with stock
-      console.log(`🔗 Criando relação produto-cor-grade (Produto: ${productId}, Cor: ${colorId}, Grade: ${gradeId}, Estoque: ${item.grade_stock})`);
-      try {
-        await connection.execute(
-          `INSERT INTO product_color_grades (product_id, color_id, grade_id, stock_quantity)
-           VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE stock_quantity = VALUES(stock_quantity)`,
-          [productId, colorId, gradeId, parseInt(item.grade_stock)]
-        );
-        console.log(`✅ Relação produto-cor-grade criada/atualizada`);
-      } catch (error) {
-        console.error(`❌ Erro ao criar relação produto-cor-grade:`, error);
-        throw new Error(`Falha ao criar relação produto-cor-grade: ${error.message}`);
-      }
-
-      // CRÍTICO: Criar variantes individuais para que o sistema reconheça as cores
-      // Para grades, precisamos criar variantes para cada tamanho (estoque controlado pela grade)
-      // Isso permite que a loja mostre as cores disponíveis
-      console.log(`🔧 === CRIANDO VARIANTES DE COR ===`);
-
-      // Download color variant image if provided
-      let colorImagePath = null;
-      if (item.color_image_url && item.color_image_url.trim()) {
-        console.log(`📸 Fazendo download da imagem da cor: ${item.color_image_url}`);
-        try {
-          colorImagePath = await downloadImage(item.color_image_url, `${item.name}_${item.color}`);
-          if (colorImagePath) {
-            console.log(`✅ Imagem da cor baixada com sucesso: ${colorImagePath}`);
-          } else {
-            console.log(`❌ Falha ao baixar imagem da cor: ${item.color_image_url}`);
-          }
-        } catch (error) {
-          console.warn(`⚠️ Erro ao baixar imagem da cor: ${error.message}`);
-        }
+      const [existingColor] = await connection.execute("SELECT id FROM colors WHERE LOWER(name) = LOWER(?) LIMIT 1", [item.color]);
+      if ((existingColor as any[]).length > 0) {
+        colorId = (existingColor as any[])[0].id;
       } else {
-        console.log(`📸 Nenhuma URL de imagem da cor fornecida`);
+        const [newColor] = await connection.execute("INSERT INTO colors (name, hex_code) VALUES (?, ?)", [item.color, '#000000']);
+        colorId = (newColor as any).insertId;
       }
+      console.log(`✅ Cor: ${item.color} - ID: ${colorId}`);
 
-      // Get default sizes para criar variantes base (mesmo que controladas por grade)
-      console.log(`👟 Buscando tamanhos padrão para criar variantes...`);
-      const [defaultSizes] = await connection.execute(
-        "SELECT id, size FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44') ORDER BY size"
-      );
-
-      if ((defaultSizes as any[]).length === 0) {
-        console.error(`❌ CRÍTICO: Nenhum tamanho padrão encontrado! Variantes NÃO serão criadas!`);
-        throw new Error("Tamanhos padrão não encontrados no banco de dados");
-      }
-
-      console.log(`📦 Criando ${(defaultSizes as any[]).length} variantes para cor "${item.color}"`);
-      console.log(`📦 Tamanhos disponíveis: ${(defaultSizes as any[]).map(s => s.size).join(', ')}`);
-
-      // Criar uma variante para cada tamanho padrão (estoque controlado pela grade)
+      // Criar variantes básicas (tamanhos 37-44)
+      const sizes = ['37', '38', '39', '40', '41', '42', '43', '44'];
       let variantsCreated = 0;
-      for (const size of defaultSizes as any[]) {
+
+      for (const sizeValue of sizes) {
         try {
-          console.log(`   ➕ Criando variante: Tamanho ${size.size} (ID: ${size.id})`);
+          // Buscar ou criar tamanho
+          let sizeId;
+          const [existingSize] = await connection.execute("SELECT id FROM sizes WHERE size = ? LIMIT 1", [sizeValue]);
+          if ((existingSize as any[]).length > 0) {
+            sizeId = (existingSize as any[])[0].id;
+          } else {
+            const [newSize] = await connection.execute("INSERT INTO sizes (size) VALUES (?)", [sizeValue]);
+            sizeId = (newSize as any).insertId;
+          }
+
+          // Criar variante
           await connection.execute(
-            `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override, image_url)
-             VALUES (?, ?, ?, ?, ?, ?)
-             ON DUPLICATE KEY UPDATE
-             stock = VALUES(stock),
-             price_override = VALUES(price_override),
-             image_url = VALUES(image_url)`,
-            [
-              productId,
-              size.id,
-              colorId,
-              0, // Estoque = 0 pois é controlado pela grade
-              item.color_price ? parseFloat(item.color_price) : null,
-              colorImagePath // Use downloaded image path
-            ]
+            "INSERT IGNORE INTO product_variants (product_id, size_id, color_id, stock) VALUES (?, ?, ?, ?)",
+            [productId, sizeId, colorId, 0]
           );
           variantsCreated++;
-          console.log(`     ✅ Variante criada: Produto ${productId} | Tamanho ${size.size} | Cor ${colorId}`);
         } catch (error) {
-          console.error(`     ❌ Erro ao criar variante para tamanho ${size.size}:`, error);
-          throw new Error(`Falha ao criar variante para tamanho ${size.size}: ${error.message}`);
+          console.warn(`⚠️ Erro no tamanho ${sizeValue}:`, error.message);
         }
       }
 
-      console.log(`🎨 ✅ ${variantsCreated} variantes criadas com sucesso! Imagem: ${colorImagePath ? 'SIM' : 'NÃO'}`);
-
-      // CRÍTICO: Criar entrada específica na tabela product_color_variants para identificação rápida
-      console.log(`🎨 Criando entrada na tabela product_color_variants...`);
-      try {
-        await connection.execute(
-          `INSERT INTO product_color_variants (product_id, color_id, color_hex, image_url, price_override, sale_price)
-           VALUES (?, ?, ?, ?, ?, ?)
-           ON DUPLICATE KEY UPDATE
-           color_hex = VALUES(color_hex),
-           image_url = VALUES(image_url),
-           price_override = VALUES(price_override),
-           sale_price = VALUES(sale_price)`,
-          [
-            productId,
-            colorId,
-            null, // color_hex pode ser null por enquanto
-            colorImagePath,
-            item.color_price ? parseFloat(item.color_price) : null,
-            item.color_sale_price ? parseFloat(item.color_sale_price) : null
-          ]
-        );
-        console.log(`✅ Entrada criada em product_color_variants`);
-      } catch (error) {
-        console.error(`❌ Erro ao criar entrada em product_color_variants:`, error);
-        throw new Error(`Falha ao criar entrada em product_color_variants: ${error.message}`);
-      }
+      console.log(`✅ ${variantsCreated} variantes criadas`);
 
       await connection.commit();
       console.log(`\n🎉 === PRODUTO GRADE CRIADO COM SUCESSO ===`);
