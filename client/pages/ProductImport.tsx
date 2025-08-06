@@ -1121,7 +1121,7 @@ export default function ProductImport() {
               </div>
               <p className="text-sm text-muted-foreground mb-3">
                 Produto vendido como grade completa. Especifique qual grade vendida usar e quantas estão disponíveis (ex: Grade "2549" com 25 unidades).
-                <strong className="text-orange-700 block mt-1">⚠️ Campos de tamanho ficam vazios!</strong>
+                <strong className="text-orange-700 block mt-1">📊 Arquivo Excel organizado - sem campos de tamanho!</strong>
               </p>
               <Button variant="outline" onClick={downloadSingleColorGradeTemplate} className="w-full">
                 <Download className="h-4 w-4 mr-2" />
