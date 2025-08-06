@@ -38,9 +38,9 @@ let importProgress = {
   current: "",
   isRunning: false,
   errorDetails: [] as Array<{
-    row: number;
-    productName: string;
-    error: string;
+    row: number,
+    productName: string,
+    error: string
   }>,
 };
 
@@ -190,9 +190,10 @@ async function processBrand(brandName: string): Promise<number> {
     brandId = (existing as any[])[0].id;
   } else {
     // Create new brand
-    const [result] = await db.execute("INSERT INTO brands (name) VALUES (?)", [
-      trimmedBrand,
-    ]);
+    const [result] = await db.execute(
+      "INSERT INTO brands (name) VALUES (?)",
+      [trimmedBrand],
+    );
     brandId = (result as any).insertId;
     console.log(`✨ Created new brand: "${trimmedBrand}" (ID: ${brandId})`);
   }
@@ -218,9 +219,10 @@ async function processGender(genderName: string): Promise<number> {
     genderId = (existing as any[])[0].id;
   } else {
     // Create new gender
-    const [result] = await db.execute("INSERT INTO genders (name) VALUES (?)", [
-      trimmedGender,
-    ]);
+    const [result] = await db.execute(
+      "INSERT INTO genders (name) VALUES (?)",
+      [trimmedGender],
+    );
     genderId = (result as any).insertId;
     console.log(`✨ Created new gender: "${trimmedGender}" (ID: ${genderId})`);
   }
@@ -246,9 +248,10 @@ async function processType(typeName: string): Promise<number> {
     typeId = (existing as any[])[0].id;
   } else {
     // Create new type
-    const [result] = await db.execute("INSERT INTO types (name) VALUES (?)", [
-      trimmedType,
-    ]);
+    const [result] = await db.execute(
+      "INSERT INTO types (name) VALUES (?)",
+      [trimmedType],
+    );
     typeId = (result as any).insertId;
     console.log(`✨ Created new type: "${trimmedType}" (ID: ${typeId})`);
   }
@@ -290,6 +293,40 @@ async function getSizesForGroup(sizeGroupId: number): Promise<any[]> {
 // Global variable to store all import data
 let allImportData: any[] = [];
 
+// Import products specifically for grade system (simplified)
+router.post("/products-grade", async (req, res) => {
+  try {
+    console.log("📦 Recebendo dados de importação de GRADES...");
+    console.log("📦 Request body:", JSON.stringify(req.body, null, 2));
+
+    const { data } = req.body;
+
+    if (!data || !Array.isArray(data)) {
+      console.error("❌ Formato de dados inválido para importação de grades");
+      return res.status(400).json({ error: "Invalid data format for grade import" });
+    }
+
+    // Reset progress
+    importProgress = {
+      total: data.length,
+      processed: 0,
+      success: 0,
+      errors: 0,
+      current: "",
+      isRunning: true,
+      errorDetails: [],
+    };
+
+    // Start processing grade imports
+    processGradeImport(data);
+
+    res.json({ message: "Grade import started", total: data.length });
+  } catch (error) {
+    console.error("Error starting grade import:", error);
+    res.status(500).json({ error: "Failed to start grade import" });
+  }
+});
+
 // Import products (first batch or full data)
 router.post("/products", async (req, res) => {
   try {
@@ -304,7 +341,7 @@ router.post("/products", async (req, res) => {
       dataLength: data?.length,
       totalBatches,
       currentBatch,
-      sampleItem: data?.[0],
+      sampleItem: data?.[0]
     });
 
     if (!data || !Array.isArray(data)) {
@@ -371,7 +408,7 @@ router.post("/products-batch", async (req, res) => {
     res.json({
       message: `Batch ${batchNumber} received`,
       totalItems: allImportData.length,
-      batchSize: data.length,
+      batchSize: data.length
     });
   } catch (error) {
     console.error("Error processing batch:", error);
@@ -400,10 +437,7 @@ router.post("/start-batch-processing", async (req, res) => {
     // Start processing in background
     processImport(allImportData);
 
-    res.json({
-      message: "Batch processing started",
-      total: allImportData.length,
-    });
+    res.json({ message: "Batch processing started", total: allImportData.length });
   } catch (error) {
     console.error("Error starting batch processing:", error);
     res.status(500).json({ error: "Failed to start batch processing" });
@@ -443,11 +477,15 @@ async function processImport(data: any[]) {
       await connection.beginTransaction();
 
       // Validate required fields
-      if (!firstItem.name || !firstItem.category_id || !firstItem.base_price) {
+      if (
+        !firstItem.name ||
+        !firstItem.category_id ||
+        !firstItem.base_price
+      ) {
         console.error("❌ Campos obrigatórios faltando:", {
           name: !!firstItem.name,
           category_id: !!firstItem.category_id,
-          base_price: !!firstItem.base_price,
+          base_price: !!firstItem.base_price
         });
         throw new Error(
           "Missing required fields: name, category_id, base_price",
@@ -550,7 +588,7 @@ async function processImport(data: any[]) {
             firstItem.parent_sku || null,
             photoPath,
             true,
-            firstItem.stock_type || "grade", // Novo campo de tipo de estoque
+            firstItem.stock_type || 'grade', // Novo campo de tipo de estoque
             brandId,
             genderId,
             typeId,
@@ -562,24 +600,22 @@ async function processImport(data: any[]) {
 
       // Get sizes for the group - default to a standard shoe size group if not specified
       let sizes = [];
-      const sizeGroupId = firstItem.size_group_id
-        ? parseInt(firstItem.size_group_id)
-        : 1;
+      const sizeGroupId = firstItem.size_group_id ? parseInt(firstItem.size_group_id) : 1;
       try {
         sizes = await getSizesForGroup(sizeGroupId);
       } catch (error) {
         // Default to a standard size range if no size group found
-        console.warn(
-          `Size group ${sizeGroupId} not found, using default sizes`,
-        );
+        console.warn(`Size group ${sizeGroupId} not found, using default sizes`);
         const [defaultSizes] = await connection.execute(
-          "SELECT id, size FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44') ORDER BY size",
+          "SELECT id, size FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44') ORDER BY size"
         );
         sizes = defaultSizes as any[];
       }
 
       if (sizes.length === 0) {
-        throw new Error(`No sizes available for processing`);
+        throw new Error(
+          `No sizes available for processing`,
+        );
       }
 
       // Process each color variation
@@ -590,16 +626,16 @@ async function processImport(data: any[]) {
 
         // Process single color
         const colorId = await processColor(item.color);
-        const stockType = item.stock_type || "grade";
+        const stockType = item.stock_type || 'grade';
 
-        if (stockType === "grade") {
+        if (stockType === 'grade') {
           // Estoque por grade - criar grade se não existir e configurar estoque
           const gradeStock = parseInt(item.grade_stock) || 0;
 
           // Buscar ou criar grade (usando size_group_id como referência)
           const [gradeResult] = await connection.execute(
             `SELECT id FROM grade_vendida WHERE name = ? LIMIT 1`,
-            [`Grade Grupo ${item.size_group_id}`],
+            [`Grade Grupo ${item.size_group_id}`]
           );
 
           let gradeId;
@@ -607,11 +643,7 @@ async function processImport(data: any[]) {
             // Criar nova grade
             const [newGrade] = await connection.execute(
               `INSERT INTO grade_vendida (name, description, active) VALUES (?, ?, ?)`,
-              [
-                `Grade Grupo ${item.size_group_id}`,
-                `Grade automática para grupo ${item.size_group_id}`,
-                1,
-              ],
+              [`Grade Grupo ${item.size_group_id}`, `Grade automática para grupo ${item.size_group_id}`, 1]
             );
             gradeId = (newGrade as any).insertId;
 
@@ -619,7 +651,7 @@ async function processImport(data: any[]) {
             for (const size of sizes) {
               await connection.execute(
                 `INSERT INTO grade_templates (grade_id, size_id, required_quantity) VALUES (?, ?, ?)`,
-                [gradeId, size.id, 1],
+                [gradeId, size.id, 1]
               );
             }
           } else {
@@ -630,7 +662,7 @@ async function processImport(data: any[]) {
           await connection.execute(
             `INSERT INTO product_color_grades (product_id, color_id, grade_id, stock_quantity)
              VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE stock_quantity = VALUES(stock_quantity)`,
-            [productId, colorId, gradeId, gradeStock],
+            [productId, colorId, gradeId, gradeStock]
           );
 
           // Criar variantes físicas sem estoque (controlado pela grade)
@@ -638,29 +670,29 @@ async function processImport(data: any[]) {
             await connection.execute(
               `INSERT INTO product_variants (product_id, size_id, color_id, stock)
                VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE stock = VALUES(stock)`,
-              [productId, size.id, colorId, 0],
+              [productId, size.id, colorId, 0]
             );
           }
+
         } else {
           // Estoque por tamanho - criar variantes com estoque individual
           const sizeStocks = {
-            "37": parseInt(item.size_37) || 0,
-            "38": parseInt(item.size_38) || 0,
-            "39": parseInt(item.size_39) || 0,
-            "40": parseInt(item.size_40) || 0,
-            "41": parseInt(item.size_41) || 0,
-            "42": parseInt(item.size_42) || 0,
-            "43": parseInt(item.size_43) || 0,
-            "44": parseInt(item.size_44) || 0,
+            '37': parseInt(item.size_37) || 0,
+            '38': parseInt(item.size_38) || 0,
+            '39': parseInt(item.size_39) || 0,
+            '40': parseInt(item.size_40) || 0,
+            '41': parseInt(item.size_41) || 0,
+            '42': parseInt(item.size_42) || 0,
+            '43': parseInt(item.size_43) || 0,
+            '44': parseInt(item.size_44) || 0,
           };
 
           for (const size of sizes) {
-            const sizeStock =
-              sizeStocks[size.size] || parseInt(item.stock_per_variant) || 0;
+            const sizeStock = sizeStocks[size.size] || parseInt(item.stock_per_variant) || 0;
             await connection.execute(
               `INSERT INTO product_variants (product_id, size_id, color_id, stock)
                VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE stock = VALUES(stock)`,
-              [productId, size.id, colorId, sizeStock],
+              [productId, size.id, colorId, sizeStock]
             );
           }
         }
@@ -678,9 +710,8 @@ async function processImport(data: any[]) {
       for (let i = 0; i < productItems.length; i++) {
         importProgress.errorDetails.push({
           row: processedItems + i + 1,
-          productName:
-            currentFirstItem?.name || `Produto ${processedItems + i + 1}`,
-          error: error instanceof Error ? error.message : String(error),
+          productName: currentFirstItem?.name || `Produto ${processedItems + i + 1}`,
+          error: error instanceof Error ? error.message : String(error)
         });
       }
 
