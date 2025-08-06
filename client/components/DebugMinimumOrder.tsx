@@ -111,6 +111,51 @@ export const DebugMinimumOrder: React.FC = () => {
             }, null, 2)}
           </div>
         )}
+
+        {/* Botões de teste para configurar pedido mínimo */}
+        {customer && (
+          <div className="mt-3 border-t pt-3">
+            <p className="text-xs font-semibold mb-2">🔧 Configurar Teste:</p>
+            <div className="flex gap-1 flex-wrap">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setTestMinimumOrder(50)}
+                disabled={isLoading}
+                className="text-xs h-6 px-2"
+              >
+                R$ 50
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setTestMinimumOrder(100)}
+                disabled={isLoading}
+                className="text-xs h-6 px-2"
+              >
+                R$ 100
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setTestMinimumOrder(200)}
+                disabled={isLoading}
+                className="text-xs h-6 px-2"
+              >
+                R$ 200
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setTestMinimumOrder(0)}
+                disabled={isLoading}
+                className="text-xs h-6 px-2"
+              >
+                Remover
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
