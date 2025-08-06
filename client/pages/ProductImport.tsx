@@ -1093,40 +1093,39 @@ export default function ProductImport() {
 
               <div className="space-y-4">
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-900 mb-2">
-                    Formato Esperado:
+                  <h4 className="font-semibold text-blue-900 mb-3">
+                    Formato Esperado (Campos Principais):
                   </h4>
-                  <ul className="text-sm text-blue-800 space-y-1">
-                    <li>
-                      • <strong>Nome:</strong> Nome do produto
-                    </li>
-                    <li>
-                      • <strong>Categoria:</strong> ID ou nome da categoria
-                    </li>
-                    <li>
-                      • <strong>Preço Base:</strong> Preço de custo/base do
-                      produto
-                    </li>
-                    <li>
-                      • <strong>Preço de Venda:</strong> Preço final de venda ao
-                      cliente
-                    </li>
-                    <li>
-                      • <strong>URL da Foto:</strong> Link direto para imagem
-                    </li>
-                    <li>
-                      • <strong>Grupo de Tamanhos:</strong> ID do grupo (ex:
-                      1=Feminino, 2=Masculino)
-                    </li>
-                    <li>
-                      • <strong>Cor:</strong> Uma cor por linha (repita produto
-                      para cada cor)
-                    </li>
-                    <li>
-                      • <strong>Estoque:</strong> Quantidade por variante
-                      (opcional)
-                    </li>
-                  </ul>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <h5 className="font-semibold text-blue-800 mb-2">Obrigatórios:</h5>
+                      <ul className="text-sm text-blue-700 space-y-1">
+                        <li>• <strong>Nome:</strong> Nome do produto</li>
+                        <li>• <strong>Categoria:</strong> ID da categoria</li>
+                        <li>• <strong>Preço Base:</strong> Preço de custo</li>
+                        <li>• <strong>Grupo de Tamanhos:</strong> ID do grupo</li>
+                        <li>• <strong>Cor:</strong> Uma cor por linha</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 className="font-semibold text-blue-800 mb-2">Classificação (Opcional):</h5>
+                      <ul className="text-sm text-blue-700 space-y-1">
+                        <li>• <strong>Marca (ID):</strong> 6=Havaianas, 7=Ipanema...</li>
+                        <li>• <strong>Gênero (ID):</strong> 8=Masc, 9=Fem, 10=Unissex</li>
+                        <li>• <strong>Tipo (ID):</strong> 11=Chinelo, 12=Sandália...</li>
+                        <li>• <strong>SKU Pai:</strong> Agrupa variantes</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-blue-200">
+                    <h5 className="font-semibold text-blue-800 mb-2">Variantes de Cor (Avançado):</h5>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      <li>• <strong>SKU da Variante:</strong> SKU específico da cor</li>
+                      <li>• <strong>Preço da Cor:</strong> Preço único para esta cor</li>
+                      <li>• <strong>Imagem da Cor:</strong> Foto específica da variante</li>
+                      <li>• <strong>Vender Sem Estoque:</strong> 0=não, 1=sim</li>
+                    </ul>
+                  </div>
                 </div>
 
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
