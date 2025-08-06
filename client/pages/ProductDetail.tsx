@@ -159,6 +159,13 @@ export default function ProductDetail() {
   const { isAuthenticated, isApproved } = useCustomerAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   useEffect(() => {
     if (id) {
       fetchProduct();
