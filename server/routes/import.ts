@@ -619,32 +619,18 @@ async function processGradeImport(data: any[]) {
       console.log(`✅ ${variantsCreated} variantes criadas`);
 
       await connection.commit();
-      console.log(`\n🎉 === PRODUTO GRADE CRIADO COM SUCESSO ===`);
-      console.log(`✅ Nome: ${item.name}`);
-      console.log(`✅ Product ID: ${productId}`);
-      console.log(`✅ Cor: ${item.color} (Color ID: ${colorId})`);
-      console.log(`✅ Grade: ${item.grade_name} (Grade ID: ${gradeId})`);
-      console.log(`✅ Estoque: ${item.grade_stock} grades`);
-      console.log(`✅ Variantes: ${variantsCreated} tamanhos criados`);
-      console.log(`✅ Imagem principal: ${item.photo_url ? 'Baixada' : 'Não fornecida'}`);
-      console.log(`✅ Imagem da cor: ${colorImagePath ? 'Baixada' : 'Não fornecida'}`);
-      console.log(`✅ Preço da cor: ${item.color_price || 'Usando preço base'}`);
-      console.log(`📊 Progresso: ${processedItems + 1}/${data.length}`);
+      console.log(`✅ SUCESSO: ${item.name} (${variantsCreated} variantes)`);
 
       importProgress.success++;
       processedItems++;
 
     } catch (error) {
       await connection.rollback();
-      console.error(`\n💥 === ERRO NO PROCESSAMENTO ===`);
-      console.error(`❌ Produto: ${item.name || 'Nome não definido'}`);
-      console.error(`❌ Linha: ${processedItems + 1}`);
-      console.error(`❌ Erro: ${error instanceof Error ? error.message : String(error)}`);
-      console.error(`❌ Stack trace:`, error instanceof Error ? error.stack : 'N/A');
+      console.error(`❌ ERRO: ${item.name} - ${error.message}`);
 
       importProgress.errorDetails.push({
         row: processedItems + 1,
-        productName: item.name || `Produto Grade ${processedItems + 1}`,
+        productName: item.name || `Produto ${processedItems + 1}`,
         error: error instanceof Error ? error.message : String(error)
       });
 
