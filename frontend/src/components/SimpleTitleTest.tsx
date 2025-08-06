@@ -7,25 +7,59 @@ export function SimpleTitleTest() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        console.log("Fetching settings from /api/settings...");
-        const response = await fetch("/api/settings");
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        console.log("Fetching settings from direct API...");
+
+        // Try multiple API endpoints
+        const endpoints = [
+          "/api/settings",
+          "http://localhost:3000/api/settings"
+        ];
+
+        let data = null;
+        let lastError = null;
+
+        for (const endpoint of endpoints) {
+          try {
+            console.log(`Trying endpoint: ${endpoint}`);
+            const response = await fetch(endpoint);
+
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            data = await response.json();
+            console.log(`Settings received from ${endpoint}:`, data);
+            break;
+          } catch (err: any) {
+            console.warn(`Failed to fetch from ${endpoint}:`, err.message);
+            lastError = err;
+          }
         }
-        
-        const data = await response.json();
-        console.log("Settings received:", data);
+
+        if (!data) {
+          // Use fallback settings
+          console.log("Using fallback settings");
+          data = {
+            store_name: "Tropical Brasil B2B",
+            primary_color: "#1d4ed8",
+            secondary_color: "#64748b",
+            accent_color: "#f59e0b",
+          };
+        }
+
         setSettings(data);
-        
+
         // Update title
         const storeName = data.store_name || "Chinelos Store";
         document.title = storeName;
         console.log(`Title updated to: ${storeName}`);
-        
+
       } catch (err: any) {
         console.error("Error fetching settings:", err);
         setError(err.message);
+
+        // Set fallback title
+        document.title = "Tropical Brasil B2B";
       }
     };
 
