@@ -1358,12 +1358,12 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     <h3 className="text-base font-semibold text-gray-900 mb-1.5">
                       Seu carrinho está vazio
                     </h3>
-                    <p className="text-gray-500 text-sm mb-6">
+                    <p className="text-gray-500 text-xs mb-4">
                       Explore nossa loja e adicione produtos incríveis
                     </p>
                     <Button
                       onClick={() => setCartOpen(false)}
-                      className="bg-primary hover:bg-primary/90 text-white"
+                      className="bg-primary hover:bg-primary/90 text-white text-sm h-8"
                     >
                       Continuar Comprando
                     </Button>
