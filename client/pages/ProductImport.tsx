@@ -1079,6 +1079,90 @@ export default function ProductImport() {
         </CardContent>
       </Card>
 
+      {/* Templates Específicos */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5 text-purple-600" />
+            Templates Específicos por Caso de Uso
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Templates otimizados para situações específicas de importação
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Template Completo */}
+            <div className="p-4 border rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="text-2xl">📋</div>
+                <div>
+                  <h4 className="font-semibold text-blue-800">Template Completo</h4>
+                  <p className="text-xs text-blue-600">Múltiplas cores e variações</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">
+                Template com todos os recursos: múltiplas cores, variações de preço e estoque por tamanho ou grade
+              </p>
+              <Button variant="outline" onClick={downloadTemplate} className="w-full">
+                <Download className="h-4 w-4 mr-2" />
+                Baixar Completo
+              </Button>
+            </div>
+
+            {/* Template 1 Cor + Múltiplas Grades */}
+            <div className="p-4 border rounded-lg bg-gradient-to-br from-green-50 to-emerald-50">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="text-2xl">🎯</div>
+                <div>
+                  <h4 className="font-semibold text-green-800">1 Cor + Estoque por Tamanho</h4>
+                  <p className="text-xs text-green-600">Controle individual por grade</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">
+                Produto com apenas uma cor, mas com estoque específico para cada tamanho (37, 38, 39, etc.)
+              </p>
+              <Button variant="outline" onClick={downloadSingleColorTemplate} className="w-full">
+                <Download className="h-4 w-4 mr-2" />
+                Baixar Template
+              </Button>
+            </div>
+
+            {/* Template 1 Cor + Estoque Grade */}
+            <div className="p-4 border rounded-lg bg-gradient-to-br from-orange-50 to-amber-50">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="text-2xl">📦</div>
+                <div>
+                  <h4 className="font-semibold text-orange-800">1 Cor + Estoque Total</h4>
+                  <p className="text-xs text-orange-600">Estoque por grade completa</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">
+                Produto com uma cor e estoque controlado por grade total (ex: 50 pares distribuídos automaticamente)
+              </p>
+              <Button variant="outline" onClick={downloadSingleColorGradeTemplate} className="w-full">
+                <Download className="h-4 w-4 mr-2" />
+                Baixar Template
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+              <div>
+                <h5 className="font-semibold text-yellow-800 mb-2">💡 Quando usar cada template:</h5>
+                <ul className="text-sm text-yellow-700 space-y-1">
+                  <li><strong>Completo:</strong> Quando você tem produtos com múltiplas cores e quer controlar preços específicos por variante</li>
+                  <li><strong>1 Cor + Tamanho:</strong> Produtos únicos onde você sabe exatamente quantos têm de cada tamanho (ex: tênis importados)</li>
+                  <li><strong>1 Cor + Grade:</strong> Produtos básicos onde você tem um estoque total e o sistema distribui automaticamente (ex: chinelos simples)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <Tabs defaultValue="export" className="space-y-4">
         <TabsList>
           <TabsTrigger value="export">Exportação</TabsTrigger>
