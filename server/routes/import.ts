@@ -817,14 +817,29 @@ async function processGradeImport(data: any[]) {
             console.log(`✅ Grade criada: ${item.grade_name} - ID: ${gradeId}`);
           }
 
-          // 3.2: Criar/atualizar relação produto-cor-grade com estoque
-          await connection.execute(
-            `INSERT INTO product_color_grades (product_id, color_id, grade_id, stock_quantity)
-             VALUES (?, ?, ?, ?)
-             ON DUPLICATE KEY UPDATE stock_quantity = stock_quantity + VALUES(stock_quantity)`,
-            [productId, colorId, gradeId, parseInt(item.grade_stock)]
+          // 3.2: Verificar se relação já existe
+          const [existingGradeRelation] = await connection.execute(
+            "SELECT stock_quantity FROM product_color_grades WHERE product_id = ? AND color_id = ? AND grade_id = ?",
+            [productId, colorId, gradeId]
           );
-          console.log(`✅ Grade da variante: Produto ${productId} + Cor ${colorId} + Grade ${gradeId} = ${item.grade_stock} unidades`);
+
+          if ((existingGradeRelation as any[]).length > 0) {
+            // Atualizar estoque existente
+            const currentStock = (existingGradeRelation as any[])[0].stock_quantity;
+            const newStock = currentStock + parseInt(item.grade_stock);
+            await connection.execute(
+              "UPDATE product_color_grades SET stock_quantity = ? WHERE product_id = ? AND color_id = ? AND grade_id = ?",
+              [newStock, productId, colorId, gradeId]
+            );
+            console.log(`✅ Grade atualizada: ${currentStock} + ${item.grade_stock} = ${newStock} unidades`);
+          } else {
+            // Criar nova relação
+            await connection.execute(
+              "INSERT INTO product_color_grades (product_id, color_id, grade_id, stock_quantity) VALUES (?, ?, ?, ?)",
+              [productId, colorId, gradeId, parseInt(item.grade_stock)]
+            );
+            console.log(`✅ Grade criada: Produto ${productId} + Cor ${colorId} + Grade ${gradeId} = ${item.grade_stock} unidades`);
+          }
         } catch (error) {
           console.warn(`⚠️ Erro na grade da variante: ${error.message}`);
         }
