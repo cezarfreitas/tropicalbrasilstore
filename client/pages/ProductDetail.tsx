@@ -1073,12 +1073,12 @@ export default function ProductDetail() {
       </div>
 
       {/* Suggested Products Section - Full Width */}
-      <div className="w-full px-4 lg:px-6 py-8 border-t mt-8">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+      <div className="w-full px-4 lg:px-6 py-4 border-t mt-4">
+        <div className="mb-4">
+          <h2 className="text-xl font-bold text-gray-900 mb-1">
             Produtos Sugeridos
           </h2>
-          <p className="text-gray-600">
+          <p className="text-sm text-gray-600">
             Outros produtos que podem interessar você
           </p>
         </div>
