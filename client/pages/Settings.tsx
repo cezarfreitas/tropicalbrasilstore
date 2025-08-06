@@ -112,7 +112,7 @@ export default function Settings() {
       // Set default settings as fallback
       console.log("🔄 Setting default fallback settings...");
       setSettings({
-        store_name: "Chinelos Store",
+        store_name: "Tropical Brasil Sandálias",
         logo_url: "",
         primary_color: "#1d4ed8",
         secondary_color: "#3b82f6",
