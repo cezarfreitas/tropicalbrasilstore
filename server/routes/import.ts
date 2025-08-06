@@ -401,16 +401,17 @@ router.post("/products-grade", async (req, res) => {
       const requiredTables = ['products', 'categories', 'colors', 'sizes', 'product_variants', 'product_color_variants', 'product_color_grades', 'grade_vendida'];
 
       for (const table of requiredTables) {
-        const [tableCheck] = await connection.execute(`SHOW TABLES LIKE ?`, [table]);
+        const [tableCheck] = await connection.execute(`SHOW TABLES LIKE '${table}'`);
         if ((tableCheck as any[]).length === 0) {
           throw new Error(`Tabela necessária '${table}' não encontrada no banco de dados`);
         }
+        console.log(`✅ Tabela '${table}' verificada`);
       }
 
       // Check if we have basic sizes
       const [sizesCheck] = await connection.execute("SELECT COUNT(*) as count FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44')");
       if ((sizesCheck as any[])[0].count === 0) {
-        throw new Error("Tamanhos padrão (37-44) não encontrados no banco de dados");
+        throw new Error("Tamanhos padr��o (37-44) não encontrados no banco de dados");
       }
 
       connection.release();
