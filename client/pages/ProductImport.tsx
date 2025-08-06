@@ -798,6 +798,7 @@ export default function ProductImport() {
         "Feminino", // Gênero (Nome)
         "Chinelo", // Tipo de Produto (Nome)
         "grade", // Tipo de Estoque = "grade" para venda por grade completa
+        "2549", // Nome da Grade Vendida (exemplo: use uma grade existente)
         "50", // Estoque por Grade (50 grades completas disponíveis)
         "", // Estoque Tam 37 (vazio quando tipo = "grade")
         "", // Estoque Tam 38
