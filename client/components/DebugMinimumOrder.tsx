@@ -62,8 +62,8 @@ export const DebugMinimumOrder: React.FC = () => {
     );
   }
 
-  const customerMinimum = customer?.minimum_order || 0;
-  const globalMinimum = storeSettings?.minimum_order_value || 0;
+  const customerMinimum = Number(customer?.minimum_order) || 0;
+  const globalMinimum = Number(storeSettings?.minimum_order_value) || 0;
   const effectiveMinimum = customerMinimum > 0 ? customerMinimum : globalMinimum;
 
   return (
