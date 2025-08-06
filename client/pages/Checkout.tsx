@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useGlobalStoreSettings } from "@/hooks/use-global-store-settings";
 import { ProductImage } from "@/components/ProductImage";
 import { MinimumOrderIndicator } from "@/components/MinimumOrderIndicator";
+import { CheckoutDebug } from "@/components/CheckoutDebug";
 import {
   ShoppingCart,
   User,
