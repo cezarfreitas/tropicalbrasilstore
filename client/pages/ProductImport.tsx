@@ -865,7 +865,7 @@ export default function ProductImport() {
         window.URL.revokeObjectURL(url);
 
         toast({
-          title: "Exportação Concluída",
+          title: "Exporta��ão Concluída",
           description: `Arquivo de produtos ${
             filter === "active"
               ? "ativos"
@@ -1142,7 +1142,7 @@ export default function ProductImport() {
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
-                Produto vendido como grade completa. Cliente compra a grade inteira (ex: 25 grades disponíveis, cada grade tem vários tamanhos)
+                Produto vendido como grade completa. Especifique qual grade vendida usar e quantas estão disponíveis (ex: Grade "2549" com 25 unidades)
               </p>
               <Button variant="outline" onClick={downloadSingleColorGradeTemplate} className="w-full">
                 <Download className="h-4 w-4 mr-2" />
