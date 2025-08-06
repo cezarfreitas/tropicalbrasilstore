@@ -43,7 +43,7 @@ export function CheckoutDebug() {
 
       const data = await response.json();
       if (response.ok) {
-        alert(`Pedido mínimo definido para R$ ${amount.toFixed(2)}`);
+        alert(`Pedido mínimo definido para ${formatCurrency(amount)}`);
         // Refresh customer data
         await checkCustomerData();
         // Refresh page to update auth customer data
