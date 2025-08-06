@@ -89,8 +89,25 @@ export function createServer() {
     next();
   });
 
-  app.use(express.json({ limit: "50mb" })); // Increase limit for large CSV imports
-  app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+  // JSON parsing middleware - skip for file upload routes
+  app.use((req, res, next) => {
+    // Skip JSON parsing for multipart uploads
+    if (req.path.includes('/upload') || req.path.includes('/parse-csv') ||
+        req.headers['content-type']?.includes('multipart/form-data')) {
+      return next();
+    }
+    express.json({ limit: "50mb" })(req, res, next);
+  });
+
+  // URL encoded parsing middleware - skip for file upload routes
+  app.use((req, res, next) => {
+    // Skip URL encoded parsing for multipart uploads
+    if (req.path.includes('/upload') || req.path.includes('/parse-csv') ||
+        req.headers['content-type']?.includes('multipart/form-data')) {
+      return next();
+    }
+    express.urlencoded({ extended: true, limit: "50mb" })(req, res, next);
+  });
 
   // API logging middleware for /admin/api routes only
   app.use(createApiLogger("/admin/api"));
@@ -140,7 +157,7 @@ export function createServer() {
     } catch (error) {
       console.error("⚠️ Banco de dados não conectado:", error.message);
       console.log("🚀 Continuando a servir o frontend mesmo sem backend...");
-      console.log("📱 Frontend funcionará com dados mock/locais");
+      console.log("��� Frontend funcionará com dados mock/locais");
       // continuar renderizando o frontend mesmo sem backend
     }
   })();
