@@ -889,12 +889,12 @@ export default function ProductDetail() {
 
             {/* Grades or Sizes Section - Only for authenticated users */}
             {selectedColor && isAuthenticated && isApproved && (
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-gray-900">
+              <div className="space-y-1.5">
+                <h3 className="text-base font-semibold text-gray-900">
                   {hasGrades() ? "Selecione a Grade" : "Selecione o Tamanho"}
                 </h3>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   {hasGrades() ? (
                     getAvailableGradesForColor().map((grade, gradeIndex) => {
                       const canAdd = canAddGradeToCart(grade);
