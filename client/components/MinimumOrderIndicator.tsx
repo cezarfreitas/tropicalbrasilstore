@@ -52,11 +52,11 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
           ) : (
             <Target className="h-5 w-5 text-blue-600" />
           )}
-          <span className="text-sm font-medium text-gray-700">
+          <span className={`text-sm font-medium ${theme === 'sidebar' ? 'text-white/90' : 'text-gray-700'}`}>
             {isCompleted ? 'Pedido mínimo atingido!' : 'Pedido mínimo'}
           </span>
         </div>
-        <div className="text-sm text-gray-600">
+        <div className={`text-sm ${theme === 'sidebar' ? 'text-white/70' : 'text-gray-600'}`}>
           {formatPrice(safeCurrentValue)} / {formatPrice(minimumValue)}
         </div>
       </div>
