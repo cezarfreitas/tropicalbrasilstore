@@ -72,16 +72,38 @@ export default function Settings() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch("/api/settings");
+      console.log("🔍 Fetching settings from /api/settings...");
+      const response = await fetch("/api/settings", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("📡 Response status:", response.status);
+      console.log("📡 Response headers:", response.headers);
+
       if (response.ok) {
         const data = await response.json();
+        console.log("✅ Settings loaded:", data);
         setSettings(data);
+      } else {
+        const errorText = await response.text();
+        console.error("❌ API Error:", response.status, errorText);
+        throw new Error(`API returned ${response.status}: ${errorText}`);
       }
     } catch (error) {
-      console.error("Error fetching settings:", error);
+      console.error("❌ Error fetching settings:", error);
+
+      // More detailed error information
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorDetails = error instanceof TypeError && error.message === "Failed to fetch"
+        ? "Network error - check if the server is running and accessible"
+        : errorMessage;
+
       toast({
-        title: "Erro",
-        description: "Não foi possível carregar as configurações",
+        title: "Erro ao carregar configurações",
+        description: errorDetails,
         variant: "destructive",
       });
     } finally {
