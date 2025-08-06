@@ -1078,7 +1078,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         <footer className="border-t bg-card">
           <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
             <div className="text-center text-xs sm:text-sm text-muted-foreground">
-              <p>&copy; 2024 Chinelos Store. Todos os direitos reservados.</p>
+              <p>&copy; 2024 Tropical Brasil Sandálias. Todos os direitos reservados.</p>
               <p className="mt-1 sm:mt-2">
                 Sistema de vendas com grades obrigatórias
               </p>
