@@ -1126,14 +1126,14 @@ export default function ProductDetail() {
                       {/* Colors */}
                       {suggestedProduct.available_colors &&
                         suggestedProduct.available_colors.length > 0 && (
-                          <div className="absolute bottom-1.5 right-1.5">
-                            <div className="flex gap-1">
+                          <div className="absolute bottom-1 right-1">
+                            <div className="flex gap-0.5">
                               {suggestedProduct.available_colors
                                 .slice(0, 2)
                                 .map((color: any) => (
                                   <div
                                     key={color.id}
-                                    className="w-4 h-4 rounded-full border border-white shadow-sm"
+                                    className="w-3 h-3 rounded-full border border-white"
                                     title={color.name}
                                     style={{
                                       backgroundColor:
@@ -1147,7 +1147,7 @@ export default function ProductDetail() {
                     </div>
 
                     {/* Product Info */}
-                    <div className="p-2 space-y-1">
+                    <div className="p-1.5 space-y-0.5">
                       <h3 className="font-medium text-sm text-gray-900 line-clamp-2 leading-tight">
                         {suggestedProduct.name}
                       </h3>
