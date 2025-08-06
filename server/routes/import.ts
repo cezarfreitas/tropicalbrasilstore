@@ -376,14 +376,49 @@ let allImportData: any[] = [];
 // Import products specifically for grade system (simplified)
 router.post("/products-grade", async (req, res) => {
   try {
+    console.log("\n🚀 === INICIANDO IMPORTAÇÃO DE GRADES ===");
     console.log("📦 Recebendo dados de importação de GRADES...");
-    console.log("📦 Request body:", JSON.stringify(req.body, null, 2));
+    console.log("📊 Total de dados recebidos:", req.body?.data?.length || 0);
 
     const { data } = req.body;
 
     if (!data || !Array.isArray(data)) {
       console.error("❌ Formato de dados inválido para importação de grades");
-      return res.status(400).json({ error: "Invalid data format for grade import" });
+      return res.status(400).json({ error: "Formato de dados inválido para importação de grades" });
+    }
+
+    if (data.length === 0) {
+      console.error("❌ Nenhum dado para importar");
+      return res.status(400).json({ error: "Nenhum dado para importar" });
+    }
+
+    // Verify database connection and required tables
+    console.log("🔍 Verificando conexão com banco de dados e tabelas necessárias...");
+    try {
+      const connection = await db.getConnection();
+
+      // Check required tables
+      const requiredTables = ['products', 'categories', 'colors', 'sizes', 'product_variants', 'product_color_variants', 'product_color_grades', 'grade_vendida'];
+
+      for (const table of requiredTables) {
+        const [tableCheck] = await connection.execute(`SHOW TABLES LIKE ?`, [table]);
+        if ((tableCheck as any[]).length === 0) {
+          throw new Error(`Tabela necessária '${table}' não encontrada no banco de dados`);
+        }
+      }
+
+      // Check if we have basic sizes
+      const [sizesCheck] = await connection.execute("SELECT COUNT(*) as count FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44')");
+      if ((sizesCheck as any[])[0].count === 0) {
+        throw new Error("Tamanhos padrão (37-44) não encontrados no banco de dados");
+      }
+
+      connection.release();
+      console.log("✅ Verificação do banco de dados concluída com sucesso");
+
+    } catch (dbError) {
+      console.error("❌ Erro na verificação do banco de dados:", dbError);
+      return res.status(500).json({ error: `Problema no banco de dados: ${dbError.message}` });
     }
 
     // Reset progress
@@ -397,13 +432,20 @@ router.post("/products-grade", async (req, res) => {
       errorDetails: [],
     };
 
+    console.log("📋 Sample do primeiro item:", JSON.stringify(data[0], null, 2));
+    console.log("🎯 Iniciando processamento...");
+
     // Start processing grade imports
     processGradeImport(data);
 
-    res.json({ message: "Grade import started", total: data.length });
+    res.json({
+      message: "Importação de grades iniciada com sucesso",
+      total: data.length,
+      timestamp: new Date().toISOString()
+    });
   } catch (error) {
-    console.error("Error starting grade import:", error);
-    res.status(500).json({ error: "Failed to start grade import" });
+    console.error("❌ Erro ao iniciar importação de grades:", error);
+    res.status(500).json({ error: "Falha ao iniciar importação de grades" });
   }
 });
 
@@ -695,7 +737,7 @@ async function processGradeImport(data: any[]) {
         colorId = await processColor(item.color);
         console.log(`✅ Cor processada - ID: ${colorId}`);
       } catch (error) {
-        console.error(`❌ Erro ao processar cor "${item.color}":`, error);
+        console.error(`�� Erro ao processar cor "${item.color}":`, error);
         throw new Error(`Falha ao processar cor: ${error.message}`);
       }
 
