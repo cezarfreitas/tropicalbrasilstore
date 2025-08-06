@@ -129,6 +129,26 @@ export function CheckoutDebug() {
               <li>5. Resultado: R$ {minimumOrderValue.toFixed(2)}</li>
             </ol>
           </div>
+
+          {authCustomer?.email && (
+            <div className="p-2 bg-green-50 rounded">
+              <strong>Configurar Pedido Mínimo:</strong>
+              <div className="flex gap-2 mt-2">
+                <Button size="sm" onClick={() => setCustomerMinimum(50)} disabled={loading}>
+                  R$ 50
+                </Button>
+                <Button size="sm" onClick={() => setCustomerMinimum(100)} disabled={loading}>
+                  R$ 100
+                </Button>
+                <Button size="sm" onClick={() => setCustomerMinimum(200)} disabled={loading}>
+                  R$ 200
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setCustomerMinimum(0)} disabled={loading}>
+                  Remover
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
