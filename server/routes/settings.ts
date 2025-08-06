@@ -146,7 +146,7 @@ async function createDefaultSettings() {
       INSERT INTO store_settings (
         store_name, store_description, contact_email, contact_phone,
         contact_whatsapp, address, city, state, postal_code,
-        shipping_fee, free_shipping_threshold, payment_methods,
+        shipping_fee, free_shipping_threshold, minimum_order_value, payment_methods,
         social_instagram, social_facebook, logo_url, banner_url,
         maintenance_mode, allow_orders, tax_rate,
         primary_color, secondary_color, accent_color, background_color, text_color
