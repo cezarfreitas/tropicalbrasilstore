@@ -6,6 +6,7 @@ interface MinimumOrderIndicatorProps {
   customerMinimumValue?: number;
   globalMinimumValue?: number;
   currency?: string;
+  theme?: 'default' | 'sidebar';
 }
 
 export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
