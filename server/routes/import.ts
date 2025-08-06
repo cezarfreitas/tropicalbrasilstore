@@ -191,7 +191,7 @@ async function processBrand(brandName: string): Promise<number> {
   } else {
     // Create new brand
     const [result] = await db.execute(
-      "INSERT INTO brands (name, active) VALUES (?, 1)",
+      "INSERT INTO brands (name) VALUES (?)",
       [trimmedBrand],
     );
     brandId = (result as any).insertId;
@@ -220,7 +220,7 @@ async function processGender(genderName: string): Promise<number> {
   } else {
     // Create new gender
     const [result] = await db.execute(
-      "INSERT INTO genders (name, active) VALUES (?, 1)",
+      "INSERT INTO genders (name) VALUES (?)",
       [trimmedGender],
     );
     genderId = (result as any).insertId;
@@ -249,7 +249,7 @@ async function processType(typeName: string): Promise<number> {
   } else {
     // Create new type
     const [result] = await db.execute(
-      "INSERT INTO types (name, active) VALUES (?, 1)",
+      "INSERT INTO types (name) VALUES (?)",
       [trimmedType],
     );
     typeId = (result as any).insertId;
@@ -564,11 +564,23 @@ async function processImport(data: any[]) {
         productId = (productResult as any).insertId;
       }
 
-      // Get sizes for the group
-      const sizes = await getSizesForGroup(parseInt(firstItem.size_group_id));
+      // Get sizes for the group - default to a standard shoe size group if not specified
+      let sizes = [];
+      const sizeGroupId = firstItem.size_group_id ? parseInt(firstItem.size_group_id) : 1;
+      try {
+        sizes = await getSizesForGroup(sizeGroupId);
+      } catch (error) {
+        // Default to a standard size range if no size group found
+        console.warn(`Size group ${sizeGroupId} not found, using default sizes`);
+        const [defaultSizes] = await connection.execute(
+          "SELECT id, size FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44') ORDER BY size"
+        );
+        sizes = defaultSizes as any[];
+      }
+
       if (sizes.length === 0) {
         throw new Error(
-          `No sizes found for size group ${firstItem.size_group_id}`,
+          `No sizes available for processing`,
         );
       }
 
@@ -660,10 +672,11 @@ async function processImport(data: any[]) {
       console.error(`Error processing product ${productKey}:`, error);
 
       // Store error details for each item in this group
+      const currentFirstItem = productItems[0];
       for (let i = 0; i < productItems.length; i++) {
         importProgress.errorDetails.push({
           row: processedItems + i + 1,
-          productName: firstItem.name || `Produto ${processedItems + i + 1}`,
+          productName: currentFirstItem?.name || `Produto ${processedItems + i + 1}`,
           error: error instanceof Error ? error.message : String(error)
         });
       }
