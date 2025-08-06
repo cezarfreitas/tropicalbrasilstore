@@ -47,8 +47,8 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
     <div className={containerClass}>
       {/* Valores separados */}
       <div className={`flex justify-between text-xs mb-1 ${theme === 'sidebar' ? 'text-white/90' : 'text-gray-700'}`}>
-        <span>{formatPrice(minimumValue)}</span>
         <span>{formatPrice(safeCurrentValue)}</span>
+        <span>{formatPrice(minimumValue)}</span>
       </div>
 
       {/* Barra de progresso ultra fina */}
