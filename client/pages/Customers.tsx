@@ -524,8 +524,6 @@ export default function Customers() {
 
   return (
     <div className="space-y-6">
-      <DatabaseVerification />
-      <ThemeDebug />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Clientes</h1>
@@ -1292,7 +1290,7 @@ export default function Customers() {
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
                                   Tem certeza que deseja aprovar o cliente{" "}
-                                  {customer.name}? Após a aprovação, ele poderá
+                                  {customer.name}? Após a aprovação, ele poder��
                                   fazer login e ver os preços.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
