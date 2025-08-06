@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/use-cart";
 import { useGlobalStoreSettings } from "@/hooks/use-global-store-settings";
+import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { ProductImage } from "@/components/ProductImage";
 import { MinimumOrderIndicator } from "@/components/MinimumOrderIndicator";
 import {
