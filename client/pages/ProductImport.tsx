@@ -585,15 +585,30 @@ export default function ProductImport() {
         console.log("📊 Full batch[0]:", JSON.stringify(batches[0], null, 2));
         console.log("📊 Tipo de batches[0]:", typeof batches[0], Array.isArray(batches[0]));
 
+        // Teste de serialização
+        const payload = {
+          data: batches[0],
+          columnMappings,
+        };
+        console.log("📦 Payload antes de stringify:", payload);
+
+        const jsonPayload = JSON.stringify(payload);
+        console.log("📄 JSON serializado (primeiros 500 chars):", jsonPayload.substring(0, 500));
+
+        // Teste de parsing de volta
+        try {
+          const parsed = JSON.parse(jsonPayload);
+          console.log("✅ JSON parse test passou. Data é array?", Array.isArray(parsed.data));
+        } catch (e) {
+          console.error("❌ JSON parse test falhou:", e);
+        }
+
         const response = await customFetch("/api/import/products", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            data: batches[0],
-            columnMappings,
-          }),
+          body: jsonPayload,
         });
 
         console.log("📥 Resposta do servidor:", response.status, response.statusText);
