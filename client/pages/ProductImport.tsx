@@ -487,7 +487,7 @@ export default function ProductImport() {
 
         if (startResponse.ok) {
           toast({
-            title: "Importação Iniciada",
+            title: "Importaç��o Iniciada",
             description: `Processando ${fullImportData.length} produtos...`,
           });
           pollImportProgress();
@@ -716,56 +716,129 @@ export default function ProductImport() {
         </div>
       </div>
 
-      {/* Guia de Tipos de Estoque */}
+      {/* Guia de Tipos de Estoque e Novos Campos */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-blue-600" />
-            Novos Tipos de Estoque - Como Usar
+            Sistema de Produtos Atualizado - Guia Completo
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Estoque por Grade */}
-            <div className="space-y-3">
-              <h4 className="font-semibold text-blue-800 flex items-center gap-2">
-                🎯 Estoque por Grade
-              </h4>
-              <p className="text-sm text-muted-foreground">
-                Configure <code>Tipo de Estoque = "grade"</code> e use <code>Estoque por Grade</code>
-              </p>
-              <div className="bg-blue-50 p-3 rounded text-sm">
-                <strong>Exemplo:</strong><br/>
-                • Tipo de Estoque: <code>grade</code><br/>
-                • Estoque por Grade: <code>25</code><br/>
-                • Deixe os campos de tamanho vazios<br/>
-                <em>→ Resultado: 25 pares no total, independente dos tamanhos</em>
+        <CardContent className="space-y-6">
+          {/* Tipos de Estoque */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">📦 Tipos de Estoque</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Estoque por Grade */}
+              <div className="space-y-3">
+                <h4 className="font-semibold text-blue-800 flex items-center gap-2">
+                  🎯 Estoque por Grade
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                  Configure <code>Tipo de Estoque = "grade"</code> e use <code>Estoque por Grade</code>
+                </p>
+                <div className="bg-blue-50 p-3 rounded text-sm">
+                  <strong>Exemplo:</strong><br/>
+                  • Tipo de Estoque: <code>grade</code><br/>
+                  • Estoque por Grade: <code>25</code><br/>
+                  • Deixe os campos de tamanho vazios<br/>
+                  <em>→ Resultado: 25 pares no total, independente dos tamanhos</em>
+                </div>
+              </div>
+
+              {/* Estoque por Tamanho */}
+              <div className="space-y-3">
+                <h4 className="font-semibold text-green-800 flex items-center gap-2">
+                  📏 Estoque por Tamanho
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                  Configure <code>Tipo de Estoque = "size"</code> e use os campos <code>Estoque Tam XX</code>
+                </p>
+                <div className="bg-green-50 p-3 rounded text-sm">
+                  <strong>Exemplo:</strong><br/>
+                  • Tipo de Estoque: <code>size</code><br/>
+                  • Estoque Tam 37: <code>5</code><br/>
+                  • Estoque Tam 38: <code>8</code><br/>
+                  • Estoque Tam 39: <code>3</code><br/>
+                  <em>→ Resultado: Estoque específico por tamanho</em>
+                </div>
               </div>
             </div>
+          </div>
 
-            {/* Estoque por Tamanho */}
-            <div className="space-y-3">
-              <h4 className="font-semibold text-green-800 flex items-center gap-2">
-                📏 Estoque por Tamanho
-              </h4>
-              <p className="text-sm text-muted-foreground">
-                Configure <code>Tipo de Estoque = "size"</code> e use os campos <code>Estoque Tam XX</code>
+          {/* Classificação de Produtos */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">🏷️ Classificação de Produtos</h3>
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="bg-purple-50 p-3 rounded text-sm">
+                <h5 className="font-semibold text-purple-800 mb-2">Marcas (ID)</h5>
+                <ul className="text-purple-700 space-y-1">
+                  <li>6: Havaianas</li>
+                  <li>7: Ipanema</li>
+                  <li>8: Melissa</li>
+                  <li>9: Rider</li>
+                  <li>10: Grendene</li>
+                </ul>
+              </div>
+              <div className="bg-orange-50 p-3 rounded text-sm">
+                <h5 className="font-semibold text-orange-800 mb-2">Gêneros (ID)</h5>
+                <ul className="text-orange-700 space-y-1">
+                  <li>8: Masculino</li>
+                  <li>9: Feminino</li>
+                  <li>10: Unissex</li>
+                  <li>11: Infantil</li>
+                </ul>
+              </div>
+              <div className="bg-teal-50 p-3 rounded text-sm">
+                <h5 className="font-semibold text-teal-800 mb-2">Tipos (ID)</h5>
+                <ul className="text-teal-700 space-y-1">
+                  <li>11: Chinelo</li>
+                  <li>12: Sandália</li>
+                  <li>13: Tênis</li>
+                  <li>14: Papete</li>
+                  <li>15: Rasteirinha</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Variantes de Cor Avançadas */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">🎨 Variantes de Cor Avançadas</h3>
+            <div className="bg-indigo-50 p-4 rounded">
+              <p className="text-sm text-indigo-800 mb-3">
+                <strong>Novo sistema de variantes:</strong> Cada cor pode ter SKU, preço e imagem específicos
               </p>
-              <div className="bg-green-50 p-3 rounded text-sm">
-                <strong>Exemplo:</strong><br/>
-                • Tipo de Estoque: <code>size</code><br/>
-                • Estoque Tam 37: <code>5</code><br/>
-                • Estoque Tam 38: <code>8</code><br/>
-                • Estoque Tam 39: <code>3</code><br/>
-                <em>→ Resultado: Estoque específico por tamanho</em>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <h5 className="font-semibold mb-2">Campos Disponíveis:</h5>
+                  <ul className="space-y-1 text-indigo-700">
+                    <li>• <code>SKU da Variante de Cor</code> - SKU específico da cor</li>
+                    <li>• <code>Preço Específico da Cor</code> - Preço único para esta cor</li>
+                    <li>• <code>Preço Promocional da Cor</code> - Promoção específica</li>
+                    <li>• <code>Imagem da Variante de Cor</code> - Foto específica da cor</li>
+                  </ul>
+                </div>
+                <div>
+                  <h5 className="font-semibold mb-2">Exemplo:</h5>
+                  <div className="bg-white/50 p-2 rounded font-mono text-xs">
+                    SKU da Variante: HAV001-DOURADO<br/>
+                    Preço da Cor: 35.90<br/>
+                    Imagem da Cor: /uploads/dourado.jpg<br/>
+                    <em>→ Cor dourada com preço premium</em>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="p-3 bg-yellow-50 rounded border border-yellow-200">
             <p className="text-sm text-yellow-800">
-              <strong>💡 Dica:</strong> Se não especificar o "Tipo de Estoque", será usado "grade" por padrão.
-              O campo "Estoque por Variante" ainda funciona para compatibilidade, mas recomendamos usar os novos campos.
+              <strong>💡 Dicas:</strong><br/>
+              • Se não especificar o "Tipo de Estoque", será usado "grade" por padrão<br/>
+              • IDs de marca, gênero e tipo são opcionais, mas ajudam na organização<br/>
+              • Variantes de cor com imagens específicas aparecem automaticamente no catálogo<br/>
+              • Use "Vender Sem Estoque = 1" para permitir vendas mesmo sem estoque
             </p>
           </div>
         </CardContent>
