@@ -1041,15 +1041,15 @@ export default function ProductDetail() {
                         onClick={() => setQuantity(quantity + 1)}
                         className="h-9 w-9 p-0 rounded-r-lg"
                       >
-                        <Plus className="h-4 w-4" />
+                        <Plus className="h-3 w-3" />
                       </Button>
                     </div>
 
                     <Button
                       onClick={addToCart}
-                      className="bg-primary hover:bg-primary/90 text-white h-9 px-4 text-sm font-semibold rounded-lg shadow-sm hover:shadow-md transition-all"
+                      className="bg-primary hover:bg-primary/90 text-white h-8 px-3 text-sm font-semibold rounded transition-all duration-200"
                     >
-                      <ShoppingCart className="mr-2 h-4 w-4" />
+                      <ShoppingCart className="mr-1.5 h-3 w-3" />
                       Adicionar ao Carrinho
                     </Button>
                   </div>
