@@ -764,14 +764,22 @@ async function processGradeImport(data: any[]) {
       }
 
       await connection.commit();
-      console.log(`✅ SUCESSO: ${item.name} (${variantsCreated} variantes)`);
+      console.log(`\n🎉 SUCESSO: ${item.name}`);
+      console.log(`   📦 ID: ${productId}`);
+      console.log(`   🎨 Variantes: ${variantsCreated}`);
+      console.log(`   🏷️ Marca: ${item.brand_name || 'Não informada'}`);
+      console.log(`   📸 Imagem: ${photoPath ? 'Baixada' : 'Não fornecida'}`);
+      console.log(`   🌈 Cor: ${item.color}`);
+      console.log(`   📊 Grade: ${item.grade_name || 'Não informada'}`);
 
       importProgress.success++;
       processedItems++;
 
     } catch (error) {
       await connection.rollback();
-      console.error(`❌ ERRO: ${item.name} - ${error.message}`);
+      console.error(`\n❌ ERRO no produto ${processedItems + 1}: ${item.name || 'Sem nome'}`);
+      console.error(`   💥 Erro: ${error.message}`);
+      console.error(`   📍 Stack:`, error.stack);
 
       importProgress.errorDetails.push({
         row: processedItems + 1,
@@ -781,6 +789,9 @@ async function processGradeImport(data: any[]) {
 
       importProgress.errors++;
       processedItems++;
+
+      // Continuar processamento mesmo com erro
+      console.log(`⏭️ Continuando para próximo produto...`);
     }
 
     importProgress.processed = processedItems;
