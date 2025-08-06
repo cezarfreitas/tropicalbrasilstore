@@ -482,9 +482,10 @@ async function processImport(data: any[]) {
 
         await connection.execute(
           `UPDATE products SET
-           name = ?, description = ?, category_id = ?, base_price = ?,
-           sale_price = ?, suggested_price = ?, sku = ?, photo = ?
-           WHERE id = ?`,
+            name = ?, description = ?, category_id = ?, base_price = ?,
+            sale_price = ?, suggested_price = ?, sku = ?, photo = ?,
+            brand_id = ?, gender_id = ?, type_id = ?
+          WHERE id = ?`,
           [
             firstItem.name,
             firstItem.description || null,
@@ -496,6 +497,9 @@ async function processImport(data: any[]) {
               : null,
             firstItem.sku || null,
             photoPath,
+            brandId,
+            genderId,
+            typeId,
             productId,
           ],
         );
