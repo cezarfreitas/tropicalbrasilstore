@@ -104,19 +104,76 @@ const REQUIRED_FIELDS = [
   { key: "stock_per_variant", label: "Estoque por Variante (DEPRECATED)", required: false },
 ];
 
-// Custom fetch function to avoid conflicts with external libraries
+// Custom fetch function using XMLHttpRequest to avoid FullStory conflicts
 const customFetch = async (url: string, options?: RequestInit): Promise<Response> => {
-  try {
-    // Use native fetch directly without any modifications
-    const response = await window.fetch(url, {
-      ...options,
-      credentials: 'same-origin'
-    });
-    return response;
-  } catch (error) {
-    console.error(`Network error for ${url}:`, error);
-    throw error;
-  }
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const method = options?.method || 'GET';
+
+    xhr.open(method, url);
+
+    // Handle credentials
+    if (options?.credentials === 'include' || options?.credentials === 'same-origin') {
+      xhr.withCredentials = true;
+    }
+
+    // Set default headers
+    xhr.setRequestHeader('Accept', 'application/json');
+    if (method !== 'GET' && method !== 'HEAD') {
+      xhr.setRequestHeader('Content-Type', 'application/json');
+    }
+
+    // Set custom headers
+    if (options?.headers) {
+      const headers = options.headers as Record<string, string>;
+      Object.entries(headers).forEach(([key, value]) => {
+        xhr.setRequestHeader(key, value);
+      });
+    }
+
+    // Handle abort signal
+    if (options?.signal) {
+      options.signal.addEventListener('abort', () => {
+        xhr.abort();
+        reject(new Error('Request aborted'));
+      });
+    }
+
+    xhr.onload = () => {
+      // Parse response headers
+      const responseHeaders: Record<string, string> = {};
+      const headerText = xhr.getAllResponseHeaders();
+      if (headerText) {
+        headerText.split('\r\n').forEach((line) => {
+          const parts = line.split(': ');
+          if (parts.length === 2) {
+            responseHeaders[parts[0].toLowerCase()] = parts[1];
+          }
+        });
+      }
+
+      const response = new Response(xhr.responseText, {
+        status: xhr.status,
+        statusText: xhr.statusText,
+        headers: new Headers(responseHeaders),
+      });
+
+      resolve(response);
+    };
+
+    xhr.onerror = () => {
+      reject(new Error(`Network request failed for ${url}`));
+    };
+
+    xhr.ontimeout = () => {
+      reject(new Error(`Request timeout for ${url}`));
+    };
+
+    // Set timeout
+    xhr.timeout = 10000; // 10 second timeout
+
+    xhr.send(options?.body || null);
+  });
 };
 
 export default function ProductImport() {
