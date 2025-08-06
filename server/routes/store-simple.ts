@@ -328,9 +328,11 @@ router.get("/products-paginated", async (req, res) => {
           `SELECT DISTINCT
             co.id,
             co.name,
-            co.hex_code
+            co.hex_code,
+            pcv.image_url
           FROM product_variants pv
           INNER JOIN colors co ON pv.color_id = co.id
+          LEFT JOIN product_color_variants pcv ON pcv.product_id = pv.product_id AND pcv.color_id = co.id AND pcv.active = true
           WHERE pv.product_id = ? AND (pv.stock > 0 OR ? = 1)
           ORDER BY co.name`,
           [product.id, product.sell_without_stock],
