@@ -9,8 +9,14 @@ import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { useProducts } from "@/hooks/use-products";
 import { LoginModal } from "@/components/LoginModal";
 import { DynamicTitle } from "@/components/DynamicTitle";
-import { StoreTitle } from "@/components/StoreTitle";
-import { Package, AlertCircle, Search } from "lucide-react";
+import { Package, AlertCircle, Search, ArrowUpDown, Grid3X3, Grid2X2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function Store() {
   // Authentication
