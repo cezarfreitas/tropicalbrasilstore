@@ -548,7 +548,7 @@ async function processGradeImport(data: any[]) {
 
   // Limitar o tamanho dos dados para evitar problemas de memória
   if (data.length > 100) {
-    console.log("⚠️ Limitando importação a 100 itens para evitar problemas de memória");
+    console.log("⚠️ Limitando importação a 100 itens para evitar problemas de mem��ria");
     data = data.slice(0, 100);
   }
 
@@ -616,15 +616,29 @@ async function processGradeImport(data: any[]) {
         }
       }
 
-      // Verificar se produto já existe (por nome ou SKU)
+      // Verificar se produto já existe (primeiro por SKU, depois por nome)
       let productId: number;
-      const searchKey = item.sku || item.name;
-      const searchField = item.sku ? "sku" : "name";
+      let existingProduct: any[] = [];
 
-      const [existingProduct] = await connection.execute(
-        `SELECT id FROM products WHERE ${searchField} = ? LIMIT 1`,
-        [searchKey]
-      );
+      // Buscar primeiro por SKU se fornecido
+      if (item.sku && item.sku.trim()) {
+        const [skuResult] = await connection.execute(
+          `SELECT id FROM products WHERE sku = ? LIMIT 1`,
+          [item.sku.trim()]
+        );
+        existingProduct = skuResult as any[];
+        console.log(`🔍 Busca por SKU "${item.sku}": ${existingProduct.length > 0 ? 'Encontrado' : 'Não encontrado'}`);
+      }
+
+      // Se não encontrou por SKU, buscar por nome
+      if (existingProduct.length === 0) {
+        const [nameResult] = await connection.execute(
+          `SELECT id FROM products WHERE name = ? LIMIT 1`,
+          [item.name]
+        );
+        existingProduct = nameResult as any[];
+        console.log(`🔍 Busca por nome "${item.name}": ${existingProduct.length > 0 ? 'Encontrado' : 'Não encontrado'}`);
+      }
 
       if ((existingProduct as any[]).length > 0) {
         // Produto existe - atualizar
