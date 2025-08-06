@@ -296,9 +296,18 @@ let allImportData: any[] = [];
 // Import products (first batch or full data)
 router.post("/products", async (req, res) => {
   try {
+    console.log("📥 Recebendo dados de importação...");
     const { data, totalBatches, currentBatch } = req.body;
 
+    console.log("📊 Data recebida:", {
+      dataLength: data?.length,
+      totalBatches,
+      currentBatch,
+      sampleItem: data?.[0]
+    });
+
     if (!data || !Array.isArray(data)) {
+      console.error("❌ Formato de dados inválido");
       return res.status(400).json({ error: "Invalid data format" });
     }
 
