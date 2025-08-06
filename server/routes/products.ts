@@ -849,9 +849,11 @@ router.post("/bulk", async (req, res) => {
         }
 
         if (validationErrors.length > 0) {
-          console.error(`❌ Dados inválidos para variante ${variante.cor || 'sem cor'}:`, {
-            cor: variante.cor,
-            preco: variante.preco,
+          console.error(`❌ [${requestId}] Dados inválidos para variante ${corLimpa || 'sem cor'}:`, {
+            cor_original: variante.cor,
+            cor_limpa: corLimpa,
+            preco_original: variante.preco,
+            preco_numerico: precoNumerico,
             grade: variante.grade,
             erros: validationErrors,
           });
@@ -860,10 +862,12 @@ router.post("/bulk", async (req, res) => {
             error: "Dados inválidos",
             message: `Problemas encontrados: ${validationErrors.join(", ")}`,
             produto: product.codigo,
-            variante: variante.cor || "sem cor",
+            variante: corLimpa || "sem cor",
             detalhes: {
-              cor: variante.cor,
-              preco: variante.preco,
+              cor_original: variante.cor,
+              cor_limpa: corLimpa,
+              preco_original: variante.preco,
+              preco_numerico: precoNumerico,
               grade: variante.grade,
               erros: validationErrors,
             },
