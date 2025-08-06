@@ -227,15 +227,69 @@ app.get("*", (req, res) => {
     });
   }
 
-  res.set({
-    "Content-Type": "text/html; charset=utf-8",
-    "Cache-Control": "no-cache, no-store, must-revalidate",
-    Pragma: "no-cache",
-    Expires: "0",
-  });
+  // Read and inject fresh settings into index.html
+  try {
+    let html = fs.readFileSync(indexPath, "utf8");
 
-  console.log(`📄 Serving SPA route: ${req.path}`);
-  res.sendFile(indexPath);
+    // Replace the settings injection with fresh data
+    const settingsScript = `
+      window.__STORE_SETTINGS__ = null;
+
+      (async function() {
+        try {
+          const response = await fetch('/api/settings');
+          if (response.ok) {
+            const settings = await response.json();
+            window.__STORE_SETTINGS__ = {
+              store_name: settings.store_name,
+              logo_url: settings.logo_url,
+              primary_color: settings.primary_color,
+              secondary_color: settings.secondary_color,
+              accent_color: settings.accent_color,
+              background_color: settings.background_color,
+              text_color: settings.text_color
+            };
+            window.dispatchEvent(new CustomEvent('storeSettingsLoaded', {
+              detail: window.__STORE_SETTINGS__
+            }));
+          }
+        } catch (error) {
+          console.warn('Failed to load store settings:', error);
+        }
+      })();
+    `;
+
+    // Find and replace existing settings script or add it
+    if (html.includes('window.__STORE_SETTINGS__')) {
+      // Replace existing script
+      html = html.replace(
+        /<script>[\s\S]*?window\.__STORE_SETTINGS__[\s\S]*?<\/script>/,
+        `<script>${settingsScript}</script>`
+      );
+    } else {
+      // Add script before closing body tag
+      html = html.replace('</body>', `<script>${settingsScript}</script>\n</body>`);
+    }
+
+    res.set({
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    });
+
+    console.log(`📄 Serving SPA route with fresh settings: ${req.path}`);
+    res.send(html);
+  } catch (error) {
+    console.error("Error reading/modifying index.html:", error);
+    res.set({
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    });
+    res.sendFile(indexPath);
+  }
 });
 
 // Error handling middleware
