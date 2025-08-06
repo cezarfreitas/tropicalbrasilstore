@@ -529,8 +529,14 @@ export default function ProductImport() {
   };
 
   const startImport = async () => {
-    if (!validateMappings()) return;
+    console.log("🚀 Iniciando importação...");
 
+    if (!validateMappings()) {
+      console.log("❌ Validação de mappings falhou");
+      return;
+    }
+
+    console.log("✅ Validação passou, iniciando importação");
     setIsImporting(true);
     setImportProgress({
       total: csvData.length,
@@ -1387,7 +1393,7 @@ export default function ProductImport() {
                   <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5" />
                   <div>
                     <h5 className="font-medium text-amber-900">
-                      Dicas para Exportação
+                      Dicas para Exporta��ão
                     </h5>
                     <ul className="text-sm text-amber-800 mt-2 space-y-1">
                       <li>
