@@ -73,12 +73,18 @@ export default function Settings() {
   const fetchSettings = async () => {
     try {
       console.log("🔍 Fetching settings from /api/settings...");
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
       const response = await fetch("/api/settings", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       console.log("📡 Response status:", response.status);
       console.log("📡 Response headers:", response.headers);
