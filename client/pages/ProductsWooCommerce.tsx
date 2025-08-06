@@ -509,28 +509,26 @@ export default function ProductsWooCommerce() {
         console.log("📊 Grades data received:", Array.isArray(data) ? data.length : 0, "items");
         setGrades(Array.isArray(data) ? data : []);
       } else {
-        console.warn(
-          "⚠️ Grades response not ok:",
-          response.status,
-          response.statusText,
-        );
-        const errorText = await response.text();
-        console.warn("⚠️ Response body:", errorText);
-        setGrades([]); // Set empty array as fallback
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Error fetching grades:", error);
-      if (error.name === "TimeoutError") {
-        console.error("🕐 Request timed out");
-      } else if (
-        error.name === "TypeError" &&
-        error.message.includes("fetch")
-      ) {
-        console.error(
-          "🌐 Network error - possibly server is down or unreachable",
-        );
+
+      if (error.name === 'AbortError') {
+        console.log("🕐 Request timed out");
+
+        // Retry once on timeout
+        if (retryCount < 1) {
+          console.log("🔄 Retrying grades fetch...");
+          setTimeout(() => fetchGrades(retryCount + 1), 2000);
+        } else {
+          console.log("❌ Max retries reached, setting empty grades");
+          setGrades([]);
+        }
+      } else {
+        // For other errors, set empty array to prevent UI issues
+        setGrades([]);
       }
-      setGrades([]); // Set empty array as fallback to prevent crashes
     }
   };
 
