@@ -408,10 +408,23 @@ router.post("/products-grade", async (req, res) => {
         console.log(`✅ Tabela '${table}' verificada`);
       }
 
-      // Check if we have basic sizes
+      // Check if we have basic sizes, create them if they don't exist
       const [sizesCheck] = await connection.execute("SELECT COUNT(*) as count FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44')");
       if ((sizesCheck as any[])[0].count === 0) {
-        throw new Error("Tamanhos padr��o (37-44) não encontrados no banco de dados");
+        console.log("⚠️ Tamanhos padrão não encontrados, criando automaticamente...");
+
+        const standardSizes = ['37', '38', '39', '40', '41', '42', '43', '44'];
+        for (const size of standardSizes) {
+          await connection.execute("INSERT IGNORE INTO sizes (size) VALUES (?)", [size]);
+        }
+
+        console.log("✅ Tamanhos padrão criados: 37-44");
+
+        // Verify creation
+        const [newSizesCheck] = await connection.execute("SELECT COUNT(*) as count FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44')");
+        console.log(`✅ Verificação: ${(newSizesCheck as any[])[0].count} tamanhos padrão disponíveis`);
+      } else {
+        console.log(`✅ Tamanhos padrão encontrados: ${(sizesCheck as any[])[0].count} tamanhos disponíveis`);
       }
 
       connection.release();
@@ -919,7 +932,7 @@ async function processGradeImport(data: any[]) {
   importProgress.current = "";
 
   console.log(`\n🏁 === PROCESSAMENTO DE GRADES CONCLUÍDO ===`);
-  console.log(`📊 Total processado: ${processedItems}/${data.length}`);
+  console.log(`�� Total processado: ${processedItems}/${data.length}`);
   console.log(`✅ Sucessos: ${importProgress.success}`);
   console.log(`❌ Erros: ${importProgress.errors}`);
   console.log(`📈 Taxa de sucesso: ${((importProgress.success / data.length) * 100).toFixed(1)}%`);
