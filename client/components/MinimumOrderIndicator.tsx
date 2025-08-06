@@ -39,8 +39,12 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
     return `${currency} ${num.toFixed(2).replace('.', ',')}`;
   };
 
+  const containerClass = theme === 'sidebar'
+    ? "bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 mb-3"
+    : "bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-4";
+
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-4">
+    <div className={containerClass}>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           {isCompleted ? (
