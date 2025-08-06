@@ -57,8 +57,20 @@ function Store() {
   // Sorting state
   const [sortBy, setSortBy] = useState("name-asc");
 
-  // Debug products data - focus on missing images
+  // Debug products data and loading state
   useEffect(() => {
+    console.log('🔍 Store Debug State:', {
+      loading,
+      error,
+      productsCount: products?.length || 0,
+      searchTerm,
+      categoryFilter,
+      colorFilter,
+      genderFilter,
+      typeFilter,
+      pagination
+    });
+
     if (products && products.length > 0) {
       console.log(`🛍️ Store loaded ${products.length} products`);
       products.forEach((product, index) => {
@@ -84,8 +96,10 @@ function Store() {
           });
         }
       });
+    } else if (!loading && !error) {
+      console.warn('⚠️ No products found but no error occurred');
     }
-  }, [products]);
+  }, [products, loading, error, searchTerm, categoryFilter, colorFilter, genderFilter, typeFilter, pagination]);
 
   // Handlers
   const handleProductClick = (productId: number) => {
