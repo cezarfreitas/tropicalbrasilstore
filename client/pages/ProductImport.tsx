@@ -87,6 +87,7 @@ const REQUIRED_FIELDS = [
   { key: "gender_name", label: "Gênero (Nome)", required: false },
   { key: "type_name", label: "Tipo de Produto (Nome)", required: false },
   { key: "stock_type", label: "Tipo de Estoque (grade/size)", required: false },
+  { key: "grade_name", label: "Nome da Grade Vendida", required: false },
   { key: "grade_stock", label: "Estoque por Grade", required: false },
   { key: "size_37", label: "Estoque Tam 37", required: false },
   { key: "size_38", label: "Estoque Tam 38", required: false },
