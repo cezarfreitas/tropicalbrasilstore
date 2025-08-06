@@ -525,11 +525,21 @@ async function processGradeImport(data: any[]) {
       if ((existingProduct as any[]).length > 0) {
         productId = (existingProduct as any[])[0].id;
 
+        // Download main product image if URL provided for existing product
+        let photoPath = null;
+        if (item.photo_url) {
+          console.log(`📸 Updating image for existing product: ${item.photo_url}`);
+          photoPath = await downloadImage(item.photo_url, item.name);
+          if (photoPath) {
+            console.log(`✅ Updated image downloaded: ${photoPath}`);
+          }
+        }
+
         // Update existing product
         await connection.execute(
           `UPDATE products SET
             name = ?, description = ?, category_id = ?, base_price = ?,
-            sale_price = ?, suggested_price = ?, sku = ?,
+            sale_price = ?, suggested_price = ?, sku = ?, photo = ?,
             brand_id = ?, gender_id = ?, type_id = ?, stock_type = ?
           WHERE id = ?`,
           [
@@ -540,6 +550,7 @@ async function processGradeImport(data: any[]) {
             item.sale_price ? parseFloat(item.sale_price) : null,
             item.suggested_price ? parseFloat(item.suggested_price) : null,
             item.sku || null,
+            photoPath, // Update photo if new one was downloaded
             brandId, genderId, typeId,
             'grade', // Force grade stock type
             productId,
@@ -707,7 +718,7 @@ async function processGradeImport(data: any[]) {
   connection.release();
   importProgress.isRunning = false;
   importProgress.current = "";
-  console.log("��� Processamento de grades concluído!");
+  console.log("📦 Processamento de grades concluído!");
 }
 
 async function processImport(data: any[]) {
