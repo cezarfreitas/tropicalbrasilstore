@@ -599,25 +599,59 @@ async function processGradeImport(data: any[]) {
         }
       }
 
-      // Criar produto completo
+      // Verificar se produto já existe (por nome ou SKU)
       let productId: number;
-      const [productResult] = await connection.execute(
-        `INSERT INTO products (name, description, category_id, base_price, sale_price, sku, photo, brand_id, active, stock_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          item.name,
-          item.description || null,
-          categoryId,
-          parseFloat(item.base_price),
-          item.sale_price ? parseFloat(item.sale_price) : null,
-          item.sku || null,
-          photoPath,
-          brandId,
-          true,
-          'grade'
-        ]
+      const searchKey = item.sku || item.name;
+      const searchField = item.sku ? "sku" : "name";
+
+      const [existingProduct] = await connection.execute(
+        `SELECT id FROM products WHERE ${searchField} = ? LIMIT 1`,
+        [searchKey]
       );
-      productId = (productResult as any).insertId;
-      console.log(`✅ Produto criado - ID: ${productId}`);
+
+      if ((existingProduct as any[]).length > 0) {
+        // Produto existe - atualizar
+        productId = (existingProduct as any[])[0].id;
+        console.log(`🔄 Produto existente encontrado - ID: ${productId}, atualizando...`);
+
+        await connection.execute(
+          `UPDATE products SET
+           name = ?, description = ?, category_id = ?, base_price = ?, sale_price = ?,
+           photo = ?, brand_id = ?, stock_type = ?
+           WHERE id = ?`,
+          [
+            item.name,
+            item.description || null,
+            categoryId,
+            parseFloat(item.base_price),
+            item.sale_price ? parseFloat(item.sale_price) : null,
+            photoPath,
+            brandId,
+            'grade',
+            productId
+          ]
+        );
+        console.log(`✅ Produto atualizado - ID: ${productId}`);
+      } else {
+        // Produto não existe - criar novo
+        const [productResult] = await connection.execute(
+          `INSERT INTO products (name, description, category_id, base_price, sale_price, sku, photo, brand_id, active, stock_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            item.name,
+            item.description || null,
+            categoryId,
+            parseFloat(item.base_price),
+            item.sale_price ? parseFloat(item.sale_price) : null,
+            item.sku || null,
+            photoPath,
+            brandId,
+            true,
+            'grade'
+          ]
+        );
+        productId = (productResult as any).insertId;
+        console.log(`✅ Produto criado - ID: ${productId}`);
+      }
 
       // Criar cor simples
       let colorId;
