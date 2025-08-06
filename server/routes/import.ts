@@ -428,6 +428,9 @@ async function processImport(data: any[]) {
   for (const [productKey, productItems] of productGroups) {
     try {
       const firstItem = productItems[0];
+      console.log("🔄 Processando produto:", firstItem.name);
+      console.log("📊 Item data:", JSON.stringify(firstItem, null, 2));
+
       importProgress.current =
         firstItem.name || `Produto ${processedItems + 1}`;
 
@@ -439,6 +442,11 @@ async function processImport(data: any[]) {
         !firstItem.category_id ||
         !firstItem.base_price
       ) {
+        console.error("❌ Campos obrigatórios faltando:", {
+          name: !!firstItem.name,
+          category_id: !!firstItem.category_id,
+          base_price: !!firstItem.base_price
+        });
         throw new Error(
           "Missing required fields: name, category_id, base_price",
         );
