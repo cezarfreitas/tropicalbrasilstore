@@ -195,6 +195,16 @@ const AppContent = () => (
         }
       />
       <Route
+        path="/admin/products/grade-import"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <GradeImport />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/admin/categories"
         element={
           <ProtectedRoute>
