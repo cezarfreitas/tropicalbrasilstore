@@ -175,7 +175,7 @@ function Store() {
               {/* Sort Options */}
               <div className="flex items-center gap-2">
                 <ArrowUpDown className="h-4 w-4 text-gray-500" />
-                <Select defaultValue="name-asc">
+                <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger className="w-[140px] h-8">
                     <SelectValue placeholder="Ordenar por" />
                   </SelectTrigger>
