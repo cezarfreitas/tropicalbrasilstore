@@ -75,6 +75,7 @@ import { createApiLogger } from "./lib/api-logger";
 import { injectStoreSettings } from "./lib/inject-store-settings";
 import { createVendorsSystem } from "./lib/create-vendors-system";
 import { addVendorPassword } from "./lib/add-vendor-password";
+import { healthRouter } from "./routes/health";
 
 export function createServer() {
   const app = express();
