@@ -52,7 +52,7 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
       </div>
 
       {/* Barra de progresso ultra fina */}
-      <div className={`w-full rounded-full h-1 overflow-hidden ${theme === 'sidebar' ? 'bg-white/20' : 'bg-gray-200'}`}>
+      <div className={`w-full rounded-full h-1 mb-1 overflow-hidden ${theme === 'sidebar' ? 'bg-white/20' : 'bg-gray-200'}`}>
         <div
           className={`h-full rounded-full transition-all duration-300 ${
             isCompleted
@@ -62,6 +62,13 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
           style={{ width: `${progress}%` }}
         />
       </div>
+
+      {/* Texto do quanto falta */}
+      {!isCompleted && (
+        <div className={`text-[10px] ${theme === 'sidebar' ? 'text-white/60' : 'text-gray-500'}`}>
+          Faltam {formatPrice(remaining)} para o pedido mínimo
+        </div>
+      )}
     </div>
   );
 };
