@@ -259,6 +259,35 @@ async function processType(typeName: string): Promise<number> {
   return typeId;
 }
 
+async function processCategory(categoryName: string): Promise<number> {
+  if (!categoryName || !categoryName.trim()) {
+    throw new Error("Category name is required");
+  }
+
+  const trimmedCategory = categoryName.trim();
+
+  // Check if category exists
+  const [existing] = await db.execute(
+    "SELECT id FROM categories WHERE LOWER(name) = LOWER(?)",
+    [trimmedCategory],
+  );
+
+  let categoryId: number;
+  if ((existing as any[]).length > 0) {
+    categoryId = (existing as any[])[0].id;
+  } else {
+    // Create new category
+    const [result] = await db.execute(
+      "INSERT INTO categories (name, active) VALUES (?, 1)",
+      [trimmedCategory],
+    );
+    categoryId = (result as any).insertId;
+    console.log(`✨ Created new category: "${trimmedCategory}" (ID: ${categoryId})`);
+  }
+
+  return categoryId;
+}
+
 function generateRandomHex(): string {
   return (
     "#" +
