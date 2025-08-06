@@ -6,7 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/use-cart";
+import { useGlobalStoreSettings } from "@/hooks/use-global-store-settings";
 import { ProductImage } from "@/components/ProductImage";
+import { MinimumOrderIndicator } from "@/components/MinimumOrderIndicator";
 import {
   ShoppingCart,
   Minus,
