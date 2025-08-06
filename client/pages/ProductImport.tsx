@@ -643,9 +643,9 @@ export default function ProductImport() {
         "HAV001",
         "Chinelo clássico Havaianas Top",
         "35.90",
-        "6", // Marca (Havaianas)
-        "9", // Gênero (Feminino)
-        "11", // Tipo (Chinelo)
+        "Havaianas", // Marca
+        "Feminino", // Gênero
+        "Chinelo", // Tipo
         "grade", // Tipo de Estoque
         "25", // Estoque por Grade
         "", // Tam 37 (vazio para estoque por grade)
@@ -675,9 +675,9 @@ export default function ProductImport() {
         "NIKE001",
         "Tênis esportivo Nike Air Max",
         "249.90",
-        "9", // Marca (Rider)
-        "8", // Gênero (Masculino)
-        "13", // Tipo (Tênis)
+        "Nike", // Marca
+        "Masculino", // Gênero
+        "Tênis", // Tipo
         "size", // Tipo de Estoque
         "", // Estoque por Grade (vazio para estoque por tamanho)
         "5", // Tam 37
@@ -707,9 +707,9 @@ export default function ProductImport() {
         "HAV001",
         "Chinelo clássico Havaianas Top - Edição Especial",
         "45.90",
-        "6", // Marca (Havaianas)
-        "9", // Gênero (Feminino)
-        "11", // Tipo (Chinelo)
+        "Havaianas", // Marca
+        "Feminino", // Gênero
+        "Chinelo", // Tipo
         "grade", // Tipo de Estoque
         "15", // Estoque por Grade (menor por ser edição especial)
         "", // Tam 37
@@ -822,7 +822,7 @@ export default function ProductImport() {
             Importação de Produtos
           </h1>
           <p className="text-muted-foreground">
-            Importe produtos em massa com upload autom��tico de fotos
+            Importe produtos em massa com upload automático de fotos
           </p>
         </div>
         <div className="flex gap-2">
