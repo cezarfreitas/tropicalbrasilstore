@@ -29,8 +29,8 @@ export function PriceDisplay({
       <div className={`space-y-1 ${className}`}>
         <div className="flex items-center gap-2">
           <Lock className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground font-medium">
-            Faça login para ver preços
+          <span className="text-sm text-blue-600 font-medium bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            🔐 Entre para ver preços especiais
           </span>
         </div>
         <Button
