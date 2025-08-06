@@ -89,25 +89,23 @@ export function createServer() {
     next();
   });
 
-  // JSON parsing middleware - skip for file upload routes
+  // JSON parsing middleware - skip for multipart uploads
   app.use((req, res, next) => {
-    // Skip JSON parsing for multipart uploads
-    if (req.path.includes('/upload') || req.path.includes('/parse-csv') ||
-        req.headers['content-type']?.includes('multipart/form-data')) {
+    const contentType = req.headers['content-type'] || '';
+
+    // Skip JSON parsing for multipart content
+    if (contentType.includes('multipart/form-data')) {
       return next();
     }
-    express.json({ limit: "50mb" })(req, res, next);
+
+    express.json({
+      limit: "50mb",
+      type: ['application/json', 'application/*+json']
+    })(req, res, next);
   });
 
-  // URL encoded parsing middleware - skip for file upload routes
-  app.use((req, res, next) => {
-    // Skip URL encoded parsing for multipart uploads
-    if (req.path.includes('/upload') || req.path.includes('/parse-csv') ||
-        req.headers['content-type']?.includes('multipart/form-data')) {
-      return next();
-    }
-    express.urlencoded({ extended: true, limit: "50mb" })(req, res, next);
-  });
+  // URL encoded parsing middleware
+  app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
   // API logging middleware for /admin/api routes only
   app.use(createApiLogger("/admin/api"));
