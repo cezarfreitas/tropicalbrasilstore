@@ -29,7 +29,6 @@ export default function Cart() {
   const storeSettings = useGlobalStoreSettings();
   const { customer } = useCustomerAuth();
 
-
   // Empty cart state
   if (items.length === 0) {
     return (
@@ -48,8 +47,8 @@ export default function Cart() {
               </p>
             </div>
             <Link to="/loja">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="bg-primary hover:bg-primary/90 text-white px-8"
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -58,7 +57,6 @@ export default function Cart() {
             </Link>
           </div>
         </div>
-
       </StoreLayout>
     );
   }
@@ -75,7 +73,8 @@ export default function Cart() {
               Carrinho de Compras
             </h1>
             <p className="text-gray-600 mt-1">
-              {items.length} {items.length === 1 ? 'produto' : 'produtos'} • {totalItems} {totalItems === 1 ? 'item' : 'itens'} no total
+              {items.length} {items.length === 1 ? "produto" : "produtos"} •{" "}
+              {totalItems} {totalItems === 1 ? "item" : "itens"} no total
             </p>
           </div>
           <Link to="/loja">
@@ -85,7 +84,6 @@ export default function Cart() {
             </Button>
           </Link>
         </div>
-
 
         {/* Minimum Order Indicator */}
         <MinimumOrderIndicator
@@ -98,7 +96,10 @@ export default function Cart() {
           {/* Cart Items - Mobile and Desktop */}
           <div className="lg:col-span-8 space-y-4">
             {items.map((item, index) => (
-              <Card key={item.id} className="overflow-hidden hover:shadow-md transition-shadow">
+              <Card
+                key={item.id}
+                className="overflow-hidden hover:shadow-md transition-shadow"
+              >
                 <CardContent className="p-4 lg:p-6">
                   <div className="flex gap-4">
                     {/* Product Image */}
@@ -125,15 +126,17 @@ export default function Cart() {
                           <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2">
                             {item.productName}
                           </h3>
-                          
+
                           {/* Grade and Color Info */}
                           <div className="mb-3">
-                            {item.type === 'grade' && (
+                            {item.type === "grade" && (
                               <div className="text-sm text-gray-600 font-medium">
-                                Grade Vendida | Cor: {item.colorName} | Grade: {item.gradeName} | Itens: {item.piecesPerGrade || 0}
+                                Grade Vendida | Cor: {item.colorName} | Grade:{" "}
+                                {item.gradeName} | Itens:{" "}
+                                {item.piecesPerGrade || 0}
                               </div>
                             )}
-                            {item.type === 'variant' && (
+                            {item.type === "variant" && (
                               <div className="flex flex-wrap gap-2">
                                 {item.colorName && (
                                   <Badge variant="outline" className="text-xs">
@@ -151,7 +154,8 @@ export default function Cart() {
 
                           {/* Price per unit */}
                           <div className="text-sm text-gray-600 mb-2">
-                            R$ {formatPrice(item.unitPrice)} por {item.type === 'grade' ? 'grade' : 'unidade'}
+                            R$ {formatPrice(item.unitPrice)} por{" "}
+                            {item.type === "grade" ? "grade" : "unidade"}
                           </div>
                         </div>
 
@@ -173,7 +177,12 @@ export default function Cart() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                            onClick={() =>
+                              updateQuantity(
+                                item.id,
+                                Math.max(1, item.quantity - 1),
+                              )
+                            }
                             className="h-8 w-8 p-0"
                             disabled={item.quantity <= 1}
                           >
@@ -187,7 +196,10 @@ export default function Cart() {
                               value={item.quantity}
                               onChange={(e) => {
                                 const value = parseInt(e.target.value) || 1;
-                                updateQuantity(item.id, Math.max(1, Math.min(99, value)));
+                                updateQuantity(
+                                  item.id,
+                                  Math.max(1, Math.min(99, value)),
+                                );
                               }}
                               className="text-center h-8 text-sm border-gray-200"
                             />
@@ -195,7 +207,12 @@ export default function Cart() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => updateQuantity(item.id, Math.min(99, item.quantity + 1))}
+                            onClick={() =>
+                              updateQuantity(
+                                item.id,
+                                Math.min(99, item.quantity + 1),
+                              )
+                            }
                             className="h-8 w-8 p-0"
                             disabled={item.quantity >= 99}
                           >
@@ -211,11 +228,12 @@ export default function Cart() {
                             </div>
                             {item.quantity > 1 && (
                               <div className="text-xs text-gray-500">
-                                {item.quantity} × R$ {formatPrice(item.unitPrice)}
+                                {item.quantity} × R${" "}
+                                {formatPrice(item.unitPrice)}
                               </div>
                             )}
                           </div>
-                          
+
                           {/* Remove button - Mobile */}
                           <Button
                             variant="ghost"
@@ -260,13 +278,15 @@ export default function Cart() {
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">
-                        Subtotal ({items.length} {items.length === 1 ? 'produto' : 'produtos'}, {totalItems} {totalItems === 1 ? 'item' : 'itens'})
+                        Subtotal ({items.length}{" "}
+                        {items.length === 1 ? "produto" : "produtos"},{" "}
+                        {totalItems} {totalItems === 1 ? "item" : "itens"})
                       </span>
                       <span className="font-medium">
                         R$ {formatPrice(totalPrice)}
                       </span>
                     </div>
-                    
+
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Frete</span>
                       <span className="font-medium text-green-600">
@@ -288,8 +308,8 @@ export default function Cart() {
                   {/* Action Buttons */}
                   <div className="space-y-3 pt-2">
                     <Link to="/loja/checkout">
-                      <Button 
-                        size="lg" 
+                      <Button
+                        size="lg"
                         className="w-full bg-primary hover:bg-primary/90 text-white"
                       >
                         <Check className="mr-2 h-5 w-5" />

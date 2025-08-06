@@ -124,7 +124,7 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
     }
   };
 
-    const changePassword = async (
+  const changePassword = async (
     newPassword: string,
   ): Promise<{ success: boolean; message: string }> => {
     try {
@@ -133,7 +133,7 @@ export function CustomerAuthProvider({ children }: CustomerAuthProviderProps) {
       }
 
       // Extract digits from customer's WhatsApp
-      const cleanWhatsapp = customer.whatsapp.replace(/\D/g, '');
+      const cleanWhatsapp = customer.whatsapp.replace(/\D/g, "");
 
       const response = await fetch("/api/customers/change-password", {
         method: "POST",

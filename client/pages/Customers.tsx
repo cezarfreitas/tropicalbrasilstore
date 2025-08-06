@@ -719,12 +719,17 @@ export default function Customers() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {customers.filter(c => c.vendor_id).length}
+                {customers.filter((c) => c.vendor_id).length}
               </div>
               <p className="text-xs text-muted-foreground">
                 {customers.length > 0
-                  ? Math.round((customers.filter(c => c.vendor_id).length / customers.length) * 100)
-                  : 0}% dos clientes
+                  ? Math.round(
+                      (customers.filter((c) => c.vendor_id).length /
+                        customers.length) *
+                        100,
+                    )
+                  : 0}
+                % dos clientes
               </p>
             </CardContent>
           </Card>
@@ -766,7 +771,10 @@ export default function Customers() {
                       <SelectItem value="all">Todos os vendedores</SelectItem>
                       <SelectItem value="unassigned">Sem vendedor</SelectItem>
                       {vendors.map((vendor) => (
-                        <SelectItem key={vendor.id} value={vendor.id.toString()}>
+                        <SelectItem
+                          key={vendor.id}
+                          value={vendor.id.toString()}
+                        >
                           {vendor.name}
                         </SelectItem>
                       ))}
@@ -793,409 +801,428 @@ export default function Customers() {
                   {customers
                     .filter((customer) => {
                       if (vendorFilter === "all") return true;
-                      if (vendorFilter === "unassigned") return !customer.vendor_id;
+                      if (vendorFilter === "unassigned")
+                        return !customer.vendor_id;
                       return customer.vendor_id === parseInt(vendorFilter);
                     })
                     .map((customer) => (
-                    <TableRow key={customer.email}>
-                      <TableCell>
-                        {editingCustomer === customer.email ? (
-                          <div className="space-y-2">
+                      <TableRow key={customer.email}>
+                        <TableCell>
+                          {editingCustomer === customer.email ? (
+                            <div className="space-y-2">
+                              <Input
+                                value={editForm.name}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    name: e.target.value,
+                                  })
+                                }
+                                placeholder="Nome"
+                                className="h-8"
+                              />
+                              <Input
+                                value={editForm.email}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    email: e.target.value,
+                                  })
+                                }
+                                placeholder="Email"
+                                className="h-8"
+                                type="email"
+                              />
+                            </div>
+                          ) : (
+                            <div>
+                              <div className="font-medium">{customer.name}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {customer.email}
+                              </div>
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingCustomer === customer.email ? (
+                            <div className="space-y-2">
+                              <Input
+                                value={editForm.whatsapp}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    whatsapp: e.target.value,
+                                  })
+                                }
+                                className="h-8"
+                                placeholder="(11) 99999-9999"
+                              />
+                              <Input
+                                value={editForm.newPassword}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    newPassword: e.target.value,
+                                  })
+                                }
+                                className="h-8"
+                                placeholder="Nova senha (opcional)"
+                                type="password"
+                              />
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1">
+                              <Phone className="h-3 w-3" />
+                              {customer.whatsapp}
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {customer.vendor_id ? (
+                            <div className="space-y-1">
+                              <div className="font-medium text-sm">
+                                {customer.vendor_name}
+                              </div>
+                              {customer.vendor_assigned_by ===
+                                "auto_referral" && (
+                                <Badge variant="outline" className="text-xs">
+                                  Indicação
+                                </Badge>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">
+                              Sem vendedor
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingCustomer === customer.email ? (
+                            <Select
+                              value={editForm.status}
+                              onValueChange={(
+                                value: "pending" | "approved" | "rejected",
+                              ) => setEditForm({ ...editForm, status: value })}
+                            >
+                              <SelectTrigger className="h-8 w-full">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="approved">
+                                  <div className="flex items-center gap-2">
+                                    <Check className="h-3 w-3 text-green-600" />
+                                    Aprovado
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="pending">
+                                  <div className="flex items-center gap-2">
+                                    <Clock className="h-3 w-3 text-yellow-600" />
+                                    Pendente
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="rejected">
+                                  <div className="flex items-center gap-2">
+                                    <XCircle className="h-3 w-3 text-red-600" />
+                                    Rejeitado
+                                  </div>
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            getCustomerStatusBadge(
+                              customer.status || "approved",
+                            )
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingCustomer === customer.email ? (
                             <Input
-                              value={editForm.name}
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={editForm.minimum_order}
                               onChange={(e) =>
                                 setEditForm({
                                   ...editForm,
-                                  name: e.target.value,
+                                  minimum_order:
+                                    parseFloat(e.target.value) || 0,
                                 })
                               }
-                              placeholder="Nome"
-                              className="h-8"
+                              className="h-8 w-24"
+                              placeholder="0.00"
                             />
-                            <Input
-                              value={editForm.email}
-                              onChange={(e) =>
-                                setEditForm({
-                                  ...editForm,
-                                  email: e.target.value,
-                                })
-                              }
-                              placeholder="Email"
-                              className="h-8"
-                              type="email"
-                            />
-                          </div>
-                        ) : (
+                          ) : (
+                            <div className="text-sm">
+                              {formatCurrency(customer.minimum_order || 0)}
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell>
                           <div>
-                            <div className="font-medium">{customer.name}</div>
+                            <div className="font-medium">
+                              {customer.total_orders}
+                            </div>
                             <div className="text-sm text-muted-foreground">
-                              {customer.email}
+                              {customer.completed_orders} concluídos
                             </div>
                           </div>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {editingCustomer === customer.email ? (
-                          <div className="space-y-2">
-                            <Input
-                              value={editForm.whatsapp}
-                              onChange={(e) =>
-                                setEditForm({
-                                  ...editForm,
-                                  whatsapp: e.target.value,
-                                })
-                              }
-                              className="h-8"
-                              placeholder="(11) 99999-9999"
-                            />
-                            <Input
-                              value={editForm.newPassword}
-                              onChange={(e) =>
-                                setEditForm({
-                                  ...editForm,
-                                  newPassword: e.target.value,
-                                })
-                              }
-                              className="h-8"
-                              placeholder="Nova senha (opcional)"
-                              type="password"
-                            />
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-1">
-                            <Phone className="h-3 w-3" />
-                            {customer.whatsapp}
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {customer.vendor_id ? (
-                          <div className="space-y-1">
-                            <div className="font-medium text-sm">{customer.vendor_name}</div>
-                            {customer.vendor_assigned_by === 'auto_referral' && (
-                              <Badge variant="outline" className="text-xs">
-                                Indicação
-                              </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {formatCurrency(customer.total_spent)}
+                        </TableCell>
+                        <TableCell>
+                          {formatDate(customer.last_order_date)}
+                        </TableCell>
+                        <TableCell>{formatDate(customer.created_at)}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {editingCustomer === customer.email ? (
+                              <>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => saveCustomer(customer.email)}
+                                  disabled={updating}
+                                >
+                                  {updating ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <Save className="h-4 w-4" />
+                                  )}
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={cancelEdit}
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              </>
+                            ) : (
+                              <>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => startEdit(customer)}
+                                >
+                                  <Edit2 className="h-4 w-4" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      disabled={
+                                        deletingCustomer === customer.email
+                                      }
+                                    >
+                                      {deletingCustomer === customer.email ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                      ) : (
+                                        <Trash2 className="h-4 w-4 text-red-600" />
+                                      )}
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>
+                                        Deletar Cliente
+                                      </AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Tem certeza que deseja deletar o cliente{" "}
+                                        {customer.name}? Esta ação não pode ser
+                                        desfeita e todos os dados do cliente
+                                        serão perdidos.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>
+                                        Cancelar
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() =>
+                                          deleteCustomer(customer.email)
+                                        }
+                                        className="bg-red-600 hover:bg-red-700"
+                                      >
+                                        Deletar
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() =>
+                                        fetchCustomerDetails(customer.email)
+                                      }
+                                    >
+                                      <Eye className="h-4 w-4" />
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+                                    <DialogHeader>
+                                      <DialogTitle>
+                                        Detalhes do Cliente: {customer.name}
+                                      </DialogTitle>
+                                    </DialogHeader>
+                                    {customerDetailsLoading ? (
+                                      <div className="flex items-center justify-center p-8">
+                                        <Loader2 className="h-8 w-8 animate-spin" />
+                                      </div>
+                                    ) : selectedCustomer ? (
+                                      <div className="space-y-6">
+                                        {/* Customer Info */}
+                                        <div className="grid grid-cols-3 gap-4">
+                                          <div>
+                                            <h4 className="font-semibold mb-2">
+                                              Informações de Contato
+                                            </h4>
+                                            <div className="space-y-2 text-sm">
+                                              <div className="flex items-center gap-2">
+                                                <Mail className="h-4 w-4" />
+                                                {selectedCustomer.email}
+                                              </div>
+                                              <div className="flex items-center gap-2">
+                                                <Phone className="h-4 w-4" />
+                                                {selectedCustomer.whatsapp}
+                                              </div>
+                                              <div className="flex items-center gap-2">
+                                                <Calendar className="h-4 w-4" />
+                                                Cliente desde{" "}
+                                                {formatDate(
+                                                  selectedCustomer.created_at,
+                                                )}
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div>
+                                            <h4 className="font-semibold mb-2">
+                                              Vendedor Atribuído
+                                            </h4>
+                                            <div className="space-y-2 text-sm">
+                                              {selectedCustomer.vendor_id ? (
+                                                <>
+                                                  <div className="font-medium">
+                                                    {
+                                                      selectedCustomer.vendor_name
+                                                    }
+                                                  </div>
+                                                  <div className="text-muted-foreground">
+                                                    {
+                                                      selectedCustomer.vendor_email
+                                                    }
+                                                  </div>
+                                                  {selectedCustomer.vendor_assigned_at && (
+                                                    <div className="text-muted-foreground">
+                                                      Atribuído em:{" "}
+                                                      {formatDate(
+                                                        selectedCustomer.vendor_assigned_at,
+                                                      )}
+                                                    </div>
+                                                  )}
+                                                  {selectedCustomer.vendor_assigned_by && (
+                                                    <div className="text-muted-foreground">
+                                                      Por:{" "}
+                                                      {selectedCustomer.vendor_assigned_by ===
+                                                      "auto_referral"
+                                                        ? "Link de indicação"
+                                                        : selectedCustomer.vendor_assigned_by}
+                                                    </div>
+                                                  )}
+                                                </>
+                                              ) : (
+                                                <div className="text-muted-foreground">
+                                                  Nenhum vendedor atribuído
+                                                </div>
+                                              )}
+                                            </div>
+                                          </div>
+                                          <div>
+                                            <h4 className="font-semibold mb-2">
+                                              Estatísticas
+                                            </h4>
+                                            <div className="space-y-2 text-sm">
+                                              <div>
+                                                Total de pedidos:{" "}
+                                                {selectedCustomer.total_orders}
+                                              </div>
+                                              <div>
+                                                Total gasto:{" "}
+                                                {formatCurrency(
+                                                  selectedCustomer.total_spent,
+                                                )}
+                                              </div>
+                                              <div>
+                                                Último pedido:{" "}
+                                                {formatDate(
+                                                  selectedCustomer.last_order_date,
+                                                )}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        {/* Order History */}
+                                        <div>
+                                          <h4 className="font-semibold mb-2">
+                                            Histórico de Pedidos
+                                          </h4>
+                                          {selectedCustomer.orders.length >
+                                          0 ? (
+                                            <div className="space-y-2">
+                                              {selectedCustomer.orders.map(
+                                                (order) => (
+                                                  <div
+                                                    key={order.id}
+                                                    className="flex items-center justify-between p-3 border rounded-lg"
+                                                  >
+                                                    <div>
+                                                      <div className="font-medium">
+                                                        Pedido #{order.id}
+                                                      </div>
+                                                      <div className="text-sm text-muted-foreground">
+                                                        {order.item_count}{" "}
+                                                        item(s) •{" "}
+                                                        {formatDate(
+                                                          order.created_at,
+                                                        )}
+                                                      </div>
+                                                    </div>
+                                                    <div className="text-right">
+                                                      <div className="font-medium">
+                                                        {formatCurrency(
+                                                          order.total_amount,
+                                                        )}
+                                                      </div>
+                                                      <div className="text-sm">
+                                                        {getStatusBadge(
+                                                          order.status,
+                                                        )}
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                ),
+                                              )}
+                                            </div>
+                                          ) : (
+                                            <p className="text-muted-foreground">
+                                              Nenhum pedido encontrado.
+                                            </p>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ) : null}
+                                  </DialogContent>
+                                </Dialog>
+                              </>
                             )}
                           </div>
-                        ) : (
-                          <span className="text-muted-foreground text-sm">
-                            Sem vendedor
-                          </span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {editingCustomer === customer.email ? (
-                          <Select
-                            value={editForm.status}
-                            onValueChange={(
-                              value: "pending" | "approved" | "rejected",
-                            ) => setEditForm({ ...editForm, status: value })}
-                          >
-                            <SelectTrigger className="h-8 w-full">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="approved">
-                                <div className="flex items-center gap-2">
-                                  <Check className="h-3 w-3 text-green-600" />
-                                  Aprovado
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="pending">
-                                <div className="flex items-center gap-2">
-                                  <Clock className="h-3 w-3 text-yellow-600" />
-                                  Pendente
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="rejected">
-                                <div className="flex items-center gap-2">
-                                  <XCircle className="h-3 w-3 text-red-600" />
-                                  Rejeitado
-                                </div>
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        ) : (
-                          getCustomerStatusBadge(customer.status || "approved")
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {editingCustomer === customer.email ? (
-                          <Input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            value={editForm.minimum_order}
-                            onChange={(e) =>
-                              setEditForm({
-                                ...editForm,
-                                minimum_order: parseFloat(e.target.value) || 0,
-                              })
-                            }
-                            className="h-8 w-24"
-                            placeholder="0.00"
-                          />
-                        ) : (
-                          <div className="text-sm">
-                            {formatCurrency(customer.minimum_order || 0)}
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">
-                            {customer.total_orders}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {customer.completed_orders} concluídos
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {formatCurrency(customer.total_spent)}
-                      </TableCell>
-                      <TableCell>
-                        {formatDate(customer.last_order_date)}
-                      </TableCell>
-                      <TableCell>{formatDate(customer.created_at)}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {editingCustomer === customer.email ? (
-                            <>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => saveCustomer(customer.email)}
-                                disabled={updating}
-                              >
-                                {updating ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <Save className="h-4 w-4" />
-                                )}
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={cancelEdit}
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </>
-                          ) : (
-                            <>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => startEdit(customer)}
-                              >
-                                <Edit2 className="h-4 w-4" />
-                              </Button>
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    disabled={
-                                      deletingCustomer === customer.email
-                                    }
-                                  >
-                                    {deletingCustomer === customer.email ? (
-                                      <Loader2 className="h-4 w-4 animate-spin" />
-                                    ) : (
-                                      <Trash2 className="h-4 w-4 text-red-600" />
-                                    )}
-                                  </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle>
-                                      Deletar Cliente
-                                    </AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                      Tem certeza que deseja deletar o cliente{" "}
-                                      {customer.name}? Esta ação não pode ser
-                                      desfeita e todos os dados do cliente serão
-                                      perdidos.
-                                    </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel>
-                                      Cancelar
-                                    </AlertDialogCancel>
-                                    <AlertDialogAction
-                                      onClick={() =>
-                                        deleteCustomer(customer.email)
-                                      }
-                                      className="bg-red-600 hover:bg-red-700"
-                                    >
-                                      Deletar
-                                    </AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
-                              <Dialog>
-                                <DialogTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() =>
-                                      fetchCustomerDetails(customer.email)
-                                    }
-                                  >
-                                    <Eye className="h-4 w-4" />
-                                  </Button>
-                                </DialogTrigger>
-                                <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-                                  <DialogHeader>
-                                    <DialogTitle>
-                                      Detalhes do Cliente: {customer.name}
-                                    </DialogTitle>
-                                  </DialogHeader>
-                                  {customerDetailsLoading ? (
-                                    <div className="flex items-center justify-center p-8">
-                                      <Loader2 className="h-8 w-8 animate-spin" />
-                                    </div>
-                                  ) : selectedCustomer ? (
-                                    <div className="space-y-6">
-                                      {/* Customer Info */}
-                                      <div className="grid grid-cols-3 gap-4">
-                                        <div>
-                                          <h4 className="font-semibold mb-2">
-                                            Informações de Contato
-                                          </h4>
-                                          <div className="space-y-2 text-sm">
-                                            <div className="flex items-center gap-2">
-                                              <Mail className="h-4 w-4" />
-                                              {selectedCustomer.email}
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                              <Phone className="h-4 w-4" />
-                                              {selectedCustomer.whatsapp}
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                              <Calendar className="h-4 w-4" />
-                                              Cliente desde{" "}
-                                              {formatDate(
-                                                selectedCustomer.created_at,
-                                              )}
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div>
-                                          <h4 className="font-semibold mb-2">
-                                            Vendedor Atribuído
-                                          </h4>
-                                          <div className="space-y-2 text-sm">
-                                            {selectedCustomer.vendor_id ? (
-                                              <>
-                                                <div className="font-medium">
-                                                  {selectedCustomer.vendor_name}
-                                                </div>
-                                                <div className="text-muted-foreground">
-                                                  {selectedCustomer.vendor_email}
-                                                </div>
-                                                {selectedCustomer.vendor_assigned_at && (
-                                                  <div className="text-muted-foreground">
-                                                    Atribuído em: {formatDate(selectedCustomer.vendor_assigned_at)}
-                                                  </div>
-                                                )}
-                                                {selectedCustomer.vendor_assigned_by && (
-                                                  <div className="text-muted-foreground">
-                                                    Por: {selectedCustomer.vendor_assigned_by === 'auto_referral' ? 'Link de indicação' : selectedCustomer.vendor_assigned_by}
-                                                  </div>
-                                                )}
-                                              </>
-                                            ) : (
-                                              <div className="text-muted-foreground">
-                                                Nenhum vendedor atribuído
-                                              </div>
-                                            )}
-                                          </div>
-                                        </div>
-                                        <div>
-                                          <h4 className="font-semibold mb-2">
-                                            Estatísticas
-                                          </h4>
-                                          <div className="space-y-2 text-sm">
-                                            <div>
-                                              Total de pedidos:{" "}
-                                              {selectedCustomer.total_orders}
-                                            </div>
-                                            <div>
-                                              Total gasto:{" "}
-                                              {formatCurrency(
-                                                selectedCustomer.total_spent,
-                                              )}
-                                            </div>
-                                            <div>
-                                              Último pedido:{" "}
-                                              {formatDate(
-                                                selectedCustomer.last_order_date,
-                                              )}
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-
-                                      {/* Order History */}
-                                      <div>
-                                        <h4 className="font-semibold mb-2">
-                                          Histórico de Pedidos
-                                        </h4>
-                                        {selectedCustomer.orders.length > 0 ? (
-                                          <div className="space-y-2">
-                                            {selectedCustomer.orders.map(
-                                              (order) => (
-                                                <div
-                                                  key={order.id}
-                                                  className="flex items-center justify-between p-3 border rounded-lg"
-                                                >
-                                                  <div>
-                                                    <div className="font-medium">
-                                                      Pedido #{order.id}
-                                                    </div>
-                                                    <div className="text-sm text-muted-foreground">
-                                                      {order.item_count} item(s)
-                                                      •{" "}
-                                                      {formatDate(
-                                                        order.created_at,
-                                                      )}
-                                                    </div>
-                                                  </div>
-                                                  <div className="text-right">
-                                                    <div className="font-medium">
-                                                      {formatCurrency(
-                                                        order.total_amount,
-                                                      )}
-                                                    </div>
-                                                    <div className="text-sm">
-                                                      {getStatusBadge(
-                                                        order.status,
-                                                      )}
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              ),
-                                            )}
-                                          </div>
-                                        ) : (
-                                          <p className="text-muted-foreground">
-                                            Nenhum pedido encontrado.
-                                          </p>
-                                        )}
-                                      </div>
-                                    </div>
-                                  ) : null}
-                                </DialogContent>
-                              </Dialog>
-                            </>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
               {customers.length === 0 && (

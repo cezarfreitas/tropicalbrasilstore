@@ -63,7 +63,7 @@ router.get("/", async (req, res) => {
       minimum_order_value: 0.0,
       maintenance_mode: false,
       allow_orders: true,
-      tax_rate: 0.0
+      tax_rate: 0.0,
     };
 
     res.json(fallbackSettings);
@@ -140,10 +140,14 @@ async function ensureSettingsTableAndColumns() {
           ALTER TABLE store_settings
           ADD COLUMN minimum_order_value DECIMAL(10, 2) DEFAULT 50.00
         `);
-        console.log("✓ minimum_order_value column added to store_settings table");
+        console.log(
+          "✓ minimum_order_value column added to store_settings table",
+        );
       } catch (e) {
         // Column probably already exists, ignore error
-        console.log("ℹ️ minimum_order_value column already exists in store_settings table");
+        console.log(
+          "ℹ️ minimum_order_value column already exists in store_settings table",
+        );
       }
     }
   } catch (error) {
@@ -154,7 +158,8 @@ async function ensureSettingsTableAndColumns() {
 // Helper function to create default settings
 async function createDefaultSettings() {
   try {
-    await db.execute(`
+    await db.execute(
+      `
       INSERT INTO store_settings (
         store_name, store_description, contact_email, contact_phone,
         contact_whatsapp, address, city, state, postal_code,
@@ -163,33 +168,35 @@ async function createDefaultSettings() {
         maintenance_mode, allow_orders, tax_rate,
         primary_color, secondary_color, accent_color, background_color, text_color
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [
-      "Chinelos Store",
-      "Loja especializada em chinelos de alta qualidade",
-      "contato@chinelos.com",
-      "(11) 99999-9999",
-      "(11) 99999-9999",
-      "Rua Principal, 123",
-      "São Paulo",
-      "SP",
-      "01234-567",
-      15.0,
-      150.0,
-      0.0,
-      JSON.stringify(["pix", "credit_card", "debit_card"]),
-      "@chinelos",
-      "facebook.com/chinelos",
-      null,
-      null,
-      false,
-      true,
-      0.0,
-      "#f97316",
-      "#ea580c",
-      "#fed7aa",
-      "#ffffff",
-      "#1f2937"
-    ]);
+    `,
+      [
+        "Chinelos Store",
+        "Loja especializada em chinelos de alta qualidade",
+        "contato@chinelos.com",
+        "(11) 99999-9999",
+        "(11) 99999-9999",
+        "Rua Principal, 123",
+        "São Paulo",
+        "SP",
+        "01234-567",
+        15.0,
+        150.0,
+        0.0,
+        JSON.stringify(["pix", "credit_card", "debit_card"]),
+        "@chinelos",
+        "facebook.com/chinelos",
+        null,
+        null,
+        false,
+        true,
+        0.0,
+        "#f97316",
+        "#ea580c",
+        "#fed7aa",
+        "#ffffff",
+        "#1f2937",
+      ],
+    );
   } catch (error) {
     console.error("Error creating default settings:", error);
   }
@@ -202,7 +209,7 @@ function ensureThemeColors(settings: any) {
     secondary_color: "#ea580c",
     accent_color: "#fed7aa",
     background_color: "#ffffff",
-    text_color: "#1f2937"
+    text_color: "#1f2937",
   };
 
   // Ensure all color fields exist
@@ -594,7 +601,7 @@ router.post("/upload-logo", (req, res) => {
       console.error("Upload error:", err);
       if (err.code === "LIMIT_FILE_SIZE") {
         return res.status(400).json({
-          error: "File too large. Maximum size is 5MB."
+          error: "File too large. Maximum size is 5MB.",
         });
       }
       return res.status(400).json({ error: err.message });

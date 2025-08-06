@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import db from './db';
+import { Request, Response, NextFunction } from "express";
+import db from "./db";
 
 interface StoreSettings {
   store_name?: string;
@@ -24,9 +24,9 @@ export function clearSettingsCache() {
 
 async function getStoreSettings(): Promise<StoreSettings> {
   const now = Date.now();
-  
+
   // Return cached settings if still valid
-  if (cachedSettings && (now - lastFetchTime) < CACHE_DURATION) {
+  if (cachedSettings && now - lastFetchTime < CACHE_DURATION) {
     return cachedSettings;
   }
 
@@ -38,68 +38,70 @@ async function getStoreSettings(): Promise<StoreSettings> {
     `);
 
     const settingsData = (settings as any[])[0];
-    
+
     if (settingsData) {
       cachedSettings = {
-        store_name: settingsData.store_name || 'Chinelos Store',
+        store_name: settingsData.store_name || "Chinelos Store",
         logo_url: settingsData.logo_url,
-        primary_color: settingsData.primary_color || '#f97316',
-        secondary_color: settingsData.secondary_color || '#ea580c',
-        accent_color: settingsData.accent_color || '#fed7aa',
-        background_color: settingsData.background_color || '#ffffff',
-        text_color: settingsData.text_color || '#1f2937',
+        primary_color: settingsData.primary_color || "#f97316",
+        secondary_color: settingsData.secondary_color || "#ea580c",
+        accent_color: settingsData.accent_color || "#fed7aa",
+        background_color: settingsData.background_color || "#ffffff",
+        text_color: settingsData.text_color || "#1f2937",
         minimum_order_value: settingsData.minimum_order_value || 0,
       };
     } else {
       // Default settings if none exist
       cachedSettings = {
-        store_name: 'Chinelos Store',
+        store_name: "Chinelos Store",
         logo_url: null,
-        primary_color: '#f97316',
-        secondary_color: '#ea580c',
-        accent_color: '#fed7aa',
-        background_color: '#ffffff',
-        text_color: '#1f2937',
+        primary_color: "#f97316",
+        secondary_color: "#ea580c",
+        accent_color: "#fed7aa",
+        background_color: "#ffffff",
+        text_color: "#1f2937",
         minimum_order_value: 0,
       };
     }
-    
+
     lastFetchTime = now;
     return cachedSettings;
-    
   } catch (error) {
-    console.error('Error fetching store settings for injection:', error);
-    
+    console.error("Error fetching store settings for injection:", error);
+
     // Return default settings on error
     return {
-      store_name: 'Chinelos Store',
+      store_name: "Chinelos Store",
       logo_url: null,
-      primary_color: '#f97316',
-      secondary_color: '#ea580c',
-      accent_color: '#fed7aa',
-      background_color: '#ffffff',
-      text_color: '#1f2937',
+      primary_color: "#f97316",
+      secondary_color: "#ea580c",
+      accent_color: "#fed7aa",
+      background_color: "#ffffff",
+      text_color: "#1f2937",
       minimum_order_value: 0,
     };
   }
 }
 
-export async function injectStoreSettings(req: Request, res: Response, next: NextFunction) {
+export async function injectStoreSettings(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   // Only inject for HTML requests
-  if (req.path === '/' || req.path.endsWith('.html')) {
+  if (req.path === "/" || req.path.endsWith(".html")) {
     try {
       const settings = await getStoreSettings();
-      
+
       // Store settings in res.locals so they can be used in HTML template
       res.locals.storeSettings = settings;
-      
+
       // Also set as a header for debugging
-      res.set('X-Store-Settings-Injected', 'true');
-      
+      res.set("X-Store-Settings-Injected", "true");
     } catch (error) {
-      console.error('Error in inject store settings middleware:', error);
+      console.error("Error in inject store settings middleware:", error);
     }
   }
-  
+
   next();
 }

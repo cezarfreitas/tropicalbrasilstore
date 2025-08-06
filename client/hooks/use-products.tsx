@@ -235,9 +235,14 @@ export function useProducts(productsPerPage: number = 20): UseProductsResult {
         }
 
         const endpoint = `/api/store/products-paginated?${params}`;
-        console.log('🌐 API Request URL:', endpoint);
-        console.log('🌐 API Request Params:', {
-          page, searchTerm, colorFilter, categoryFilter, genderFilter, typeFilter
+        console.log("🌐 API Request URL:", endpoint);
+        console.log("🌐 API Request Params:", {
+          page,
+          searchTerm,
+          colorFilter,
+          categoryFilter,
+          genderFilter,
+          typeFilter,
         });
 
         const controller = new AbortController();

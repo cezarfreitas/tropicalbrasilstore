@@ -22,12 +22,12 @@ export function ThemeDebug() {
       setDebugInfo(data);
     } catch (error) {
       console.error("Error fetching theme debug info:", error);
-      setDebugInfo({ 
+      setDebugInfo({
         error: "Failed to fetch debug info",
         table_exists: false,
         columns: [],
         settings: null,
-        total_settings_count: 0
+        total_settings_count: 0,
       });
     } finally {
       setLoading(false);
@@ -38,7 +38,7 @@ export function ThemeDebug() {
     setLoading(true);
     try {
       const response = await fetch("/api/debug-theme/create-settings", {
-        method: "POST"
+        method: "POST",
       });
       const data = await response.json();
       alert(JSON.stringify(data, null, 2));
@@ -55,7 +55,7 @@ export function ThemeDebug() {
     setLoading(true);
     try {
       const response = await fetch("/api/init-settings", {
-        method: "POST"
+        method: "POST",
       });
       const data = await response.json();
       alert(`Settings initialized: ${data.message}`);
@@ -116,13 +116,15 @@ export function ThemeDebug() {
               <>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <strong>Table Exists:</strong> {debugInfo.table_exists ? "Yes" : "No"}
+                    <strong>Table Exists:</strong>{" "}
+                    {debugInfo.table_exists ? "Yes" : "No"}
                   </div>
                   <div>
-                    <strong>Settings Count:</strong> {debugInfo.total_settings_count}
+                    <strong>Settings Count:</strong>{" "}
+                    {debugInfo.total_settings_count}
                   </div>
                 </div>
-                
+
                 {debugInfo.settings && (
                   <div>
                     <strong>Current Settings:</strong>
@@ -137,7 +139,9 @@ export function ThemeDebug() {
                   <div className="mt-2 text-sm">
                     {debugInfo.columns.map((col, index) => (
                       <div key={index} className="p-1 bg-gray-50 rounded mb-1">
-                        <strong>{col.COLUMN_NAME}</strong> - Default: {col.COLUMN_DEFAULT || "NULL"} - Nullable: {col.IS_NULLABLE}
+                        <strong>{col.COLUMN_NAME}</strong> - Default:{" "}
+                        {col.COLUMN_DEFAULT || "NULL"} - Nullable:{" "}
+                        {col.IS_NULLABLE}
                       </div>
                     ))}
                   </div>

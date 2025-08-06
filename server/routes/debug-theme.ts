@@ -15,7 +15,7 @@ router.get("/settings", async (req, res) => {
     if ((tables as any[]).length === 0) {
       return res.json({
         error: "store_settings table does not exist",
-        tables_found: tables
+        tables_found: tables,
       });
     }
 
@@ -37,13 +37,13 @@ router.get("/settings", async (req, res) => {
       table_exists: true,
       columns: columns,
       settings: (settings as any[])[0] || null,
-      total_settings_count: (settings as any[]).length
+      total_settings_count: (settings as any[]).length,
     });
   } catch (error) {
     console.error("Error debugging theme settings:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Failed to debug theme settings",
-      message: error.message 
+      message: error.message,
     });
   }
 });
@@ -53,38 +53,41 @@ router.post("/create-settings", async (req, res) => {
   try {
     // Delete existing settings
     await db.execute("DELETE FROM store_settings");
-    
+
     // Insert new default settings with theme colors
-    await db.execute(`
+    await db.execute(
+      `
       INSERT INTO store_settings (
         store_name, store_description, 
         primary_color, secondary_color, accent_color, background_color, text_color,
         shipping_fee, free_shipping_threshold, minimum_order_value,
         payment_methods, maintenance_mode, allow_orders, tax_rate
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [
-      "Tropical Brasil",
-      "Loja especializada em chinelos",
-      "#3b82f6", // blue
-      "#1d4ed8", // blue-700
-      "#dbeafe", // blue-100
-      "#ffffff", // white
-      "#1f2937", // gray-800
-      15.00,
-      150.00,
-      0.00,
-      JSON.stringify(["pix", "credit_card"]),
-      false,
-      true,
-      0.00
-    ]);
+    `,
+      [
+        "Tropical Brasil",
+        "Loja especializada em chinelos",
+        "#3b82f6", // blue
+        "#1d4ed8", // blue-700
+        "#dbeafe", // blue-100
+        "#ffffff", // white
+        "#1f2937", // gray-800
+        15.0,
+        150.0,
+        0.0,
+        JSON.stringify(["pix", "credit_card"]),
+        false,
+        true,
+        0.0,
+      ],
+    );
 
     res.json({ message: "Default settings created successfully" });
   } catch (error) {
     console.error("Error creating settings:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Failed to create settings",
-      message: error.message 
+      message: error.message,
     });
   }
 });

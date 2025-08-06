@@ -12,36 +12,39 @@ router.post("/", async (req, res) => {
     `);
 
     if ((existing as any[])[0].count > 0) {
-      return res.json({ 
+      return res.json({
         message: "Settings already exist",
-        action: "skipped"
+        action: "skipped",
       });
     }
 
     // Create default settings
-    await db.execute(`
+    await db.execute(
+      `
       INSERT INTO store_settings (
         store_name, store_description,
         primary_color, secondary_color, accent_color, background_color, text_color,
         shipping_fee, free_shipping_threshold, minimum_order_value,
         payment_methods, maintenance_mode, allow_orders, tax_rate
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [
-      "Tropical Brasil",
-      "Loja especializada em chinelos e sandálias",
-      "#3b82f6", // blue-500
-      "#1d4ed8", // blue-700  
-      "#dbeafe", // blue-100
-      "#ffffff", // white
-      "#1f2937", // gray-800
-      15.00,
-      150.00,
-      0.00,
-      JSON.stringify(["pix", "credit_card", "bank_transfer"]),
-      false,
-      true,
-      0.00
-    ]);
+    `,
+      [
+        "Tropical Brasil",
+        "Loja especializada em chinelos e sandálias",
+        "#3b82f6", // blue-500
+        "#1d4ed8", // blue-700
+        "#dbeafe", // blue-100
+        "#ffffff", // white
+        "#1f2937", // gray-800
+        15.0,
+        150.0,
+        0.0,
+        JSON.stringify(["pix", "credit_card", "bank_transfer"]),
+        false,
+        true,
+        0.0,
+      ],
+    );
 
     // Get the created settings
     const [settings] = await db.execute(`
@@ -51,13 +54,13 @@ router.post("/", async (req, res) => {
     res.json({
       message: "Default settings created successfully",
       action: "created",
-      settings: (settings as any[])[0]
+      settings: (settings as any[])[0],
     });
   } catch (error) {
     console.error("Error initializing settings:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Failed to initialize settings",
-      message: error.message 
+      message: error.message,
     });
   }
 });
@@ -74,11 +77,13 @@ router.get("/", async (req, res) => {
     }
 
     const storeSettings = (settings as any[])[0];
-    
+
     // Parse JSON fields
     if (storeSettings.payment_methods) {
       try {
-        storeSettings.payment_methods = JSON.parse(storeSettings.payment_methods);
+        storeSettings.payment_methods = JSON.parse(
+          storeSettings.payment_methods,
+        );
       } catch (e) {
         storeSettings.payment_methods = ["pix", "credit_card"];
       }
@@ -87,9 +92,9 @@ router.get("/", async (req, res) => {
     res.json(storeSettings);
   } catch (error) {
     console.error("Error fetching init settings:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Failed to fetch settings",
-      message: error.message 
+      message: error.message,
     });
   }
 });

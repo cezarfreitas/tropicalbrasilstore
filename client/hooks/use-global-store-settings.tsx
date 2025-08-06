@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface StoreSettings {
   store_name?: string;
@@ -21,7 +21,7 @@ declare global {
 export function useGlobalStoreSettings() {
   const [settings, setSettings] = useState<StoreSettings | null>(() => {
     // Try to get settings immediately from global variable
-    if (typeof window !== 'undefined' && window.__STORE_SETTINGS__) {
+    if (typeof window !== "undefined" && window.__STORE_SETTINGS__) {
       return window.__STORE_SETTINGS__;
     }
     return null;
@@ -45,14 +45,20 @@ export function useGlobalStoreSettings() {
       }
     };
 
-    window.addEventListener('storeSettingsLoaded', handleSettingsLoaded as EventListener);
-    window.addEventListener('settingsRefresh', handleSettingsUpdate);
-    window.addEventListener('themeRefresh', handleSettingsUpdate);
+    window.addEventListener(
+      "storeSettingsLoaded",
+      handleSettingsLoaded as EventListener,
+    );
+    window.addEventListener("settingsRefresh", handleSettingsUpdate);
+    window.addEventListener("themeRefresh", handleSettingsUpdate);
 
     return () => {
-      window.removeEventListener('storeSettingsLoaded', handleSettingsLoaded as EventListener);
-      window.removeEventListener('settingsRefresh', handleSettingsUpdate);
-      window.removeEventListener('themeRefresh', handleSettingsUpdate);
+      window.removeEventListener(
+        "storeSettingsLoaded",
+        handleSettingsLoaded as EventListener,
+      );
+      window.removeEventListener("settingsRefresh", handleSettingsUpdate);
+      window.removeEventListener("themeRefresh", handleSettingsUpdate);
     };
   }, []);
 
@@ -61,7 +67,7 @@ export function useGlobalStoreSettings() {
 
 // Helper function to get settings synchronously
 export function getGlobalStoreSettings(): StoreSettings | null {
-  if (typeof window !== 'undefined' && window.__STORE_SETTINGS__) {
+  if (typeof window !== "undefined" && window.__STORE_SETTINGS__) {
     return window.__STORE_SETTINGS__;
   }
   return null;
@@ -69,8 +75,15 @@ export function getGlobalStoreSettings(): StoreSettings | null {
 
 // Function to update global settings
 export function updateGlobalStoreSettings(newSettings: StoreSettings) {
-  if (typeof window !== 'undefined') {
-    window.__STORE_SETTINGS__ = { ...window.__STORE_SETTINGS__, ...newSettings };
-    window.dispatchEvent(new CustomEvent('storeSettingsLoaded', { detail: window.__STORE_SETTINGS__ }));
+  if (typeof window !== "undefined") {
+    window.__STORE_SETTINGS__ = {
+      ...window.__STORE_SETTINGS__,
+      ...newSettings,
+    };
+    window.dispatchEvent(
+      new CustomEvent("storeSettingsLoaded", {
+        detail: window.__STORE_SETTINGS__,
+      }),
+    );
   }
 }

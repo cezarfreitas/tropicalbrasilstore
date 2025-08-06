@@ -15,7 +15,9 @@ export function CheckoutDebug() {
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/debug-database/customer/${encodeURIComponent(authCustomer.email)}`);
+      const response = await fetch(
+        `/api/debug-database/customer/${encodeURIComponent(authCustomer.email)}`,
+      );
       const data = await response.json();
       setCustomerData(data);
     } catch (error) {
@@ -37,8 +39,8 @@ export function CheckoutDebug() {
         },
         body: JSON.stringify({
           email: authCustomer.email,
-          minimum_order: amount
-        })
+          minimum_order: amount,
+        }),
       });
 
       const data = await response.json();
@@ -70,9 +72,10 @@ export function CheckoutDebug() {
     return `R$ ${num.toFixed(2)}`;
   };
 
-  const minimumOrderValue = (Number(authCustomer?.minimum_order) > 0)
-    ? Number(authCustomer?.minimum_order)
-    : (Number(storeSettings?.minimum_order_value) || 0);
+  const minimumOrderValue =
+    Number(authCustomer?.minimum_order) > 0
+      ? Number(authCustomer?.minimum_order)
+      : Number(storeSettings?.minimum_order_value) || 0;
 
   return (
     <Card className="mb-6 border-2 border-orange-200">
@@ -88,31 +91,41 @@ export function CheckoutDebug() {
         <div className="space-y-4 text-sm">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <strong>Auth Status:</strong> {isAuthenticated ? "Logado" : "Não logado"}
+              <strong>Auth Status:</strong>{" "}
+              {isAuthenticated ? "Logado" : "Não logado"}
             </div>
             <div>
-              <strong>Valor Mínimo Calculado:</strong> {formatCurrency(minimumOrderValue)}
+              <strong>Valor Mínimo Calculado:</strong>{" "}
+              {formatCurrency(minimumOrderValue)}
             </div>
           </div>
 
           <div>
             <strong>Cliente Auth:</strong>
             <pre className="mt-1 p-2 bg-gray-50 rounded text-xs">
-              {JSON.stringify({
-                email: authCustomer?.email,
-                name: authCustomer?.name,
-                minimum_order: authCustomer?.minimum_order
-              }, null, 2)}
+              {JSON.stringify(
+                {
+                  email: authCustomer?.email,
+                  name: authCustomer?.name,
+                  minimum_order: authCustomer?.minimum_order,
+                },
+                null,
+                2,
+              )}
             </pre>
           </div>
 
           <div>
             <strong>Store Settings:</strong>
             <pre className="mt-1 p-2 bg-gray-50 rounded text-xs">
-              {JSON.stringify({
-                minimum_order_value: storeSettings?.minimum_order_value,
-                store_name: storeSettings?.store_name
-              }, null, 2)}
+              {JSON.stringify(
+                {
+                  minimum_order_value: storeSettings?.minimum_order_value,
+                  store_name: storeSettings?.store_name,
+                },
+                null,
+                2,
+              )}
             </pre>
           </div>
 
@@ -128,10 +141,15 @@ export function CheckoutDebug() {
           <div className="p-2 bg-blue-50 rounded">
             <strong>Lógica de Cálculo:</strong>
             <ol className="mt-1 text-xs space-y-1">
-              <li>1. Se customer.minimum_order existe e &gt; 0: usa valor do cliente</li>
+              <li>
+                1. Se customer.minimum_order existe e &gt; 0: usa valor do
+                cliente
+              </li>
               <li>2. Senão: usa storeSettings.minimum_order_value</li>
               <li>3. Cliente: {authCustomer?.minimum_order || "undefined"}</li>
-              <li>4. Global: {storeSettings?.minimum_order_value || "undefined"}</li>
+              <li>
+                4. Global: {storeSettings?.minimum_order_value || "undefined"}
+              </li>
               <li>5. Resultado: {formatCurrency(minimumOrderValue)}</li>
             </ol>
           </div>
@@ -140,16 +158,33 @@ export function CheckoutDebug() {
             <div className="p-2 bg-green-50 rounded">
               <strong>Configurar Pedido Mínimo:</strong>
               <div className="flex gap-2 mt-2">
-                <Button size="sm" onClick={() => setCustomerMinimum(50)} disabled={loading}>
+                <Button
+                  size="sm"
+                  onClick={() => setCustomerMinimum(50)}
+                  disabled={loading}
+                >
                   R$ 50
                 </Button>
-                <Button size="sm" onClick={() => setCustomerMinimum(100)} disabled={loading}>
+                <Button
+                  size="sm"
+                  onClick={() => setCustomerMinimum(100)}
+                  disabled={loading}
+                >
                   R$ 100
                 </Button>
-                <Button size="sm" onClick={() => setCustomerMinimum(200)} disabled={loading}>
+                <Button
+                  size="sm"
+                  onClick={() => setCustomerMinimum(200)}
+                  disabled={loading}
+                >
                   R$ 200
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => setCustomerMinimum(0)} disabled={loading}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setCustomerMinimum(0)}
+                  disabled={loading}
+                >
                   Remover
                 </Button>
               </div>

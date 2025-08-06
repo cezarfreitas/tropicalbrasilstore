@@ -203,10 +203,10 @@ export function createServer() {
   app.use("/api/vendor/dashboard", vendorDashboardRouter);
   app.use("/api/vendor/referral", vendorReferralRouter);
   app.use("/api/debug-minimum-order", debugMinimumOrderRouter);
-app.use("/api/debug-database", debugDatabaseRouter);
-app.use("/api/debug-theme", debugThemeRouter);
-app.use("/api/set-customer-minimum", setCustomerMinimumRouter);
-app.use("/api/init-settings", initSettingsRouter);
+  app.use("/api/debug-database", debugDatabaseRouter);
+  app.use("/api/debug-theme", debugThemeRouter);
+  app.use("/api/set-customer-minimum", setCustomerMinimumRouter);
+  app.use("/api/init-settings", initSettingsRouter);
 
   return app;
 }

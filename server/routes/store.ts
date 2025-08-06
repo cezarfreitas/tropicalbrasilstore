@@ -389,7 +389,7 @@ router.get("/products/:id", async (req, res) => {
     // Check if this product has grades
     const [hasGrades] = await db.execute(
       "SELECT COUNT(*) as count FROM product_color_grades WHERE product_id = ?",
-      [req.params.id]
+      [req.params.id],
     );
 
     if ((hasGrades as any[])[0].count > 0) {
@@ -597,12 +597,18 @@ router.post("/orders", async (req, res) => {
     }
 
     // Calculate total order value
-    const totalOrderValue = items.reduce((sum: number, item: any) => sum + item.totalPrice, 0);
+    const totalOrderValue = items.reduce(
+      (sum: number, item: any) => sum + item.totalPrice,
+      0,
+    );
 
     // Check customer's specific minimum order value first
-    const [customerData] = await connection.execute(`
+    const [customerData] = await connection.execute(
+      `
       SELECT minimum_order FROM customers WHERE email = ? LIMIT 1
-    `, [customer.email]);
+    `,
+      [customer.email],
+    );
 
     const customerMinimumOrder = (customerData as any[])[0]?.minimum_order || 0;
 
@@ -618,7 +624,7 @@ router.post("/orders", async (req, res) => {
     // Validate minimum order value
     if (minimumOrderValue > 0 && totalOrderValue < minimumOrderValue) {
       return res.status(400).json({
-        error: `Pedido mínimo de R$ ${minimumOrderValue.toFixed(2).replace('.', ',')} não atingido. Valor atual: R$ ${totalOrderValue.toFixed(2).replace('.', ',')}`
+        error: `Pedido mínimo de R$ ${minimumOrderValue.toFixed(2).replace(".", ",")} não atingido. Valor atual: R$ ${totalOrderValue.toFixed(2).replace(".", ",")}`,
       });
     }
 
@@ -632,11 +638,7 @@ router.post("/orders", async (req, res) => {
     // Create order
     const [orderResult] = await connection.execute(
       `INSERT INTO orders (customer_email, total_amount, status) VALUES (?, ?, ?)`,
-      [
-        customer.email,
-        totalOrderValue,
-        "pending",
-      ],
+      [customer.email, totalOrderValue, "pending"],
     );
 
     const orderId = (orderResult as any).insertId;

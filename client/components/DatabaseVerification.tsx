@@ -36,7 +36,9 @@ export function DatabaseVerification() {
 
   const checkSpecificCustomer = async () => {
     try {
-      const response = await fetch("/api/debug-database/customer/cezarfreitas2011@gmail.com");
+      const response = await fetch(
+        "/api/debug-database/customer/cezarfreitas2011@gmail.com",
+      );
       const data = await response.json();
       alert(`Cliente encontrado: ${JSON.stringify(data, null, 2)}`);
     } catch (error) {
@@ -65,7 +67,7 @@ export function DatabaseVerification() {
                 <strong>Total de Clientes:</strong> {dbInfo.total_customers}
               </div>
             </div>
-            
+
             <div>
               <strong>Últimos 10 Clientes:</strong>
               <div className="mt-2 space-y-1 text-sm">
@@ -75,7 +77,8 @@ export function DatabaseVerification() {
                     <br />
                     Pedido Mínimo: R$ {customer.minimum_order || 0}
                     <br />
-                    Criado: {new Date(customer.created_at).toLocaleString('pt-BR')}
+                    Criado:{" "}
+                    {new Date(customer.created_at).toLocaleString("pt-BR")}
                   </div>
                 ))}
               </div>

@@ -59,7 +59,7 @@ function Store() {
 
   // Debug products data and loading state
   useEffect(() => {
-    console.log('🔍 Store Debug State:', {
+    console.log("🔍 Store Debug State:", {
       loading,
       error,
       productsCount: products?.length || 0,
@@ -68,7 +68,7 @@ function Store() {
       colorFilter,
       genderFilter,
       typeFilter,
-      pagination
+      pagination,
     });
 
     if (products && products.length > 0) {
@@ -97,9 +97,19 @@ function Store() {
         }
       });
     } else if (!loading && !error) {
-      console.warn('⚠️ No products found but no error occurred');
+      console.warn("⚠️ No products found but no error occurred");
     }
-  }, [products, loading, error, searchTerm, categoryFilter, colorFilter, genderFilter, typeFilter, pagination]);
+  }, [
+    products,
+    loading,
+    error,
+    searchTerm,
+    categoryFilter,
+    colorFilter,
+    genderFilter,
+    typeFilter,
+    pagination,
+  ]);
 
   // Handlers
   const handleProductClick = (productId: number) => {

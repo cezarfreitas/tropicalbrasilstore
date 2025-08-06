@@ -10,7 +10,11 @@ interface ProductCardProps {
   index: number;
   selectedVariantImages: Record<number, string>;
   onProductClick: (productId: number) => void;
-  onColorVariantClick: (productId: number, imageUrl: string, event: React.MouseEvent) => void;
+  onColorVariantClick: (
+    productId: number,
+    imageUrl: string,
+    event: React.MouseEvent,
+  ) => void;
   getColorValue: (color: any) => string;
 }
 
@@ -22,7 +26,10 @@ export function ProductCard({
   onColorVariantClick,
   getColorValue,
 }: ProductCardProps) {
-  const productImageUrl = useProductImage(product, selectedVariantImages[product.id]);
+  const productImageUrl = useProductImage(
+    product,
+    selectedVariantImages[product.id],
+  );
 
   return (
     <Card
@@ -40,8 +47,10 @@ export function ProductCard({
               className="w-full h-full object-contain group-hover:scale-102 transition-all duration-200 p-1.5 sm:p-2"
               loading={index < 8 ? "eager" : "lazy"}
               onError={(e) => {
-                console.error(`Failed to load image for product ${product.id}: ${productImageUrl}`);
-                e.currentTarget.style.display = 'none';
+                console.error(
+                  `Failed to load image for product ${product.id}: ${productImageUrl}`,
+                );
+                e.currentTarget.style.display = "none";
               }}
             />
           ) : (
@@ -81,8 +90,9 @@ export function ProductCard({
                         className="w-full h-full object-contain"
                         loading="lazy"
                         onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                          e.currentTarget.parentElement!.style.backgroundColor = getColorValue(color);
+                          e.currentTarget.style.display = "none";
+                          e.currentTarget.parentElement!.style.backgroundColor =
+                            getColorValue(color);
                         }}
                       />
                     ) : (

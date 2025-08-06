@@ -74,9 +74,11 @@ export default function Checkout() {
   }
 
   const formatPrice = (price: number) => price.toFixed(2);
-  
+
   const formatWhatsApp = (phone: string) => {
-    return phone.replace(/\D/g, '').replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    return phone
+      .replace(/\D/g, "")
+      .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
   };
 
   const handlePhoneChange = (value: string) => {
@@ -88,13 +90,14 @@ export default function Checkout() {
     e.preventDefault();
 
     // Check minimum order value before proceeding - use customer value if exists, otherwise global
-    const minimumOrderValue = (authCustomer?.minimum_order && authCustomer.minimum_order > 0)
-      ? authCustomer.minimum_order
-      : (storeSettings?.minimum_order_value || 0);
+    const minimumOrderValue =
+      authCustomer?.minimum_order && authCustomer.minimum_order > 0
+        ? authCustomer.minimum_order
+        : storeSettings?.minimum_order_value || 0;
     if (minimumOrderValue > 0 && totalPrice < minimumOrderValue) {
       toast({
         title: "Pedido mínimo não atingido",
-        description: `Adicione mais R$ ${(minimumOrderValue - totalPrice).toFixed(2).replace('.', ',')} para atingir o pedido mínimo de R$ ${minimumOrderValue.toFixed(2).replace('.', ',')}`,
+        description: `Adicione mais R$ ${(minimumOrderValue - totalPrice).toFixed(2).replace(".", ",")} para atingir o pedido mínimo de R$ ${minimumOrderValue.toFixed(2).replace(".", ",")}`,
         variant: "destructive",
       });
       return;
@@ -198,7 +201,9 @@ export default function Checkout() {
                   <Check className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-green-800">Pedido Registrado</h3>
+                  <h3 className="font-semibold text-green-800">
+                    Pedido Registrado
+                  </h3>
                   <p className="text-sm text-green-700">
                     Suas informações e produtos foram salvos com sucesso
                   </p>
@@ -215,8 +220,9 @@ export default function Checkout() {
                     Enviar via WhatsApp
                   </h3>
                   <p className="text-sm text-blue-700 mb-4">
-                    Clique no botão abaixo para enviar os detalhes do pedido via WhatsApp. 
-                    Nossa equipe confirmará a disponibilidade e processará seu pedido.
+                    Clique no botão abaixo para enviar os detalhes do pedido via
+                    WhatsApp. Nossa equipe confirmará a disponibilidade e
+                    processará seu pedido.
                   </p>
                   <Button
                     onClick={sendWhatsApp}
@@ -236,9 +242,12 @@ export default function Checkout() {
                   <CreditCard className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-700">Confirmação e Pagamento</h3>
+                  <h3 className="font-semibold text-gray-700">
+                    Confirmação e Pagamento
+                  </h3>
                   <p className="text-sm text-gray-600">
-                    Nossa equipe confirmará disponibilidade e informará sobre pagamento e entrega
+                    Nossa equipe confirmará disponibilidade e informará sobre
+                    pagamento e entrega
                   </p>
                 </div>
               </div>
@@ -255,7 +264,9 @@ export default function Checkout() {
                     </h4>
                     <ul className="text-sm text-yellow-700 space-y-1">
                       <li>• Produtos sujeitos à disponibilidade de estoque</li>
-                      <li>• Pagamento e entrega serão confirmados via WhatsApp</li>
+                      <li>
+                        • Pagamento e entrega serão confirmados via WhatsApp
+                      </li>
                       <li>• Mantenha o WhatsApp ativo para nossa resposta</li>
                     </ul>
                   </div>
@@ -287,7 +298,9 @@ export default function Checkout() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Finalizar Compra</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Finalizar Compra
+            </h1>
             <p className="text-gray-600 mt-1">
               Complete suas informações para finalizar o pedido
             </p>
@@ -397,7 +410,8 @@ export default function Checkout() {
                           Suas informações estão seguras
                         </h4>
                         <p className="text-xs text-blue-700 mt-1">
-                          Seus dados são protegidos e usados apenas para processar seu pedido
+                          Seus dados são protegidos e usados apenas para
+                          processar seu pedido
                         </p>
                       </div>
                     </div>
@@ -408,12 +422,17 @@ export default function Checkout() {
                     type="submit"
                     size="lg"
                     className="w-full bg-primary hover:bg-primary/90 text-white"
-                    disabled={loading || ((() => {
-                      const minValue = (authCustomer?.minimum_order && authCustomer.minimum_order > 0)
-                        ? authCustomer.minimum_order
-                        : (storeSettings?.minimum_order_value || 0);
-                      return minValue > 0 && totalPrice < minValue;
-                    })())}
+                    disabled={
+                      loading ||
+                      (() => {
+                        const minValue =
+                          authCustomer?.minimum_order &&
+                          authCustomer.minimum_order > 0
+                            ? authCustomer.minimum_order
+                            : storeSettings?.minimum_order_value || 0;
+                        return minValue > 0 && totalPrice < minValue;
+                      })()
+                    }
                   >
                     {loading ? (
                       <>
@@ -430,16 +449,25 @@ export default function Checkout() {
 
                   {/* Minimum order message */}
                   {(() => {
-                    const minValue = (authCustomer?.minimum_order && authCustomer.minimum_order > 0)
-                      ? authCustomer.minimum_order
-                      : (storeSettings?.minimum_order_value || 0);
-                    return minValue > 0 && totalPrice < minValue && (
-                      <div className="text-center">
-                        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-                          <AlertCircle className="inline h-4 w-4 mr-1" />
-                          Adicione mais R$ {(minValue - totalPrice).toFixed(2).replace('.', ',')} para atingir o pedido mínimo
-                        </p>
-                      </div>
+                    const minValue =
+                      authCustomer?.minimum_order &&
+                      authCustomer.minimum_order > 0
+                        ? authCustomer.minimum_order
+                        : storeSettings?.minimum_order_value || 0;
+                    return (
+                      minValue > 0 &&
+                      totalPrice < minValue && (
+                        <div className="text-center">
+                          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                            <AlertCircle className="inline h-4 w-4 mr-1" />
+                            Adicione mais R${" "}
+                            {(minValue - totalPrice)
+                              .toFixed(2)
+                              .replace(".", ",")}{" "}
+                            para atingir o pedido mínimo
+                          </p>
+                        </div>
+                      )
                     );
                   })()}
 
@@ -480,7 +508,10 @@ export default function Checkout() {
                   {/* Items */}
                   <div className="space-y-3 max-h-64 overflow-y-auto">
                     {items.map((item) => (
-                      <div key={item.id} className="flex gap-3 p-3 bg-gray-50 rounded-lg">
+                      <div
+                        key={item.id}
+                        className="flex gap-3 p-3 bg-gray-50 rounded-lg"
+                      >
                         <div className="w-12 h-12 bg-white rounded-lg flex-shrink-0 overflow-hidden">
                           <ProductImage
                             src={item.photo}
@@ -495,11 +526,14 @@ export default function Checkout() {
                           <h4 className="font-medium text-sm line-clamp-1">
                             {item.productName}
                           </h4>
-                          {item.type === 'grade' && (
+                          {item.type === "grade" && (
                             <div className="text-xs text-gray-600 mt-1">
                               Grade: {item.gradeName} • Cor: {item.colorName}
                               {item.piecesPerGrade && (
-                                <Badge variant="outline" className="ml-2 text-xs">
+                                <Badge
+                                  variant="outline"
+                                  className="ml-2 text-xs"
+                                >
                                   {item.piecesPerGrade} itens
                                 </Badge>
                               )}
@@ -524,18 +558,19 @@ export default function Checkout() {
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">
-                        Subtotal ({items.length} {items.length === 1 ? 'produto' : 'produtos'})
+                        Subtotal ({items.length}{" "}
+                        {items.length === 1 ? "produto" : "produtos"})
                       </span>
                       <span className="font-medium">
                         R$ {formatPrice(totalPrice)}
                       </span>
                     </div>
-                    
+
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Total de itens</span>
                       <span className="font-medium">{totalItems}</span>
                     </div>
-                    
+
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Taxa de entrega</span>
                       <span className="font-medium text-blue-600">
