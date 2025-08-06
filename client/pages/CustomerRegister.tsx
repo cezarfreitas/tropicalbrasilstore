@@ -95,7 +95,7 @@ export default function CustomerRegister() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4">
             <Package className="h-8 w-8 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">Chinelos Store</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Tropical Brasil Sandálias</h1>
           <p className="text-gray-600 mt-2">
             Cadastre-se para acessar preços exclusivos
           </p>
