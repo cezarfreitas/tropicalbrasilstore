@@ -22,7 +22,7 @@ interface ProductImageProps {
     available_colors?: Array<{
       image_url?: string;
       name?: string;
-    }> | any; // Allow any type to handle malformed data gracefully
+    }> | string | any; // Allow array, string, or any type to handle different API formats
   };
 }
 
