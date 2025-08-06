@@ -87,7 +87,8 @@ export default function Cart() {
         {/* Minimum Order Indicator */}
         <MinimumOrderIndicator
           currentValue={totalPrice}
-          minimumValue={storeSettings?.minimum_order_value || 0}
+          customerMinimumValue={customer?.minimum_order}
+          globalMinimumValue={storeSettings?.minimum_order_value}
         />
 
         <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
