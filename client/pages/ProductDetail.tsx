@@ -808,10 +808,10 @@ export default function ProductDetail() {
                       typeof product.suggested_price === "number" &&
                       product.suggested_price > product.base_price && (
                         <div className="text-right">
-                          <div className="text-sm text-gray-600 mb-1">
+                          <div className="text-xs text-gray-600 mb-0.5">
                             Você Economiza
                           </div>
-                          <div className="text-xl font-bold text-green-600">
+                          <div className="text-lg font-bold text-green-600">
                             R${" "}
                             {formatPrice(
                               product.suggested_price - product.base_price,
