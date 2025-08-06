@@ -10,9 +10,15 @@ interface MinimumOrderIndicatorProps {
 
 export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
   currentValue,
-  minimumValue,
+  customerMinimumValue,
+  globalMinimumValue,
   currency = 'R$'
 }) => {
+  // Usa o valor do cliente se existir e for maior que 0, senão usa o valor global
+  const minimumValue = (customerMinimumValue && customerMinimumValue > 0)
+    ? customerMinimumValue
+    : (globalMinimumValue || 0);
+
   // Se não há pedido mínimo configurado, não exibe o componente
   if (minimumValue <= 0) {
     return null;
