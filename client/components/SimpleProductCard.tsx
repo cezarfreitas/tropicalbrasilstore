@@ -182,7 +182,7 @@ export function SimpleProductCard({
 
   return (
     <Card
-      className="group cursor-pointer border border-gray-200 rounded-xl overflow-hidden bg-white hover:shadow-lg transition-all duration-300 hover:border-primary/40 hover:-translate-y-1"
+      className="group cursor-pointer border border-gray-200 rounded-lg overflow-hidden bg-white hover:shadow-md transition-all duration-200 hover:border-gray-300"
       onClick={handleProductClick}
     >
       <CardContent className="p-0 h-full flex flex-col">
