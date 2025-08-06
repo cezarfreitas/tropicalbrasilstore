@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
 import { DynamicTitle } from "@/components/DynamicTitle";
-import { TitleTest } from "@/components/TitleTest";
+import { SimpleTitleTest } from "@/components/SimpleTitleTest";
 
 // TODO: Import all existing components and pages
 // These would need to be moved from ../client/* to ./src/*
@@ -17,7 +17,7 @@ function App() {
           element={
             <div>
               <div>Store Page - TODO: Import from client/pages/Store.tsx</div>
-              <TitleTest />
+              <SimpleTitleTest />
             </div>
           }
         />
