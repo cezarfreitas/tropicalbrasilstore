@@ -76,23 +76,26 @@ export function ProductImage({
       }
     }
 
-    // Try available_colors (Store API style)
-    const firstColorWithImage = product.available_colors?.find(
-      (c) => c.image_url,
-    );
-    if (firstColorWithImage && firstColorWithImage.image_url) {
-      console.log(
-        `🔍 Using available_colors image: "${firstColorWithImage.image_url}" for "${alt}"`,
+    // Try available_colors (Store API style) - ensure it's an array
+    if (Array.isArray(product.available_colors)) {
+      const firstColorWithImage = product.available_colors.find(
+        (c) => c.image_url,
       );
-      return getImageUrl(firstColorWithImage.image_url);
+      if (firstColorWithImage && firstColorWithImage.image_url) {
+        console.log(
+          `🔍 Using available_colors image: "${firstColorWithImage.image_url}" for "${alt}"`,
+        );
+        return getImageUrl(firstColorWithImage.image_url);
+      }
     }
 
     console.log(`🔍 No image found for "${alt}"`, {
       hasPhoto: !!product.photo,
       color_variants: product.color_variants?.length || 0,
-      available_colors: product.available_colors?.length || 0,
-      available_colors_with_images:
-        product.available_colors?.filter((c) => c.image_url).length || 0,
+      available_colors: Array.isArray(product.available_colors) ? product.available_colors.length : 'not an array',
+      available_colors_with_images: Array.isArray(product.available_colors)
+        ? product.available_colors.filter((c) => c.image_url).length
+        : 0,
     });
     return null;
   };
