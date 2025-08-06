@@ -96,7 +96,10 @@ router.get("/", async (req, res) => {
         c.name as category_name,
         b.name as brand_name,
         COUNT(DISTINCT pcv.id) as variant_count,
-        SUM(pcv.stock_total) as total_stock,
+        CASE
+          WHEN p.stock_type = 'grade' THEN COALESCE(SUM(DISTINCT pcg.stock_quantity), 0)
+          ELSE COALESCE(SUM(pcv.stock_total), 0)
+        END as total_stock,
         COUNT(DISTINCT pcg.grade_id) as grade_count,
         GROUP_CONCAT(DISTINCT co.name ORDER BY co.name) as available_colors,
         GROUP_CONCAT(DISTINCT CONCAT(co.name, ':', co.hex_code) ORDER BY co.name) as color_data
