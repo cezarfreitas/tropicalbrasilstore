@@ -791,29 +791,54 @@ export default function ProductImport() {
 
     const sampleRows = [
       [
-        "Chinelo Simples XYZ", // Nome do Produto
-        "1", // Categoria (ex: Chinelos)
-        "22.50", // Preço Base
-        "29.90", // Preço de Venda
-        "https://example.com/chinelo-xyz.jpg", // URL da Foto
-        "1", // Grupo de Tamanhos (ex: Chinelos)
-        "azul", // Cor (apenas uma cor)
-        "XYZ001-AZUL", // SKU
-        "XYZ001", // SKU Pai
-        "Chinelo XYZ clássico vendido por grade completa", // Descrição
-        "35.90", // Preço Sugerido
-        "XYZ", // Marca (Nome)
-        "Feminino", // Gênero (Nome)
-        "Chinelo", // Tipo de Produto (Nome)
-        "grade", // Tipo de Estoque = "grade" para venda por grade completa
-        "2549", // Nome da Grade Vendida (exemplo: use uma grade existente)
-        "50", // Estoque por Grade (50 grades completas disponíveis)
-        "XYZ001-AZUL-V1", // SKU da Variante de Cor
-        "", // Preço Específico da Cor
-        "", // Preço Promocional da Cor
-        "https://example.com/chinelo-xyz-azul.jpg", // Imagem da Variante de Cor
-        "0", // Vender Sem Estoque
-        "", // Stock per variant (campo legado)
+        "Chinelo ABC Grade Completa",
+        "1",
+        "15.00",
+        "25.90",
+        "https://exemplo.com/chinelo-abc.jpg",
+        "1",
+        "preto",
+        "ABC001-PRETO",
+        "ABC001",
+        "Chinelo ABC vendido por grade completa",
+        "29.90",
+        "ABC",
+        "Unissex",
+        "Chinelo",
+        "grade",
+        "2549",
+        "30",
+        "ABC001-PRETO-GRADE",
+        "",
+        "",
+        "https://exemplo.com/chinelo-abc-preto.jpg",
+        "0",
+        ""
+      ],
+      [
+        "Sandália XYZ Grade Premium",
+        "1",
+        "35.00",
+        "55.90",
+        "https://exemplo.com/sandalia-xyz.jpg",
+        "1",
+        "marrom",
+        "XYZ002-MARROM",
+        "XYZ002",
+        "Sandália XYZ premium vendida por grade",
+        "65.90",
+        "XYZ Premium",
+        "Feminino",
+        "Sandália",
+        "grade",
+        "2550",
+        "15",
+        "XYZ002-MARROM-GRADE",
+        "49.90",
+        "45.90",
+        "https://exemplo.com/sandalia-xyz-marrom.jpg",
+        "0",
+        ""
       ]
     ];
 
@@ -1185,7 +1210,7 @@ export default function ProductImport() {
                     <li>• Backup completo dos produtos</li>
                     <li>• Edição em massa no Excel</li>
                     <li>• Migraç��o para outro sistema</li>
-                    <li>• Análise de dados de produtos</li>
+                    <li>�� Análise de dados de produtos</li>
                     <li>• Compartilhamento de cat��logo</li>
                     <li>• Importação em outro ambiente</li>
                   </ul>
