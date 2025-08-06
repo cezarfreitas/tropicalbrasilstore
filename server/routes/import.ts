@@ -598,6 +598,37 @@ async function processGradeImport(data: any[]) {
         [productId, colorId, gradeId, parseInt(item.grade_stock)]
       );
 
+      // IMPORTANTE: Criar variantes individuais para que o sistema reconheça as cores
+      // Para grades, precisamos criar variantes base (sem tamanho específico)
+      // Isso permite que a loja mostre as cores disponíveis
+
+      // Get default sizes para criar variantes base (mesmo que controladas por grade)
+      const [defaultSizes] = await connection.execute(
+        "SELECT id, size FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44') ORDER BY size"
+      );
+
+      console.log(`📦 Criando ${(defaultSizes as any[]).length} variantes para cor ${item.color}`);
+
+      // Criar uma variante para cada tamanho padrão (estoque controlado pela grade)
+      for (const size of defaultSizes as any[]) {
+        await connection.execute(
+          `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override, image_url)
+           VALUES (?, ?, ?, ?, ?, ?)
+           ON DUPLICATE KEY UPDATE
+           stock = VALUES(stock),
+           price_override = VALUES(price_override),
+           image_url = VALUES(image_url)`,
+          [
+            productId,
+            size.id,
+            colorId,
+            0, // Estoque = 0 pois é controlado pela grade
+            item.color_price ? parseFloat(item.color_price) : null,
+            item.color_image_url || null
+          ]
+        );
+      }
+
       await connection.commit();
       console.log(`✅ Produto grade criado com sucesso: ${item.name} (Product ID: ${productId})`);
       importProgress.success++;
@@ -623,7 +654,7 @@ async function processGradeImport(data: any[]) {
   connection.release();
   importProgress.isRunning = false;
   importProgress.current = "";
-  console.log("📦 Processamento de grades concluído!");
+  console.log("���� Processamento de grades concluído!");
 }
 
 async function processImport(data: any[]) {
