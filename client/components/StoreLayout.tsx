@@ -518,7 +518,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
         {/* Quick Actions */}
         <div className="px-4 py-3 border-b border-white/10 bg-white/5">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-3 mb-3">
             {/* User Menu */}
             <div className="flex flex-col items-center gap-2">
               <div className="relative">
