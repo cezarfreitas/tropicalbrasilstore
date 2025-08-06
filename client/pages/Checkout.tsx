@@ -408,7 +408,12 @@ export default function Checkout() {
                     type="submit"
                     size="lg"
                     className="w-full bg-primary hover:bg-primary/90 text-white"
-                    disabled={loading || (storeSettings?.minimum_order_value && storeSettings.minimum_order_value > 0 && totalPrice < storeSettings.minimum_order_value)}
+                    disabled={loading || ((() => {
+                      const minValue = (authCustomer?.minimum_order && authCustomer.minimum_order > 0)
+                        ? authCustomer.minimum_order
+                        : (storeSettings?.minimum_order_value || 0);
+                      return minValue > 0 && totalPrice < minValue;
+                    })())}
                   >
                     {loading ? (
                       <>
