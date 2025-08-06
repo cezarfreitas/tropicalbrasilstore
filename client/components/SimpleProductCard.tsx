@@ -255,28 +255,28 @@ export function SimpleProductCard({
 
           {/* Pricing with cart icon - Compact design */}
           {product.base_price && (
-            <div className="bg-gray-50 rounded-md p-2 flex items-center justify-between">
+            <div className="bg-gray-50 rounded p-1.5 flex items-center justify-between">
               <div className="flex-1">
                 <PriceDisplay
                   price={product.base_price}
                   suggestedPrice={product.suggested_price}
                   variant="default"
                   onLoginClick={onLoginClick}
-                  className="[&>div:first-child]:text-sm [&>div:first-child]:font-semibold"
+                  className="[&>div:first-child]:text-xs [&>div:first-child]:font-semibold"
                 />
               </div>
 
               {/* Cart Icon Button */}
               {isAuthenticated && isApproved && (
                 <button
-                  className="ml-2 p-1.5 bg-primary hover:bg-primary/90 text-white rounded-md transition-colors duration-200 flex-shrink-0"
+                  className="ml-1.5 p-1 bg-primary hover:bg-primary/90 text-white rounded transition-colors duration-200 flex-shrink-0"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleProductClick();
                   }}
                   title="Adicionar ao carrinho"
                 >
-                  <ShoppingCart className="w-3.5 h-3.5" />
+                  <ShoppingCart className="w-3 h-3" />
                 </button>
               )}
             </div>
