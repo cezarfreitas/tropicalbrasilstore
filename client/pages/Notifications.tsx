@@ -384,7 +384,7 @@ export default function Notifications() {
                     onChange={(e) =>
                       handleInputChange("smtp_from_name", e.target.value)
                     }
-                    placeholder="Chinelos Store"
+                    placeholder="Tropical Brasil Sandálias"
                   />
                 </div>
               </div>
