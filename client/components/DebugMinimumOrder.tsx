@@ -22,8 +22,14 @@ export const DebugMinimumOrder: React.FC = () => {
     }
   }, [customer]);
 
+  // Mostrar sempre para debug (remover depois)
   if (!isAuthenticated) {
-    return null;
+    return (
+      <div className="fixed bottom-4 right-4 bg-red-100 border-2 border-red-400 rounded-lg p-4 max-w-sm shadow-lg z-50">
+        <h4 className="font-bold text-red-800 mb-2">🔍 Debug: Usuário não logado</h4>
+        <p className="text-sm text-red-700">Faça login para ver as configurações de pedido mínimo</p>
+      </div>
+    );
   }
 
   const customerMinimum = customer?.minimum_order || 0;
