@@ -427,6 +427,12 @@ export default function Checkout() {
           {/* Order Summary */}
           <div className="lg:col-span-5">
             <div className="lg:sticky lg:top-6 space-y-6">
+              {/* Minimum Order Indicator */}
+              <MinimumOrderIndicator
+                currentValue={totalPrice}
+                minimumValue={storeSettings?.minimum_order_value || 0}
+              />
+
               {/* Summary Card */}
               <Card className="border-2 border-primary/10">
                 <CardHeader>
