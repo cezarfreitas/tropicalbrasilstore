@@ -435,7 +435,7 @@ export default function Settings() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
           <p className="mt-2 text-sm text-muted-foreground">
-            Carregando configuraç��es...
+            Carregando configurações...
           </p>
         </div>
       </div>
@@ -465,14 +465,29 @@ export default function Settings() {
             Configure as informações e preferências da loja
           </p>
         </div>
-        <Button onClick={saveSettings} disabled={saving}>
-          {saving ? (
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-          ) : (
-            <Save className="h-4 w-4 mr-2" />
-          )}
-          Salvar Configurações
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={forceRefreshStore}
+            disabled={refreshing}
+            className="gap-2"
+          >
+            {refreshing ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
+            Atualizar Loja
+          </Button>
+          <Button onClick={saveSettings} disabled={saving}>
+            {saving ? (
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            ) : (
+              <Save className="h-4 w-4 mr-2" />
+            )}
+            Salvar Configurações
+          </Button>
+        </div>
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
