@@ -625,6 +625,17 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           </div>
         </div>
 
+        {/* Minimum Order Indicator */}
+        <div className="px-4 pb-3">
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden">
+            <MinimumOrderIndicator
+              currentValue={totalPrice}
+              customerMinimumValue={customer?.minimum_order}
+              globalMinimumValue={storeSettings?.minimum_order_value}
+            />
+          </div>
+        </div>
+
         {/* Navigation */}
         <nav
           className="flex-1 px-4 py-3 overflow-y-auto"
