@@ -111,10 +111,8 @@ export function ProductImage({
     console.log(`🔍 No image found for "${alt}"`, {
       hasPhoto: !!product.photo,
       color_variants: product.color_variants?.length || 0,
-      available_colors: Array.isArray(product.available_colors) ? product.available_colors.length : 'not an array',
-      available_colors_with_images: Array.isArray(product.available_colors)
-        ? product.available_colors.filter((c) => c.image_url).length
-        : 0,
+      available_colors_type: product.available_colors ? typeof product.available_colors : 'undefined',
+      available_colors_value: product.available_colors,
     });
     return null;
   };
