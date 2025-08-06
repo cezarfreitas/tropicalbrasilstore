@@ -599,12 +599,13 @@ async function processGradeImport(data: any[]) {
       );
 
       await connection.commit();
+      console.log(`✅ Produto grade criado com sucesso: ${item.name} (Product ID: ${productId})`);
       importProgress.success++;
       processedItems++;
 
     } catch (error) {
       await connection.rollback();
-      console.error(`Error processing grade product ${item.name}:`, error);
+      console.error(`❌ Error processing grade product ${item.name}:`, error);
 
       importProgress.errorDetails.push({
         row: processedItems + 1,
