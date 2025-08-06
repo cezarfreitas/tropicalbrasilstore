@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
+import { DynamicTitle } from "@/components/DynamicTitle";
 
 // TODO: Import all existing components and pages
 // These would need to be moved from ../client/* to ./src/*
@@ -7,6 +8,7 @@ import { Toaster } from "sonner";
 function App() {
   return (
     <>
+      <DynamicTitle />
       <Routes>
         <Route path="/" element={<Navigate to="/loja" replace />} />
         <Route
