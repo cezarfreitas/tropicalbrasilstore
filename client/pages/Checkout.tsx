@@ -87,8 +87,10 @@ export default function Checkout() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check minimum order value before proceeding
-    const minimumOrderValue = storeSettings?.minimum_order_value || 0;
+    // Check minimum order value before proceeding - use customer value if exists, otherwise global
+    const minimumOrderValue = (authCustomer?.minimum_order && authCustomer.minimum_order > 0)
+      ? authCustomer.minimum_order
+      : (storeSettings?.minimum_order_value || 0);
     if (minimumOrderValue > 0 && totalPrice < minimumOrderValue) {
       toast({
         title: "Pedido mínimo não atingido",
