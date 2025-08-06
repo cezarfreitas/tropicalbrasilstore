@@ -27,29 +27,19 @@ export function PriceDisplay({
   if (!shouldShowPrice) {
     return (
       <div className={`${className}`}>
-        <div className="relative overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-3 text-white shadow-md">
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-2">
-              <Lock className="h-4 w-4" />
-              <span className="text-xs font-medium opacity-90">
-                Acesso Exclusivo
-              </span>
-            </div>
-            <p className="text-sm font-semibold mb-3">
-              Entre para ver preços especiais
-            </p>
-            <Button
-              size="sm"
-              className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm h-7 text-xs px-3 font-medium transition-all duration-200 hover:scale-105"
-              onClick={onLoginClick}
-            >
-              Entrar agora
-            </Button>
+        <div className="text-center space-y-2">
+          <div className="flex items-center justify-center gap-1.5 text-gray-500">
+            <Lock className="h-3.5 w-3.5" />
+            <span className="text-xs">Faça login para ver preços</span>
           </div>
-
-          {/* Decorative elements */}
-          <div className="absolute -top-2 -right-2 w-12 h-12 bg-white/10 rounded-full blur-sm"></div>
-          <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-white/5 rounded-full blur-md"></div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-7 text-xs px-3 text-primary border-primary/30 hover:bg-primary/5"
+            onClick={onLoginClick}
+          >
+            Entrar
+          </Button>
         </div>
       </div>
     );
