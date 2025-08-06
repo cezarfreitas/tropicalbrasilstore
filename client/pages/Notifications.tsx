@@ -397,7 +397,7 @@ export default function Notifications() {
                   onChange={(e) =>
                     handleInputChange("email_subject", e.target.value)
                   }
-                  placeholder="🎉 Novo Pedido Recebido - Chinelos Store"
+                  placeholder="🎉 Novo Pedido Recebido - Tropical Brasil Sandálias"
                 />
               </div>
 
