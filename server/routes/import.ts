@@ -434,11 +434,10 @@ async function processImport(data: any[]) {
       if (
         !firstItem.name ||
         !firstItem.category_id ||
-        !firstItem.base_price ||
-        !firstItem.size_group_id
+        !firstItem.base_price
       ) {
         throw new Error(
-          "Missing required fields: name, category_id, base_price, size_group_id",
+          "Missing required fields: name, category_id, base_price",
         );
       }
 
