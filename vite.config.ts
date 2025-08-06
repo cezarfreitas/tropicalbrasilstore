@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
         "127.0.0.1",
         "0.0.0.0",
         ".tropicalbrasilsandalias.com.br",
-        ".fly.dev"
+        ".fly.dev",
       ],
     },
     base: "/",

@@ -27,7 +27,6 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-
 interface StoreSettings {
   id?: number;
   store_name: string;
@@ -49,7 +48,6 @@ interface StoreSettings {
   maintenance_mode: boolean;
   allow_orders: boolean;
   tax_rate: number;
-
 }
 
 const paymentMethodOptions = [
@@ -67,8 +65,6 @@ export default function Settings() {
   const [restoreLoading, setRestoreLoading] = useState(false);
   const [templateLoading, setTemplateLoading] = useState(false);
   const { toast } = useToast();
-
-
 
   useEffect(() => {
     fetchSettings();
@@ -120,9 +116,11 @@ export default function Settings() {
         }
 
         // Trigger all refresh events
-        window.dispatchEvent(new CustomEvent("storeSettingsLoaded", {
-          detail: window.__STORE_SETTINGS__
-        }));
+        window.dispatchEvent(
+          new CustomEvent("storeSettingsLoaded", {
+            detail: window.__STORE_SETTINGS__,
+          }),
+        );
         window.dispatchEvent(new CustomEvent("settingsRefresh"));
         window.dispatchEvent(new CustomEvent("themeRefresh"));
 
@@ -159,7 +157,8 @@ export default function Settings() {
       if (response.ok) {
         toast({
           title: "Sucesso",
-          description: "Configurações salvas com sucesso. Atualizando a loja...",
+          description:
+            "Configurações salvas com sucesso. Atualizando a loja...",
         });
 
         // Force clear browser cache for frontend
@@ -185,9 +184,11 @@ export default function Settings() {
 
         // Trigger theme refresh event for all components
         window.dispatchEvent(new CustomEvent("themeRefresh"));
-        window.dispatchEvent(new CustomEvent("storeSettingsLoaded", {
-          detail: window.__STORE_SETTINGS__
-        }));
+        window.dispatchEvent(
+          new CustomEvent("storeSettingsLoaded", {
+            detail: window.__STORE_SETTINGS__,
+          }),
+        );
         window.dispatchEvent(new CustomEvent("settingsRefresh"));
 
         console.log("🎨 Settings saved, cache cleared, triggering refresh...");
@@ -271,9 +272,13 @@ export default function Settings() {
           description: "Logo carregado com sucesso!",
         });
       } else {
-        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: "Unknown error" }));
         console.error("❌ Upload failed:", response.status, errorData);
-        throw new Error(errorData.error || `Upload failed with status ${response.status}`);
+        throw new Error(
+          errorData.error || `Upload failed with status ${response.status}`,
+        );
       }
     } catch (error) {
       console.error("💥 Logo upload error:", error);
@@ -465,7 +470,8 @@ export default function Settings() {
             Configure as informações e preferências da loja
           </p>
           <p className="text-xs text-muted-foreground mt-1">
-            💡 Use "Atualizar Loja" se as mudanças não aparecerem automaticamente na home
+            💡 Use "Atualizar Loja" se as mudanças não aparecerem
+            automaticamente na home
           </p>
         </div>
         <div className="flex gap-2">
@@ -588,7 +594,9 @@ export default function Settings() {
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => document.getElementById("logo-upload")?.click()}
+                        onClick={() =>
+                          document.getElementById("logo-upload")?.click()
+                        }
                         className="w-full"
                       >
                         <Upload className="h-4 w-4 mr-2" />
@@ -608,7 +616,9 @@ export default function Settings() {
                     <Input
                       id="logo_url_manual"
                       value={settings.logo_url || ""}
-                      onChange={(e) => updateSettings("logo_url", e.target.value)}
+                      onChange={(e) =>
+                        updateSettings("logo_url", e.target.value)
+                      }
                       placeholder="https://exemplo.com/logo.png"
                     />
                   </div>
@@ -626,8 +636,6 @@ export default function Settings() {
             </CardContent>
           </Card>
         </TabsContent>
-
-
 
         <TabsContent value="contact" className="space-y-6">
           <Card>
@@ -960,8 +968,6 @@ export default function Settings() {
           </Card>
         </TabsContent>
       </Tabs>
-
-
     </div>
   );
 }

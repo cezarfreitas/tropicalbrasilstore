@@ -275,15 +275,18 @@ app.get("*", (req, res) => {
     `;
 
     // Find and replace existing settings script or add it
-    if (html.includes('window.__STORE_SETTINGS__')) {
+    if (html.includes("window.__STORE_SETTINGS__")) {
       // Replace existing script
       html = html.replace(
         /<script>[\s\S]*?window\.__STORE_SETTINGS__[\s\S]*?<\/script>/,
-        `<script>${settingsScript}</script>`
+        `<script>${settingsScript}</script>`,
       );
     } else {
       // Add script before closing body tag
-      html = html.replace('</body>', `<script>${settingsScript}</script>\n</body>`);
+      html = html.replace(
+        "</body>",
+        `<script>${settingsScript}</script>\n</body>`,
+      );
     }
 
     res.set({
