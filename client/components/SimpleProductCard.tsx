@@ -248,8 +248,8 @@ export function SimpleProductCard({
         </div>
 
         {/* Product Info - Reduced padding and spacing */}
-        <div className="p-2.5 flex-1 flex flex-col">
-          <h3 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2 leading-tight group-hover:text-primary transition-colors duration-200">
+        <div className="p-1.5 flex-1 flex flex-col">
+          <h3 className="font-medium text-xs text-gray-900 mb-1.5 line-clamp-2 leading-tight">
             {product.name}
           </h3>
 
