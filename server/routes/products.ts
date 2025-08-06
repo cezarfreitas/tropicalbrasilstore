@@ -876,12 +876,12 @@ router.post("/bulk", async (req, res) => {
 
         // Criar ou buscar cor
         console.log(
-          `🎨 Criando/buscando cor: ${variante.cor} para produto ${product.codigo}`,
+          `🎨 [${requestId}] Criando/buscando cor: ${corLimpa} para produto ${product.codigo}`,
         );
-        const colorId = await getOrCreateColor(variante.cor);
-        colorsCreated.add(variante.cor);
+        const colorId = await getOrCreateColor(corLimpa);
+        colorsCreated.add(corLimpa);
         console.log(
-          `✅ Cor criada/encontrada: ${variante.cor} (ID: ${colorId})`,
+          `✅ [${requestId}] Cor criada/encontrada: ${corLimpa} (ID: ${colorId})`,
         );
 
         // Processar grades - suporta string única, array ou string separada por vírgula
