@@ -301,30 +301,34 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     [totalItems],
   );
 
-  // Logo component that shows only custom logo with immediate global loading
+  // Logo component that shows custom logo or store name
   const LogoDisplay = ({
     size = "h-6 w-6",
     className = "",
+    showText = false,
   }: {
     size?: string;
     className?: string;
+    showText?: boolean;
   }) => {
-    // Try to get logo from current settings or global settings immediately
+    // Try to get logo and store name from settings
     const logoUrl =
       storeSettings?.logo_url || getGlobalStoreSettings()?.logo_url;
+    const storeName =
+      storeSettings?.store_name || getGlobalStoreSettings()?.store_name || "Chinelos Store";
 
     if (logoUrl) {
       return (
         <div className={`logo-container ${size} ${className}`}>
           <img
             src={logoUrl}
-            alt="Logo da Loja"
+            alt={`Logo - ${storeName}`}
             className="transition-opacity duration-200 hover:opacity-90"
             onError={(e) => {
-              // Show fallback when image fails to load
+              // Show fallback with store name when image fails to load
               const fallback = document.createElement("div");
-              fallback.className = `${size} bg-primary rounded-lg flex items-center justify-center text-white font-bold text-sm`;
-              fallback.textContent = "LOGO";
+              fallback.className = `${size} bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xs px-2`;
+              fallback.textContent = storeName.substring(0, 12);
               e.currentTarget.parentNode?.replaceChild(
                 fallback,
                 e.currentTarget,
@@ -336,10 +340,22 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       );
     }
 
-    // Fallback logo when no logo is configured
+    // Fallback: show store name or icon based on showText prop
+    if (showText) {
+      return (
+        <div
+          className={`logo-fallback ${size} ${className} bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xs px-3 py-2`}
+        >
+          <span className="truncate">{storeName}</span>
+        </div>
+      );
+    }
+
+    // Icon fallback
     return (
       <div
         className={`logo-fallback ${size} ${className} bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xs`}
+        title={storeName}
       >
         <Package2 className="h-full w-full p-1" />
       </div>
