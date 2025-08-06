@@ -146,6 +146,11 @@ function Store() {
     <StoreLayout>
       <DynamicTitle />
       <div className="w-full px-4 lg:px-6 py-3 lg:py-4 space-y-3 lg:space-y-4">
+        {/* DEBUG TEST */}
+        <div style={{backgroundColor: 'red', color: 'white', padding: '20px', fontSize: '24px', fontWeight: 'bold'}}>
+          TESTE DEBUG - SE VOCÊ VÊ ISSO, O COMPONENTE ESTÁ FUNCIONANDO
+        </div>
+
         {/* Product Count and Sorting - ALWAYS VISIBLE FOR TEST */}
         <div className="flex items-center justify-between bg-green-100 border-2 border-green-500 rounded-lg p-4 shadow-sm">
           <div className="flex items-center gap-2">
