@@ -8,11 +8,19 @@ router.get("/", async (req, res) => {
   try {
     console.log("📊 Fetching grades...");
 
+    // Set timeout to prevent long-running queries
+    const timeout = setTimeout(() => {
+      console.error("❌ Grades query timeout");
+      if (!res.headersSent) {
+        res.json([]);
+      }
+    }, 10000); // 10 second timeout
+
     // First check if grade_vendida table exists
     let gradeRows;
     try {
       [gradeRows] = await db.execute(
-        "SELECT * FROM grade_vendida ORDER BY name",
+        "SELECT * FROM grade_vendida ORDER BY name LIMIT 100",
       );
       console.log(
         `📊 Found ${(gradeRows as any[]).length} grades in grade_vendida`,
@@ -24,53 +32,84 @@ router.get("/", async (req, res) => {
 
       // Fallback to grades table if grade_vendida doesn't exist
       try {
-        [gradeRows] = await db.execute("SELECT * FROM grades ORDER BY name");
+        [gradeRows] = await db.execute("SELECT * FROM grades ORDER BY name LIMIT 100");
         console.log(
           `📊 Found ${(gradeRows as any[]).length} grades in grades table`,
         );
       } catch (fallbackError) {
         console.error("❌ Neither grade_vendida nor grades table exists");
+        clearTimeout(timeout);
         return res.json([]); // Return empty array instead of error
       }
     }
 
     const grades = gradeRows as any[];
 
-    // Get template requirements for each grade
-    for (const grade of grades) {
-      try {
-        const [templateRows] = await db.execute(
-          `SELECT gt.*, s.size, s.display_order
-           FROM grade_templates gt
-           LEFT JOIN sizes s ON gt.size_id = s.id
-           WHERE gt.grade_id = ?
-           ORDER BY s.display_order`,
-          [grade.id],
-        );
-        grade.templates = templateRows;
+    // Use Promise.all to get all data in parallel instead of sequential queries
+    try {
+      const gradeIds = grades.map(g => g.id);
 
-        // Get count of product-color assignments using this grade
-        const [assignmentCount] = await db.execute(
-          `SELECT COUNT(*) as count FROM product_color_grades WHERE grade_id = ?`,
-          [grade.id],
-        );
-        grade.assignment_count = (assignmentCount as any)[0].count;
-      } catch (detailError) {
-        console.warn(
-          `⚠️ Error getting details for grade ${grade.id}:`,
-          detailError.message,
-        );
+      // Get all templates at once
+      const [allTemplates] = await db.execute(
+        `SELECT gt.*, s.size, s.display_order, gt.grade_id
+         FROM grade_templates gt
+         LEFT JOIN sizes s ON gt.size_id = s.id
+         WHERE gt.grade_id IN (${gradeIds.map(() => '?').join(',')})
+         ORDER BY gt.grade_id, s.display_order`,
+        gradeIds,
+      );
+
+      // Get all assignment counts at once
+      const [allAssignments] = await db.execute(
+        `SELECT grade_id, COUNT(*) as count
+         FROM product_color_grades
+         WHERE grade_id IN (${gradeIds.map(() => '?').join(',')})
+         GROUP BY grade_id`,
+        gradeIds,
+      );
+
+      // Map the results back to grades
+      const templatesMap = new Map();
+      const assignmentsMap = new Map();
+
+      (allTemplates as any[]).forEach(template => {
+        if (!templatesMap.has(template.grade_id)) {
+          templatesMap.set(template.grade_id, []);
+        }
+        templatesMap.get(template.grade_id).push(template);
+      });
+
+      (allAssignments as any[]).forEach(assignment => {
+        assignmentsMap.set(assignment.grade_id, assignment.count);
+      });
+
+      // Assign to grades
+      grades.forEach(grade => {
+        grade.templates = templatesMap.get(grade.id) || [];
+        grade.assignment_count = assignmentsMap.get(grade.id) || 0;
+      });
+
+    } catch (detailError) {
+      console.warn("⚠️ Error getting grade details:", detailError.message);
+      // Set defaults for all grades
+      grades.forEach(grade => {
         grade.templates = [];
         grade.assignment_count = 0;
-      }
+      });
     }
 
+    clearTimeout(timeout);
     console.log(`✅ Successfully fetched ${grades.length} grades`);
-    res.json(grades);
+
+    if (!res.headersSent) {
+      res.json(grades);
+    }
   } catch (error) {
     console.error("❌ Error fetching grades:", error);
     // Return empty array instead of error to prevent frontend crash
-    res.json([]);
+    if (!res.headersSent) {
+      res.json([]);
+    }
   }
 });
 
