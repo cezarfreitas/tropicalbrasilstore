@@ -841,7 +841,7 @@ router.post("/bulk", async (req, res) => {
         }
 
         if (isNaN(precoNumerico) || precoNumerico <= 0) {
-          validationErrors.push(`preço é inv��lido (${variante.preco}) - deve ser um número maior que 0`);
+          validationErrors.push(`preço é inválido (${variante.preco}) - deve ser um número maior que 0`);
         }
 
         if (!variante.grade) {
@@ -986,7 +986,7 @@ router.post("/bulk", async (req, res) => {
           // Criar nova variante
           try {
             console.log(
-              `🆕 Criando nova variante de cor para ${product.nome} - ${variante.cor}`,
+              `🆕 [${requestId}] Criando nova variante de cor para ${product.nome} - ${corLimpa}`,
             );
             const [colorVariantResult] = await db.execute(
               `INSERT INTO product_color_variants
@@ -995,9 +995,9 @@ router.post("/bulk", async (req, res) => {
               [
                 productId,
                 colorId,
-                `${product.nome} - ${variante.cor}`,
+                `${product.nome} - ${corLimpa}`,
                 variantSku,
-                variante.preco,
+                precoNumerico,
                 imageUrlForDatabase,
                 0,
                 true,
@@ -1005,7 +1005,7 @@ router.post("/bulk", async (req, res) => {
             );
             colorVariantId = (colorVariantResult as any).insertId;
             console.log(
-              `✅ Nova variante de cor criada: ${variante.cor} (ID: ${colorVariantId})`,
+              `��� Nova variante de cor criada: ${variante.cor} (ID: ${colorVariantId})`,
             );
           } catch (insertError) {
             console.error(`❌ Erro ao criar variante de cor:`, insertError);
