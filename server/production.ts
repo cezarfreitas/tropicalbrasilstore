@@ -1,37 +1,14 @@
 import path from "path";
 import express from "express";
-import { createServer as createViteServer } from "vite";
-
-import { createServer } from "./index.js";
-<<<<<<< HEAD
-=======
 import fs from "fs";
 import compression from "compression";
 import helmet from "helmet";
->>>>>>> ae23744f4e418c9a0bf0208fd7f0eec6d995e40c
+import { createServer } from "./index.js";
 
 const app = createServer();
 
 const staticPath = path.join(process.cwd(), "dist", "spa");
 
-<<<<<<< HEAD
-const vite = await createViteServer({
-  root: staticPath,
-  server: { middlewareMode: "html" },
-});
-
-app.use(vite.middlewares);
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Production server running on port ${PORT}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
-  console.log(
-    `💾 Database: ${process.env.DATABASE_URL ? "Connected" : "No URL set"}`,
-  );
-});
-=======
 // Log static files for debugging
 if (fs.existsSync(staticPath)) {
   console.log(`📄 Static files:`, fs.readdirSync(staticPath));
@@ -289,7 +266,7 @@ const PORT = Number(process.env.PORT) || 80;
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Production server running on port ${PORT}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || "production"}`);
+  console.log(`��� Environment: ${process.env.NODE_ENV || "production"}`);
   console.log(`🗂️ Serving static from: ${staticPath}`);
   console.log(
     `📊 Memory usage: ${JSON.stringify(process.memoryUsage(), null, 2)}`,
@@ -309,4 +286,3 @@ process.on("SIGTERM", () => {
   console.log("\n🛑 Received SIGTERM, shutting down gracefully...");
   process.exit(0);
 });
->>>>>>> ae23744f4e418c9a0bf0208fd7f0eec6d995e40c
