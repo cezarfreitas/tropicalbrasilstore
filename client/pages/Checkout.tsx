@@ -452,7 +452,8 @@ export default function Checkout() {
               {/* Minimum Order Indicator */}
               <MinimumOrderIndicator
                 currentValue={totalPrice}
-                minimumValue={storeSettings?.minimum_order_value || 0}
+                customerMinimumValue={authCustomer?.minimum_order}
+                globalMinimumValue={storeSettings?.minimum_order_value}
               />
 
               {/* Summary Card */}
