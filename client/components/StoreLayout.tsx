@@ -1375,20 +1375,20 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                         key={item.id}
                         className="group bg-gray-50 hover:bg-gray-100 rounded-lg p-3 transition-all duration-200 border border-gray-100 hover:border-gray-200"
                       >
-                        <div className="flex items-start gap-4">
+                        <div className="flex items-start gap-3">
                           {/* Product Image */}
-                          <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-100">
+                          <div className="w-12 h-12 bg-white rounded flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-100">
                             {item.photo ? (
                               <ProductImage
                                 src={item.photo}
                                 alt={item.productName}
                                 className="w-full h-full object-contain"
                                 loading="lazy"
-                                sizes="64px"
+                                sizes="48px"
                                 fallbackIconSize="sm"
                               />
                             ) : (
-                              <Package className="h-8 w-8 text-gray-400" />
+                              <Package className="h-6 w-6 text-gray-400" />
                             )}
                           </div>
 
