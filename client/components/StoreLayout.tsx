@@ -1082,12 +1082,21 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <p className="mt-1 sm:mt-2 text-xs text-gray-400 flex items-center justify-center gap-1">
                 Feito com
                 <svg
-                  className="w-3.5 h-3.5 text-red-500 animate-pulse"
+                  className="w-4 h-4 inline-block animate-pulse"
                   viewBox="0 0 24 24"
-                  fill="currentColor"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402m5.726-20.583c-2.203 0-4.446 1.042-5.726 3.238-1.285-2.206-3.522-3.248-5.719-3.248-3.183 0-6.281 2.187-6.281 6.191 0 4.661 5.571 9.429 12 15.809 6.43-6.38 12-11.148 12-15.809 0-4.011-3.095-6.181-6.274-6.181"/>
+                  <defs>
+                    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#ef4444" />
+                      <stop offset="50%" stopColor="#dc2626" />
+                      <stop offset="100%" stopColor="#b91c1c" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    fill="url(#heartGradient)"
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                  />
                 </svg>
                 por <a
                   href="https://www.idenegociosdigitais.com.br"
