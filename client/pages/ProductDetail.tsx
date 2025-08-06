@@ -161,17 +161,20 @@ export default function ProductDetail() {
 
   // Redirect to login if not authenticated
   useEffect(() => {
-    console.log('🔐 ProductDetail Auth Check:', { isAuthenticated, isApproved });
+    console.log("🔐 ProductDetail Auth Check:", {
+      isAuthenticated,
+      isApproved,
+    });
 
     if (!isAuthenticated) {
-      console.log('❌ User not authenticated, redirecting to login...');
+      console.log("❌ User not authenticated, redirecting to login...");
       // Force immediate redirect
-      window.location.href = '/login';
+      window.location.href = "/login";
       return;
     }
 
     if (!isApproved) {
-      console.log('⚠️ User authenticated but not approved');
+      console.log("⚠️ User authenticated but not approved");
     }
   }, [isAuthenticated, isApproved]);
 
@@ -332,7 +335,7 @@ export default function ProductDetail() {
       const selectedColorData = product.available_colors.find(
         (c) => c.id === selectedColor,
       );
-      console.log('🖼️ Selected color data:', selectedColorData);
+      console.log("🖼️ Selected color data:", selectedColorData);
       if (selectedColorData?.images && selectedColorData.images.length > 0) {
         // Add unique images only
         selectedColorData.images.forEach((img) => {
@@ -345,7 +348,7 @@ export default function ProductDetail() {
         !images.includes(selectedColorData.image_url)
       ) {
         images.push(selectedColorData.image_url);
-        console.log('🖼️ Added color image_url:', selectedColorData.image_url);
+        console.log("🖼️ Added color image_url:", selectedColorData.image_url);
       }
     }
 
@@ -364,18 +367,23 @@ export default function ProductDetail() {
       });
     }
 
-    console.log('🖼️ All available images:', images);
+    console.log("🖼️ All available images:", images);
     return images.filter((img) => img && img.trim() !== "");
   };
 
   const getAvailableColors = (productData = product) => {
     // First try to use available_colors if it exists (from API)
-    if (productData?.available_colors && productData.available_colors.length > 0) {
+    if (
+      productData?.available_colors &&
+      productData.available_colors.length > 0
+    ) {
       return productData.available_colors.filter((color) => {
         // If product has variants, check if this color has stock
         if (productData.variants && productData.variants.length > 0) {
-          const hasStock = productData.variants.some((variant) =>
-            variant.color_id === color.id && (variant.stock > 0 || productData.sell_without_stock)
+          const hasStock = productData.variants.some(
+            (variant) =>
+              variant.color_id === color.id &&
+              (variant.stock > 0 || productData.sell_without_stock),
           );
           return hasStock;
         }
@@ -568,13 +576,15 @@ export default function ProductDetail() {
     setSelectedColor(colorId);
 
     // Find the selected color data to get its image
-    const selectedColorData = getAvailableColors().find(c => c.id === colorId);
+    const selectedColorData = getAvailableColors().find(
+      (c) => c.id === colorId,
+    );
     if (selectedColorData) {
       // Use the color's image_url or the passed imageUrl
       const colorImage = selectedColorData.image_url || imageUrl;
       if (colorImage) {
         setSelectedVariantImage(colorImage);
-        console.log('🎨 Selected color image:', colorImage);
+        console.log("🎨 Selected color image:", colorImage);
       }
     }
 
@@ -862,57 +872,61 @@ export default function ProductDetail() {
                 <div className="flex flex-wrap gap-1">
                   {getAvailableColors().map((color) => {
                     // Debug log for color images
-                    console.log(`🎨 Color "${color.name}" image:`, color.image_url);
+                    console.log(
+                      `🎨 Color "${color.name}" image:`,
+                      color.image_url,
+                    );
                     return (
-                    <button
-                      key={color.id}
-                      onClick={() => {
-                        handleColorSelect(color.id, color.image_url);
-                        // If this color has specific images, update gallery
-                        if (color.images && color.images.length > 0) {
-                          setSelectedImageIndex(0);
-                        }
-                      }}
-                      className={`flex items-center gap-1 p-1 rounded transition-all duration-200 ${
-                        selectedColor === color.id
-                          ? "bg-primary/10 border border-primary"
-                          : "bg-gray-50 border border-gray-200 hover:bg-gray-100"
-                      }`}
-                    >
-                      {/* Color Thumbnail */}
-                      <div className="w-6 h-6 rounded border border-gray-200 overflow-hidden bg-gray-100">
-                        {color.image_url ? (
-                          <ProductImage
-                            src={getImageUrl(color.image_url)}
-                            alt={color.name}
-                            className="w-full h-full object-contain"
-                            loading="lazy"
-                            sizes="32px"
-                          />
-                        ) : (
-                          <div
-                            className="w-full h-full rounded"
-                            style={{
-                              backgroundColor: getColorValue(color),
-                            }}
-                          ></div>
-                        )}
-                      </div>
+                      <button
+                        key={color.id}
+                        onClick={() => {
+                          handleColorSelect(color.id, color.image_url);
+                          // If this color has specific images, update gallery
+                          if (color.images && color.images.length > 0) {
+                            setSelectedImageIndex(0);
+                          }
+                        }}
+                        className={`flex items-center gap-1 p-1 rounded transition-all duration-200 ${
+                          selectedColor === color.id
+                            ? "bg-primary/10 border border-primary"
+                            : "bg-gray-50 border border-gray-200 hover:bg-gray-100"
+                        }`}
+                      >
+                        {/* Color Thumbnail */}
+                        <div className="w-6 h-6 rounded border border-gray-200 overflow-hidden bg-gray-100">
+                          {color.image_url ? (
+                            <ProductImage
+                              src={getImageUrl(color.image_url)}
+                              alt={color.name}
+                              className="w-full h-full object-contain"
+                              loading="lazy"
+                              sizes="32px"
+                            />
+                          ) : (
+                            <div
+                              className="w-full h-full rounded"
+                              style={{
+                                backgroundColor: getColorValue(color),
+                              }}
+                            ></div>
+                          )}
+                        </div>
 
-                      {/* Color Name */}
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm font-medium text-gray-900">
-                          {color.name}
-                        </span>
-                        {/* Multiple images indicator */}
-                        {color.images && color.images.length > 1 && (
-                          <span className="text-[10px] bg-primary/10 text-primary px-1 py-0.5 rounded">
-                            {color.images.length}
+                        {/* Color Name */}
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm font-medium text-gray-900">
+                            {color.name}
                           </span>
-                        )}
-                      </div>
-                    </button>
-                  );})}
+                          {/* Multiple images indicator */}
+                          {color.images && color.images.length > 1 && (
+                            <span className="text-[10px] bg-primary/10 text-primary px-1 py-0.5 rounded">
+                              {color.images.length}
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
