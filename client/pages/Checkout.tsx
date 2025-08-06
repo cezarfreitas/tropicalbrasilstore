@@ -302,8 +302,6 @@ export default function Checkout() {
           </Button>
         </div>
 
-        <CheckoutDebug />
-
         <div className="grid lg:grid-cols-12 gap-8">
           {/* Customer Form */}
           <div className="lg:col-span-7">
