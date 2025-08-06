@@ -403,9 +403,9 @@ export default function ProductImport() {
       parent_sku: ["sku_pai", "parent_sku", "codigo_pai"],
       description: ["descricao", "description", "desc"],
       suggested_price: ["preco_sugerido", "suggested_price", "msrp"],
-      brand_id: ["marca", "brand", "brand_id", "marca_id"],
-      gender_id: ["genero", "gender", "gender_id", "sexo"],
-      type_id: ["tipo", "type", "type_id", "categoria_tipo"],
+      brand_name: ["marca", "brand", "brand_name", "nome_marca"],
+      gender_name: ["genero", "gender", "gender_name", "sexo"],
+      type_name: ["tipo", "type", "type_name", "categoria_tipo"],
       stock_type: ["tipo_estoque", "stock_type", "estoque_tipo"],
       grade_stock: ["estoque_grade", "grade_stock", "estoque_total"],
       variant_sku: ["sku_variante", "variant_sku", "sku_cor"],
@@ -969,7 +969,7 @@ export default function ProductImport() {
                     SKU da Variante: HAV001-DOURADO<br/>
                     Preço da Cor: 35.90<br/>
                     Imagem da Cor: /uploads/dourado.jpg<br/>
-                    <em>→ Cor dourada com pre��o premium</em>
+                    <em>→ Cor dourada com preço premium</em>
                   </div>
                 </div>
               </div>
