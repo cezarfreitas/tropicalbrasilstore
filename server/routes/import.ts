@@ -111,34 +111,85 @@ async function downloadImage(
   filename: string,
 ): Promise<string | null> {
   try {
+    // Validate URL
+    if (!url || typeof url !== 'string' || url.trim() === '') {
+      console.log(`❌ URL de imagem inválida: "${url}"`);
+      return null;
+    }
+
+    const trimmedUrl = url.trim();
+
+    // Check if it's a valid URL
+    try {
+      new URL(trimmedUrl);
+    } catch {
+      console.log(`❌ URL de imagem malformada: "${trimmedUrl}"`);
+      return null;
+    }
+
+    console.log(`📥 Iniciando download: ${trimmedUrl}`);
+
     const publicDir = path.join(process.cwd(), "public", "uploads", "products");
 
     // Create directory if it doesn't exist
     if (!fs.existsSync(publicDir)) {
+      console.log(`📁 Criando diretório: ${publicDir}`);
       fs.mkdirSync(publicDir, { recursive: true });
     }
 
-    const ext = path.extname(url) || ".jpg";
+    const ext = path.extname(trimmedUrl) || ".jpg";
     const safeName = filename.replace(/[^a-z0-9]/gi, "_").toLowerCase();
-    const imagePath = path.join(publicDir, `${safeName}${ext}`);
-    const publicPath = `/uploads/products/${safeName}${ext}`;
+    const timestamp = Date.now();
+    const imagePath = path.join(publicDir, `${safeName}_${timestamp}${ext}`);
+    const publicPath = `/uploads/products/${safeName}_${timestamp}${ext}`;
+
+    console.log(`💾 Salvando em: ${imagePath}`);
 
     const response = await axios({
       method: "GET",
-      url: url,
+      url: trimmedUrl,
       responseType: "stream",
       timeout: 30000,
+      maxRedirects: 5,
       headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Accept": "image/*,*/*;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
       },
     });
 
+    // Check response content type
+    const contentType = response.headers['content-type'];
+    if (!contentType || !contentType.startsWith('image/')) {
+      console.log(`❌ Resposta não é uma imagem válida. Content-Type: ${contentType}`);
+      return null;
+    }
+
     await streamPipeline(response.data, fs.createWriteStream(imagePath));
 
-    return publicPath;
+    // Verify file was created and has content
+    if (fs.existsSync(imagePath)) {
+      const stats = fs.statSync(imagePath);
+      if (stats.size > 0) {
+        console.log(`✅ Imagem baixada com sucesso: ${publicPath} (${stats.size} bytes)`);
+        return publicPath;
+      } else {
+        console.log(`❌ Arquivo criado mas está vazio: ${imagePath}`);
+        fs.unlinkSync(imagePath); // Remove empty file
+        return null;
+      }
+    } else {
+      console.log(`❌ Arquivo não foi criado: ${imagePath}`);
+      return null;
+    }
+
   } catch (error) {
-    console.error(`Error downloading image from ${url}:`, error);
+    console.error(`❌ Erro ao baixar imagem de ${url}:`, error.message);
+    if (error.response) {
+      console.error(`   Status: ${error.response.status}`);
+      console.error(`   Headers:`, error.response.headers);
+    }
     return null;
   }
 }
