@@ -98,6 +98,9 @@ export function ThemeDebug() {
             <Button onClick={testSettingsEndpoint} size="sm" variant="outline">
               Test /api/settings
             </Button>
+            <Button onClick={initializeSettings} size="sm" variant="default">
+              Initialize Settings
+            </Button>
             <Button onClick={createSettings} size="sm" variant="secondary">
               Create Settings
             </Button>
