@@ -60,6 +60,7 @@ router.get("/", async (req, res) => {
       payment_methods: ["pix", "credit_card"],
       shipping_fee: 15.0,
       free_shipping_threshold: 150.0,
+      minimum_order_value: 0.0,
       maintenance_mode: false,
       allow_orders: true,
       tax_rate: 0.0
