@@ -955,9 +955,9 @@ export default function ProductImport() {
                 <div className="bg-blue-50 p-3 rounded text-sm">
                   <strong>Exemplo:</strong><br/>
                   • Tipo de Estoque: <code>grade</code><br/>
-                  • Estoque por Grade: <code>25</code><br/>
+                  • Estoque por Grade: <code>25</code> (grades completas)<br/>
                   • Deixe os campos de tamanho vazios<br/>
-                  <em>→ Resultado: 25 pares no total, independente dos tamanhos</em>
+                  <em>→ Resultado: 25 grades completas para venda (não por tamanho individual)</em>
                 </div>
               </div>
 
@@ -972,10 +972,10 @@ export default function ProductImport() {
                 <div className="bg-green-50 p-3 rounded text-sm">
                   <strong>Exemplo:</strong><br/>
                   • Tipo de Estoque: <code>size</code><br/>
-                  • Estoque Tam 37: <code>5</code><br/>
-                  • Estoque Tam 38: <code>8</code><br/>
-                  • Estoque Tam 39: <code>3</code><br/>
-                  <em>→ Resultado: Estoque específico por tamanho</em>
+                  • Estoque Tam 37: <code>5</code> pares<br/>
+                  • Estoque Tam 38: <code>8</code> pares<br/>
+                  • Estoque Tam 39: <code>3</code> pares<br/>
+                  <em>→ Resultado: Venda individual por tamanho específico</em>
                 </div>
               </div>
             </div>
