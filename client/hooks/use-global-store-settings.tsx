@@ -8,6 +8,7 @@ interface StoreSettings {
   accent_color?: string;
   background_color?: string;
   text_color?: string;
+  minimum_order_value?: number;
 }
 
 // Declare global variable
