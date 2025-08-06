@@ -734,6 +734,51 @@ export default function ProductsWooCommerce() {
     });
   };
 
+  const updateGradeStock = (
+    variantIndex: number,
+    gradeId: number,
+    stockQuantity: number,
+  ) => {
+    const updatedVariants = [...formData.color_variants];
+    const variant = updatedVariants[variantIndex];
+
+    // Initialize grade_stocks if it doesn't exist
+    if (!variant.grade_stocks) {
+      variant.grade_stocks = [];
+    }
+
+    // Find existing grade stock entry
+    const existingGradeIndex = variant.grade_stocks.findIndex(
+      (gs) => gs.grade_id === gradeId,
+    );
+
+    if (existingGradeIndex >= 0) {
+      // Update existing grade stock
+      variant.grade_stocks[existingGradeIndex].stock_quantity = stockQuantity;
+    } else {
+      // Add new grade stock entry
+      const grade = grades.find((g) => g.id === gradeId);
+      variant.grade_stocks.push({
+        grade_id: gradeId,
+        stock_quantity: stockQuantity,
+        grade_name: grade?.name || "",
+      });
+    }
+
+    // Update total stock based on grade stocks for grade-type products
+    if ((formData as any).stock_type === "grade") {
+      variant.stock_total = variant.grade_stocks.reduce(
+        (sum, gs) => sum + gs.stock_quantity,
+        0,
+      );
+    }
+
+    setFormData({
+      ...formData,
+      color_variants: updatedVariants,
+    });
+  };
+
   const removeColorVariant = (index: number) => {
     setFormData({
       ...formData,
