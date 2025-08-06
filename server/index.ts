@@ -202,6 +202,7 @@ export function createServer() {
   app.use("/api/vendor/referral", vendorReferralRouter);
   app.use("/api/debug-minimum-order", debugMinimumOrderRouter);
 app.use("/api/debug-database", debugDatabaseRouter);
+app.use("/api/debug-theme", debugThemeRouter);
 
   return app;
 }
