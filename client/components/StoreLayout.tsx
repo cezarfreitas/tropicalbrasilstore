@@ -1080,7 +1080,14 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             <div className="text-center text-xs sm:text-sm text-muted-foreground">
               <p>&copy; 2024 Tropical Brasil Sandálias. Todos os direitos reservados.</p>
               <p className="mt-1 sm:mt-2 text-xs text-gray-400">
-                Feito com ❤️ por <span className="font-medium">IDE | Negócios Digitais</span>
+                Feito com ❤️ por <a
+                  href="https://www.idenegociosdigitais.com.br"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-gray-500 hover:text-primary transition-colors duration-200 hover:underline"
+                >
+                  IDE | Negócios Digitais
+                </a>
               </p>
             </div>
           </div>
