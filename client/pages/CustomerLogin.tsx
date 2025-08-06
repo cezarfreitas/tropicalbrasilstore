@@ -66,7 +66,7 @@ export default function CustomerLogin() {
     if (result.success) {
       toast({
         title: "Login realizado com sucesso!",
-        description: "Bem-vindo de volta à Chinelos Store.",
+        description: "Bem-vindo de volta à Tropical Brasil Sandálias.",
       });
 
       // Check if it's first login and redirect to password change
