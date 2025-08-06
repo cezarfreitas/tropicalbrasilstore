@@ -829,15 +829,19 @@ router.post("/bulk", async (req, res) => {
         );
         console.log(`🔍 [${requestId}] Dados da variante:`, JSON.stringify(variante, null, 2));
 
+        // Type conversion and normalization
+        const precoNumerico = parseFloat(variante.preco);
+        const corLimpa = typeof variante.cor === 'string' ? variante.cor.trim() : variante.cor;
+
         // More detailed validation with specific error messages
         const validationErrors = [];
 
-        if (!variante.cor) {
+        if (!corLimpa) {
           validationErrors.push("cor está vazia ou não foi fornecida");
         }
 
-        if (!variante.preco || variante.preco <= 0) {
-          validationErrors.push(`preço �� inválido (${variante.preco}) - deve ser maior que 0`);
+        if (isNaN(precoNumerico) || precoNumerico <= 0) {
+          validationErrors.push(`preço é inválido (${variante.preco}) - deve ser um número maior que 0`);
         }
 
         if (!variante.grade) {
