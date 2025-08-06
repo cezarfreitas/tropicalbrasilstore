@@ -604,9 +604,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   </Badge>
                 )}
               </div>
-              <span className="text-[10px] text-white/70">
-                Carrinho
-              </span>
+              <span className="text-[10px] text-white/70">Carrinho</span>
             </div>
 
             {/* Search */}
@@ -684,22 +682,26 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     <div className="space-y-0.5">
                       {selectedColorFilters.length > 0 && (
                         <div className="text-[10px] text-white/70">
-                          <span className="font-medium">Cores:</span> {selectedColorFilters.length}
+                          <span className="font-medium">Cores:</span>{" "}
+                          {selectedColorFilters.length}
                         </div>
                       )}
                       {selectedGenderFilters.length > 0 && (
                         <div className="text-[10px] text-white/70">
-                          <span className="font-medium">Gêneros:</span> {selectedGenderFilters.length}
+                          <span className="font-medium">Gêneros:</span>{" "}
+                          {selectedGenderFilters.length}
                         </div>
                       )}
                       {selectedTypeFilters.length > 0 && (
                         <div className="text-[10px] text-white/70">
-                          <span className="font-medium">Tipos:</span> {selectedTypeFilters.length}
+                          <span className="font-medium">Tipos:</span>{" "}
+                          {selectedTypeFilters.length}
                         </div>
                       )}
                       {searchTerm.trim() && (
                         <div className="text-[10px] text-white/70 truncate">
-                          <span className="font-medium">Busca:</span> {searchTerm.trim()}
+                          <span className="font-medium">Busca:</span>{" "}
+                          {searchTerm.trim()}
                         </div>
                       )}
                     </div>
@@ -1074,7 +1076,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
         <footer className="border-t bg-card">
           <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
             <div className="text-center text-xs sm:text-sm text-muted-foreground">
-              <p>&copy; 2024 Tropical Brasil Sandálias. Todos os direitos reservados.</p>
+              <p>
+                &copy; 2024 Tropical Brasil Sandálias. Todos os direitos
+                reservados.
+              </p>
               <p className="mt-1 sm:mt-2 text-xs text-gray-400 flex items-center justify-center gap-1">
                 Feito com
                 <svg
@@ -1083,7 +1088,13 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <defs>
-                    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <linearGradient
+                      id="heartGradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="100%"
+                    >
                       <stop offset="0%" stopColor="#ef4444" />
                       <stop offset="50%" stopColor="#dc2626" />
                       <stop offset="100%" stopColor="#b91c1c" />
@@ -1094,7 +1105,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                     d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
                   />
                 </svg>
-                por <a
+                por{" "}
+                <a
                   href="https://www.idenegociosdigitais.com.br"
                   target="_blank"
                   rel="noopener noreferrer"

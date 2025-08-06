@@ -44,7 +44,9 @@ export function ThemeLoader() {
 
   const fetchThemeColors = async (retries = 1) => {
     try {
-      console.log(`🎨 Fetching theme colors from server... (attempts left: ${retries + 1})`);
+      console.log(
+        `🎨 Fetching theme colors from server... (attempts left: ${retries + 1})`,
+      );
 
       // Use XMLHttpRequest to bypass FullStory interference
       const response = await new Promise<Response>((resolve, reject) => {
@@ -56,10 +58,13 @@ export function ThemeLoader() {
         xhr.onload = () => {
           try {
             const headers = new Headers();
-            xhr.getAllResponseHeaders().split("\r\n").forEach((line) => {
-              const [key, value] = line.split(": ");
-              if (key && value) headers.set(key, value);
-            });
+            xhr
+              .getAllResponseHeaders()
+              .split("\r\n")
+              .forEach((line) => {
+                const [key, value] = line.split(": ");
+                if (key && value) headers.set(key, value);
+              });
 
             const response = new Response(xhr.responseText, {
               status: xhr.status,
@@ -103,7 +108,10 @@ export function ThemeLoader() {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
-      console.warn(`Theme colors fetch attempt ${2 - retries} failed:`, error.message || error);
+      console.warn(
+        `Theme colors fetch attempt ${2 - retries} failed:`,
+        error.message || error,
+      );
 
       // Retry once if we have attempts left
       if (retries > 0) {
@@ -148,7 +156,7 @@ export function ThemeLoader() {
       secondary_color: "#1d4ed8",
       accent_color: "#dbeafe",
       background_color: "#ffffff",
-      text_color: "#1f2937"
+      text_color: "#1f2937",
     };
     setColors(fallbackColors);
     // Save fallback to localStorage

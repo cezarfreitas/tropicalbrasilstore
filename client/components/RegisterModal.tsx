@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Package, Phone, User, LogIn } from "lucide-react";
 
@@ -13,7 +18,11 @@ interface RegisterModalProps {
   onSwitchToLogin?: () => void;
 }
 
-export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
+export function RegisterModal({
+  isOpen,
+  onClose,
+  onSwitchToLogin,
+}: RegisterModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -66,7 +75,8 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
     if (whatsappDigits.length !== 11) {
       toast({
         title: "Erro no WhatsApp",
-        description: "Por favor, insira um número de WhatsApp válido com 11 dígitos.",
+        description:
+          "Por favor, insira um número de WhatsApp válido com 11 dígitos.",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -89,7 +99,8 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
         const result = await response.json();
         toast({
           title: "Cadastro realizado com sucesso!",
-          description: "Sua conta está sendo analisada. Em breve você receberá a aprovação e poderá fazer pedidos.",
+          description:
+            "Sua conta está sendo analisada. Em breve você receberá a aprovação e poderá fazer pedidos.",
           duration: 5000,
         });
         resetForm();
@@ -99,7 +110,8 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
         if (response.status === 409) {
           toast({
             title: "WhatsApp já cadastrado",
-            description: "Este número já possui uma conta. Tente fazer login ou use outro número.",
+            description:
+              "Este número já possui uma conta. Tente fazer login ou use outro número.",
             variant: "destructive",
           });
         } else {
@@ -109,7 +121,9 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
     } catch (error: any) {
       toast({
         title: "Erro no cadastro",
-        description: error.message || "Não foi possível realizar o cadastro. Tente novamente.",
+        description:
+          error.message ||
+          "Não foi possível realizar o cadastro. Tente novamente.",
         variant: "destructive",
       });
     } finally {
@@ -144,7 +158,9 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
                 <Input
                   id="modal-name"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   placeholder="Seu nome completo"
                   className="pl-10"
                   required
@@ -159,7 +175,9 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
                 id="modal-email"
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 placeholder="seu@email.com"
                 required
                 disabled={isLoading}
@@ -186,11 +204,7 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
               </p>
             </div>
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
@@ -207,7 +221,9 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">ou</span>
+              <span className="bg-background px-2 text-muted-foreground">
+                ou
+              </span>
             </div>
           </div>
 

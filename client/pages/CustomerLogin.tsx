@@ -95,7 +95,9 @@ export default function CustomerLogin() {
       <div className="w-full max-w-sm sm:max-w-md">
         <div className="text-center mb-6 sm:mb-8">
           <div className="mb-6">
-            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-2">{storeName}</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-2">
+              {storeName}
+            </h1>
             <p className="text-blue-100 text-sm sm:text-base">
               Entre para acessar sua área exclusiva
             </p>
@@ -104,15 +106,17 @@ export default function CustomerLogin() {
 
         <Card className="shadow-lg border-0">
           <CardHeader className="space-y-1 pb-6">
-                        <CardTitle className="text-xl sm:text-2xl font-semibold text-center flex items-center justify-center gap-2">
+            <CardTitle className="text-xl sm:text-2xl font-semibold text-center flex items-center justify-center gap-2">
               <Lock className="h-4 w-4 sm:h-5 sm:w-5" />
               Entrar
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="space-y-2">
-                <Label htmlFor="whatsapp" className="text-sm">WhatsApp</Label>
+              <div className="space-y-2">
+                <Label htmlFor="whatsapp" className="text-sm">
+                  WhatsApp
+                </Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -131,7 +135,7 @@ export default function CustomerLogin() {
                 </p>
               </div>
 
-                            <div className="space-y-2">
+              <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm">
                   Senha
                 </Label>

@@ -1148,18 +1148,18 @@ export default function ProductDetail() {
 
                     {/* Product Info */}
                     <div className="p-1.5 space-y-0.5">
-                      <h3 className="font-medium text-sm text-gray-900 line-clamp-2 leading-tight">
+                      <h3 className="font-medium text-xs text-gray-900 line-clamp-2 leading-tight">
                         {suggestedProduct.name}
                       </h3>
 
                       {/* Pricing */}
                       {suggestedProduct.base_price && (
-                        <div className="bg-gray-50 rounded-lg p-1.5">
+                        <div className="bg-gray-50 rounded p-1">
                           <PriceDisplay
                             price={suggestedProduct.base_price}
                             suggestedPrice={suggestedProduct.suggested_price}
                             variant="default"
-                            className="[&>div:first-child]:text-lg"
+                            className="[&>div:first-child]:text-sm"
                             onLoginClick={() => setShowLoginModal(true)}
                           />
                         </div>
