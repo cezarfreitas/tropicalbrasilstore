@@ -833,7 +833,7 @@ export default function ProductImport() {
         "15.00",                                   // Preço Base
         "25.90",                                   // Preço de Venda
         "https://exemplo.com/chinelo-abc.jpg",     // URL da Foto
-        "Chinelos Tamanhos",                       // Grupo de Tamanhos (nome, não ID)
+        "",                                        // Grupo de Tamanhos (OPCIONAL para grade)
         "preto",                                   // Cor
         "ABC001-PRETO",                           // SKU
         "ABC001",                                 // SKU Pai
