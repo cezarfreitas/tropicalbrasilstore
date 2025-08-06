@@ -208,8 +208,8 @@ export function SimpleProductCard({
 
           {/* Color Variants - Smaller and positioned closer to edge */}
           {product.available_colors && product.available_colors.length > 0 && (
-            <div className="absolute bottom-1.5 right-1.5">
-              <div className="flex gap-1">
+            <div className="absolute bottom-1 right-1">
+              <div className="flex gap-0.5">
                 {product.available_colors.slice(0, 3).map((color, idx) => (
                   <div
                     key={color.id}
