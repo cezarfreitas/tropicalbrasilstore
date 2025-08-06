@@ -823,10 +823,11 @@ router.post("/bulk", async (req, res) => {
       const variants = [];
 
       // Processar cada variante
-      for (const variante of product.variantes) {
+      for (const [varianteIndex, variante] of product.variantes.entries()) {
         console.log(
-          `🎨 Processando variante: ${variante.cor} do produto: ${product.codigo}`,
+          `🎨 [${requestId}] Processando variante ${varianteIndex + 1}/${product.variantes.length}: ${variante.cor || 'sem cor'} do produto: ${product.codigo}`,
         );
+        console.log(`🔍 [${requestId}] Dados da variante:`, JSON.stringify(variante, null, 2));
 
         // More detailed validation with specific error messages
         const validationErrors = [];
@@ -836,7 +837,7 @@ router.post("/bulk", async (req, res) => {
         }
 
         if (!variante.preco || variante.preco <= 0) {
-          validationErrors.push(`preço é inválido (${variante.preco}) - deve ser maior que 0`);
+          validationErrors.push(`preço �� inválido (${variante.preco}) - deve ser maior que 0`);
         }
 
         if (!variante.grade) {
@@ -1018,7 +1019,7 @@ router.post("/bulk", async (req, res) => {
           console.log(`🔄 Processando grade: ${gradeNome}`);
           const gradeId = await getOrCreateGrade(gradeNome);
           console.log(
-            `��� Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`,
+            `�� Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`,
           );
           gradesCreated.add(gradeNome);
 
