@@ -297,9 +297,13 @@ let allImportData: any[] = [];
 router.post("/products", async (req, res) => {
   try {
     console.log("📥 Recebendo dados de importação...");
+    console.log("📦 Request body:", JSON.stringify(req.body, null, 2));
+
     const { data, totalBatches, currentBatch } = req.body;
 
     console.log("📊 Data recebida:", {
+      dataType: typeof data,
+      dataIsArray: Array.isArray(data),
       dataLength: data?.length,
       totalBatches,
       currentBatch,
@@ -307,7 +311,9 @@ router.post("/products", async (req, res) => {
     });
 
     if (!data || !Array.isArray(data)) {
-      console.error("❌ Formato de dados inválido");
+      console.error("❌ Formato de dados inválido. Data:", data);
+      console.error("❌ Tipo de data:", typeof data);
+      console.error("❌ É array?", Array.isArray(data));
       return res.status(400).json({ error: "Invalid data format" });
     }
 
