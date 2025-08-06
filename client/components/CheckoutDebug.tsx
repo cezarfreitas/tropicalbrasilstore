@@ -12,7 +12,7 @@ export function CheckoutDebug() {
 
   const checkCustomerData = async () => {
     if (!authCustomer?.email) return;
-    
+
     setLoading(true);
     try {
       const response = await fetch(`/api/debug-database/customer/${encodeURIComponent(authCustomer.email)}`);
@@ -20,6 +20,39 @@ export function CheckoutDebug() {
       setCustomerData(data);
     } catch (error) {
       console.error("Error checking customer data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const setCustomerMinimum = async (amount: number) => {
+    if (!authCustomer?.email) return;
+
+    setLoading(true);
+    try {
+      const response = await fetch("/api/set-customer-minimum", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: authCustomer.email,
+          minimum_order: amount
+        })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert(`Pedido mínimo definido para R$ ${amount.toFixed(2)}`);
+        // Refresh customer data
+        await checkCustomerData();
+        // Refresh page to update auth customer data
+        window.location.reload();
+      } else {
+        alert(`Erro: ${data.error}`);
+      }
+    } catch (error) {
+      alert(`Erro: ${error.message}`);
     } finally {
       setLoading(false);
     }
