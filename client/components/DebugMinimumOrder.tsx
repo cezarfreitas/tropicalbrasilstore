@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCustomerAuth } from '@/hooks/use-customer-auth';
 import { useGlobalStoreSettings } from '@/hooks/use-global-store-settings';
+import { Button } from '@/components/ui/button';
 
 export const DebugMinimumOrder: React.FC = () => {
   const { customer, isAuthenticated } = useCustomerAuth();
