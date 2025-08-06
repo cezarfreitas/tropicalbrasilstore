@@ -82,23 +82,23 @@ export const DebugMinimumOrder: React.FC = () => {
         </div>
         
         <div>
-          <strong>💰 Pedido Mínimo (Cliente):</strong> 
+          <strong>💰 Pedido Mínimo (Cliente):</strong>
           <span className={customerMinimum > 0 ? 'text-green-600 font-bold' : 'text-gray-500'}>
-            R$ {customerMinimum.toFixed(2).replace('.', ',')}
+            {formatCurrency(customerMinimum)}
           </span>
         </div>
-        
+
         <div>
-          <strong>🌐 Pedido Mínimo (Global):</strong> 
+          <strong>🌐 Pedido Mínimo (Global):</strong>
           <span className={globalMinimum > 0 ? 'text-blue-600' : 'text-gray-500'}>
-            R$ {globalMinimum.toFixed(2).replace('.', ',')}
+            {formatCurrency(globalMinimum)}
           </span>
         </div>
-        
+
         <div className="border-t pt-2 mt-2">
           <strong>✅ Valor Efetivo:</strong>
           <span className={effectiveMinimum > 0 ? 'text-red-600 font-bold' : 'text-gray-500'}>
-            R$ {effectiveMinimum.toFixed(2).replace('.', ',')}
+            {formatCurrency(effectiveMinimum)}
           </span>
         </div>
 
