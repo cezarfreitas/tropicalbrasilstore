@@ -77,16 +77,34 @@ export function ProductImage({
       }
     }
 
-    // Try available_colors (Store API style) - ensure it's an array
-    if (Array.isArray(product.available_colors)) {
-      const firstColorWithImage = product.available_colors.find(
-        (c) => c.image_url,
-      );
-      if (firstColorWithImage && firstColorWithImage.image_url) {
-        console.log(
-          `🔍 Using available_colors image: "${firstColorWithImage.image_url}" for "${alt}"`,
+    // Try available_colors (Store API style) - handle both array and string formats
+    if (product.available_colors) {
+      let availableColors: Array<{ image_url?: string; name?: string }> = [];
+
+      if (Array.isArray(product.available_colors)) {
+        // Already an array
+        availableColors = product.available_colors;
+      } else if (typeof product.available_colors === 'string') {
+        // Parse string format (possibly comma-separated or JSON)
+        try {
+          // Try parsing as JSON first
+          availableColors = JSON.parse(product.available_colors);
+        } catch {
+          // If JSON parsing fails, skip string processing for now
+          availableColors = [];
+        }
+      }
+
+      if (availableColors.length > 0) {
+        const firstColorWithImage = availableColors.find(
+          (c) => c.image_url,
         );
-        return getImageUrl(firstColorWithImage.image_url);
+        if (firstColorWithImage && firstColorWithImage.image_url) {
+          console.log(
+            `🔍 Using available_colors image: "${firstColorWithImage.image_url}" for "${alt}"`,
+          );
+          return getImageUrl(firstColorWithImage.image_url);
+        }
       }
     }
 
