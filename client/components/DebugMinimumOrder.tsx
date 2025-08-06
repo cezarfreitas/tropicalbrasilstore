@@ -17,7 +17,7 @@ export const DebugMinimumOrder: React.FC = () => {
     }
   }, [customer]);
 
-  if (!isAuthenticated || customer?.email !== 'cezarfreitas2011@gmail.com') {
+  if (!isAuthenticated) {
     return null;
   }
 
