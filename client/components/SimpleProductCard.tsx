@@ -201,7 +201,7 @@ export function SimpleProductCard({
 
           {/* Category Badge - Smaller, more compact */}
           {product.category_name && (
-            <Badge className="absolute top-1.5 left-1.5 bg-primary/90 backdrop-blur-sm text-white px-1.5 py-0.5 text-[10px] font-medium rounded shadow-sm">
+            <Badge className="absolute top-1 left-1 bg-primary text-white px-1 py-0.5 text-[8px] font-medium rounded">
               {product.category_name}
             </Badge>
           )}
