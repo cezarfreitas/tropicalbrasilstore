@@ -5,68 +5,38 @@ const router = Router();
 
 // GET /api/settings - Get store settings
 router.get('/', async (req, res) => {
-  let connection;
-  
   try {
-    connection = await getDbConnection();
     
-    const [rows] = await connection.execute(`
-      SELECT 
-        setting_key,
-        setting_value,
-        setting_type
-      FROM store_settings 
-      WHERE is_active = 1
+    const [rows] = await db.execute(`
+      SELECT * FROM store_settings ORDER BY id LIMIT 1
     `);
     
-    // Convert array of settings to object
-    const settings: Record<string, any> = {};
-    
-    (rows as any[]).forEach((row) => {
-      const { setting_key, setting_value, setting_type } = row;
-      
-      let value = setting_value;
-      
-      // Convert based on type
-      if (setting_type === 'boolean') {
-        value = setting_value === '1' || setting_value === 'true' || setting_value === true;
-      } else if (setting_type === 'number') {
-        value = parseFloat(setting_value) || 0;
-      } else if (setting_type === 'json') {
-        try {
-          value = JSON.parse(setting_value);
-        } catch {
-          value = setting_value;
-        }
-      }
-      
-      settings[setting_key] = value;
-    });
-    
-    // Apply default values if not set
-    const defaultSettings = {
-      store_name: 'Chinelos Store',
-      primary_color: '#1d4ed8',
-      secondary_color: '#64748b',
-      accent_color: '#f59e0b',
-      text_color: '#1f2937',
-      background_color: '#ffffff',
-      currency_symbol: 'R$',
-      currency_position: 'before',
-      decimal_places: 2,
-      thousands_separator: '.',
-      decimal_separator: ',',
-      show_prices_to_guests: true,
-      enable_customer_registration: true,
-      enable_vendor_system: true,
-      maintenance_mode: false,
-    };
-    
-    const finalSettings = { ...defaultSettings, ...settings };
+    let storeSettings = (rows as any[])[0];
+
+    // If no settings exist, return defaults
+    if (!storeSettings) {
+      storeSettings = {
+        store_name: 'Chinelos Store',
+        primary_color: '#1d4ed8',
+        secondary_color: '#64748b',
+        accent_color: '#f59e0b',
+        text_color: '#1f2937',
+        background_color: '#ffffff',
+        currency_symbol: 'R$',
+        currency_position: 'before',
+        decimal_places: 2,
+        thousands_separator: '.',
+        decimal_separator: ',',
+        show_prices_to_guests: true,
+        enable_customer_registration: true,
+        enable_vendor_system: true,
+        maintenance_mode: false,
+      };
+    }
     
     res.json({
       success: true,
-      data: finalSettings
+      data: storeSettings
     });
     
   } catch (error) {
