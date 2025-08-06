@@ -857,7 +857,10 @@ export default function ProductDetail() {
                 <p className="text-sm text-gray-500">Nenhuma cor disponível</p>
               ) : (
                 <div className="flex flex-wrap gap-1">
-                  {getAvailableColors().map((color) => (
+                  {getAvailableColors().map((color) => {
+                    // Debug log for color images
+                    console.log(`🎨 Color "${color.name}" image:`, color.image_url);
+                    return (
                     <button
                       key={color.id}
                       onClick={() => {
@@ -906,7 +909,7 @@ export default function ProductDetail() {
                         )}
                       </div>
                     </button>
-                  ))}
+                  );})}
                 </div>
               )}
             </div>
