@@ -332,6 +332,7 @@ export default function ProductDetail() {
       const selectedColorData = product.available_colors.find(
         (c) => c.id === selectedColor,
       );
+      console.log('🖼️ Selected color data:', selectedColorData);
       if (selectedColorData?.images && selectedColorData.images.length > 0) {
         // Add unique images only
         selectedColorData.images.forEach((img) => {
@@ -344,6 +345,7 @@ export default function ProductDetail() {
         !images.includes(selectedColorData.image_url)
       ) {
         images.push(selectedColorData.image_url);
+        console.log('🖼️ Added color image_url:', selectedColorData.image_url);
       }
     }
 
@@ -362,6 +364,7 @@ export default function ProductDetail() {
       });
     }
 
+    console.log('🖼️ All available images:', images);
     return images.filter((img) => img && img.trim() !== "");
   };
 
