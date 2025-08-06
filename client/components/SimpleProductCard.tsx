@@ -54,19 +54,43 @@ export function SimpleProductCard({
     );
 
     if (!hasAnyImage && !enhancedProductData) {
-      fetch(`/api/store/products/${product.id}`)
-        .then((response) => response.json())
-        .then((data) => {
+      const fetchEnhancedData = async (retries = 2) => {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+          const response = await fetch(`/api/store/products/${product.id}`, {
+            signal: controller.signal,
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          const data = await response.json();
           if (data.variants && data.variants.length > 0) {
             setEnhancedProductData(data);
           }
-        })
-        .catch((error) => {
-          console.error(
-            `Failed to fetch enhanced data for product ${product.id}:`,
-            error,
-          );
-        });
+        } catch (error) {
+          if (retries > 0 && (error.name === 'AbortError' || error.message.includes('fetch'))) {
+            console.warn(`Retrying fetch for product ${product.id}, attempts left: ${retries}`);
+            setTimeout(() => fetchEnhancedData(retries - 1), 1000);
+          } else {
+            console.warn(
+              `Failed to fetch enhanced data for product ${product.id}:`,
+              error.message || error
+            );
+          }
+        }
+      };
+
+      fetchEnhancedData();
     }
   }, [
     product.id,
