@@ -164,9 +164,6 @@ export default function CustomerLogin() {
                     )}
                   </Button>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Ex: Se seu celular é (11) 99999-1234, a senha é 1234
-                </p>
               </div>
 
               <Button
