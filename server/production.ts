@@ -221,14 +221,12 @@ app.get("*", (req, res) => {
   // Skip API routes - these should be handled by the main server middleware
   if (req.path.startsWith("/api/")) {
     console.log(`❌ API route not handled: ${req.method} ${req.path}`);
-    return res
-      .status(404)
-      .json({
-        error: "API route not found",
-        path: req.path,
-        method: req.method,
-        hint: "This route should be handled by the main server middleware"
-      });
+    return res.status(404).json({
+      error: "API route not found",
+      path: req.path,
+      method: req.method,
+      hint: "This route should be handled by the main server middleware",
+    });
   }
 
   // Skip upload routes

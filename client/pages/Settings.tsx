@@ -102,10 +102,12 @@ export default function Settings() {
       console.error("❌ Error fetching settings:", error);
 
       // More detailed error information
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
-      const errorDetails = error instanceof TypeError && error.message === "Failed to fetch"
-        ? "Network error - check if the server is running and accessible"
-        : errorMessage;
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      const errorDetails =
+        error instanceof TypeError && error.message === "Failed to fetch"
+          ? "Network error - check if the server is running and accessible"
+          : errorMessage;
 
       // Set default settings as fallback
       console.log("🔄 Setting default fallback settings...");
