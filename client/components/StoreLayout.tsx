@@ -599,28 +599,28 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   <ShoppingCart className="h-4 w-4 text-white" />
                 </Button>
                 {totalItems > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 text-white animate-pulse border-2 border-white shadow-xl font-bold">
-                    {totalItems > 99 ? "99+" : totalItems}
+                  <Badge className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full p-0 flex items-center justify-center text-[9px] bg-red-500 text-white font-semibold">
+                    {totalItems > 9 ? "9+" : totalItems}
                   </Badge>
                 )}
               </div>
-              <span className="text-xs text-white/80 font-medium">
+              <span className="text-[10px] text-white/70">
                 Carrinho
               </span>
             </div>
 
             {/* Search */}
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-1">
               <div className="relative">
                 <Button
                   variant="ghost"
-                  className="w-12 h-12 p-0 rounded-xl bg-white/10 hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-lg border border-white/20 hover:border-white/40 backdrop-blur-sm"
+                  className="w-10 h-10 p-0 rounded-lg bg-white/10 hover:bg-white/15 transition-all duration-200"
                   onClick={() => setSearchModalOpen(true)}
                 >
-                  <Search className="h-5 w-5 text-white" />
+                  <Search className="h-4 w-4 text-white" />
                 </Button>
               </div>
-              <span className="text-xs text-white/80 font-medium">Buscar</span>
+              <span className="text-[10px] text-white/70">Buscar</span>
             </div>
           </div>
 
