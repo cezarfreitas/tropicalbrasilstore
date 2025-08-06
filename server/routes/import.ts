@@ -614,6 +614,18 @@ async function processGradeImport(data: any[]) {
       // Para grades, precisamos criar variantes base (sem tamanho específico)
       // Isso permite que a loja mostre as cores disponíveis
 
+      // Download color variant image if provided
+      let colorImagePath = null;
+      if (item.color_image_url) {
+        console.log(`📸 Downloading color image: ${item.color_image_url}`);
+        colorImagePath = await downloadImage(item.color_image_url, `${item.name}_${item.color}`);
+        if (colorImagePath) {
+          console.log(`✅ Color image downloaded: ${colorImagePath}`);
+        } else {
+          console.log(`❌ Failed to download color image: ${item.color_image_url}`);
+        }
+      }
+
       // Get default sizes para criar variantes base (mesmo que controladas por grade)
       const [defaultSizes] = await connection.execute(
         "SELECT id, size FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44') ORDER BY size"
@@ -636,10 +648,31 @@ async function processGradeImport(data: any[]) {
             colorId,
             0, // Estoque = 0 pois é controlado pela grade
             item.color_price ? parseFloat(item.color_price) : null,
-            item.color_image_url || null
+            colorImagePath // Use downloaded image path
           ]
         );
       }
+
+      console.log(`🎨 Variantes criadas com imagem: ${colorImagePath ? 'SIM' : 'NÃO'}`);
+
+      // Criar entrada específica na tabela product_color_variants para identificação rápida
+      await connection.execute(
+        `INSERT INTO product_color_variants (product_id, color_id, color_hex, image_url, price_override, sale_price)
+         VALUES (?, ?, ?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE
+         color_hex = VALUES(color_hex),
+         image_url = VALUES(image_url),
+         price_override = VALUES(price_override),
+         sale_price = VALUES(sale_price)`,
+        [
+          productId,
+          colorId,
+          null, // color_hex pode ser null por enquanto
+          colorImagePath,
+          item.color_price ? parseFloat(item.color_price) : null,
+          item.color_sale_price ? parseFloat(item.color_sale_price) : null
+        ]
+      );
 
       await connection.commit();
       console.log(`✅ Produto grade criado com sucesso: ${item.name}`);
