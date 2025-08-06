@@ -173,6 +173,10 @@ async function downloadImage(
       const stats = fs.statSync(imagePath);
       if (stats.size > 0) {
         console.log(`✅ Imagem baixada com sucesso: ${publicPath} (${stats.size} bytes)`);
+
+        // Liberar referências para garbage collection
+        response.data = null;
+
         return publicPath;
       } else {
         console.log(`❌ Arquivo criado mas está vazio: ${imagePath}`);
