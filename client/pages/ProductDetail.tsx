@@ -716,14 +716,14 @@ export default function ProductDetail() {
 
                 {/* Thumbnail Gallery */}
                 {getAllAvailableImages().length > 1 && (
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-5 gap-1">
                     {getAllAvailableImages().map((image, index) => (
                       <button
                         key={index}
                         onClick={() => setSelectedImageIndex(index)}
-                        className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                        className={`aspect-square rounded overflow-hidden border transition-all duration-200 ${
                           selectedImageIndex === index
-                            ? "border-primary ring-2 ring-primary/20"
+                            ? "border-primary border-2"
                             : "border-gray-200 hover:border-gray-300"
                         }`}
                       >
@@ -755,24 +755,24 @@ export default function ProductDetail() {
           </div>
 
           {/* Product Information */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Product Header */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               {/* Title and Actions */}
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   {/* Category Badge */}
                   {product.category_name && (
-                    <div className="inline-block bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium mb-2">
+                    <div className="inline-block bg-primary/10 text-primary px-1.5 py-0.5 rounded text-[10px] font-medium mb-1">
                       {product.category_name}
                     </div>
                   )}
-                  <h1 className="text-3xl font-bold text-gray-900 mb-1.5 leading-tight">
+                  <h1 className="text-2xl font-bold text-gray-900 mb-1 leading-tight">
                     {product.name}
                   </h1>
                   {/* Product SKU */}
                   {product.sku && (
-                    <div className="text-sm text-gray-500 mb-3">
+                    <div className="text-xs text-gray-500 mb-2">
                       <span className="font-medium">SKU:</span> {product.sku}
                     </div>
                   )}
