@@ -713,7 +713,7 @@ export default function ProductImport() {
         "Feminino", // Gênero
         "Chinelo", // Tipo
         "grade", // Tipo de Estoque
-        "15", // Estoque por Grade (menor por ser edição especial)
+        "15", // Estoque por Grade (menor por ser ediç��o especial)
         "", // Tam 37
         "", // Tam 38
         "", // Tam 39
@@ -958,6 +958,7 @@ export default function ProductImport() {
                 <div className="bg-blue-50 p-3 rounded text-sm">
                   <strong>Exemplo:</strong><br/>
                   • Tipo de Estoque: <code>grade</code><br/>
+                  • Nome da Grade Vendida: <code>2549</code> (nome da grade criada)<br/>
                   • Estoque por Grade: <code>25</code> (grades completas)<br/>
                   • Deixe os campos de tamanho vazios<br/>
                   <em>→ Resultado: 25 grades completas para venda (não por tamanho individual)</em>
