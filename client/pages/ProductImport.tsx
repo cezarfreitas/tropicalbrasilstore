@@ -257,18 +257,23 @@ export default function ProductImport() {
     }
   };
 
-  const fetchSizeGroups = async () => {
+  const fetchSizeGroups = async (retryCount = 0) => {
     try {
       const response = await customFetch("/api/size-groups");
       if (response.ok) {
         const data = await response.json();
         setSizeGroups(data);
       } else {
-        console.error("Error response from size-groups:", response.status, response.statusText);
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error("Error fetching size groups:", error);
-      setSizeGroups([]);
+      if (retryCount < 2) {
+        console.log(`Retrying size groups fetch... (${retryCount + 1}/3)`);
+        setTimeout(() => fetchSizeGroups(retryCount + 1), 1000 * (retryCount + 1));
+      } else {
+        setSizeGroups([]);
+      }
     }
   };
 
@@ -1224,7 +1229,7 @@ export default function ProductImport() {
                     <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5" />
                     <div>
                       <h5 className="font-medium text-amber-900 mb-2">
-                        ⚠️ Novo Formato: Uma Cor Por Linha
+                        ���️ Novo Formato: Uma Cor Por Linha
                       </h5>
                       <div className="text-sm text-amber-800 space-y-2">
                         <p>
