@@ -597,14 +597,20 @@ async function processGradeImport(data: any[]) {
       } else {
         // Download main product image if URL provided
         let photoPath = null;
-        if (item.photo_url) {
-          console.log(`📸 Downloading main product image: ${item.photo_url}`);
-          photoPath = await downloadImage(item.photo_url, item.name);
-          if (photoPath) {
-            console.log(`✅ Main image downloaded: ${photoPath}`);
-          } else {
-            console.log(`❌ Failed to download main image: ${item.photo_url}`);
+        if (item.photo_url && item.photo_url.trim()) {
+          console.log(`📸 Fazendo download da imagem principal: ${item.photo_url}`);
+          try {
+            photoPath = await downloadImage(item.photo_url, item.name);
+            if (photoPath) {
+              console.log(`✅ Imagem principal baixada com sucesso: ${photoPath}`);
+            } else {
+              console.log(`❌ Falha ao baixar imagem principal: ${item.photo_url}`);
+            }
+          } catch (error) {
+            console.warn(`⚠️ Erro ao baixar imagem principal: ${error.message}`);
           }
+        } else {
+          console.log(`📸 Nenhuma URL de imagem principal fornecida`);
         }
 
         // Create new product with grade stock type
