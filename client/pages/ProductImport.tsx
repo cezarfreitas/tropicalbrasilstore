@@ -876,15 +876,32 @@ export default function ProductImport() {
         header.length,
         ...rows.map(row => String(row[index] || "").length)
       );
-      return { wch: Math.min(Math.max(maxLength, 10), 50) };
+      return { wch: Math.min(Math.max(maxLength, 15), 40) };
     });
     worksheet['!cols'] = colWidths;
 
     // Estilizar cabeçalho
     const headerStyle = {
       font: { bold: true, color: { rgb: "FFFFFF" } },
-      fill: { fgColor: { rgb: "4472C4" } },
-      alignment: { horizontal: "center" }
+      fill: { fgColor: { rgb: "2E7D32" } }, // Verde mais escuro para grade
+      alignment: { horizontal: "center", vertical: "center" },
+      border: {
+        top: { style: "thin", color: { rgb: "000000" } },
+        bottom: { style: "thin", color: { rgb: "000000" } },
+        left: { style: "thin", color: { rgb: "000000" } },
+        right: { style: "thin", color: { rgb: "000000" } }
+      }
+    };
+
+    // Estilo para dados
+    const dataStyle = {
+      alignment: { horizontal: "left", vertical: "center" },
+      border: {
+        top: { style: "thin", color: { rgb: "CCCCCC" } },
+        bottom: { style: "thin", color: { rgb: "CCCCCC" } },
+        left: { style: "thin", color: { rgb: "CCCCCC" } },
+        right: { style: "thin", color: { rgb: "CCCCCC" } }
+      }
     };
 
     // Aplicar estilo aos headers
@@ -894,8 +911,17 @@ export default function ProductImport() {
       worksheet[cellAddress].s = headerStyle;
     });
 
+    // Aplicar estilo aos dados
+    rows.forEach((row, rowIndex) => {
+      row.forEach((_, colIndex) => {
+        const cellAddress = XLSX.utils.encode_cell({ r: rowIndex + 1, c: colIndex });
+        if (!worksheet[cellAddress]) worksheet[cellAddress] = {};
+        worksheet[cellAddress].s = dataStyle;
+      });
+    });
+
     // Adicionar worksheet ao workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Produtos por Grade");
 
     // Gerar arquivo Excel
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
@@ -1041,7 +1067,7 @@ export default function ProductImport() {
               {/* Estoque por Tamanho */}
               <div className="space-y-3">
                 <h4 className="font-semibold text-green-800 flex items-center gap-2">
-                  ��� Estoque por Tamanho
+                  📏 Estoque por Tamanho
                 </h4>
                 <p className="text-sm text-muted-foreground">
                   Configure <code>Tipo de Estoque = "size"</code> e use os campos <code>Estoque Tam XX</code>
@@ -1148,7 +1174,7 @@ export default function ProductImport() {
 
       <Tabs defaultValue="export" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="export">Exporta��ão</TabsTrigger>
+          <TabsTrigger value="export">Exportação</TabsTrigger>
           <TabsTrigger value="upload">1. Upload do Arquivo</TabsTrigger>
           <TabsTrigger value="mapping" disabled={!csvHeaders.length}>
             2. Mapeamento de Colunas
