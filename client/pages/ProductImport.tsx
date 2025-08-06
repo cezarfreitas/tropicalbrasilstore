@@ -372,12 +372,23 @@ export default function ProductImport() {
         setCsvHeaders(result.headers);
 
         // Auto-map columns based on header names
-        const autoMappings: ColumnMapping[] = REQUIRED_FIELDS.map((field) => ({
-          csvColumn: autoMapColumn(result.headers, field.key),
-          targetField: field.key,
-          required: field.required,
-        }));
+        console.log("🔍 Headers encontrados:", result.headers);
+
+        const autoMappings: ColumnMapping[] = REQUIRED_FIELDS.map((field) => {
+          const mappedColumn = autoMapColumn(result.headers, field.key);
+          console.log(`📋 Campo "${field.key}" -> "${mappedColumn}"`);
+          return {
+            csvColumn: mappedColumn,
+            targetField: field.key,
+            required: field.required,
+          };
+        });
+
         setColumnMappings(autoMappings);
+
+        // Contar quantos campos foram mapeados automaticamente
+        const mappedCount = autoMappings.filter(m => m.csvColumn).length;
+        console.log(`✅ ${mappedCount}/${autoMappings.length} campos mapeados automaticamente`);
 
         toast({
           title: "Arquivo Processado",
@@ -1158,7 +1169,7 @@ export default function ProductImport() {
               </div>
               <p className="text-sm text-muted-foreground mb-3">
                 Produto vendido como grade completa. Especifique qual grade vendida usar e quantas estão disponíveis (ex: Grade "2549" com 25 unidades).
-                <strong className="text-orange-700 block mt-1">���� Arquivo Excel organizado - sem campos de tamanho!</strong>
+                <strong className="text-orange-700 block mt-1">📊 Arquivo Excel organizado - sem campos de tamanho!</strong>
               </p>
               <Button variant="outline" onClick={downloadSingleColorGradeTemplate} className="w-full">
                 <Download className="h-4 w-4 mr-2" />
