@@ -639,10 +639,14 @@ export default function ProductImport() {
           throw new Error("Erro ao iniciar processamento");
         }
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error("❌ Erro na importação:", error);
+      console.error("📋 Column mappings:", columnMappings);
+      console.error("📊 Import data:", fullImportData.slice(0, 2));
+
       toast({
         title: "Erro",
-        description: "Não foi possível iniciar a importação",
+        description: `Não foi possível iniciar a importação: ${error.message}`,
         variant: "destructive",
       });
       setIsImporting(false);
