@@ -9,18 +9,18 @@ import { useToast } from "@/hooks/use-toast";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { ProductImage } from "@/components/ProductImage";
-import { 
-  ShoppingCart, 
-  Package, 
-  X, 
-  Minus, 
-  Plus, 
-  Lock, 
+import {
+  ShoppingCart,
+  Package,
+  X,
+  Minus,
+  Plus,
+  Lock,
   Info,
   Star,
   Heart,
   Share2,
-  ImageIcon
+  ImageIcon,
 } from "lucide-react";
 
 interface ProductVariant {
@@ -87,7 +87,9 @@ export function ProductModal({
   const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariantImage, setSelectedVariantImage] = useState<string | null>(null);
+  const [selectedVariantImage, setSelectedVariantImage] = useState<
+    string | null
+  >(null);
   const { addItem } = useCart();
   const { toast } = useToast();
   const { isAuthenticated, isApproved } = useCustomerAuth();
@@ -143,7 +145,9 @@ export function ProductModal({
         if (colors.length === 1) {
           setSelectedColor(colors[0].id);
           // Set the initial variant image
-          const firstVariant = data.variants?.find((v: ProductVariant) => v.color_id === colors[0].id);
+          const firstVariant = data.variants?.find(
+            (v: ProductVariant) => v.color_id === colors[0].id,
+          );
           if (firstVariant?.image_url) {
             setSelectedVariantImage(firstVariant.image_url);
           }
@@ -409,7 +413,9 @@ export function ProductModal({
           <div className="flex items-center justify-center py-20">
             <div className="text-center space-y-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-              <p className="text-sm text-muted-foreground">Carregando produto...</p>
+              <p className="text-sm text-muted-foreground">
+                Carregando produto...
+              </p>
             </div>
           </div>
         ) : product ? (
@@ -419,7 +425,9 @@ export function ProductModal({
               <div className="flex items-center justify-between p-4">
                 <div className="flex items-center gap-2">
                   <Package className="h-5 w-5 text-primary" />
-                  <span className="font-medium text-sm">Detalhes do Produto</span>
+                  <span className="font-medium text-sm">
+                    Detalhes do Produto
+                  </span>
                 </div>
                 <Button
                   variant="ghost"
@@ -441,7 +449,7 @@ export function ProductModal({
                   className="w-full h-full object-contain transition-all duration-300"
                   priority={true}
                 />
-                
+
                 {/* Category Badge */}
                 {product.category_name && (
                   <Badge
@@ -469,7 +477,7 @@ export function ProductModal({
                 <h1 className="text-xl font-bold text-gray-900 leading-tight">
                   {product.name}
                 </h1>
-                
+
                 {product.base_price && (
                   <div className="flex items-center justify-between">
                     <PriceDisplay
@@ -478,7 +486,7 @@ export function ProductModal({
                       variant="large"
                       onLoginClick={onLoginClick}
                     />
-                    
+
                     {/* Action buttons */}
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -516,6 +524,7 @@ export function ProductModal({
                     <h3 className="text-lg font-semibold text-blue-700">
                       🔐 Acesso Exclusivo para Clientes
                     </h3>
+<<<<<<< HEAD
                     <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 mt-3">
                       <p className="text-sm font-medium text-blue-700 mb-1">
                         Entre para desbloquear:
@@ -526,6 +535,12 @@ export function ProductModal({
                         <li>📦 Histórico de pedidos</li>
                       </ul>
                     </div>
+=======
+                    <p className="text-sm text-muted-foreground">
+                      Faça login para ver preços e adicionar produtos ao
+                      carrinho
+                    </p>
+>>>>>>> 4fd011bde74916a7d1b0e76dd623d3a55e6cd691
                   </div>
                   <Button
                     className="bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -559,7 +574,9 @@ export function ProductModal({
                           {getAvailableColors().map((color) => (
                             <button
                               key={color.id}
-                              onClick={() => handleColorSelect(color.id, color.image_url)}
+                              onClick={() =>
+                                handleColorSelect(color.id, color.image_url)
+                              }
                               className={`relative group p-3 border-2 rounded-xl transition-all duration-200 ${
                                 selectedColor === color.id
                                   ? "border-primary bg-primary/5 shadow-lg"
@@ -580,12 +597,15 @@ export function ProductModal({
                                   ) : (
                                     <div
                                       className="w-12 h-12 rounded-lg border border-gray-200 flex items-center justify-center text-xs font-medium text-white shadow-sm"
-                                      style={{ backgroundColor: color.hex_code || "#999" }}
+                                      style={{
+                                        backgroundColor:
+                                          color.hex_code || "#999",
+                                      }}
                                     >
                                       {color.name?.charAt(0).toUpperCase()}
                                     </div>
                                   )}
-                                  
+
                                   {/* Selection indicator */}
                                   {selectedColor === color.id && (
                                     <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-white flex items-center justify-center">
@@ -600,7 +620,9 @@ export function ProductModal({
                                     {color.name}
                                   </p>
                                   <p className="text-xs text-gray-500">
-                                    {color.image_url ? "Com imagem" : "Cor padrão"}
+                                    {color.image_url
+                                      ? "Com imagem"
+                                      : "Cor padrão"}
                                   </p>
                                 </div>
                               </div>
@@ -614,9 +636,11 @@ export function ProductModal({
                     {selectedColor && (
                       <div className="space-y-3">
                         <h3 className="text-sm font-semibold text-gray-900">
-                          {hasGrades() ? "Grades Disponíveis" : "Tamanhos Disponíveis"}
+                          {hasGrades()
+                            ? "Grades Disponíveis"
+                            : "Tamanhos Disponíveis"}
                         </h3>
-                        
+
                         <div className="space-y-3">
                           {hasGrades() ? (
                             getAvailableGradesForColor().map((grade) => {
@@ -655,7 +679,10 @@ export function ProductModal({
                                       {product.base_price && (
                                         <div className="text-right">
                                           <PriceDisplay
-                                            price={product.base_price * grade.total_quantity}
+                                            price={
+                                              product.base_price *
+                                              grade.total_quantity
+                                            }
                                             variant="small"
                                             className="text-primary"
                                             onLoginClick={onLoginClick}
@@ -671,12 +698,21 @@ export function ProductModal({
                                         </span>
                                       </div>
                                       <div className="text-xs text-gray-700">
-                                        {sortedTemplates.map((template, index) => (
-                                          <span key={`${template.size_id}-${index}`} className="inline-block mr-3 mb-1">
-                                            <span className="font-medium">{template.size}</span>
-                                            <span className="text-gray-500 ml-1">({template.required_quantity})</span>
-                                          </span>
-                                        ))}
+                                        {sortedTemplates.map(
+                                          (template, index) => (
+                                            <span
+                                              key={`${template.size_id}-${index}`}
+                                              className="inline-block mr-3 mb-1"
+                                            >
+                                              <span className="font-medium">
+                                                {template.size}
+                                              </span>
+                                              <span className="text-gray-500 ml-1">
+                                                ({template.required_quantity})
+                                              </span>
+                                            </span>
+                                          ),
+                                        )}
                                       </div>
                                     </div>
                                   </div>
@@ -710,7 +746,9 @@ export function ProductModal({
                                       )}
                                     </div>
                                     <div className="flex items-center justify-between text-xs">
-                                      <span className="font-medium text-primary">1 peça</span>
+                                      <span className="font-medium text-primary">
+                                        1 peça
+                                      </span>
                                       <span className="text-gray-500">
                                         {size.stock} disponível
                                       </span>
@@ -731,12 +769,16 @@ export function ProductModal({
                       <Separator />
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-700">Quantidade</span>
+                          <span className="text-sm font-medium text-gray-700">
+                            Quantidade
+                          </span>
                           <div className="flex items-center gap-3">
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                              onClick={() =>
+                                setQuantity(Math.max(1, quantity - 1))
+                              }
                               className="h-8 w-8 p-0"
                             >
                               <Minus className="h-3 w-3" />
