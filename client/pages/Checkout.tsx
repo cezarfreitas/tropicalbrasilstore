@@ -43,6 +43,7 @@ interface CustomerInfo {
 export default function Checkout() {
   const { items, totalItems, totalPrice, clearCart } = useCart();
   const { customer: authCustomer, isAuthenticated } = useCustomerAuth();
+  const storeSettings = useGlobalStoreSettings();
   const [customer, setCustomer] = useState<CustomerInfo>({
     name: "",
     email: "",
