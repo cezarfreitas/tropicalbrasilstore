@@ -904,7 +904,13 @@ export default function ProductImport() {
       ]
     ];
 
+    // Gerar tanto Excel quanto CSV para debug
     downloadExcelFile("template_1_cor_estoque_grade.xlsx", headers, sampleRows);
+
+    // Também gerar CSV para teste
+    setTimeout(() => {
+      downloadCSVFile("template_1_cor_estoque_grade.csv", headers, sampleRows);
+    }, 1000);
   };
 
   // Função auxiliar para download do CSV
