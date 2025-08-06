@@ -16,6 +16,12 @@ let cachedSettings: StoreSettings | null = null;
 let lastFetchTime = 0;
 const CACHE_DURATION = 60 * 1000; // 1 minute cache
 
+// Function to clear cache
+export function clearSettingsCache() {
+  cachedSettings = null;
+  lastFetchTime = 0;
+}
+
 async function getStoreSettings(): Promise<StoreSettings> {
   const now = Date.now();
   
