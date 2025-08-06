@@ -227,5 +227,23 @@ export function createServer() {
   app.use("/api/init-settings", initSettingsRouter);
   app.use("/api/health", healthRouter);
 
+  // Error handling middleware for JSON parsing errors
+  app.use((error: any, req: any, res: any, next: any) => {
+    if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
+      console.error('JSON Parse Error:', {
+        url: req.url,
+        method: req.method,
+        contentType: req.headers['content-type'],
+        error: error.message
+      });
+
+      return res.status(400).json({
+        error: 'Invalid JSON format',
+        message: 'Request body contains invalid JSON'
+      });
+    }
+    next(error);
+  });
+
   return app;
 }
