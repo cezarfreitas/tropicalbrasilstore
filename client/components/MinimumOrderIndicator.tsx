@@ -45,63 +45,38 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
 
   return (
     <div className={containerClass}>
+      {/* Header compacto com valores */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           {isCompleted ? (
-            <CheckCircle className="h-5 w-5 text-green-600" />
+            <CheckCircle className="h-4 w-4 text-green-600" />
           ) : (
-            <Target className="h-5 w-5 text-blue-600" />
+            <Target className="h-4 w-4 text-blue-600" />
           )}
-          <span className={`text-sm font-medium ${theme === 'sidebar' ? 'text-white/90' : 'text-gray-700'}`}>
-            {isCompleted ? 'Pedido mínimo atingido!' : 'Pedido mínimo'}
+          <span className={`text-xs ${theme === 'sidebar' ? 'text-white/90' : 'text-gray-700'}`}>
+            {formatPrice(safeCurrentValue)} / {formatPrice(minimumValue)}
           </span>
-        </div>
-        <div className={`text-sm ${theme === 'sidebar' ? 'text-white/70' : 'text-gray-600'}`}>
-          {formatPrice(safeCurrentValue)} / {formatPrice(minimumValue)}
         </div>
       </div>
 
-      {/* Barra de progresso */}
-      <div className="relative">
-        <div className={`w-full rounded-full h-3 mb-2 overflow-hidden ${theme === 'sidebar' ? 'bg-white/20' : 'bg-gray-200'}`}>
-          <div 
-            className={`h-full rounded-full transition-all duration-500 ease-out ${
-              isCompleted 
-                ? 'bg-gradient-to-r from-green-500 to-green-600' 
-                : 'bg-gradient-to-r from-blue-500 to-indigo-600'
-            }`}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        
-        {/* Indicador de posição atual */}
-        <div 
-          className="absolute top-0 h-3 w-1 bg-white border border-gray-300 rounded-sm shadow-sm"
-          style={{ left: `${Math.min(progress, 96)}%` }}
+      {/* Barra de progresso mais fina */}
+      <div className={`w-full rounded-full h-2 mb-2 overflow-hidden ${theme === 'sidebar' ? 'bg-white/20' : 'bg-gray-200'}`}>
+        <div
+          className={`h-full rounded-full transition-all duration-500 ease-out ${
+            isCompleted
+              ? 'bg-gradient-to-r from-green-500 to-green-600'
+              : 'bg-gradient-to-r from-blue-500 to-indigo-600'
+          }`}
+          style={{ width: `${progress}%` }}
         />
       </div>
 
-      {/* Mensagem de feedback */}
-      <div className="flex items-center justify-between mt-2">
-        <div className="flex items-center gap-1.5">
-          <ShoppingCart className={`h-4 w-4 ${theme === 'sidebar' ? 'text-white/60' : 'text-gray-500'}`} />
-          {isCompleted ? (
-            <span className={`text-sm font-medium ${theme === 'sidebar' ? 'text-green-300' : 'text-green-700'}`}>
-              Parabéns! Você pode finalizar seu pedido.
-            </span>
-          ) : (
-            <span className={`text-sm ${theme === 'sidebar' ? 'text-white/80' : 'text-gray-600'}`}>
-              Adicione mais <strong>{formatPrice(remaining)}</strong> para atingir o mínimo
-            </span>
-          )}
+      {/* Mensagem simplificada */}
+      {!isCompleted && (
+        <div className={`text-xs ${theme === 'sidebar' ? 'text-white/70' : 'text-gray-600'}`}>
+          Faltam {formatPrice(remaining)}
         </div>
-
-        {!isCompleted && (
-          <div className={`text-xs ${theme === 'sidebar' ? 'text-white/50' : 'text-gray-500'}`}>
-            {Math.round(progress)}% completo
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 };
