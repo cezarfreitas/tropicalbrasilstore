@@ -191,16 +191,13 @@ export function SimpleProductCard({
           <ProductImage
             src={bestImageSrc}
             alt={product.name}
-            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-contain group-hover:scale-102 transition-transform duration-200"
             loading={index < 8 ? "eager" : "lazy"}
             product={{
               photo: product.photo,
               available_colors: product.available_colors,
             }}
           />
-
-          {/* Image overlay for better contrast on hover */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 pointer-events-none" />
 
           {/* Category Badge - Smaller, more compact */}
           {product.category_name && (
