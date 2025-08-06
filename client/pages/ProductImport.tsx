@@ -109,11 +109,11 @@ const REQUIRED_FIELDS = [
 // Custom fetch function using XMLHttpRequest to avoid FullStory conflicts
 const customFetch = async (url: string, options?: RequestInit): Promise<Response> => {
   return new Promise((resolve, reject) => {
-    console.log("🌐 CustomFetch:", method, url);
-    console.log("📦 Body length:", options?.body?.length || 0);
-
     const xhr = new XMLHttpRequest();
     const method = options?.method || 'GET';
+
+    console.log("🌐 CustomFetch:", method, url);
+    console.log("📦 Body length:", options?.body?.length || 0);
 
     xhr.open(method, url);
 
