@@ -308,7 +308,7 @@ router.post("/orders", async (req, res) => {
       `INSERT INTO orders (customer_email, total_amount, status) VALUES (?, ?, ?)`,
       [
         customer.email,
-        items.reduce((sum: number, item: any) => sum + item.totalPrice, 0),
+        totalOrderValue,
         "pending",
       ],
     );
