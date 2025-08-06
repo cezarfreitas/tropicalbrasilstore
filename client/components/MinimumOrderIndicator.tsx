@@ -34,8 +34,8 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
       <div className="bg-yellow-100 border border-yellow-400 rounded-lg p-3 mb-4">
         <p className="text-sm text-yellow-800">
           🔍 <strong>Debug:</strong> Nenhum pedido mínimo configurado
-          (Cliente: R$ {(customerMinimumValue || 0).toFixed(2)},
-          Global: R$ {(globalMinimumValue || 0).toFixed(2)})
+          (Cliente: {formatPrice(customerMinimumValue || 0)},
+          Global: {formatPrice(globalMinimumValue || 0)})
         </p>
       </div>
     );
