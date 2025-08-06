@@ -729,16 +729,106 @@ export default function ProductImport() {
       ],
     ];
 
+    downloadCSVFile("template_importacao_produtos.csv", headers, sampleRows);
+  };
+
+  // Template específico para produto com 1 cor e múltiplas grades
+  const downloadSingleColorTemplate = () => {
+    const headers = REQUIRED_FIELDS.map((f) => f.label);
+
+    // Template para produto com 1 cor e múltiplas grades com estoque por tamanho
+    const sampleRows = [
+      [
+        "Tênis Esportivo ABC", // Nome do Produto
+        "2", // Categoria (ex: Tênis)
+        "89.90", // Preço Base
+        "129.90", // Preço de Venda
+        "https://example.com/tenis-abc.jpg", // URL da Foto
+        "2", // Grupo de Tamanhos (ex: Calçados Adulto)
+        "preto", // Cor (apenas uma cor)
+        "ABC001-PRETO", // SKU
+        "ABC001", // SKU Pai
+        "Tênis esportivo ABC modelo clássico, disponível em várias grades", // Descrição
+        "149.90", // Preço Sugerido
+        "ABC Sports", // Marca (Nome)
+        "Unissex", // Gênero (Nome)
+        "Tênis", // Tipo de Produto (Nome)
+        "size", // Tipo de Estoque = "size" para controle por tamanho
+        "", // Estoque por Grade (vazio quando tipo = "size")
+        "8", // Estoque Tam 37
+        "12", // Estoque Tam 38
+        "15", // Estoque Tam 39
+        "18", // Estoque Tam 40
+        "20", // Estoque Tam 41
+        "16", // Estoque Tam 42
+        "10", // Estoque Tam 43
+        "6", // Estoque Tam 44
+        "ABC001-PRETO-V1", // SKU da Variante de Cor
+        "", // Preço Específico da Cor (vazio = usar preço base)
+        "", // Preço Promocional da Cor
+        "https://example.com/tenis-abc-preto.jpg", // Imagem da Variante de Cor
+        "0", // Vender Sem Estoque (0=não, 1=sim)
+        "", // Stock per variant (campo legado)
+      ]
+    ];
+
+    downloadCSVFile("template_1_cor_multiplas_grades.csv", headers, sampleRows);
+  };
+
+  // Template para produto com 1 cor usando estoque por grade (não por tamanho)
+  const downloadSingleColorGradeTemplate = () => {
+    const headers = REQUIRED_FIELDS.map((f) => f.label);
+
+    const sampleRows = [
+      [
+        "Chinelo Simples XYZ", // Nome do Produto
+        "1", // Categoria (ex: Chinelos)
+        "22.50", // Preço Base
+        "29.90", // Preço de Venda
+        "https://example.com/chinelo-xyz.jpg", // URL da Foto
+        "1", // Grupo de Tamanhos (ex: Chinelos)
+        "azul", // Cor (apenas uma cor)
+        "XYZ001-AZUL", // SKU
+        "XYZ001", // SKU Pai
+        "Chinelo XYZ clássico, estoque controlado por grade total", // Descrição
+        "35.90", // Preço Sugerido
+        "XYZ", // Marca (Nome)
+        "Feminino", // Gênero (Nome)
+        "Chinelo", // Tipo de Produto (Nome)
+        "grade", // Tipo de Estoque = "grade" para controle total
+        "50", // Estoque por Grade (total de pares, todas as grades)
+        "", // Estoque Tam 37 (vazio quando tipo = "grade")
+        "", // Estoque Tam 38
+        "", // Estoque Tam 39
+        "", // Estoque Tam 40
+        "", // Estoque Tam 41
+        "", // Estoque Tam 42
+        "", // Estoque Tam 43
+        "", // Estoque Tam 44
+        "XYZ001-AZUL-V1", // SKU da Variante de Cor
+        "", // Preço Específico da Cor
+        "", // Preço Promocional da Cor
+        "https://example.com/chinelo-xyz-azul.jpg", // Imagem da Variante de Cor
+        "0", // Vender Sem Estoque
+        "", // Stock per variant (campo legado)
+      ]
+    ];
+
+    downloadCSVFile("template_1_cor_estoque_grade.csv", headers, sampleRows);
+  };
+
+  // Função auxiliar para download do CSV
+  const downloadCSVFile = (filename: string, headers: string[], rows: string[][]) => {
     const csvContent =
       headers.join(",") +
       "\n" +
-      sampleRows.map((row) => row.join(",")).join("\n") +
+      rows.map((row) => row.join(",")).join("\n") +
       "\n";
     const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "template_importacao_produtos.csv";
+    a.download = filename;
     a.click();
     window.URL.revokeObjectURL(url);
   };
