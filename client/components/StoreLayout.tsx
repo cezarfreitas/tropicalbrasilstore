@@ -765,12 +765,6 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                             }}
                             title={`${color.name} ${isSelected ? "(selecionado)" : ""}`}
                           >
-                            {!color.hex_code && (
-                              <span className="text-xs font-bold text-gray-700">
-                                {color.name?.charAt(0)?.toUpperCase()}
-                              </span>
-                            )}
-
                             {isSelected && (
                               <div className="absolute inset-0 flex items-center justify-center">
                                 <div className="w-2 h-2 bg-white rounded-full shadow-lg"></div>
