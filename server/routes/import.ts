@@ -544,7 +544,7 @@ router.post("/start-batch-processing", async (req, res) => {
 });
 
 async function processGradeImport(data: any[]) {
-  console.log("🚀 IMPORTAÇÃO SIMPLES - Processando", data.length, "produtos");
+  console.log("🚀 IMPORTAÇÃO DE GRADES - Processando", data.length, "produtos");
 
   // Limitar o tamanho dos dados para evitar problemas de memória
   if (data.length > 100) {
@@ -558,16 +558,24 @@ async function processGradeImport(data: any[]) {
   for (const item of data) {
     try {
       console.log(`\n📋 === PROCESSANDO ITEM ${processedItems + 1}/${data.length} ===`);
+      console.log(`📦 Item completo:`, JSON.stringify(item, null, 2));
       console.log(`📦 Produto: ${item.name || 'Sem nome'}`);
       console.log(`🎨 Cor: ${item.color}`);
       console.log(`📊 Grade: ${item.grade_name || 'Não informada'}`);
+      console.log(`🏷️ SKU: ${item.sku || 'Não informado'}`);
 
       importProgress.current = item.name || `Produto ${processedItems + 1}`;
       await connection.beginTransaction();
 
-      // Validação básica apenas
-      if (!item.name || !item.category_id || !item.base_price || !item.color) {
-        throw new Error("Campos obrigatórios: name, category_id, base_price, color");
+      // Validação básica mais detalhada
+      const missingFields = [];
+      if (!item.name) missingFields.push('name');
+      if (!item.category_id) missingFields.push('category_id');
+      if (!item.base_price) missingFields.push('base_price');
+      if (!item.color) missingFields.push('color');
+
+      if (missingFields.length > 0) {
+        throw new Error(`Campos obrigatórios faltando: ${missingFields.join(', ')}`);
       }
 
       // ETAPA 0: Processar categoria
