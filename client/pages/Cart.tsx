@@ -86,12 +86,6 @@ export default function Cart() {
           </Link>
         </div>
 
-        {/* Debug: Componente está sendo renderizado */}
-        <div className="bg-blue-100 border border-blue-400 rounded-lg p-2 mb-4">
-          <p className="text-sm text-blue-800">
-            🔍 <strong>Debug Cart:</strong> Componente MinimumOrderIndicator carregado
-          </p>
-        </div>
 
         {/* Minimum Order Indicator */}
         <MinimumOrderIndicator
@@ -337,7 +331,7 @@ export default function Cart() {
                     </span>
                   </div>
                   <ul className="text-xs text-green-700 space-y-1">
-                    <li>• Melhor preço por peça</li>
+                    <li>��� Melhor preço por peça</li>
                     <li>• Mix completo de tamanhos</li>
                     <li>�� Ideal para revenda</li>
                   </ul>
