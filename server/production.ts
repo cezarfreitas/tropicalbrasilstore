@@ -69,7 +69,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// CORS for API routes
+// CORS for API routes - this must come BEFORE other API middleware
 app.use("/api", (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
@@ -84,6 +84,9 @@ app.use("/api", (req, res, next) => {
     next();
   }
 });
+
+// The main server from index.ts already includes all API routes
+// We don't need to redefine them here, just add production-specific ones
 
 // Static file serving with optimized headers
 app.use(
