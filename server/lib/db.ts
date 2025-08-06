@@ -1,51 +1,8 @@
 import mysql from "mysql2/promise";
 
-// Database configuration with multiple fallback options
+// Database configuration - Force Tropical Brasil database
 const createConnection = () => {
-  // Option 1: Use DATABASE_URL if provided (for cloud platforms)
-  if (process.env.DATABASE_URL) {
-    return mysql.createPool({
-      uri: process.env.DATABASE_URL,
-      waitForConnections: true,
-      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "3"),
-      queueLimit: 0,
-      charset: "utf8mb4",
-      connectTimeout: 60000,
-    });
-  }
-
-  // Option 2: Use individual MYSQL_* environment variables
-  if (process.env.MYSQL_HOST) {
-    return mysql.createPool({
-      host: process.env.MYSQL_HOST,
-      port: parseInt(process.env.MYSQL_PORT || "3306"),
-      user: process.env.MYSQL_USER || "mysql",
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DATABASE || "default",
-      waitForConnections: true,
-      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "3"),
-      queueLimit: 0,
-      charset: "utf8mb4",
-    });
-  }
-
-  // Option 3: Use Docker-style DB_* environment variables
-  if (process.env.DB_HOST) {
-    return mysql.createPool({
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT || "3306"),
-      user: process.env.DB_USER || "root",
-      password: process.env.DB_PASSWORD || "",
-      database: process.env.DB_NAME || "chinelos_store",
-      waitForConnections: true,
-      connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "3"),
-      queueLimit: 0,
-      charset: "utf8mb4",
-    });
-  }
-
-  // Fallback: Use Tropical Brasil database connection
-  console.log("Using Tropical Brasil database configuration");
+  console.log("🔗 Using Tropical Brasil database connection (FORCED)");
   return mysql.createPool({
     uri: "mysql://tropical:ceb404856425cc1f8472@148.230.78.129:3399/tropical",
     waitForConnections: true,
