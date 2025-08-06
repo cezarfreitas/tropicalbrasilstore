@@ -486,14 +486,30 @@ router.put("/:id", async (req, res) => {
             }
           }
 
-          // Associate grades with this product-color combination
+          // Handle grade stocks - save the actual stock quantities for each grade
+          if (variant.grade_stocks && variant.grade_stocks.length > 0) {
+            for (const gradeStock of variant.grade_stocks) {
+              await connection.execute(
+                `INSERT INTO product_color_grades (product_id, color_id, grade_id, stock_quantity)
+                 VALUES (?, ?, ?, ?)
+                 ON DUPLICATE KEY UPDATE stock_quantity = VALUES(stock_quantity)`,
+                [req.params.id, variant.color_id, gradeStock.grade_id, gradeStock.stock_quantity || 0],
+              );
+            }
+          }
+
+          // Also handle legacy grade_ids (for backward compatibility)
           if (variant.grade_ids && variant.grade_ids.length > 0) {
             for (const gradeId of variant.grade_ids) {
-              await connection.execute(
-                `INSERT IGNORE INTO product_color_grades (product_id, color_id, grade_id)
-                 VALUES (?, ?, ?)`,
-                [req.params.id, variant.color_id, gradeId],
-              );
+              // Only insert if not already handled by grade_stocks above
+              const existingStock = variant.grade_stocks?.find(gs => gs.grade_id === gradeId);
+              if (!existingStock) {
+                await connection.execute(
+                  `INSERT IGNORE INTO product_color_grades (product_id, color_id, grade_id, stock_quantity)
+                   VALUES (?, ?, ?, 0)`,
+                  [req.params.id, variant.color_id, gradeId],
+                );
+              }
             }
           }
 
