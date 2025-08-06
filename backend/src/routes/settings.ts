@@ -1,26 +1,7 @@
 import { Router } from 'express';
-import mysql from 'mysql2/promise';
+import db from '../lib/db';
 
 const router = Router();
-
-// Database connection configuration
-const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_DATABASE || 'chinelos_store',
-  port: Number(process.env.DB_PORT) || 3306,
-};
-
-// Helper function to get database connection
-async function getDbConnection() {
-  try {
-    return await mysql.createConnection(dbConfig);
-  } catch (error) {
-    console.error('Database connection error:', error);
-    throw new Error('Failed to connect to database');
-  }
-}
 
 // GET /api/settings - Get store settings
 router.get('/', async (req, res) => {
