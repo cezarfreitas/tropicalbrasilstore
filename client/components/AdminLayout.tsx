@@ -57,6 +57,11 @@ const navigation = [
     icon: Upload,
   },
   {
+    name: "Importar Grades",
+    href: "/admin/products/grade-import",
+    icon: Grid3x3,
+  },
+  {
     name: "Categorias",
     href: "/admin/categories",
     icon: ShoppingBag,
