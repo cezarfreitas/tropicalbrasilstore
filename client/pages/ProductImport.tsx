@@ -454,24 +454,27 @@ export default function ProductImport() {
     };
 
     const possibleHeaders = commonMappings[targetField] || [];
-    const normalizedHeaders = headers.map((h) => h.toLowerCase().trim());
+    const normalizedHeaders = headers.map((h) => normalizeText(h));
+    const normalizedPossibles = possibleHeaders.map((p) => normalizeText(p));
 
     // Primeiro, buscar correspondência exata
-    for (const possible of possibleHeaders) {
-      const index = normalizedHeaders.findIndex((h) =>
-        h === possible.toLowerCase()
-      );
+    for (let i = 0; i < normalizedPossibles.length; i++) {
+      const possible = normalizedPossibles[i];
+      const index = normalizedHeaders.findIndex((h) => h === possible);
       if (index !== -1) {
+        console.log(`🎯 Mapeamento exato: "${headers[index]}" -> ${targetField}`);
         return headers[index];
       }
     }
 
     // Se não encontrar correspondência exata, buscar por inclusão
-    for (const possible of possibleHeaders) {
+    for (let i = 0; i < normalizedPossibles.length; i++) {
+      const possible = normalizedPossibles[i];
       const index = normalizedHeaders.findIndex((h) =>
-        h.includes(possible.toLowerCase()) || possible.toLowerCase().includes(h)
+        h.includes(possible) || possible.includes(h)
       );
       if (index !== -1) {
+        console.log(`🎯 Mapeamento por inclusão: "${headers[index]}" -> ${targetField}`);
         return headers[index];
       }
     }
@@ -1230,7 +1233,7 @@ export default function ProductImport() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-semibold mb-3">
-                    Informações Incluídas na Exportação:
+                    Informações Incluídas na Exportaç��o:
                   </h4>
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-center gap-2">
