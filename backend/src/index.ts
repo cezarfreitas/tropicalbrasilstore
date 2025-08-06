@@ -77,6 +77,9 @@ app.use(
   express.static(path.join(process.cwd(), "public", "uploads")),
 );
 
+// API Routes
+app.use("/api/settings", settingsRouter);
+
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({
