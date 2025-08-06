@@ -22,14 +22,6 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
   // Usa o valor do cliente se existir e for maior que 0, senão usa o valor global
   const minimumValue = (safeCustomerMinimum > 0) ? safeCustomerMinimum : safeGlobalMinimum;
 
-  // Debug temporário
-  console.log('🔍 MinimumOrderIndicator Debug:', {
-    currentValue: safeCurrentValue,
-    customerMinimumValue: safeCustomerMinimum,
-    globalMinimumValue: safeGlobalMinimum,
-    minimumValue,
-    willRender: minimumValue > 0
-  });
 
   // Se não há pedido mínimo configurado, não exibe o componente
   if (minimumValue <= 0) {
