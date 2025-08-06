@@ -25,15 +25,7 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
 
   // Se não há pedido mínimo configurado, não exibe o componente
   if (minimumValue <= 0) {
-    return (
-      <div className="bg-yellow-100 border border-yellow-400 rounded-lg p-3 mb-4">
-        <p className="text-sm text-yellow-800">
-          🔍 <strong>Debug:</strong> Nenhum pedido mínimo configurado
-          (Cliente: {formatPrice(safeCustomerMinimum)},
-          Global: {formatPrice(safeGlobalMinimum)})
-        </p>
-      </div>
-    );
+    return null;
   }
 
   const progress = Math.min((safeCurrentValue / minimumValue) * 100, 100);
