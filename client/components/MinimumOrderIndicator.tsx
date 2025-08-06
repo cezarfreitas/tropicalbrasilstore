@@ -45,8 +45,9 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
   const remaining = Math.max(minimumValue - currentValue, 0);
   const isCompleted = currentValue >= minimumValue;
 
-  const formatPrice = (price: number) => {
-    return `${currency} ${price.toFixed(2).replace('.', ',')}`;
+  const formatPrice = (price: any) => {
+    const num = Number(price) || 0;
+    return `${currency} ${num.toFixed(2).replace('.', ',')}`;
   };
 
   return (
