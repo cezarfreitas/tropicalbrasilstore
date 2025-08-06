@@ -117,8 +117,30 @@ function Store() {
     fetchProducts,
   ]);
 
-  // Use all products since we removed filtering
-  const filteredProducts = products;
+  // Sort products based on selected option
+  const sortProducts = (products: any[], sortBy: string) => {
+    if (!products || products.length === 0) return products;
+
+    const sorted = [...products];
+
+    switch (sortBy) {
+      case "name-asc":
+        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+      case "name-desc":
+        return sorted.sort((a, b) => b.name.localeCompare(a.name));
+      case "price-asc":
+        return sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+      case "price-desc":
+        return sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+      case "newest":
+        return sorted.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime());
+      default:
+        return sorted;
+    }
+  };
+
+  // Use all products with sorting applied
+  const filteredProducts = sortProducts(products, sortBy);
 
   return (
     <StoreLayout>
