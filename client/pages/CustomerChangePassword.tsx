@@ -60,7 +60,7 @@ export default function CustomerChangePassword() {
         toast({
           title: "Senha mantida!",
           description:
-            "Você manteve a senha padrão. Bem-vindo à Chinelos Store!",
+            "Você manteve a senha padrão. Bem-vindo à Tropical Brasil Sandálias!",
         });
         navigate("/");
       } else {
