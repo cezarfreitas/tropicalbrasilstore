@@ -350,10 +350,10 @@ export default function GradeImport() {
     setImportProgress({ total: data.length, processed: 0, success: 0, errors: 0 });
 
     try {
-      const response = await customFetch("/api/import/products", {
+      const response = await customFetch("/api/import/products-grade", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           data,
           columnMappings: columnMappings.map(m => ({
             csvColumn: m.csvColumn,
