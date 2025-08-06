@@ -4,23 +4,23 @@
     "lib": ["ES2022"],
     "module": "ESNext",
     "skipLibCheck": true,
-    
+
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    
+
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    
+
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
-    
+
     "types": ["node"],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

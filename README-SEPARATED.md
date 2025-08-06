@@ -23,6 +23,7 @@ Sistema B2B para venda de chinelos com arquitetura separada entre frontend e bac
 ## 🚀 Quick Start
 
 ### 1. Migração da Estrutura Atual
+
 ```bash
 # Executar script de migração
 chmod +x migrate-to-separate.sh
@@ -32,6 +33,7 @@ chmod +x migrate-to-separate.sh
 ### 2. Desenvolvimento
 
 #### Frontend (React)
+
 ```bash
 cd frontend
 cp .env.example .env
@@ -41,6 +43,7 @@ npm run dev
 ```
 
 #### Backend (API)
+
 ```bash
 cd backend
 cp .env.example .env
@@ -51,6 +54,7 @@ npm run dev
 ```
 
 ### 3. Produção com Docker
+
 ```bash
 # Build e start todos os serviços
 docker-compose -f docker-compose.separated.yml up -d
@@ -100,6 +104,7 @@ chinelos-store/
 ## ⚙️ Configuração
 
 ### Frontend (.env)
+
 ```env
 VITE_API_URL=http://localhost:3001
 VITE_API_KEY=your_api_key
@@ -107,6 +112,7 @@ VITE_APP_NAME="Chinelos Store"
 ```
 
 ### Backend (.env)
+
 ```env
 NODE_ENV=development
 PORT=3001
@@ -118,6 +124,7 @@ JWT_SECRET=your_super_secret_key
 ## 📦 Scripts Disponíveis
 
 ### Frontend
+
 ```bash
 npm run dev        # Desenvolvimento
 npm run build      # Build para produção
@@ -126,6 +133,7 @@ npm run typecheck  # Verificar tipos
 ```
 
 ### Backend
+
 ```bash
 npm run dev        # Desenvolvimento com hot reload
 npm run build      # Build para produção
@@ -135,52 +143,57 @@ npm run typecheck  # Verificar tipos
 
 ## 🌐 URLs
 
-| Serviço | Desenvolvimento | Produção |
-|---------|----------------|----------|
-| Frontend | http://localhost:3000 | https://your-frontend-domain.com |
-| Backend API | http://localhost:3001 | https://your-api-domain.com |
+| Serviço      | Desenvolvimento              | Produção                           |
+| ------------ | ---------------------------- | ---------------------------------- |
+| Frontend     | http://localhost:3000        | https://your-frontend-domain.com   |
+| Backend API  | http://localhost:3001        | https://your-api-domain.com        |
 | Health Check | http://localhost:3001/health | https://your-api-domain.com/health |
 
 ## 🔗 Integração Frontend/Backend
 
 ### Cliente HTTP (Frontend)
+
 ```typescript
-import { api } from '@/lib/api-client';
+import { api } from "@/lib/api-client";
 
 // GET request
-const products = await api.get('/api/products');
+const products = await api.get("/api/products");
 
 // POST request
-const result = await api.post('/api/products', {
-  nome: 'Chinelo Novo',
-  preco: 29.99
+const result = await api.post("/api/products", {
+  nome: "Chinelo Novo",
+  preco: 29.99,
 });
 
 // Error handling
 try {
-  const data = await api.get('/api/settings');
+  const data = await api.get("/api/settings");
 } catch (error) {
   if (error instanceof ApiClientError) {
-    console.error('API Error:', error.message, error.status);
+    console.error("API Error:", error.message, error.status);
   }
 }
 ```
 
 ### CORS (Backend)
+
 ```typescript
 // Configuração automática no backend
-app.use(cors({
-  origin: [
-    'http://localhost:3000',     // Development
-    'https://your-domain.com'    // Production
-  ],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000", // Development
+      "https://your-domain.com", // Production
+    ],
+    credentials: true,
+  }),
+);
 ```
 
 ## 🚀 Deploy
 
 ### Frontend (Netlify/Vercel)
+
 ```bash
 cd frontend
 npm run build
@@ -188,6 +201,7 @@ npm run build
 ```
 
 ### Backend (Railway/Heroku)
+
 ```bash
 cd backend
 npm run build
@@ -195,6 +209,7 @@ npm run build
 ```
 
 ### Docker (Produção)
+
 ```bash
 # Build images
 docker-compose -f docker-compose.separated.yml build
@@ -206,16 +221,19 @@ docker-compose -f docker-compose.separated.yml up -d
 ## 🔧 Desenvolvimento
 
 ### Adicionar Nova Página (Frontend)
+
 1. Criar componente em `frontend/src/pages/`
 2. Adicionar rota em `frontend/src/App.tsx`
 3. Importar hooks necessários
 
 ### Adicionar Nova API (Backend)
+
 1. Criar rota em `backend/src/routes/`
 2. Importar e usar em `backend/src/index.ts`
 3. Documentar endpoint
 
 ### Adicionar Novo Componente UI
+
 1. Criar em `frontend/src/components/`
 2. Usar Radix UI + TailwindCSS
 3. Exportar do index

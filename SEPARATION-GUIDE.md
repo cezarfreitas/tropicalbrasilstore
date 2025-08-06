@@ -39,6 +39,7 @@ project-root/
 ## 🔧 Configuração
 
 ### Frontend (porta 3000)
+
 ```bash
 cd frontend
 npm install
@@ -46,6 +47,7 @@ npm run dev
 ```
 
 ### Backend (porta 3001)
+
 ```bash
 cd backend
 npm install
@@ -55,12 +57,14 @@ npm run dev
 ## 🌐 Variáveis de Ambiente
 
 ### Frontend (.env)
+
 ```env
 VITE_API_URL=http://localhost:3001
 VITE_API_KEY=your_api_key_here
 ```
 
 ### Backend (.env)
+
 ```env
 NODE_ENV=development
 PORT=3001
@@ -72,13 +76,16 @@ JWT_SECRET=your_jwt_secret
 ## 🔄 Processo de Migração
 
 ### 1. Executar Script de Migração
+
 ```bash
 chmod +x migrate-to-separate.sh
 ./migrate-to-separate.sh
 ```
 
 ### 2. Ajustar Imports do Frontend
+
 Alterar todos os imports para usar os novos paths:
+
 ```typescript
 // Antes
 import { Button } from "@/components/ui/button";
@@ -88,31 +95,36 @@ import { Button } from "@/components/ui/button";
 ```
 
 ### 3. Configurar API Client
+
 O frontend agora usa um cliente HTTP centralizado:
+
 ```typescript
-import { api } from '@/lib/api-client';
+import { api } from "@/lib/api-client";
 
 // GET request
-const products = await api.get('/api/products');
+const products = await api.get("/api/products");
 
 // POST request
-const result = await api.post('/api/products', productData);
+const result = await api.post("/api/products", productData);
 ```
 
 ### 4. Atualizar Rotas do Backend
+
 Importar todas as rotas existentes no novo `backend/src/index.ts`:
+
 ```typescript
-import { productsRouter } from './routes/products';
-import { settingsRouter } from './routes/settings';
+import { productsRouter } from "./routes/products";
+import { settingsRouter } from "./routes/settings";
 // ... outras rotas
 
-app.use('/api/products', productsRouter);
-app.use('/api/settings', settingsRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/settings", settingsRouter);
 ```
 
 ## 📦 Deploy Separado
 
 ### Frontend (Netlify/Vercel/etc.)
+
 ```bash
 cd frontend
 npm run build
@@ -120,6 +132,7 @@ npm run build
 ```
 
 ### Backend (Railway/Heroku/VPS)
+
 ```bash
 cd backend
 npm run build
@@ -159,6 +172,7 @@ npm start
 ## 📞 Suporte
 
 Para dúvidas sobre a migração:
+
 1. Consulte a documentação dos componentes
 2. Verifique os logs do console para erros
 3. Teste as rotas da API individualmente

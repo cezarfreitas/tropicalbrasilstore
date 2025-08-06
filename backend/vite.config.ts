@@ -50,7 +50,7 @@ export default defineConfig({
     minify: false,
     sourcemap: true,
   },
-  
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

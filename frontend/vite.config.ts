@@ -4,7 +4,7 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
-  
+
   server: {
     port: 3000,
     host: "0.0.0.0",
@@ -16,7 +16,7 @@ export default defineConfig({
       },
     },
   },
-  
+
   build: {
     outDir: "dist",
     sourcemap: false,
@@ -35,13 +35,13 @@ export default defineConfig({
       },
     },
   },
-  
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  
+
   define: {
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
   },
