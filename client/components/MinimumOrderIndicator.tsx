@@ -67,7 +67,7 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
           </span>
         </div>
         <div className="text-sm text-gray-600">
-          {formatPrice(currentValue)} / {formatPrice(minimumValue)}
+          {formatPrice(safeCurrentValue)} / {formatPrice(minimumValue)}
         </div>
       </div>
 
