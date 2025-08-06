@@ -110,7 +110,7 @@ export function LoginModal({ isOpen, onClose, onSuccess, onSwitchToRegister }: L
             <div className="inline-flex items-center justify-center w-8 h-8 bg-primary rounded-lg">
               <Package className="h-4 w-4 text-primary-foreground" />
             </div>
-            Entrar na Chinelos Store
+            Entrar na Tropical Brasil Sandálias
           </DialogTitle>
         </DialogHeader>
 
