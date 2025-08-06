@@ -790,13 +790,13 @@ export default function ProductImport() {
         "azul", // Cor (apenas uma cor)
         "XYZ001-AZUL", // SKU
         "XYZ001", // SKU Pai
-        "Chinelo XYZ clássico, estoque controlado por grade total", // Descrição
+        "Chinelo XYZ clássico vendido por grade completa", // Descrição
         "35.90", // Preço Sugerido
         "XYZ", // Marca (Nome)
         "Feminino", // Gênero (Nome)
         "Chinelo", // Tipo de Produto (Nome)
-        "grade", // Tipo de Estoque = "grade" para controle total
-        "50", // Estoque por Grade (total de pares, todas as grades)
+        "grade", // Tipo de Estoque = "grade" para venda por grade completa
+        "50", // Estoque por Grade (50 grades completas disponíveis)
         "", // Estoque Tam 37 (vazio quando tipo = "grade")
         "", // Estoque Tam 38
         "", // Estoque Tam 39
