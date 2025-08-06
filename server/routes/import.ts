@@ -514,8 +514,8 @@ async function processImport(data: any[]) {
         const [productResult] = await connection.execute(
           `INSERT INTO products (
             name, description, category_id, base_price, sale_price, suggested_price,
-            sku, parent_sku, photo, active, stock_type
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            sku, parent_sku, photo, active, stock_type, brand_id, gender_id, type_id
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             firstItem.name,
             firstItem.description || null,
@@ -530,6 +530,9 @@ async function processImport(data: any[]) {
             photoPath,
             true,
             firstItem.stock_type || 'grade', // Novo campo de tipo de estoque
+            brandId,
+            genderId,
+            typeId,
           ],
         );
 
