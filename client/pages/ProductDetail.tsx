@@ -1059,11 +1059,11 @@ export default function ProductDetail() {
 
             {/* Product Description at bottom */}
             {product.description && (
-              <div className="border-t pt-4 mt-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <div className="border-t pt-3 mt-3">
+                <h3 className="text-base font-semibold text-gray-900 mb-1.5">
                   Descrição do Produto
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed">
                   {product.description}
                 </p>
               </div>
