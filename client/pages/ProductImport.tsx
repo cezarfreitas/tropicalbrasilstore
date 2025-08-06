@@ -836,6 +836,54 @@ export default function ProductImport() {
     window.URL.revokeObjectURL(url);
   };
 
+  // Função auxiliar para download do Excel
+  const downloadExcelFile = (filename: string, headers: string[], rows: string[][]) => {
+    // Criar dados para o Excel
+    const worksheetData = [headers, ...rows];
+
+    // Criar workbook e worksheet
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    // Definir largura das colunas
+    const colWidths = headers.map((header, index) => {
+      const maxLength = Math.max(
+        header.length,
+        ...rows.map(row => String(row[index] || "").length)
+      );
+      return { wch: Math.min(Math.max(maxLength, 10), 50) };
+    });
+    worksheet['!cols'] = colWidths;
+
+    // Estilizar cabeçalho
+    const headerStyle = {
+      font: { bold: true, color: { rgb: "FFFFFF" } },
+      fill: { fgColor: { rgb: "4472C4" } },
+      alignment: { horizontal: "center" }
+    };
+
+    // Aplicar estilo aos headers
+    headers.forEach((_, index) => {
+      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: index });
+      if (!worksheet[cellAddress]) worksheet[cellAddress] = {};
+      worksheet[cellAddress].s = headerStyle;
+    });
+
+    // Adicionar worksheet ao workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
+
+    // Gerar arquivo Excel
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   const exportProducts = async (filter: string = "all") => {
     setIsExporting(true);
     try {
