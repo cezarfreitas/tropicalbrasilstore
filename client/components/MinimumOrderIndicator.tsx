@@ -45,13 +45,14 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
 
   return (
     <div className={containerClass}>
-      {/* Valores em uma linha */}
-      <div className={`text-xs mb-1 ${theme === 'sidebar' ? 'text-white/90' : 'text-gray-700'}`}>
-        {formatPrice(safeCurrentValue)} / {formatPrice(minimumValue)}
+      {/* Valores separados */}
+      <div className={`flex justify-between text-xs mb-1 ${theme === 'sidebar' ? 'text-white/90' : 'text-gray-700'}`}>
+        <span>{formatPrice(minimumValue)}</span>
+        <span>{formatPrice(safeCurrentValue)}</span>
       </div>
 
       {/* Barra de progresso ultra fina */}
-      <div className={`w-full rounded-full h-1 mb-1 overflow-hidden ${theme === 'sidebar' ? 'bg-white/20' : 'bg-gray-200'}`}>
+      <div className={`w-full rounded-full h-1 overflow-hidden ${theme === 'sidebar' ? 'bg-white/20' : 'bg-gray-200'}`}>
         <div
           className={`h-full rounded-full transition-all duration-300 ${
             isCompleted
@@ -61,13 +62,6 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
           style={{ width: `${progress}%` }}
         />
       </div>
-
-      {/* Mensagem ultra compacta */}
-      {!isCompleted && (
-        <div className={`text-xs ${theme === 'sidebar' ? 'text-white/70' : 'text-gray-600'}`}>
-          Faltam {formatPrice(remaining)}
-        </div>
-      )}
     </div>
   );
 };
