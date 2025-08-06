@@ -83,6 +83,9 @@ const REQUIRED_FIELDS = [
   { key: "parent_sku", label: "SKU Pai", required: false },
   { key: "description", label: "Descrição", required: false },
   { key: "suggested_price", label: "Preço Sugerido", required: false },
+  { key: "brand_id", label: "Marca (ID)", required: false },
+  { key: "gender_id", label: "Gênero (ID)", required: false },
+  { key: "type_id", label: "Tipo de Produto (ID)", required: false },
   { key: "stock_type", label: "Tipo de Estoque (grade/size)", required: false },
   { key: "grade_stock", label: "Estoque por Grade", required: false },
   { key: "size_37", label: "Estoque Tam 37", required: false },
@@ -93,6 +96,11 @@ const REQUIRED_FIELDS = [
   { key: "size_42", label: "Estoque Tam 42", required: false },
   { key: "size_43", label: "Estoque Tam 43", required: false },
   { key: "size_44", label: "Estoque Tam 44", required: false },
+  { key: "variant_sku", label: "SKU da Variante de Cor", required: false },
+  { key: "color_price", label: "Preço Específico da Cor", required: false },
+  { key: "color_sale_price", label: "Preço Promocional da Cor", required: false },
+  { key: "color_image_url", label: "Imagem da Variante de Cor", required: false },
+  { key: "sell_without_stock", label: "Vender Sem Estoque (0/1)", required: false },
   { key: "stock_per_variant", label: "Estoque por Variante (DEPRECATED)", required: false },
 ];
 
