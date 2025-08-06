@@ -89,7 +89,7 @@ export function CheckoutDebug() {
           <div className="p-2 bg-blue-50 rounded">
             <strong>Lógica de Cálculo:</strong>
             <ol className="mt-1 text-xs space-y-1">
-              <li>1. Se customer.minimum_order existe e > 0: usa valor do cliente</li>
+              <li>1. Se customer.minimum_order existe e &gt; 0: usa valor do cliente</li>
               <li>2. Senão: usa storeSettings.minimum_order_value</li>
               <li>3. Cliente: {authCustomer?.minimum_order || "undefined"}</li>
               <li>4. Global: {storeSettings?.minimum_order_value || "undefined"}</li>
