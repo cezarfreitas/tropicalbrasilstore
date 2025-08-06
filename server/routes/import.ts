@@ -446,7 +446,7 @@ router.post("/products", async (req, res) => {
     if (!data || !Array.isArray(data)) {
       console.error("❌ Formato de dados inválido. Data:", data);
       console.error("❌ Tipo de data:", typeof data);
-      console.error("��� É array?", Array.isArray(data));
+      console.error("❌ É array?", Array.isArray(data));
       return res.status(400).json({ error: "Invalid data format" });
     }
 
@@ -763,6 +763,13 @@ async function processGradeImport(data: any[]) {
       }
 
       console.log(`✅ Variantes: ${variantsCreated} criadas, ${variantsUpdated} atualizadas`);
+
+      // Verificação final - contar variantes realmente criadas
+      const [variantCount] = await connection.execute(
+        "SELECT COUNT(*) as total FROM product_variants WHERE product_id = ? AND color_id = ?",
+        [productId, colorId]
+      );
+      console.log(`🔢 Total de variantes no banco para este produto/cor: ${(variantCount as any[])[0].total}`);
 
       // 2.4: Criar/atualizar entrada na tabela product_color_variants (para reconhecimento)
       try {
