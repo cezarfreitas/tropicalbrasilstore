@@ -490,31 +490,23 @@ export default function ProductsWooCommerce() {
     }
   };
 
-  const fetchGrades = async () => {
+  const fetchGrades = async (retryCount = 0) => {
     try {
-      // First test if API is reachable with a simple ping
-      try {
-        const pingResponse = await fetch("/api/ping");
-        console.log("🏓 API ping status:", pingResponse.status);
-      } catch (pingError) {
-        console.warn("⚠️ API ping failed:", pingError);
-      }
+      console.log("🔄 Fetching grades...");
 
-      console.log("🔄 Fetching grades from /api/grades...");
-      const response = await fetch("/api/grades", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // Add timeout and retry logic
-        signal: AbortSignal.timeout(10000), // 10 second timeout
+      // Add timeout to the fetch request
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+      const response = await fetch("/api/grades-redesigned", {
+        signal: controller.signal,
       });
 
-      console.log("📊 Grades response status:", response.status);
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const data = await response.json();
-        console.log("📊 Grades data received:", data);
+        console.log("📊 Grades data received:", Array.isArray(data) ? data.length : 0, "items");
         setGrades(Array.isArray(data) ? data : []);
       } else {
         console.warn(
