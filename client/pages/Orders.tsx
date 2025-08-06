@@ -913,14 +913,45 @@ function EditOrderForm({
     }
   };
 
-  const fetchGrades = async () => {
+  const fetchGrades = async (retryCount = 0) => {
     try {
-      const response = await fetch("/api/grades-redesigned");
+      console.log("Fetching grades...");
+
+      // Add timeout to the fetch request
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+      const response = await fetch("/api/grades-redesigned", {
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
       if (response.ok) {
-        setGrades(await response.json());
+        const grades = await response.json();
+        setGrades(grades);
+        console.log(`✅ Successfully fetched ${grades.length} grades`);
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-    } catch (error) {
-      console.error("Error fetching grades:", error);
+    } catch (error: any) {
+      console.error("❌ Error fetching grades:", error);
+
+      if (error.name === 'AbortError') {
+        console.log("🕐 Request timed out");
+
+        // Retry once on timeout
+        if (retryCount < 1) {
+          console.log("🔄 Retrying grades fetch...");
+          setTimeout(() => fetchGrades(retryCount + 1), 2000);
+        } else {
+          console.log("❌ Max retries reached, setting empty grades");
+          setGrades([]);
+        }
+      } else {
+        // For other errors, set empty array to prevent UI issues
+        setGrades([]);
+      }
     }
   };
 
