@@ -631,6 +631,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             currentValue={totalPrice}
             customerMinimumValue={customer?.minimum_order}
             globalMinimumValue={storeSettings?.minimum_order_value}
+            theme="sidebar"
           />
         </div>
 
