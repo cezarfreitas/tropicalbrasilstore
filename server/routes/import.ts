@@ -172,6 +172,93 @@ async function processColor(colorName: string): Promise<number> {
   return colorId;
 }
 
+async function processBrand(brandName: string): Promise<number> {
+  if (!brandName || !brandName.trim()) {
+    throw new Error("Brand name is required");
+  }
+
+  const trimmedBrand = brandName.trim();
+
+  // Check if brand exists
+  const [existing] = await db.execute(
+    "SELECT id FROM brands WHERE LOWER(name) = LOWER(?)",
+    [trimmedBrand],
+  );
+
+  let brandId: number;
+  if ((existing as any[]).length > 0) {
+    brandId = (existing as any[])[0].id;
+  } else {
+    // Create new brand
+    const [result] = await db.execute(
+      "INSERT INTO brands (name, active) VALUES (?, 1)",
+      [trimmedBrand],
+    );
+    brandId = (result as any).insertId;
+    console.log(`✨ Created new brand: "${trimmedBrand}" (ID: ${brandId})`);
+  }
+
+  return brandId;
+}
+
+async function processGender(genderName: string): Promise<number> {
+  if (!genderName || !genderName.trim()) {
+    throw new Error("Gender name is required");
+  }
+
+  const trimmedGender = genderName.trim();
+
+  // Check if gender exists
+  const [existing] = await db.execute(
+    "SELECT id FROM genders WHERE LOWER(name) = LOWER(?)",
+    [trimmedGender],
+  );
+
+  let genderId: number;
+  if ((existing as any[]).length > 0) {
+    genderId = (existing as any[])[0].id;
+  } else {
+    // Create new gender
+    const [result] = await db.execute(
+      "INSERT INTO genders (name, active) VALUES (?, 1)",
+      [trimmedGender],
+    );
+    genderId = (result as any).insertId;
+    console.log(`✨ Created new gender: "${trimmedGender}" (ID: ${genderId})`);
+  }
+
+  return genderId;
+}
+
+async function processType(typeName: string): Promise<number> {
+  if (!typeName || !typeName.trim()) {
+    throw new Error("Type name is required");
+  }
+
+  const trimmedType = typeName.trim();
+
+  // Check if type exists
+  const [existing] = await db.execute(
+    "SELECT id FROM types WHERE LOWER(name) = LOWER(?)",
+    [trimmedType],
+  );
+
+  let typeId: number;
+  if ((existing as any[]).length > 0) {
+    typeId = (existing as any[])[0].id;
+  } else {
+    // Create new type
+    const [result] = await db.execute(
+      "INSERT INTO types (name, active) VALUES (?, 1)",
+      [trimmedType],
+    );
+    typeId = (result as any).insertId;
+    console.log(`✨ Created new type: "${trimmedType}" (ID: ${typeId})`);
+  }
+
+  return typeId;
+}
+
 function generateRandomHex(): string {
   return (
     "#" +
