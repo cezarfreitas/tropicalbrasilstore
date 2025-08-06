@@ -817,7 +817,7 @@ async function processGradeImport(data: any[]) {
       console.log(`   ✅ ETAPA 3 - Grade: ${item.grade_name ? item.grade_name + ' (' + item.grade_stock + ' unidades)' : 'Não processada'}`);
       console.log(`   📋 Resumo:`);
       console.log(`      🏷️ Marca: ${item.brand_name || 'Não informada'}`);
-      console.log(`      ��� Imagem principal: ${photoPath ? 'Baixada' : 'Não fornecida'}`);
+      console.log(`      📸 Imagem principal: ${photoPath ? 'Baixada' : 'Não fornecida'}`);
       console.log(`      🎨 Cor: ${item.color} (ID: ${colorId})`);
       console.log(`      🌈 Imagem da cor: ${colorImagePath ? 'Baixada' : 'Não fornecida'}`);
 
@@ -844,13 +844,22 @@ async function processGradeImport(data: any[]) {
     }
 
     importProgress.processed = processedItems;
+
+    // Força garbage collection a cada 10 itens para evitar acúmulo de memória
+    if (processedItems % 10 === 0 && global.gc) {
+      global.gc();
+    }
   }
 
+  // Liberar conexão e limpar variáveis
   connection.release();
   importProgress.isRunning = false;
   importProgress.current = "";
 
   console.log(`🏁 CONCLUÍDO: ${importProgress.success} sucessos, ${importProgress.errors} erros`);
+
+  // Limpar dados da memória
+  data.length = 0;
 }
 
 async function processImport(data: any[]) {
