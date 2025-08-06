@@ -807,14 +807,6 @@ export default function ProductImport() {
         "grade", // Tipo de Estoque = "grade" para venda por grade completa
         "2549", // Nome da Grade Vendida (exemplo: use uma grade existente)
         "50", // Estoque por Grade (50 grades completas disponíveis)
-        "", // Estoque Tam 37 (DEIXAR VAZIO - não usar para grade)
-        "", // Estoque Tam 38 (DEIXAR VAZIO - não usar para grade)
-        "", // Estoque Tam 39 (DEIXAR VAZIO - não usar para grade)
-        "", // Estoque Tam 40 (DEIXAR VAZIO - não usar para grade)
-        "", // Estoque Tam 41 (DEIXAR VAZIO - não usar para grade)
-        "", // Estoque Tam 42 (DEIXAR VAZIO - não usar para grade)
-        "", // Estoque Tam 43 (DEIXAR VAZIO - não usar para grade)
-        "", // Estoque Tam 44 (DEIXAR VAZIO - não usar para grade)
         "XYZ001-AZUL-V1", // SKU da Variante de Cor
         "", // Preço Específico da Cor
         "", // Preço Promocional da Cor
