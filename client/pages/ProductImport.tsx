@@ -237,18 +237,23 @@ export default function ProductImport() {
     fetchData();
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchCategories = async (retryCount = 0) => {
     try {
       const response = await customFetch("/api/categories");
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
       } else {
-        console.error("Error response from categories:", response.status, response.statusText);
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error("Error fetching categories:", error);
-      setCategories([]);
+      if (retryCount < 2) {
+        console.log(`Retrying categories fetch... (${retryCount + 1}/3)`);
+        setTimeout(() => fetchCategories(retryCount + 1), 1000 * (retryCount + 1));
+      } else {
+        setCategories([]);
+      }
     }
   };
 
