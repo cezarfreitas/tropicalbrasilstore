@@ -694,7 +694,7 @@ async function processGradeImport(data: any[]) {
             console.log(`❌ Falha ao baixar imagem da cor: ${item.color_image_url}`);
           }
         } catch (error) {
-          console.warn(`⚠️ Erro ao baixar imagem da cor: ${error.message}`);
+          console.warn(`⚠�� Erro ao baixar imagem da cor: ${error.message}`);
         }
       } else {
         console.log(`📸 Nenhuma URL de imagem da cor fornecida`);
@@ -772,21 +772,28 @@ async function processGradeImport(data: any[]) {
       }
 
       await connection.commit();
-      console.log(`✅ Produto grade criado com sucesso: ${item.name}`);
-      console.log(`   📦 Product ID: ${productId}`);
-      console.log(`   🎨 Cor: ${item.color} (Color ID: ${colorId})`);
-      console.log(`   📊 Grade: ${item.grade_name} (Grade ID: ${gradeId})`);
-      console.log(`   📦 Estoque: ${item.grade_stock} grades`);
-      console.log(`   🎯 Variantes: ${(defaultSizes as any[]).length} tamanhos criados`);
-      console.log(`   📸 Imagem principal: ${item.photo_url ? '✅ Baixada' : '❌ Não fornecida'}`);
-      console.log(`   🖼️ Imagem da cor: ${colorImagePath ? '✅ Baixada' : '❌ Não fornecida'}`);
-      console.log(`   💰 Preço da cor: ${item.color_price || 'Padrão'}`);
+      console.log(`\n🎉 === PRODUTO GRADE CRIADO COM SUCESSO ===`);
+      console.log(`✅ Nome: ${item.name}`);
+      console.log(`✅ Product ID: ${productId}`);
+      console.log(`✅ Cor: ${item.color} (Color ID: ${colorId})`);
+      console.log(`✅ Grade: ${item.grade_name} (Grade ID: ${gradeId})`);
+      console.log(`✅ Estoque: ${item.grade_stock} grades`);
+      console.log(`✅ Variantes: ${variantsCreated} tamanhos criados`);
+      console.log(`✅ Imagem principal: ${item.photo_url ? '✅ Baixada' : '❌ Não fornecida'}`);
+      console.log(`✅ Imagem da cor: ${colorImagePath ? '✅ Baixada' : '❌ Não fornecida'}`);
+      console.log(`✅ Preço da cor: ${item.color_price || 'Usando preço base'}`);
+      console.log(`📊 Progresso: ${processedItems + 1}/${data.length}`);
+
       importProgress.success++;
       processedItems++;
 
     } catch (error) {
       await connection.rollback();
-      console.error(`❌ Error processing grade product ${item.name}:`, error);
+      console.error(`\n💥 === ERRO NO PROCESSAMENTO ===`);
+      console.error(`❌ Produto: ${item.name || 'Nome não definido'}`);
+      console.error(`❌ Linha: ${processedItems + 1}`);
+      console.error(`❌ Erro: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(`❌ Stack trace:`, error instanceof Error ? error.stack : 'N/A');
 
       importProgress.errorDetails.push({
         row: processedItems + 1,
