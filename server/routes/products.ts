@@ -825,13 +825,17 @@ router.post("/bulk", async (req, res) => {
       // Processar cada variante
       for (const [varianteIndex, variante] of product.variantes.entries()) {
         console.log(
-          `🎨 [${requestId}] Processando variante ${varianteIndex + 1}/${product.variantes.length}: ${variante.cor || 'sem cor'} do produto: ${product.codigo}`,
+          `🎨 [${requestId}] Processando variante ${varianteIndex + 1}/${product.variantes.length}: ${variante.cor || "sem cor"} do produto: ${product.codigo}`,
         );
-        console.log(`🔍 [${requestId}] Dados da variante:`, JSON.stringify(variante, null, 2));
+        console.log(
+          `🔍 [${requestId}] Dados da variante:`,
+          JSON.stringify(variante, null, 2),
+        );
 
         // Type conversion and normalization
         const precoNumerico = parseFloat(variante.preco);
-        const corLimpa = typeof variante.cor === 'string' ? variante.cor.trim() : variante.cor;
+        const corLimpa =
+          typeof variante.cor === "string" ? variante.cor.trim() : variante.cor;
 
         // More detailed validation with specific error messages
         const validationErrors = [];
@@ -841,7 +845,9 @@ router.post("/bulk", async (req, res) => {
         }
 
         if (isNaN(precoNumerico) || precoNumerico <= 0) {
-          validationErrors.push(`preço é inválido (${variante.preco}) - deve ser um número maior que 0`);
+          validationErrors.push(
+            `preço é inválido (${variante.preco}) - deve ser um número maior que 0`,
+          );
         }
 
         if (!variante.grade) {
@@ -849,14 +855,17 @@ router.post("/bulk", async (req, res) => {
         }
 
         if (validationErrors.length > 0) {
-          console.error(`❌ [${requestId}] Dados inválidos para variante ${corLimpa || 'sem cor'}:`, {
-            cor_original: variante.cor,
-            cor_limpa: corLimpa,
-            preco_original: variante.preco,
-            preco_numerico: precoNumerico,
-            grade: variante.grade,
-            erros: validationErrors,
-          });
+          console.error(
+            `❌ [${requestId}] Dados inválidos para variante ${corLimpa || "sem cor"}:`,
+            {
+              cor_original: variante.cor,
+              cor_limpa: corLimpa,
+              preco_original: variante.preco,
+              preco_numerico: precoNumerico,
+              grade: variante.grade,
+              erros: validationErrors,
+            },
+          );
           return res.status(422).json({
             success: false,
             error: "Dados inválidos",
