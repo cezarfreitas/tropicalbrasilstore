@@ -27,6 +27,7 @@ export default function Cart() {
   const { items, totalItems, totalPrice, updateQuantity, removeItem } =
     useCart();
   const storeSettings = useGlobalStoreSettings();
+  const { customer } = useCustomerAuth();
 
   // Empty cart state
   if (items.length === 0) {
