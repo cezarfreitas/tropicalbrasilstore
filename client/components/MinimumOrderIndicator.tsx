@@ -12,8 +12,12 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
   minimumValue,
   currency = 'R$'
 }) => {
+  // Debug logs
+  console.log('MinimumOrderIndicator props:', { currentValue, minimumValue, currency });
+
   // Se não há pedido mínimo configurado, não exibe o componente
   if (minimumValue <= 0) {
+    console.log('MinimumOrderIndicator: not showing because minimumValue <= 0');
     return null;
   }
 
