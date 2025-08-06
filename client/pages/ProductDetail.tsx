@@ -267,7 +267,7 @@ export default function ProductDetail() {
 
         xhr.onerror = () => reject(new Error("Network error"));
         xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 8000; // 8 second timeout
+        xhr.timeout = 15000; // 15 second timeout
 
         xhr.send();
       });
