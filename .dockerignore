@@ -1,0 +1,51 @@
+# Node
+node_modules
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Documentation que não é essencial
+*.md
+docs/
+
+# Test files
+coverage
+.nyc_output
+test/
+tests/
+__tests__/
+
+# Arquivos temporários e de deploy
+dist
+build
+deploy-ready
+prepare-deploy.js
+docker-compose.prod.yml
+build-production.js
+package.production.json
+
+# Manter apenas os essenciais para build
+# NÃO excluir client/, server/, shared/
