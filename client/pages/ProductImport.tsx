@@ -969,7 +969,7 @@ export default function ProductImport() {
                     SKU da Variante: HAV001-DOURADO<br/>
                     Preço da Cor: 35.90<br/>
                     Imagem da Cor: /uploads/dourado.jpg<br/>
-                    <em>→ Cor dourada com preço premium</em>
+                    <em>→ Cor dourada com pre��o premium</em>
                   </div>
                 </div>
               </div>
@@ -1230,9 +1230,9 @@ export default function ProductImport() {
                     <div>
                       <h5 className="font-semibold text-blue-800 mb-2">Classificação (Opcional):</h5>
                       <ul className="text-sm text-blue-700 space-y-1">
-                        <li>• <strong>Marca (ID):</strong> 6=Havaianas, 7=Ipanema...</li>
-                        <li>• <strong>Gênero (ID):</strong> 8=Masc, 9=Fem, 10=Unissex</li>
-                        <li>• <strong>Tipo (ID):</strong> 11=Chinelo, 12=Sandália...</li>
+                        <li>• <strong>Marca (Nome):</strong> "Havaianas", "Nike", "Adidas"...</li>
+                        <li>• <strong>Gênero (Nome):</strong> "Masculino", "Feminino", "Unissex"</li>
+                        <li>• <strong>Tipo (Nome):</strong> "Chinelo", "Sandália", "Tênis"...</li>
                         <li>• <strong>SKU Pai:</strong> Agrupa variantes</li>
                       </ul>
                     </div>
