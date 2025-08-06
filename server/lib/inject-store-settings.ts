@@ -103,10 +103,3 @@ export async function injectStoreSettings(req: Request, res: Response, next: Nex
   
   next();
 }
-
-// Function to clear cache when settings are updated
-export function clearSettingsCache() {
-  cachedSettings = null;
-  lastFetchTime = 0;
-  console.log('🗑️ Store settings cache cleared');
-}
