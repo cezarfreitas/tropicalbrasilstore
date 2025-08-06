@@ -165,18 +165,27 @@ export default function ProductDetail() {
 
     if (!isAuthenticated) {
       console.log('❌ User not authenticated, redirecting to login...');
-      navigate('/login', { replace: true });
+      // Force immediate redirect
+      window.location.href = '/login';
       return;
     }
 
     if (!isApproved) {
       console.log('⚠️ User authenticated but not approved');
     }
-  }, [isAuthenticated, isApproved, navigate]);
+  }, [isAuthenticated, isApproved]);
 
   // Don't render anything if not authenticated
   if (!isAuthenticated) {
-    return null;
+    // Show a loading state while redirecting
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Redirecionando para o login...</p>
+        </div>
+      </div>
+    );
   }
 
   useEffect(() => {
