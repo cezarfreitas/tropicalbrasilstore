@@ -48,17 +48,12 @@ export function SimpleProductCard({
   // Remove problematic fetch to avoid AbortError issues
   // Products should have proper images from the main API
 
-  // EXACT same logic as ProductDetail page working example
+  // Simplified image logic without enhanced data fetch
   const selectedVariantImage = selectedColorImage;
-
-  // This is the EXACT line that works in ProductDetail.tsx line 571-572:
-  // <ProductImage src={getImageUrl(selectedVariantImage || product.photo)} />
   const finalImageSrc = getImageUrl(selectedVariantImage || product.photo);
 
-  // Additional check for available_colors as fallback (for product_color_variants.image_url)
+  // Try available_colors as fallback
   let bestImageSrc = finalImageSrc;
-
-  // Try available_colors from listing API
   if (
     !bestImageSrc &&
     product.available_colors &&
@@ -69,16 +64,6 @@ export function SimpleProductCard({
     );
     if (firstColorWithImage && firstColorWithImage.image_url) {
       bestImageSrc = getImageUrl(firstColorWithImage.image_url);
-    }
-  }
-
-  // Try enhanced data from individual product API (contains pcv.image_url)
-  if (!bestImageSrc && enhancedProductData && enhancedProductData.variants) {
-    const firstVariantWithImage = enhancedProductData.variants.find(
-      (v) => v.image_url,
-    );
-    if (firstVariantWithImage && firstVariantWithImage.image_url) {
-      bestImageSrc = getImageUrl(firstVariantWithImage.image_url);
     }
   }
 
