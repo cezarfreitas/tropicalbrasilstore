@@ -61,8 +61,6 @@ import {
   Store,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { DatabaseVerification } from "../components/DatabaseVerification";
-import { ThemeDebug } from "../components/ThemeDebug";
 
 interface Customer {
   email: string;
