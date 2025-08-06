@@ -43,7 +43,6 @@ export function SimpleProductCard({
   const [selectedColorImage, setSelectedColorImage] = useState<string | null>(
     null,
   );
-  const [enhancedProductData, setEnhancedProductData] = useState<any>(null);
 
   // Remove problematic fetch to avoid AbortError issues
   // Products should have proper images from the main API
