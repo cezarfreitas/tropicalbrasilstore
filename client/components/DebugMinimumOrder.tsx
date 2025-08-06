@@ -9,6 +9,12 @@ export const DebugMinimumOrder: React.FC = () => {
   const [customerData, setCustomerData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Helper function to safely format currency
+  const formatCurrency = (value: any): string => {
+    const num = Number(value) || 0;
+    return `R$ ${num.toFixed(2).replace('.', ',')}`;
+  };
+
   const setTestMinimumOrder = async (amount: number) => {
     if (!customer?.email) return;
 
