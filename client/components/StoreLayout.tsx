@@ -717,17 +717,17 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             )}
 
             {/* Color Filter Section */}
-            <div className="mt-4 pt-3 border-t border-white/20">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between px-2">
+            <div className="mt-3 pt-2 border-t border-white/15">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between px-1">
                   <button
                     onClick={() => setColorFilterOpen(!colorFilterOpen)}
-                    className="flex items-center gap-2 text-sm font-bold text-white/90 hover:text-white transition-all duration-300 group"
+                    className="flex items-center gap-1.5 text-xs font-semibold text-white/80 hover:text-white transition-all duration-200 group"
                   >
-                    <div className="w-2 h-2 bg-gradient-to-br from-red-400 to-blue-400 rounded-full group-hover:scale-110 transition-transform duration-300"></div>
-                    <span>Filtrar por Cor</span>
+                    <div className="w-1.5 h-1.5 bg-gradient-to-br from-red-400 to-blue-400 rounded-full"></div>
+                    <span>Cores</span>
                     <ChevronDown
-                      className={`h-4 w-4 transition-all duration-300 ${
+                      className={`h-3 w-3 transition-all duration-200 ${
                         colorFilterOpen
                           ? "rotate-180 text-white"
                           : "text-white/50 rotate-[-90deg]"
@@ -737,7 +737,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   {selectedColorFilters.length > 0 && (
                     <button
                       onClick={() => setSelectedColorFilters([])}
-                      className="text-xs text-white/70 hover:text-white bg-white/10 hover:bg-white/20 px-2 py-1 rounded-full transition-all duration-300"
+                      className="text-[10px] text-white/60 hover:text-white bg-white/10 hover:bg-white/15 px-1.5 py-0.5 rounded transition-all duration-200"
                     >
                       Limpar ({selectedColorFilters.length})
                     </button>
@@ -746,7 +746,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
                 {colorFilterOpen && (
                   <>
-                    <div className="grid grid-cols-6 gap-1.5 px-2">
+                    <div className="grid grid-cols-7 gap-1 px-1">
                       {availableColors.map((color) => {
                         const isSelected = selectedColorFilters.includes(
                           color.id,
@@ -755,10 +755,10 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                           <button
                             key={color.id}
                             onClick={() => handleColorFilter(color.id)}
-                            className={`w-7 h-7 rounded-lg border transition-all duration-200 relative ${
+                            className={`w-5 h-5 rounded-md border transition-all duration-200 relative ${
                               isSelected
-                                ? "border-white border-2 scale-105 shadow-lg"
-                                : "border-white/30 hover:border-white/60 hover:scale-105"
+                                ? "border-white border-2 scale-105"
+                                : "border-white/30 hover:border-white/60"
                             }`}
                             style={{
                               backgroundColor: color.hex_code || "#E5E7EB",
