@@ -10,6 +10,14 @@ export default defineConfig(({ mode }) => {
       host: "0.0.0.0",
       port: 3000,
       strictPort: true,
+      allowedHosts: [
+        "b2b.tropicalbrasilsandalias.com.br",
+        "localhost",
+        "127.0.0.1",
+        "0.0.0.0",
+        ".tropicalbrasilsandalias.com.br",
+        ".fly.dev"
+      ],
     },
     base: "/",
     publicDir: "public",
