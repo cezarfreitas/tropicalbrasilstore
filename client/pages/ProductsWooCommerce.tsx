@@ -1657,6 +1657,12 @@ export default function ProductsWooCommerce() {
                                             );
                                             if (!grade) return null;
 
+                                            // Get current stock for this grade
+                                            const gradeStock = variant.grade_stocks?.find(
+                                              (gs) => gs.grade_id === gradeId
+                                            );
+                                            const currentStock = gradeStock?.stock_quantity || 0;
+
                                             return (
                                               <div
                                                 key={gradeId}
@@ -1684,15 +1690,12 @@ export default function ProductsWooCommerce() {
                                                   <Input
                                                     type="number"
                                                     min="0"
+                                                    value={currentStock}
                                                     placeholder="25"
                                                     className="w-20 text-center"
                                                     onChange={(e) => {
-                                                      console.log(
-                                                        "Estoque grade:",
-                                                        gradeId,
-                                                        variant.color_id,
-                                                        e.target.value,
-                                                      );
+                                                      const newStock = parseInt(e.target.value) || 0;
+                                                      updateGradeStock(variantIndex, gradeId, newStock);
                                                     }}
                                                   />
                                                 </div>
