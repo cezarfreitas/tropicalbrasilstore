@@ -845,6 +845,17 @@ async function processGradeImport(data: any[]) {
         }
       }
 
+      // Verificações finais antes do commit
+      const [finalVariantCheck] = await connection.execute(
+        "SELECT COUNT(*) as total FROM product_variants WHERE product_id = ? AND color_id = ?",
+        [productId, colorId]
+      );
+
+      const [finalGradeCheck] = await connection.execute(
+        "SELECT SUM(stock_quantity) as total_stock FROM product_color_grades WHERE product_id = ? AND color_id = ?",
+        [productId, colorId]
+      );
+
       await connection.commit();
       console.log(`\n🎉 === PROCESSAMENTO CONCLUÍDO COM SUCESSO ===`);
       console.log(`   ✅ ETAPA 1 - Produto: ${item.name} (ID: ${productId})`);
@@ -855,6 +866,9 @@ async function processGradeImport(data: any[]) {
       console.log(`      📸 Imagem principal: ${photoPath ? 'Baixada' : 'Não fornecida'}`);
       console.log(`      🎨 Cor: ${item.color} (ID: ${colorId})`);
       console.log(`      🌈 Imagem da cor: ${colorImagePath ? 'Baixada' : 'Não fornecida'}`);
+      console.log(`   🔍 Verificação Final:`);
+      console.log(`      📦 Variantes no banco: ${(finalVariantCheck as any[])[0].total}`);
+      console.log(`      📊 Estoque total em grades: ${(finalGradeCheck as any[])[0].total_stock || 0}`);
 
       importProgress.success++;
       processedItems++;
