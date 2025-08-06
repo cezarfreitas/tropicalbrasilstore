@@ -433,9 +433,20 @@ export default function ProductImport() {
     const possibleHeaders = commonMappings[targetField] || [];
     const normalizedHeaders = headers.map((h) => h.toLowerCase().trim());
 
+    // Primeiro, buscar correspondência exata
     for (const possible of possibleHeaders) {
       const index = normalizedHeaders.findIndex((h) =>
-        h.includes(possible.toLowerCase()),
+        h === possible.toLowerCase()
+      );
+      if (index !== -1) {
+        return headers[index];
+      }
+    }
+
+    // Se não encontrar correspondência exata, buscar por inclusão
+    for (const possible of possibleHeaders) {
+      const index = normalizedHeaders.findIndex((h) =>
+        h.includes(possible.toLowerCase()) || possible.toLowerCase().includes(h)
       );
       if (index !== -1) {
         return headers[index];
@@ -964,7 +975,7 @@ export default function ProductImport() {
         window.URL.revokeObjectURL(url);
 
         toast({
-          title: "Exporta����o Concluída",
+          title: "Exporta��ão Concluída",
           description: `Arquivo de produtos ${
             filter === "active"
               ? "ativos"
@@ -1147,7 +1158,7 @@ export default function ProductImport() {
               </div>
               <p className="text-sm text-muted-foreground mb-3">
                 Produto vendido como grade completa. Especifique qual grade vendida usar e quantas estão disponíveis (ex: Grade "2549" com 25 unidades).
-                <strong className="text-orange-700 block mt-1">📊 Arquivo Excel organizado - sem campos de tamanho!</strong>
+                <strong className="text-orange-700 block mt-1">���� Arquivo Excel organizado - sem campos de tamanho!</strong>
               </p>
               <Button variant="outline" onClick={downloadSingleColorGradeTemplate} className="w-full">
                 <Download className="h-4 w-4 mr-2" />
