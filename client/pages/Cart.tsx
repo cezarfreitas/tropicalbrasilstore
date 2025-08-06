@@ -27,10 +27,6 @@ export default function Cart() {
     useCart();
   const storeSettings = useGlobalStoreSettings();
 
-  // Debug logs
-  console.log('Cart storeSettings:', storeSettings);
-  console.log('Cart totalPrice:', totalPrice);
-
   // Empty cart state
   if (items.length === 0) {
     return (
