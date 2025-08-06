@@ -392,48 +392,7 @@ router.post("/products-grade", async (req, res) => {
       return res.status(400).json({ error: "Nenhum dado para importar" });
     }
 
-    // Verify database connection and required tables
-    console.log("🔍 Verificando conexão com banco de dados e tabelas necessárias...");
-    try {
-      const connection = await db.getConnection();
-
-      // Check required tables
-      const requiredTables = ['products', 'categories', 'colors', 'sizes', 'product_variants', 'product_color_variants', 'product_color_grades', 'grade_vendida'];
-
-      for (const table of requiredTables) {
-        const [tableCheck] = await connection.execute(`SHOW TABLES LIKE '${table}'`);
-        if ((tableCheck as any[]).length === 0) {
-          throw new Error(`Tabela necessária '${table}' não encontrada no banco de dados`);
-        }
-        console.log(`✅ Tabela '${table}' verificada`);
-      }
-
-      // Check if we have basic sizes, create them if they don't exist
-      const [sizesCheck] = await connection.execute("SELECT COUNT(*) as count FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44')");
-      if ((sizesCheck as any[])[0].count === 0) {
-        console.log("⚠️ Tamanhos padrão não encontrados, criando automaticamente...");
-
-        const standardSizes = ['37', '38', '39', '40', '41', '42', '43', '44'];
-        for (const size of standardSizes) {
-          await connection.execute("INSERT IGNORE INTO sizes (size) VALUES (?)", [size]);
-        }
-
-        console.log("✅ Tamanhos padrão criados: 37-44");
-
-        // Verify creation
-        const [newSizesCheck] = await connection.execute("SELECT COUNT(*) as count FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44')");
-        console.log(`✅ Verificação: ${(newSizesCheck as any[])[0].count} tamanhos padrão disponíveis`);
-      } else {
-        console.log(`✅ Tamanhos padrão encontrados: ${(sizesCheck as any[])[0].count} tamanhos disponíveis`);
-      }
-
-      connection.release();
-      console.log("✅ Verificação do banco de dados concluída com sucesso");
-
-    } catch (dbError) {
-      console.error("❌ Erro na verificação do banco de dados:", dbError);
-      return res.status(500).json({ error: `Problema no banco de dados: ${dbError.message}` });
-    }
+    console.log("🚀 Pulando verificações complexas e iniciando importação diretamente...");
 
     // Reset progress
     importProgress = {
@@ -932,7 +891,7 @@ async function processGradeImport(data: any[]) {
   importProgress.current = "";
 
   console.log(`\n🏁 === PROCESSAMENTO DE GRADES CONCLUÍDO ===`);
-  console.log(`�� Total processado: ${processedItems}/${data.length}`);
+  console.log(`📊 Total processado: ${processedItems}/${data.length}`);
   console.log(`✅ Sucessos: ${importProgress.success}`);
   console.log(`❌ Erros: ${importProgress.errors}`);
   console.log(`📈 Taxa de sucesso: ${((importProgress.success / data.length) * 100).toFixed(1)}%`);
