@@ -421,6 +421,16 @@ export default function Checkout() {
                     )}
                   </Button>
 
+                  {/* Minimum order message */}
+                  {storeSettings?.minimum_order_value && storeSettings.minimum_order_value > 0 && totalPrice < storeSettings.minimum_order_value && (
+                    <div className="text-center">
+                      <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                        <AlertCircle className="inline h-4 w-4 mr-1" />
+                        Adicione mais R$ {(storeSettings.minimum_order_value - totalPrice).toFixed(2).replace('.', ',')} para atingir o pedido mínimo
+                      </p>
+                    </div>
+                  )}
+
                   {/* Back to Cart - Mobile */}
                   <Button
                     type="button"
