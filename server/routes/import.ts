@@ -737,7 +737,7 @@ async function processGradeImport(data: any[]) {
         colorId = await processColor(item.color);
         console.log(`✅ Cor processada - ID: ${colorId}`);
       } catch (error) {
-        console.error(`�� Erro ao processar cor "${item.color}":`, error);
+        console.error(`❌ Erro ao processar cor "${item.color}":`, error);
         throw new Error(`Falha ao processar cor: ${error.message}`);
       }
 
@@ -884,8 +884,8 @@ async function processGradeImport(data: any[]) {
       console.log(`✅ Grade: ${item.grade_name} (Grade ID: ${gradeId})`);
       console.log(`✅ Estoque: ${item.grade_stock} grades`);
       console.log(`✅ Variantes: ${variantsCreated} tamanhos criados`);
-      console.log(`✅ Imagem principal: ${item.photo_url ? '✅ Baixada' : '❌ Não fornecida'}`);
-      console.log(`✅ Imagem da cor: ${colorImagePath ? '✅ Baixada' : '❌ Não fornecida'}`);
+      console.log(`✅ Imagem principal: ${item.photo_url ? 'Baixada' : 'Não fornecida'}`);
+      console.log(`✅ Imagem da cor: ${colorImagePath ? 'Baixada' : 'Não fornecida'}`);
       console.log(`✅ Preço da cor: ${item.color_price || 'Usando preço base'}`);
       console.log(`📊 Progresso: ${processedItems + 1}/${data.length}`);
 
