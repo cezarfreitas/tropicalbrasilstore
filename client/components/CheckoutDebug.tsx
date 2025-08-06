@@ -64,9 +64,15 @@ export function CheckoutDebug() {
     }
   }, [isAuthenticated, authCustomer?.email]);
 
-  const minimumOrderValue = (authCustomer?.minimum_order && authCustomer.minimum_order > 0)
-    ? authCustomer.minimum_order
-    : (storeSettings?.minimum_order_value || 0);
+  // Helper function to safely format currency
+  const formatCurrency = (value: any): string => {
+    const num = Number(value) || 0;
+    return `R$ ${num.toFixed(2)}`;
+  };
+
+  const minimumOrderValue = (Number(authCustomer?.minimum_order) > 0)
+    ? Number(authCustomer?.minimum_order)
+    : (Number(storeSettings?.minimum_order_value) || 0);
 
   return (
     <Card className="mb-6 border-2 border-orange-200">
