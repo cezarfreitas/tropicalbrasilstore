@@ -137,11 +137,14 @@ async function downloadImage(
       fs.mkdirSync(publicDir, { recursive: true });
     }
 
-    const ext = path.extname(trimmedUrl) || ".jpg";
+    // Extract extension from URL, removing query parameters
+    const urlPath = new URL(trimmedUrl).pathname;
+    const ext = path.extname(urlPath) || ".jpg";
     const safeName = filename.replace(/[^a-z0-9]/gi, "_").toLowerCase();
     const timestamp = Date.now();
-    const imagePath = path.join(publicDir, `${safeName}_${timestamp}${ext}`);
-    const publicPath = `/uploads/products/${safeName}_${timestamp}${ext}`;
+    const cleanFileName = `${safeName}_${timestamp}${ext}`;
+    const imagePath = path.join(publicDir, cleanFileName);
+    const publicPath = `/uploads/products/${cleanFileName}`;
 
     console.log(`💾 Salvando em: ${imagePath}`);
 
