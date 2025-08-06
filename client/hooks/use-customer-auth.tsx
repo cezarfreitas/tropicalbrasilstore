@@ -13,6 +13,7 @@ interface Customer {
   whatsapp: string;
   status: "pending" | "approved" | "rejected";
   is_first_login: boolean;
+  minimum_order?: number;
 }
 
 interface CustomerAuthContextType {
