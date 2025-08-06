@@ -542,6 +542,12 @@ router.post("/start-batch-processing", async (req, res) => {
 async function processGradeImport(data: any[]) {
   console.log("🚀 IMPORTAÇÃO SIMPLES - Processando", data.length, "produtos");
 
+  // Limitar o tamanho dos dados para evitar problemas de memória
+  if (data.length > 100) {
+    console.log("⚠️ Limitando importação a 100 itens para evitar problemas de memória");
+    data = data.slice(0, 100);
+  }
+
   const connection = await db.getConnection();
   let processedItems = 0;
 
@@ -657,7 +663,7 @@ async function processGradeImport(data: any[]) {
           ]
         );
         productId = (productResult as any).insertId;
-        console.log(`��� Produto criado - ID: ${productId}`);
+        console.log(`✅ Produto criado - ID: ${productId}`);
       }
 
       // ETAPA 2: CRIAR/ATUALIZAR VARIANTE (1 variante por linha do Excel = 1 cor)
@@ -811,7 +817,7 @@ async function processGradeImport(data: any[]) {
       console.log(`   ✅ ETAPA 3 - Grade: ${item.grade_name ? item.grade_name + ' (' + item.grade_stock + ' unidades)' : 'Não processada'}`);
       console.log(`   📋 Resumo:`);
       console.log(`      🏷️ Marca: ${item.brand_name || 'Não informada'}`);
-      console.log(`      📸 Imagem principal: ${photoPath ? 'Baixada' : 'Não fornecida'}`);
+      console.log(`      ��� Imagem principal: ${photoPath ? 'Baixada' : 'Não fornecida'}`);
       console.log(`      🎨 Cor: ${item.color} (ID: ${colorId})`);
       console.log(`      🌈 Imagem da cor: ${colorImagePath ? 'Baixada' : 'Não fornecida'}`);
 
