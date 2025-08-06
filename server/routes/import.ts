@@ -513,17 +513,35 @@ async function processGradeImport(data: any[]) {
 
       let brandId = null, genderId = null, typeId = null;
 
+      // Process optional fields with error handling
       if (item.brand_name && item.brand_name.trim()) {
-        console.log(`📦 Processing brand: "${item.brand_name}"`);
-        brandId = await processBrand(item.brand_name);
+        try {
+          console.log(`🏷️ Processando marca: "${item.brand_name}"`);
+          brandId = await processBrand(item.brand_name);
+          console.log(`✅ Marca processada - ID: ${brandId}`);
+        } catch (error) {
+          console.warn(`⚠️ Aviso: Falha ao processar marca "${item.brand_name}": ${error.message}`);
+        }
       }
+
       if (item.gender_name && item.gender_name.trim()) {
-        console.log(`📦 Processing gender: "${item.gender_name}"`);
-        genderId = await processGender(item.gender_name);
+        try {
+          console.log(`👤 Processando gênero: "${item.gender_name}"`);
+          genderId = await processGender(item.gender_name);
+          console.log(`✅ Gênero processado - ID: ${genderId}`);
+        } catch (error) {
+          console.warn(`⚠️ Aviso: Falha ao processar gênero "${item.gender_name}": ${error.message}`);
+        }
       }
+
       if (item.type_name && item.type_name.trim()) {
-        console.log(`📦 Processing type: "${item.type_name}"`);
-        typeId = await processType(item.type_name);
+        try {
+          console.log(`📝 Processando tipo: "${item.type_name}"`);
+          typeId = await processType(item.type_name);
+          console.log(`✅ Tipo processado - ID: ${typeId}`);
+        } catch (error) {
+          console.warn(`⚠️ Aviso: Falha ao processar tipo "${item.type_name}": ${error.message}`);
+        }
       }
 
       // Check if product already exists
