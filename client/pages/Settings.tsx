@@ -109,12 +109,46 @@ export default function Settings() {
       if (response.ok) {
         toast({
           title: "Sucesso",
-          description: "Configurações salvas com sucesso",
+          description: "Configurações salvas com sucesso. Atualizando a loja...",
         });
+
+        // Force clear browser cache for frontend
+        try {
+          await fetch("/api/clear-cache", { method: "POST" });
+        } catch (error) {
+          console.warn("Failed to clear cache:", error);
+        }
+
+        // Update global settings immediately
+        if (window.__STORE_SETTINGS__) {
+          window.__STORE_SETTINGS__ = {
+            ...window.__STORE_SETTINGS__,
+            store_name: settings.store_name,
+            logo_url: settings.logo_url,
+            primary_color: settings.primary_color,
+            secondary_color: settings.secondary_color,
+            accent_color: settings.accent_color,
+            background_color: settings.background_color,
+            text_color: settings.text_color,
+          };
+        }
 
         // Trigger theme refresh event for all components
         window.dispatchEvent(new CustomEvent("themeRefresh"));
-        console.log("🎨 Settings saved, triggering theme refresh...");
+        window.dispatchEvent(new CustomEvent("storeSettingsLoaded", {
+          detail: window.__STORE_SETTINGS__
+        }));
+        window.dispatchEvent(new CustomEvent("settingsRefresh"));
+
+        console.log("🎨 Settings saved, cache cleared, triggering refresh...");
+
+        // Show additional success message for frontend updates
+        setTimeout(() => {
+          toast({
+            title: "Loja Atualizada",
+            description: "As mudanças já estão visíveis na página da loja",
+          });
+        }, 1000);
       } else {
         throw new Error("Failed to save settings");
       }
