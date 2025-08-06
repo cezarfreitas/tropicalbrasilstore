@@ -623,10 +623,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <span className="text-xs text-white/80 font-medium">Buscar</span>
             </div>
           </div>
-        </div>
 
-        {/* Minimum Order Indicator */}
-        <div className="px-4 pb-3">
+          {/* Minimum Order Indicator */}
           <MinimumOrderIndicator
             currentValue={totalPrice}
             customerMinimumValue={customer?.minimum_order}
