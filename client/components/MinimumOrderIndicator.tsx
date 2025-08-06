@@ -40,38 +40,29 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
   };
 
   const containerClass = theme === 'sidebar'
-    ? "bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 mb-3"
-    : "bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-4";
+    ? "bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-2 mb-2"
+    : "bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-3 mb-3";
 
   return (
     <div className={containerClass}>
-      {/* Header compacto com valores */}
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          {isCompleted ? (
-            <CheckCircle className="h-4 w-4 text-green-600" />
-          ) : (
-            <Target className="h-4 w-4 text-blue-600" />
-          )}
-          <span className={`text-xs ${theme === 'sidebar' ? 'text-white/90' : 'text-gray-700'}`}>
-            {formatPrice(safeCurrentValue)} / {formatPrice(minimumValue)}
-          </span>
-        </div>
+      {/* Valores em uma linha */}
+      <div className={`text-xs mb-1 ${theme === 'sidebar' ? 'text-white/90' : 'text-gray-700'}`}>
+        {formatPrice(safeCurrentValue)} / {formatPrice(minimumValue)}
       </div>
 
-      {/* Barra de progresso mais fina */}
-      <div className={`w-full rounded-full h-2 mb-2 overflow-hidden ${theme === 'sidebar' ? 'bg-white/20' : 'bg-gray-200'}`}>
+      {/* Barra de progresso ultra fina */}
+      <div className={`w-full rounded-full h-1 mb-1 overflow-hidden ${theme === 'sidebar' ? 'bg-white/20' : 'bg-gray-200'}`}>
         <div
-          className={`h-full rounded-full transition-all duration-500 ease-out ${
+          className={`h-full rounded-full transition-all duration-300 ${
             isCompleted
-              ? 'bg-gradient-to-r from-green-500 to-green-600'
-              : 'bg-gradient-to-r from-blue-500 to-indigo-600'
+              ? 'bg-green-500'
+              : 'bg-blue-500'
           }`}
           style={{ width: `${progress}%` }}
         />
       </div>
 
-      {/* Mensagem simplificada */}
+      {/* Mensagem ultra compacta */}
       {!isCompleted && (
         <div className={`text-xs ${theme === 'sidebar' ? 'text-white/70' : 'text-gray-600'}`}>
           Faltam {formatPrice(remaining)}
