@@ -581,13 +581,20 @@ async function processGradeImport(data: any[]) {
       // ETAPA 0: Processar categoria
       let categoryId = 1; // Default
       try {
-        const [catResult] = await connection.execute("SELECT id FROM categories WHERE LOWER(name) = LOWER(?) LIMIT 1", [item.category_id]);
+        console.log(`🔍 Buscando categoria: "${item.category_id}"`);
+        const [catResult] = await connection.execute("SELECT id, name FROM categories WHERE LOWER(name) = LOWER(?) LIMIT 1", [item.category_id]);
         if ((catResult as any[]).length > 0) {
           categoryId = (catResult as any[])[0].id;
+          console.log(`✅ Categoria encontrada: ${item.category_id} - ID: ${categoryId}`);
+        } else {
+          // Tentar criar categoria automaticamente
+          console.log(`📝 Categoria "${item.category_id}" não encontrada, criando...`);
+          const [newCat] = await connection.execute("INSERT INTO categories (name, active) VALUES (?, 1)", [item.category_id]);
+          categoryId = (newCat as any).insertId;
+          console.log(`✅ Categoria criada: ${item.category_id} - ID: ${categoryId}`);
         }
-        console.log(`✅ Categoria: ${item.category_id} - ID: ${categoryId}`);
       } catch (error) {
-        console.log("⚠️ Usando categoria padrão");
+        console.warn(`⚠️ Erro na categoria: ${error.message}, usando categoria padrão (ID: 1)`);
       }
 
       // ETAPA 1: CRIAR/ATUALIZAR PRODUTO
