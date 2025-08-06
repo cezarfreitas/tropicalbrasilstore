@@ -568,12 +568,53 @@ async function processGradeImport(data: any[]) {
         console.log("⚠️ Usando categoria padrão");
       }
 
-      // Criar produto simples sem complicações
-      let productId: number;
+      // Processar marca se fornecida
+      let brandId = null;
+      if (item.brand_name && item.brand_name.trim()) {
+        try {
+          const [brandResult] = await connection.execute("SELECT id FROM brands WHERE LOWER(name) = LOWER(?) LIMIT 1", [item.brand_name.trim()]);
+          if ((brandResult as any[]).length > 0) {
+            brandId = (brandResult as any[])[0].id;
+          } else {
+            const [newBrand] = await connection.execute("INSERT INTO brands (name) VALUES (?)", [item.brand_name.trim()]);
+            brandId = (newBrand as any).insertId;
+          }
+          console.log(`✅ Marca: ${item.brand_name} - ID: ${brandId}`);
+        } catch (error) {
+          console.warn(`⚠️ Erro na marca: ${error.message}`);
+        }
+      }
 
+      // Download da imagem principal se fornecida
+      let photoPath = null;
+      if (item.photo_url && item.photo_url.trim()) {
+        try {
+          console.log(`📸 Baixando imagem: ${item.photo_url}`);
+          photoPath = await downloadImage(item.photo_url, item.name);
+          if (photoPath) {
+            console.log(`✅ Imagem baixada: ${photoPath}`);
+          }
+        } catch (error) {
+          console.warn(`⚠️ Erro na imagem: ${error.message}`);
+        }
+      }
+
+      // Criar produto completo
+      let productId: number;
       const [productResult] = await connection.execute(
-        `INSERT INTO products (name, category_id, base_price, active, stock_type) VALUES (?, ?, ?, ?, ?)`,
-        [item.name, categoryId, parseFloat(item.base_price), true, 'grade']
+        `INSERT INTO products (name, description, category_id, base_price, sale_price, sku, photo, brand_id, active, stock_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          item.name,
+          item.description || null,
+          categoryId,
+          parseFloat(item.base_price),
+          item.sale_price ? parseFloat(item.sale_price) : null,
+          item.sku || null,
+          photoPath,
+          brandId,
+          true,
+          'grade'
+        ]
       );
       productId = (productResult as any).insertId;
       console.log(`✅ Produto criado - ID: ${productId}`);
