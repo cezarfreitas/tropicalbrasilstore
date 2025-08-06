@@ -791,10 +791,10 @@ export default function ProductDetail() {
 
               {/* Price Section */}
               {product.base_price && (
-                <div className="bg-gray-50 rounded-xl p-3">
+                <div className="bg-gray-50 rounded-lg p-2">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-sm text-gray-600 mb-1">
+                      <div className="text-xs text-gray-600 mb-0.5">
                         Preço Unitário
                       </div>
                       <PriceDisplay
