@@ -9,7 +9,7 @@ export function DynamicTitle({ suffix = "" }: DynamicTitleProps) {
   const storeSettings = useGlobalStoreSettings();
 
   useEffect(() => {
-    const storeName = storeSettings?.store_name || "Chinelos Store";
+    const storeName = storeSettings?.store_name || "Tropical Brasil Sandálias";
     const fullTitle = suffix ? `${suffix} - ${storeName}` : storeName;
     document.title = fullTitle;
   }, [storeSettings?.store_name, suffix]);
