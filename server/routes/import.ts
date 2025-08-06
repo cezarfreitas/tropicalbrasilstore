@@ -47,15 +47,7 @@ let importProgress = {
 // Parse CSV/Excel file
 router.post("/parse-csv", upload.single("file"), async (req, res) => {
   try {
-    console.log("🔍 Upload request received:", {
-      headers: req.headers,
-      method: req.method,
-      url: req.url,
-      hasFile: !!req.file
-    });
-
     if (!req.file) {
-      console.error("❌ No file uploaded");
       return res.status(400).json({ error: "No file uploaded" });
     }
 
