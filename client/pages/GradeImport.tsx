@@ -79,14 +79,12 @@ interface ColumnMapping {
   required: boolean;
 }
 
-// customFetch function
-let customFetch: typeof fetch;
-
-const initCustomFetch = () => {
+// customFetch function - initialize once
+const initCustomFetch = (): typeof fetch => {
   const method = (window as any).FS ? (window as any).FS.getCurrentSessionURL ? 'fullstory' : 'builtin' : 'builtin';
-  
+
   if (method === 'fullstory') {
-    customFetch = async (url: string, options?: RequestInit) => {
+    return async (url: string, options?: RequestInit) => {
       const response = await fetch(url, {
         ...options,
         headers: {
@@ -97,9 +95,11 @@ const initCustomFetch = () => {
       return response;
     };
   } else {
-    customFetch = fetch;
+    return fetch;
   }
 };
+
+const customFetch = initCustomFetch();
 
 export default function GradeImport() {
   const [file, setFile] = useState<File | null>(null);
