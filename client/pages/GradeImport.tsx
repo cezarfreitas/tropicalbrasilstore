@@ -654,7 +654,7 @@ export default function GradeImport() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {processImportData().slice(0, 5).map((row, index) => (
+                {getPreviewData().slice(0, 5).map((row, index) => (
                   <TableRow key={index}>
                     {GRADE_FIELDS.slice(0, 8).map((field) => (
                       <TableCell key={field.key} className="text-xs">
