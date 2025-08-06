@@ -729,6 +729,40 @@ async function processGradeImport(data: any[]) {
         console.warn(`⚠️ Erro em product_color_variants: ${error.message}`);
       }
 
+      // CRÍTICO: Criar ou encontrar grade e relação product_color_grades
+      if (item.grade_name && item.grade_stock) {
+        try {
+          let gradeId;
+          const [existingGrade] = await connection.execute(
+            "SELECT id FROM grade_vendida WHERE name = ? LIMIT 1",
+            [item.grade_name]
+          );
+
+          if ((existingGrade as any[]).length > 0) {
+            gradeId = (existingGrade as any[])[0].id;
+            console.log(`✅ Grade existente: ${item.grade_name} - ID: ${gradeId}`);
+          } else {
+            const [newGrade] = await connection.execute(
+              "INSERT INTO grade_vendida (name, description, active) VALUES (?, ?, ?)",
+              [item.grade_name, `Grade: ${item.grade_name}`, 1]
+            );
+            gradeId = (newGrade as any).insertId;
+            console.log(`✅ Grade criada: ${item.grade_name} - ID: ${gradeId}`);
+          }
+
+          // Criar relação produto-cor-grade com estoque
+          await connection.execute(
+            `INSERT INTO product_color_grades (product_id, color_id, grade_id, stock_quantity)
+             VALUES (?, ?, ?, ?)
+             ON DUPLICATE KEY UPDATE stock_quantity = VALUES(stock_quantity)`,
+            [productId, colorId, gradeId, parseInt(item.grade_stock)]
+          );
+          console.log(`✅ Relação produto-cor-grade criada (Estoque: ${item.grade_stock})`);
+        } catch (error) {
+          console.warn(`⚠️ Erro na grade: ${error.message}`);
+        }
+      }
+
       await connection.commit();
       console.log(`✅ SUCESSO: ${item.name} (${variantsCreated} variantes)`);
 
