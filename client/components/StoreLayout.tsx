@@ -506,6 +506,7 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             <LogoDisplay
               size="w-44 h-24"
               className="flex-shrink-0 transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
+              showText={true}
             />
           </Link>
         </div>
