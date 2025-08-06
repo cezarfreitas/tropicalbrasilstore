@@ -149,7 +149,7 @@ const customFetch = async (url: string, options?: RequestInit): Promise<Response
 
     xhr.onload = () => {
       console.log("📥 Response received:", xhr.status, xhr.statusText);
-      console.log("📄 Response text:", xhr.responseText);
+      console.log("���� Response text:", xhr.responseText);
 
       // Parse response headers
       const responseHeaders: Record<string, string> = {};
@@ -742,7 +742,7 @@ export default function ProductImport() {
         } else {
           setIsImporting(false);
           toast({
-            title: "Importação Concluída",
+            title: "Importação Conclu��da",
             description: `${progress.success} produtos importados com sucesso, ${progress.errors} erros`,
           });
         }
@@ -859,7 +859,12 @@ export default function ProductImport() {
       ],
     ];
 
-    downloadCSVFile("template_importacao_produtos.csv", headers, sampleRows);
+    downloadExcelFile("template_produtos_completo.xlsx", headers, sampleRows);
+
+    toast({
+      title: "✅ Template baixado!",
+      description: "Template completo com exemplos de estoque por TAMANHO e por GRADE. Preencha e faça upload.",
+    });
   };
 
   // Template específico para produto com 1 cor e múltiplas grades
