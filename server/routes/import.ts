@@ -409,7 +409,7 @@ router.post("/products-grade", async (req, res) => {
       errorDetails: [],
     };
 
-    console.log("📋 Sample do primeiro item:", JSON.stringify(data[0], null, 2));
+    console.log("���� Sample do primeiro item:", JSON.stringify(data[0], null, 2));
     console.log("🎯 Iniciando processamento...");
 
     // Start processing grade imports
@@ -733,16 +733,22 @@ async function processGradeImport(data: any[]) {
       let variantsCreated = 0;
       let variantsUpdated = 0;
 
+      console.log(`🔄 Criando variantes para todos os tamanhos: ${sizes.join(', ')}`);
+
       for (const sizeValue of sizes) {
         try {
+          console.log(`   🔄 Processando tamanho: ${sizeValue}`);
+
           // Buscar ou criar tamanho
           let sizeId;
           const [existingSize] = await connection.execute("SELECT id FROM sizes WHERE size = ? LIMIT 1", [sizeValue]);
           if ((existingSize as any[]).length > 0) {
             sizeId = (existingSize as any[])[0].id;
+            console.log(`     ✅ Tamanho ${sizeValue} encontrado - ID: ${sizeId}`);
           } else {
             const [newSize] = await connection.execute("INSERT INTO sizes (size) VALUES (?)", [sizeValue]);
             sizeId = (newSize as any).insertId;
+            console.log(`     ✅ Tamanho ${sizeValue} criado - ID: ${sizeId}`);
           }
 
           // Verificar se variante já existe
@@ -751,8 +757,11 @@ async function processGradeImport(data: any[]) {
             [productId, sizeId, colorId]
           );
 
+          const variantExists = (existingVariant as any[]).length > 0;
+          console.log(`     🔍 Variante Produto:${productId} | Tamanho:${sizeId} | Cor:${colorId} - ${variantExists ? 'EXISTE' : 'NOVA'}`);
+
           // Usar REPLACE INTO para garantir criação/atualização sempre
-          await connection.execute(
+          const [replaceResult] = await connection.execute(
             `REPLACE INTO product_variants (product_id, size_id, color_id, stock, image_url, price_override)
              VALUES (?, ?, ?, ?, ?, ?)`,
             [
@@ -765,15 +774,18 @@ async function processGradeImport(data: any[]) {
             ]
           );
 
-          if ((existingVariant as any[]).length > 0) {
+          console.log(`     📝 REPLACE result:`, replaceResult);
+
+          if (variantExists) {
             variantsUpdated++;
+            console.log(`     ✅ Variante ATUALIZADA: Produto ${productId} | Tamanho ${sizeValue} (${sizeId}) | Cor ${colorId}`);
           } else {
             variantsCreated++;
+            console.log(`     ✅ Variante CRIADA: Produto ${productId} | Tamanho ${sizeValue} (${sizeId}) | Cor ${colorId}`);
           }
-
-          console.log(`     ✅ Variante processada: Produto ${productId} | Tamanho ${sizeValue} | Cor ${colorId}`);
         } catch (error) {
-          console.warn(`⚠️ Erro na variante tamanho ${sizeValue}:`, error.message);
+          console.error(`     ❌ ERRO na variante tamanho ${sizeValue}:`, error.message);
+          console.error(`     📍 Stack:`, error.stack);
         }
       }
 
