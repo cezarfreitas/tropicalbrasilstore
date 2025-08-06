@@ -577,6 +577,8 @@ export default function ProductImport() {
         // Single batch - use original method
         console.log("📤 Enviando batch único com", batches[0].length, "itens");
         console.log("📋 Sample data:", JSON.stringify(batches[0][0], null, 2));
+        console.log("📊 Full batch[0]:", JSON.stringify(batches[0], null, 2));
+        console.log("📊 Tipo de batches[0]:", typeof batches[0], Array.isArray(batches[0]));
 
         const response = await customFetch("/api/import/products", {
           method: "POST",
