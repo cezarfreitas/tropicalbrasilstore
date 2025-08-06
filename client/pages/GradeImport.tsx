@@ -309,21 +309,39 @@ export default function GradeImport() {
   const processImportData = () => {
     const processedData = csvData.map(row => {
       const processedRow: any = {};
-      
+
       columnMappings.forEach(mapping => {
         if (mapping.csvColumn && row[mapping.csvColumn] !== undefined) {
           processedRow[mapping.targetField] = row[mapping.csvColumn];
         }
       });
-      
+
       // Garantir que stock_type seja sempre 'grade' para este sistema
       processedRow.stock_type = 'grade';
-      
+
       return processedRow;
     });
 
     setImportData(processedData);
     return processedData;
+  };
+
+  // Get processed data for preview without state updates
+  const getPreviewData = () => {
+    return csvData.map(row => {
+      const processedRow: any = {};
+
+      columnMappings.forEach(mapping => {
+        if (mapping.csvColumn && row[mapping.csvColumn] !== undefined) {
+          processedRow[mapping.targetField] = row[mapping.csvColumn];
+        }
+      });
+
+      // Garantir que stock_type seja sempre 'grade' para este sistema
+      processedRow.stock_type = 'grade';
+
+      return processedRow;
+    });
   };
 
   // Iniciar importação
