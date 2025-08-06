@@ -119,9 +119,8 @@ export default function GradeImport() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  // Initialize customFetch
+  // Initialize data on mount
   useEffect(() => {
-    initCustomFetch();
     fetchCategories();
   }, []);
 
