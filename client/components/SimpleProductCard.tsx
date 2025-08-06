@@ -213,7 +213,7 @@ export function SimpleProductCard({
                 {product.available_colors.slice(0, 3).map((color, idx) => (
                   <div
                     key={color.id}
-                    className={`w-5 h-5 rounded-full border border-white shadow-sm cursor-pointer bg-gray-100 hover:scale-110 transition-transform duration-200 ${
+                    className={`w-4 h-4 rounded-full border border-white cursor-pointer bg-gray-100 transition-transform duration-200 ${
                       idx > 1 ? "hidden sm:block" : ""
                     }`}
                     title={color.name}
