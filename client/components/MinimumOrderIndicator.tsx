@@ -40,8 +40,8 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
   };
 
   const containerClass = theme === 'sidebar'
-    ? "bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-2 mb-2"
-    : "bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-3 mb-3";
+    ? "p-2 mb-2"
+    : "p-3 mb-3";
 
   return (
     <div className={containerClass}>
