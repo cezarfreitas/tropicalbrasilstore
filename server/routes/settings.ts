@@ -276,6 +276,10 @@ router.patch("/", async (req, res) => {
       updateFields.push("free_shipping_threshold = ?");
       updateValues.push(free_shipping_threshold);
     }
+    if (minimum_order_value !== undefined) {
+      updateFields.push("minimum_order_value = ?");
+      updateValues.push(minimum_order_value);
+    }
     if (payment_methods !== undefined) {
       updateFields.push("payment_methods = ?");
       updateValues.push(JSON.stringify(payment_methods));
