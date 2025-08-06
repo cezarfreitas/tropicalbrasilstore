@@ -42,52 +42,31 @@ export function ThemeLoader() {
     };
   }, []);
 
-  const fetchThemeColors = async (retries = 2) => {
+  const fetchThemeColors = async (retries = 1) => {
     try {
       console.log(`🎨 Fetching theme colors from server... (attempts left: ${retries + 1})`);
 
-      // Use XMLHttpRequest to avoid FullStory conflicts
-      const response = await new Promise<Response>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "/api/settings", true);
-        xhr.setRequestHeader("Accept", "application/json");
-        xhr.setRequestHeader("Content-Type", "application/json");
+      // Use simple fetch with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-        xhr.onload = () => {
-          try {
-            const headers = new Headers();
-            xhr
-              .getAllResponseHeaders()
-              .split("\r\n")
-              .forEach((line) => {
-                const [key, value] = line.split(": ");
-                if (key && value) headers.set(key, value);
-              });
-
-            const response = new Response(xhr.responseText, {
-              status: xhr.status,
-              statusText: xhr.statusText,
-              headers: headers,
-            });
-            resolve(response);
-          } catch (parseError) {
-            reject(new Error(`Response parsing error: ${parseError.message}`));
-          }
-        };
-
-        xhr.onerror = () => reject(new Error("Network error"));
-        xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 12000; // Increased to 12 second timeout
-
-        xhr.send();
+      const response = await fetch("/api/settings", {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const settings = await response.json();
         const themeColors = {
-          primary_color: settings.primary_color || "#f97316",
-          secondary_color: settings.secondary_color || "#ea580c",
-          accent_color: settings.accent_color || "#fed7aa",
+          primary_color: settings.primary_color || "#3b82f6",
+          secondary_color: settings.secondary_color || "#1d4ed8",
+          accent_color: settings.accent_color || "#dbeafe",
           background_color: settings.background_color || "#ffffff",
           text_color: settings.text_color || "#1f2937",
         };
@@ -101,31 +80,26 @@ export function ThemeLoader() {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
-      console.warn(`Error fetching theme colors (attempt ${3 - retries}):`, error.message || error);
+      console.warn(`Error fetching theme colors (attempt ${2 - retries}):`, error.message || error);
 
-      // Retry if we have attempts left and it's a network-related error
-      if (retries > 0 && (
-        error.message.includes('timeout') ||
-        error.message.includes('Network') ||
-        error.message.includes('fetch') ||
-        error.message.includes('HTTP 5')
-      )) {
-        setTimeout(() => fetchThemeColors(retries - 1), 2000);
+      // Retry once if we have attempts left
+      if (retries > 0 && !error.name?.includes('AbortError')) {
+        setTimeout(() => fetchThemeColors(retries - 1), 1000);
         return;
       }
 
       // Final fallback after all retries
-      console.error("All theme color fetch attempts failed, using fallback colors");
+      console.error("Theme color fetch failed, using blue theme fallback colors");
 
-      // Use fallback colors if there's any error
+      // Use blue theme fallback colors
       const fallbackColors = {
-        primary_color: "#f97316",
-        secondary_color: "#ea580c",
-        accent_color: "#fed7aa",
+        primary_color: "#3b82f6",
+        secondary_color: "#1d4ed8",
+        accent_color: "#dbeafe",
         background_color: "#ffffff",
         text_color: "#1f2937"
       };
-      console.log("🎨 Using fallback colors due to error:", fallbackColors);
+      console.log("🎨 Using blue theme fallback colors:", fallbackColors);
       setColors(fallbackColors);
     } finally {
       setLoading(false);
