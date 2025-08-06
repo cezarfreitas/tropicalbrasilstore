@@ -148,11 +148,11 @@ function Store() {
       <div className="w-full px-4 lg:px-6 py-3 lg:py-4 space-y-3 lg:space-y-4">
         {/* Product Count and Sorting */}
         {!loading && !error && (
-          <div className="flex items-center justify-between bg-white border rounded-lg p-4 shadow-sm">
+          <div className="flex items-center justify-between bg-green-100 border-2 border-green-500 rounded-lg p-4 shadow-sm">
             <div className="flex items-center gap-2">
               <Package className="h-5 w-5 text-primary" />
               <span className="text-sm font-medium text-gray-700">
-                {filteredProducts.length > 0 ? (
+                [TESTE] {filteredProducts.length > 0 ? (
                   <>
                     {pagination ? (
                       <>
