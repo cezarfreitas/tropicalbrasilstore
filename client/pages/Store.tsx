@@ -112,6 +112,7 @@ function Store() {
 
   return (
     <StoreLayout>
+      <DynamicTitle />
       <div className="w-full px-4 lg:px-6 py-3 lg:py-4 space-y-3 lg:space-y-4">
         {/* Search Results Indicator */}
         {searchTerm && (
