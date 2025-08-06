@@ -909,54 +909,54 @@ export default function ProductImport() {
 
     const sampleRows = [
       [
-        "Chinelo ABC Grade Completa",              // Nome do Produto
-        "Chinelos",                                // Categoria (nome, não ID)
-        "15.00",                                   // Preço Base
-        "25.90",                                   // Preço de Venda
-        "https://exemplo.com/chinelo-abc.jpg",     // URL da Foto
-        "",                                        // Grupo de Tamanhos (OPCIONAL para grade)
-        "preto",                                   // Cor
-        "ABC001-PRETO",                           // SKU
-        "ABC001",                                 // SKU Pai
-        "Chinelo ABC vendido por grade completa", // Descrição
-        "29.90",                                  // Preço Sugerido
-        "ABC",                                    // Marca (Nome)
-        "Unissex",                               // Gênero (Nome)
-        "Chinelo",                               // Tipo de Produto (Nome)
-        "grade",                                 // Tipo de Estoque
-        "2549",                                  // Nome da Grade Vendida
-        "30",                                    // Estoque por Grade
-        "ABC001-PRETO-GRADE",                    // SKU da Variante de Cor
-        "",                                      // Preço Específico da Cor
-        "",                                      // Preço Promocional da Cor
-        "https://exemplo.com/chinelo-abc-preto.jpg", // Imagem da Variante de Cor
-        "0",                                     // Vender Sem Estoque
-        ""                                       // Stock per variant (DEPRECATED)
+        "Chinelo ABC Grade Completa",              // name - Nome do Produto
+        "Chinelos",                                // category_id - Categoria
+        "15.00",                                   // base_price - Preço Base
+        "25.90",                                   // sale_price - Preço de Venda
+        "https://exemplo.com/chinelo-abc.jpg",     // photo_url - URL da Foto
+        "",                                        // size_group_id - Grupo de Tamanhos (OPCIONAL para grade)
+        "preto",                                   // color - Cor
+        "ABC001-PRETO",                           // sku - SKU
+        "ABC001",                                 // parent_sku - SKU Pai
+        "Chinelo ABC vendido por grade completa", // description - Descrição
+        "29.90",                                  // suggested_price - Preço Sugerido
+        "ABC",                                    // brand_name - Marca (Nome)
+        "Unissex",                               // gender_name - Gênero (Nome)
+        "Chinelo",                               // type_name - Tipo de Produto (Nome)
+        "grade",                                 // stock_type - Tipo de Estoque (grade/size)
+        "2549",                                  // grade_name - Nome da Grade Vendida
+        "30",                                    // grade_stock - Estoque por Grade
+        "ABC001-PRETO-GRADE",                    // variant_sku - SKU da Variante de Cor
+        "",                                      // color_price - Preço Específico da Cor
+        "",                                      // color_sale_price - Preço Promocional da Cor
+        "https://exemplo.com/chinelo-abc-preto.jpg", // color_image_url - Imagem da Variante de Cor
+        "0",                                     // sell_without_stock - Vender Sem Estoque
+        ""                                       // stock_per_variant - Stock per variant (DEPRECATED)
       ],
       [
-        "Sandália XYZ Grade Premium",             // Nome do Produto
-        "Sandálias",                             // Categoria (nome, não ID)
-        "35.00",                                 // Preço Base
-        "55.90",                                 // Preço de Venda
-        "https://exemplo.com/sandalia-xyz.jpg",  // URL da Foto
-        "",                                      // Grupo de Tamanhos (OPCIONAL para grade)
-        "marrom",                                // Cor
-        "XYZ002-MARROM",                         // SKU
-        "XYZ002",                                // SKU Pai
-        "Sandália XYZ premium vendida por grade", // Descrição
-        "65.90",                                 // Preço Sugerido
-        "XYZ Premium",                           // Marca (Nome)
-        "Feminino",                              // Gênero (Nome)
-        "Sandália",                              // Tipo de Produto (Nome)
-        "grade",                                 // Tipo de Estoque
-        "2550",                                  // Nome da Grade Vendida
-        "15",                                    // Estoque por Grade
-        "XYZ002-MARROM-GRADE",                   // SKU da Variante de Cor
-        "49.90",                                 // Preço Específico da Cor
-        "45.90",                                 // Preço Promocional da Cor
-        "https://exemplo.com/sandalia-xyz-marrom.jpg", // Imagem da Variante de Cor
-        "0",                                     // Vender Sem Estoque
-        ""                                       // Stock per variant (DEPRECATED)
+        "Sandália XYZ Grade Premium",             // name - Nome do Produto
+        "Sandálias",                             // category_id - Categoria
+        "35.00",                                 // base_price - Preço Base
+        "55.90",                                 // sale_price - Preço de Venda
+        "https://exemplo.com/sandalia-xyz.jpg",  // photo_url - URL da Foto
+        "",                                      // size_group_id - Grupo de Tamanhos (OPCIONAL para grade)
+        "marrom",                                // color - Cor
+        "XYZ002-MARROM",                         // sku - SKU
+        "XYZ002",                                // parent_sku - SKU Pai
+        "Sandália XYZ premium vendida por grade", // description - Descrição
+        "65.90",                                 // suggested_price - Preço Sugerido
+        "XYZ Premium",                           // brand_name - Marca (Nome)
+        "Feminino",                              // gender_name - Gênero (Nome)
+        "Sandália",                              // type_name - Tipo de Produto (Nome)
+        "grade",                                 // stock_type - Tipo de Estoque (grade/size)
+        "2550",                                  // grade_name - Nome da Grade Vendida
+        "15",                                    // grade_stock - Estoque por Grade
+        "XYZ002-MARROM-GRADE",                   // variant_sku - SKU da Variante de Cor
+        "49.90",                                 // color_price - Preço Específico da Cor
+        "45.90",                                 // color_sale_price - Preço Promocional da Cor
+        "https://exemplo.com/sandalia-xyz-marrom.jpg", // color_image_url - Imagem da Variante de Cor
+        "0",                                     // sell_without_stock - Vender Sem Estoque
+        ""                                       // stock_per_variant - Stock per variant (DEPRECATED)
       ]
     ];
 
