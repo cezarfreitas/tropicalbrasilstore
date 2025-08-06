@@ -483,8 +483,14 @@ export default function ProductImport() {
   };
 
   const validateMappings = (): boolean => {
+    console.log("🔍 Validando mappings...");
+    console.log("📋 Column mappings:", columnMappings);
+
     const requiredMappings = columnMappings.filter((m) => m.required);
     const missingMappings = requiredMappings.filter((m) => !m.csvColumn);
+
+    console.log("🔸 Required mappings:", requiredMappings.map(m => m.targetField));
+    console.log("❌ Missing mappings:", missingMappings.map(m => m.targetField));
 
     if (missingMappings.length > 0) {
       toast({
@@ -495,6 +501,7 @@ export default function ProductImport() {
       return false;
     }
 
+    console.log("✅ Validação de mappings passou");
     return true;
   };
 
