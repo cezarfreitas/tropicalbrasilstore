@@ -482,20 +482,34 @@ async function processGradeImport(data: any[]) {
 
   for (const item of data) {
     try {
-      console.log("📦 Processando produto grade:", item.name);
+      console.log(`\n📦 === PROCESSANDO PRODUTO GRADE ${processedItems + 1}/${data.length} ===`);
+      console.log("📦 Nome:", item.name);
+      console.log("📦 Categoria:", item.category_id);
+      console.log("📦 Cor:", item.color);
+      console.log("📦 Grade:", item.grade_name);
+      console.log("📦 Estoque:", item.grade_stock);
 
       importProgress.current = item.name || `Produto Grade ${processedItems + 1}`;
       await connection.beginTransaction();
 
       // Validate required fields for grade import
-      if (!item.name || !item.category_id || !item.base_price || !item.color || !item.grade_name || !item.grade_stock) {
-        throw new Error("Missing required grade fields: name, category_id, base_price, color, grade_name, grade_stock");
+      const requiredFields = ['name', 'category_id', 'base_price', 'color', 'grade_name', 'grade_stock'];
+      const missingFields = requiredFields.filter(field => !item[field] || item[field].toString().trim() === '');
+
+      if (missingFields.length > 0) {
+        throw new Error(`Campos obrigatórios faltando: ${missingFields.join(', ')}`);
       }
 
       // Process required category and optional brand, gender, and type by name
-      console.log(`📦 Processing category: "${item.category_id}"`);
-      const categoryId = await processCategory(item.category_id);
-      console.log(`📦 Category ID: ${categoryId}`);
+      console.log(`📂 Processando categoria: "${item.category_id}"`);
+      let categoryId;
+      try {
+        categoryId = await processCategory(item.category_id);
+        console.log(`✅ Categoria processada - ID: ${categoryId}`);
+      } catch (error) {
+        console.error(`❌ Erro ao processar categoria "${item.category_id}":`, error);
+        throw new Error(`Falha ao processar categoria: ${error.message}`);
+      }
 
       let brandId = null, genderId = null, typeId = null;
 
