@@ -147,16 +147,14 @@ async function populateColorVariants() {
 }
 
 // Execute if run directly
-if (require.main === module) {
-  populateColorVariants()
-    .then(() => {
-      console.log("🎉 Script executado com sucesso!");
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error("💥 Falha no script:", error);
-      process.exit(1);
-    });
-}
+populateColorVariants()
+  .then(() => {
+    console.log("🎉 Script executado com sucesso!");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error("💥 Falha no script:", error);
+    process.exit(1);
+  });
 
 export { populateColorVariants };
