@@ -13,6 +13,13 @@ export function StoreTitle({
 }: StoreTitleProps) {
   const storeSettings = useGlobalStoreSettings();
 
+  // Debug logging
+  console.log("🏪 StoreTitle Debug:", {
+    storeSettings,
+    windowSettings: typeof window !== "undefined" ? window.__STORE_SETTINGS__ : "SSR",
+    hasWindow: typeof window !== "undefined"
+  });
+
   const storeName =
     storeSettings?.store_name ||
     (typeof window !== "undefined" && window.__STORE_SETTINGS__?.store_name) ||
@@ -24,6 +31,8 @@ export function StoreTitle({
     lg: "text-2xl font-bold",
     xl: "text-3xl font-bold",
   };
+
+  console.log("🏪 StoreTitle will render:", { storeName, size, showSubtitle });
 
   return (
     <div className={`text-center ${className}`}>
