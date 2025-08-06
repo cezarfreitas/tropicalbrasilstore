@@ -208,6 +208,7 @@ export function createServer() {
   app.use("/api/debug-theme", debugThemeRouter);
   app.use("/api/set-customer-minimum", setCustomerMinimumRouter);
   app.use("/api/init-settings", initSettingsRouter);
+  app.use("/api/health", healthRouter);
 
   return app;
 }
