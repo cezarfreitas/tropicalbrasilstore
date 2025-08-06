@@ -86,6 +86,18 @@ export default function Checkout() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check minimum order value before proceeding
+    const minimumOrderValue = storeSettings?.minimum_order_value || 0;
+    if (minimumOrderValue > 0 && totalPrice < minimumOrderValue) {
+      toast({
+        title: "Pedido mínimo não atingido",
+        description: `Adicione mais R$ ${(minimumOrderValue - totalPrice).toFixed(2).replace('.', ',')} para atingir o pedido mínimo de R$ ${minimumOrderValue.toFixed(2).replace('.', ',')}`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
