@@ -17,6 +17,7 @@ export default function CustomerLogin() {
   const { login, isAuthenticated } = useCustomerAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const storeSettings = useGlobalStoreSettings();
 
   // Redirect if already authenticated
   if (isAuthenticated) {
