@@ -563,13 +563,22 @@ export default function ProductDetail() {
 
   const handleColorSelect = (colorId: number, imageUrl?: string) => {
     setSelectedColor(colorId);
-    if (imageUrl) {
-      setSelectedVariantImage(imageUrl);
+
+    // Find the selected color data to get its image
+    const selectedColorData = getAvailableColors().find(c => c.id === colorId);
+    if (selectedColorData) {
+      // Use the color's image_url or the passed imageUrl
+      const colorImage = selectedColorData.image_url || imageUrl;
+      if (colorImage) {
+        setSelectedVariantImage(colorImage);
+        console.log('🎨 Selected color image:', colorImage);
+      }
     }
+
     // Reset size/grade selection when color changes
     setSelectedGrade(null);
     setSelectedSize(null);
-    // Reset image gallery to first image
+    // Reset image gallery to first image to show the new color
     setSelectedImageIndex(0);
   };
 
