@@ -627,13 +627,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
         {/* Minimum Order Indicator */}
         <div className="px-4 pb-3">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden">
-            <MinimumOrderIndicator
-              currentValue={totalPrice}
-              customerMinimumValue={customer?.minimum_order}
-              globalMinimumValue={storeSettings?.minimum_order_value}
-            />
-          </div>
+          <MinimumOrderIndicator
+            currentValue={totalPrice}
+            customerMinimumValue={customer?.minimum_order}
+            globalMinimumValue={storeSettings?.minimum_order_value}
+          />
         </div>
 
         {/* Navigation */}
