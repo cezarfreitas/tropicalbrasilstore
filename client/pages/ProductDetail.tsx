@@ -1108,7 +1108,7 @@ export default function ProductDetail() {
                         src={getImageUrl(suggestedProduct.photo)}
                         product={suggestedProduct}
                         alt={suggestedProduct.name}
-                        className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300 p-3"
+                        className="w-full h-full object-contain group-hover:scale-102 transition-all duration-200 p-2"
                         loading="lazy"
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                       />
@@ -1117,7 +1117,7 @@ export default function ProductDetail() {
                       {suggestedProduct.category_name && (
                         <Badge
                           variant="secondary"
-                          className="absolute top-1.5 left-1.5 text-[10px] bg-primary text-white px-1 py-0.5 rounded-full shadow-md font-medium"
+                          className="absolute top-1 left-1 text-[8px] bg-primary text-white px-1 py-0.5 rounded font-medium"
                         >
                           {suggestedProduct.category_name}
                         </Badge>
