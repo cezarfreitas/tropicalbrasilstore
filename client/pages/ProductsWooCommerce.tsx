@@ -600,6 +600,7 @@ export default function ProductsWooCommerce() {
                 variant.images ||
                 (variant.image_url ? [variant.image_url] : []),
               grade_ids: variant.grade_ids || [],
+              grade_stocks: variant.grade_stocks || [],
               size_stocks: variant.size_stocks || [],
             }),
           ),
