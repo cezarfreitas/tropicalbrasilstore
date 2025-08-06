@@ -905,7 +905,7 @@ export default function ProductDetail() {
                       return (
                         <div
                           key={grade.id || `grade-${gradeIndex}`}
-                          className={`inline-block rounded-lg border-2 transition-all ${
+                          className={`inline-block rounded border transition-all duration-200 ${
                             !canAdd
                               ? "border-gray-200 bg-gray-50 opacity-50"
                               : selectedGrade === grade.id
@@ -914,12 +914,12 @@ export default function ProductDetail() {
                           }`}
                         >
                           <div
-                            className="p-2 cursor-pointer"
+                            className="p-1.5 cursor-pointer"
                             onClick={() =>
                               canAdd ? setSelectedGrade(grade.id) : null
                             }
                           >
-                            <div className="text-sm">
+                            <div className="text-xs">
                               <span className="font-medium text-gray-900">
                                 {grade.name}
                               </span>
