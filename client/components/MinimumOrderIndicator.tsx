@@ -40,7 +40,7 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
   };
 
   const containerClass = theme === 'sidebar'
-    ? "p-2 mb-2"
+    ? "p-1 mb-1"
     : "p-3 mb-3";
 
   return (
