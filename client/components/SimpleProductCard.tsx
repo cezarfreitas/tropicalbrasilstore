@@ -45,83 +45,8 @@ export function SimpleProductCard({
   );
   const [enhancedProductData, setEnhancedProductData] = useState<any>(null);
 
-  // If no image available from listing API, try to fetch from individual product API
-  useEffect(() => {
-    let isMounted = true;
-    let abortController: AbortController | null = null;
-
-    const hasAnyImage = !!(
-      product.photo ||
-      (product.available_colors &&
-        product.available_colors.some((c) => c.image_url))
-    );
-
-    if (!hasAnyImage && !enhancedProductData) {
-      const fetchEnhancedData = async (retries = 2) => {
-        if (!isMounted) return;
-
-        try {
-          abortController = new AbortController();
-          const timeoutId = setTimeout(() => {
-            if (abortController && isMounted) {
-              abortController.abort();
-            }
-          }, 8000); // Reduced timeout to 8s
-
-          const response = await fetch(`/api/store/products/${product.id}`, {
-            signal: abortController.signal,
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
-          });
-
-          clearTimeout(timeoutId);
-
-          if (!isMounted) return;
-
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-
-          const data = await response.json();
-          if (isMounted && data.variants && data.variants.length > 0) {
-            setEnhancedProductData(data);
-          }
-        } catch (error: any) {
-          if (!isMounted) return;
-
-          // Handle AbortError silently if component is unmounted
-          if (error.name === 'AbortError') {
-            return;
-          }
-
-          if (retries > 0 && error.message.includes('fetch')) {
-            setTimeout(() => {
-              if (isMounted) {
-                fetchEnhancedData(retries - 1);
-              }
-            }, 1000);
-          }
-        }
-      };
-
-      fetchEnhancedData();
-    }
-
-    // Cleanup function
-    return () => {
-      isMounted = false;
-      if (abortController) {
-        abortController.abort();
-      }
-    };
-  }, [
-    product.id,
-    product.photo,
-    product.available_colors,
-    enhancedProductData,
-  ]);
+  // Remove problematic fetch to avoid AbortError issues
+  // Products should have proper images from the main API
 
   // EXACT same logic as ProductDetail page working example
   const selectedVariantImage = selectedColorImage;
