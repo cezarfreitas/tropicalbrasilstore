@@ -311,11 +311,14 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     className?: string;
     showText?: boolean;
   }) => {
-    // Try to get logo and store name from settings
+    // Try to get logo and store name from settings with fallbacks
     const logoUrl =
       storeSettings?.logo_url || getGlobalStoreSettings()?.logo_url;
     const storeName =
-      storeSettings?.store_name || getGlobalStoreSettings()?.store_name || "Chinelos Store";
+      storeSettings?.store_name ||
+      getGlobalStoreSettings()?.store_name ||
+      (typeof window !== 'undefined' && window.__STORE_SETTINGS__?.store_name) ||
+      "Tropical Brasil Sandálias";
 
     if (logoUrl) {
       return (
