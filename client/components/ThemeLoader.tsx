@@ -42,9 +42,9 @@ export function ThemeLoader() {
     };
   }, []);
 
-  const fetchThemeColors = async () => {
+  const fetchThemeColors = async (retries = 2) => {
     try {
-      console.log("🎨 Fetching theme colors from server...");
+      console.log(`🎨 Fetching theme colors from server... (attempts left: ${retries + 1})`);
 
       // Use XMLHttpRequest to avoid FullStory conflicts
       const response = await new Promise<Response>((resolve, reject) => {
@@ -54,26 +54,30 @@ export function ThemeLoader() {
         xhr.setRequestHeader("Content-Type", "application/json");
 
         xhr.onload = () => {
-          const headers = new Headers();
-          xhr
-            .getAllResponseHeaders()
-            .split("\r\n")
-            .forEach((line) => {
-              const [key, value] = line.split(": ");
-              if (key && value) headers.set(key, value);
-            });
+          try {
+            const headers = new Headers();
+            xhr
+              .getAllResponseHeaders()
+              .split("\r\n")
+              .forEach((line) => {
+                const [key, value] = line.split(": ");
+                if (key && value) headers.set(key, value);
+              });
 
-          const response = new Response(xhr.responseText, {
-            status: xhr.status,
-            statusText: xhr.statusText,
-            headers: headers,
-          });
-          resolve(response);
+            const response = new Response(xhr.responseText, {
+              status: xhr.status,
+              statusText: xhr.statusText,
+              headers: headers,
+            });
+            resolve(response);
+          } catch (parseError) {
+            reject(new Error(`Response parsing error: ${parseError.message}`));
+          }
         };
 
         xhr.onerror = () => reject(new Error("Network error"));
         xhr.ontimeout = () => reject(new Error("Request timeout"));
-        xhr.timeout = 8000; // 8 second timeout
+        xhr.timeout = 12000; // Increased to 12 second timeout
 
         xhr.send();
       });
@@ -92,22 +96,26 @@ export function ThemeLoader() {
 
         // Save to localStorage for faster loading next time
         localStorage.setItem("theme-colors", JSON.stringify(themeColors));
+        return; // Success, no retry needed
       } else {
-        console.error("Failed to fetch theme colors, status:", response.status);
-
-        // Use fallback colors if server request fails
-        const fallbackColors = {
-          primary_color: "#f97316",
-          secondary_color: "#ea580c",
-          accent_color: "#fed7aa",
-          background_color: "#ffffff",
-          text_color: "#1f2937"
-        };
-        console.log("🎨 Using fallback theme colors:", fallbackColors);
-        setColors(fallbackColors);
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
-      console.error("Error fetching theme colors:", error);
+      console.warn(`Error fetching theme colors (attempt ${3 - retries}):`, error.message || error);
+
+      // Retry if we have attempts left and it's a network-related error
+      if (retries > 0 && (
+        error.message.includes('timeout') ||
+        error.message.includes('Network') ||
+        error.message.includes('fetch') ||
+        error.message.includes('HTTP 5')
+      )) {
+        setTimeout(() => fetchThemeColors(retries - 1), 2000);
+        return;
+      }
+
+      // Final fallback after all retries
+      console.error("All theme color fetch attempts failed, using fallback colors");
 
       // Use fallback colors if there's any error
       const fallbackColors = {
