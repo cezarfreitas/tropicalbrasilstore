@@ -609,6 +609,34 @@ export default function ProductImport() {
           console.error("❌ JSON parse test falhou:", e);
         }
 
+        // Teste com fetch nativo para comparação
+        console.log("🧪 Testando com fetch nativo...");
+
+        try {
+          const testResponse = await fetch("/api/import/products", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: jsonPayload,
+          });
+
+          console.log("🧪 Fetch nativo result:", testResponse.status, testResponse.statusText);
+          const testText = await testResponse.text();
+          console.log("🧪 Fetch nativo response:", testText);
+
+          // Se fetch nativo funcionar, usar ele
+          if (testResponse.ok) {
+            console.log("✅ Fetch nativo funcionou! Prosseguindo...");
+            pollImportProgress();
+            return;
+          }
+        } catch (fetchError) {
+          console.log("❌ Fetch nativo também falhou:", fetchError);
+        }
+
+        // Se chegou aqui, tenta com customFetch
+        console.log("🔄 Tentando com customFetch...");
         const response = await customFetch("/api/import/products", {
           method: "POST",
           headers: {
