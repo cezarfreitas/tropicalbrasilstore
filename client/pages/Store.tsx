@@ -146,69 +146,52 @@ function Store() {
     <StoreLayout>
       <DynamicTitle />
       <div className="w-full px-4 lg:px-6 py-3 lg:py-4 space-y-3 lg:space-y-4">
-        {/* Product Count and Sorting */}
-        {!loading && !error && (
-          <div className="flex items-center justify-between bg-green-100 border-2 border-green-500 rounded-lg p-4 shadow-sm">
+        {/* Product Count and Sorting - ALWAYS VISIBLE FOR TEST */}
+        <div className="flex items-center justify-between bg-green-100 border-2 border-green-500 rounded-lg p-4 shadow-sm">
+          <div className="flex items-center gap-2">
+            <Package className="h-5 w-5 text-primary" />
+            <span className="text-sm font-medium text-gray-700">
+              [TESTE SEMPRE VISÍVEL] {filteredProducts?.length || 0} produtos
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {/* Sort Options */}
             <div className="flex items-center gap-2">
-              <Package className="h-5 w-5 text-primary" />
-              <span className="text-sm font-medium text-gray-700">
-                [TESTE] {filteredProducts.length > 0 ? (
-                  <>
-                    {pagination ? (
-                      <>
-                        <span className="text-primary font-semibold">{filteredProducts.length}</span> de{" "}
-                        <span className="text-primary font-semibold">{pagination.totalItems}</span> produtos
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-primary font-semibold">{filteredProducts.length}</span> produtos encontrados
-                      </>
-                    )}
-                  </>
-                ) : (
-                  "Nenhum produto encontrado"
-                )}
-              </span>
+              <ArrowUpDown className="h-4 w-4 text-gray-500" />
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-[140px] h-8">
+                  <SelectValue placeholder="Ordenar por" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="name-asc">Nome A-Z</SelectItem>
+                  <SelectItem value="name-desc">Nome Z-A</SelectItem>
+                  <SelectItem value="price-asc">Menor preço</SelectItem>
+                  <SelectItem value="price-desc">Maior preço</SelectItem>
+                  <SelectItem value="newest">Mais recentes</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <div className="flex items-center gap-3">
-              {/* Sort Options */}
-              <div className="flex items-center gap-2">
-                <ArrowUpDown className="h-4 w-4 text-gray-500" />
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-[140px] h-8">
-                    <SelectValue placeholder="Ordenar por" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="name-asc">Nome A-Z</SelectItem>
-                    <SelectItem value="name-desc">Nome Z-A</SelectItem>
-                    <SelectItem value="price-asc">Menor preço</SelectItem>
-                    <SelectItem value="price-desc">Maior preço</SelectItem>
-                    <SelectItem value="newest">Mais recentes</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* View Toggle */}
-              <div className="hidden sm:flex items-center border rounded-md">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0 border-r rounded-r-none"
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0 rounded-l-none bg-primary/10"
-                >
-                  <Grid2X2 className="h-4 w-4" />
-                </Button>
-              </div>
+            {/* View Toggle */}
+            <div className="hidden sm:flex items-center border rounded-md">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 border-r rounded-r-none"
+              >
+                <Grid3X3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 rounded-l-none bg-primary/10"
+              >
+                <Grid2X2 className="h-4 w-4" />
+              </Button>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Search Results Indicator */}
         {searchTerm && (
