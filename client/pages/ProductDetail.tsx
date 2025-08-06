@@ -780,11 +780,11 @@ export default function ProductDetail() {
 
                 {/* Action Buttons */}
                 <div className="flex items-center gap-1">
-                  <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                    <Heart className="h-4 w-4" />
+                  <Button variant="outline" size="sm" className="h-7 w-7 p-0">
+                    <Heart className="h-3 w-3" />
                   </Button>
-                  <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                    <Share2 className="h-4 w-4" />
+                  <Button variant="outline" size="sm" className="h-7 w-7 p-0">
+                    <Share2 className="h-3 w-3" />
                   </Button>
                 </div>
               </div>
