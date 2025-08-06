@@ -206,6 +206,7 @@ export function createServer() {
 app.use("/api/debug-database", debugDatabaseRouter);
 app.use("/api/debug-theme", debugThemeRouter);
 app.use("/api/set-customer-minimum", setCustomerMinimumRouter);
+app.use("/api/init-settings", initSettingsRouter);
 
   return app;
 }
