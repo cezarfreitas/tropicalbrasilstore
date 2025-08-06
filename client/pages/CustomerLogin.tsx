@@ -133,7 +133,7 @@ export default function CustomerLogin() {
 
                             <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm">
-                  Senha (4 últimos dígitos do celular)
+                  Senha
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
