@@ -828,19 +828,40 @@ router.post("/bulk", async (req, res) => {
           `🎨 Processando variante: ${variante.cor} do produto: ${product.codigo}`,
         );
 
-        if (!variante.cor || variante.preco <= 0 || !variante.grade) {
-          console.error(`❌ Dados inválidos para variante ${variante.cor}:`, {
+        // More detailed validation with specific error messages
+        const validationErrors = [];
+
+        if (!variante.cor) {
+          validationErrors.push("cor está vazia ou não foi fornecida");
+        }
+
+        if (!variante.preco || variante.preco <= 0) {
+          validationErrors.push(`preço é inválido (${variante.preco}) - deve ser maior que 0`);
+        }
+
+        if (!variante.grade) {
+          validationErrors.push("grade está vazia ou não foi fornecida");
+        }
+
+        if (validationErrors.length > 0) {
+          console.error(`❌ Dados inválidos para variante ${variante.cor || 'sem cor'}:`, {
             cor: variante.cor,
             preco: variante.preco,
             grade: variante.grade,
+            erros: validationErrors,
           });
           return res.status(422).json({
             success: false,
             error: "Dados inválidos",
-            message:
-              "Cor, preço > 0 e grade são obrigatórios para cada variante",
+            message: `Problemas encontrados: ${validationErrors.join(", ")}`,
             produto: product.codigo,
-            variante: variante.cor,
+            variante: variante.cor || "sem cor",
+            detalhes: {
+              cor: variante.cor,
+              preco: variante.preco,
+              grade: variante.grade,
+              erros: validationErrors,
+            },
           });
         }
 
@@ -997,7 +1018,7 @@ router.post("/bulk", async (req, res) => {
           console.log(`🔄 Processando grade: ${gradeNome}`);
           const gradeId = await getOrCreateGrade(gradeNome);
           console.log(
-            `�� Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`,
+            `��� Grade criada/encontrada: ${gradeNome} (ID: ${gradeId})`,
           );
           gradesCreated.add(gradeNome);
 
