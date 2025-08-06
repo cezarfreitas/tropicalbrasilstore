@@ -409,7 +409,7 @@ router.post("/products-grade", async (req, res) => {
       errorDetails: [],
     };
 
-    console.log("���� Sample do primeiro item:", JSON.stringify(data[0], null, 2));
+    console.log("📋 Sample do primeiro item:", JSON.stringify(data[0], null, 2));
     console.log("🎯 Iniciando processamento...");
 
     // Start processing grade imports
@@ -544,7 +544,7 @@ router.post("/start-batch-processing", async (req, res) => {
 });
 
 async function processGradeImport(data: any[]) {
-  console.log("🚀 IMPORTAÇÃO DE GRADES - Processando", data.length, "produtos");
+  console.log("🚀 IMPORTA��ÃO DE GRADES - Processando", data.length, "produtos");
 
   // Limitar o tamanho dos dados para evitar problemas de memória
   if (data.length > 100) {
@@ -817,7 +817,7 @@ async function processGradeImport(data: any[]) {
         );
         console.log(`✅ Product_color_variants criado/atualizado`);
       } catch (error) {
-        console.warn(`⚠️ Erro em product_color_variants: ${error.message}`);
+        console.warn(`⚠��� Erro em product_color_variants: ${error.message}`);
       }
 
       // ETAPA 3: CRIAR/ATUALIZAR GRADE DA VARIANTE
@@ -873,6 +873,8 @@ async function processGradeImport(data: any[]) {
       }
 
       // Verificações finais antes do commit
+      console.log(`\n🔍 === VERIFICAÇÕES FINAIS ===`);
+
       const [finalVariantCheck] = await connection.execute(
         "SELECT COUNT(*) as total FROM product_variants WHERE product_id = ? AND color_id = ?",
         [productId, colorId]
@@ -883,7 +885,22 @@ async function processGradeImport(data: any[]) {
         [productId, colorId]
       );
 
+      const variantCountInDB = (finalVariantCheck as any[])[0].total;
+      const gradeStockInDB = (finalGradeCheck as any[])[0].total_stock || 0;
+
+      console.log(`📊 Verificação final:`);
+      console.log(`   🎯 Variantes criadas/atualizadas: ${variantsCreated} criadas + ${variantsUpdated} atualizadas`);
+      console.log(`   🔍 Variantes no banco de dados: ${variantCountInDB}`);
+      console.log(`   📦 Estoque total em grades: ${gradeStockInDB}`);
+
+      if (variantCountInDB === 0) {
+        console.error(`❌ ERRO CRÍTICO: Nenhuma variante foi criada no banco de dados!`);
+        console.error(`   📋 Dados do produto: ID=${productId}, Cor=${colorId}`);
+        // Ainda fazer commit para debug, mas logar o erro
+      }
+
       await connection.commit();
+      console.log(`✅ Transaction committed successfully`);
       console.log(`\n🎉 === PROCESSAMENTO CONCLUÍDO COM SUCESSO ===`);
       console.log(`   ✅ ETAPA 1 - Produto: ${item.name} (ID: ${productId})`);
       console.log(`   ✅ ETAPA 2 - Variantes: ${variantsCreated} criadas, ${variantsUpdated} atualizadas`);
