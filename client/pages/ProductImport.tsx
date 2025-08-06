@@ -782,7 +782,11 @@ export default function ProductImport() {
 
   // Template para produto com 1 cor usando estoque por grade (não por tamanho)
   const downloadSingleColorGradeTemplate = () => {
-    const headers = REQUIRED_FIELDS.map((f) => f.label);
+    // Para grade, excluir campos de tamanho específicos
+    const gradeFields = REQUIRED_FIELDS.filter(field =>
+      !field.key.startsWith('size_') // Remove size_37, size_38, etc.
+    );
+    const headers = gradeFields.map((f) => f.label);
 
     const sampleRows = [
       [
