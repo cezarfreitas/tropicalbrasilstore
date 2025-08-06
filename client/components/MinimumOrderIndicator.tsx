@@ -84,20 +84,20 @@ export const MinimumOrderIndicator: React.FC<MinimumOrderIndicatorProps> = ({
       {/* Mensagem de feedback */}
       <div className="flex items-center justify-between mt-2">
         <div className="flex items-center gap-1.5">
-          <ShoppingCart className="h-4 w-4 text-gray-500" />
+          <ShoppingCart className={`h-4 w-4 ${theme === 'sidebar' ? 'text-white/60' : 'text-gray-500'}`} />
           {isCompleted ? (
-            <span className="text-sm text-green-700 font-medium">
+            <span className={`text-sm font-medium ${theme === 'sidebar' ? 'text-green-300' : 'text-green-700'}`}>
               Parabéns! Você pode finalizar seu pedido.
             </span>
           ) : (
-            <span className="text-sm text-gray-600">
+            <span className={`text-sm ${theme === 'sidebar' ? 'text-white/80' : 'text-gray-600'}`}>
               Adicione mais <strong>{formatPrice(remaining)}</strong> para atingir o mínimo
             </span>
           )}
         </div>
-        
+
         {!isCompleted && (
-          <div className="text-xs text-gray-500">
+          <div className={`text-xs ${theme === 'sidebar' ? 'text-white/50' : 'text-gray-500'}`}>
             {Math.round(progress)}% completo
           </div>
         )}
