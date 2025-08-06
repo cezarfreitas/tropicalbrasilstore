@@ -60,7 +60,7 @@ async function getStoreSettings(): Promise<StoreSettings> {
         accent_color: '#fed7aa',
         background_color: '#ffffff',
         text_color: '#1f2937',
-        minimum_order_value: 50,
+        minimum_order_value: 0,
       };
     }
     
