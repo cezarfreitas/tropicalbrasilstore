@@ -46,20 +46,38 @@ export function ThemeLoader() {
     try {
       console.log(`🎨 Fetching theme colors from server... (attempts left: ${retries + 1})`);
 
-      // Use simple fetch with timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000);
+      // Use XMLHttpRequest to bypass FullStory interference
+      const response = await new Promise<Response>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/settings", true);
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.setRequestHeader("Content-Type", "application/json");
 
-      const response = await fetch("/api/settings", {
-        method: "GET",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-        signal: controller.signal
+        xhr.onload = () => {
+          try {
+            const headers = new Headers();
+            xhr.getAllResponseHeaders().split("\r\n").forEach((line) => {
+              const [key, value] = line.split(": ");
+              if (key && value) headers.set(key, value);
+            });
+
+            const response = new Response(xhr.responseText, {
+              status: xhr.status,
+              statusText: xhr.statusText,
+              headers: headers,
+            });
+            resolve(response);
+          } catch (parseError) {
+            reject(new Error(`Response parsing error: ${parseError.message}`));
+          }
+        };
+
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.ontimeout = () => reject(new Error("Request timeout"));
+        xhr.timeout = 5000; // 5 second timeout
+
+        xhr.send();
       });
-
-      clearTimeout(timeoutId);
 
       if (response.ok) {
         const settings = await response.json();
@@ -70,40 +88,71 @@ export function ThemeLoader() {
           background_color: settings.background_color || "#ffffff",
           text_color: settings.text_color || "#1f2937",
         };
-        console.log("🎨 Received theme colors from server:", themeColors);
+        console.log("🎨 Theme colors loaded successfully:", themeColors);
         setColors(themeColors);
 
         // Save to localStorage for faster loading next time
         localStorage.setItem("theme-colors", JSON.stringify(themeColors));
         return; // Success, no retry needed
+      } else if (response.status === 404 || response.status === 500) {
+        // Try to initialize settings if they don't exist
+        console.log("🎨 Settings not found, attempting to initialize...");
+        await initializeSettings();
+        return;
       } else {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
-      console.warn(`Error fetching theme colors (attempt ${2 - retries}):`, error.message || error);
+      console.warn(`Theme colors fetch attempt ${2 - retries} failed:`, error.message || error);
 
       // Retry once if we have attempts left
-      if (retries > 0 && !error.name?.includes('AbortError')) {
+      if (retries > 0) {
         setTimeout(() => fetchThemeColors(retries - 1), 1000);
         return;
       }
 
-      // Final fallback after all retries
-      console.error("Theme color fetch failed, using blue theme fallback colors");
-
-      // Use blue theme fallback colors
-      const fallbackColors = {
-        primary_color: "#3b82f6",
-        secondary_color: "#1d4ed8",
-        accent_color: "#dbeafe",
-        background_color: "#ffffff",
-        text_color: "#1f2937"
-      };
-      console.log("🎨 Using blue theme fallback colors:", fallbackColors);
-      setColors(fallbackColors);
+      // Use fallback colors
+      useFallbackColors();
     } finally {
       setLoading(false);
     }
+  };
+
+  const initializeSettings = async () => {
+    try {
+      console.log("🎨 Initializing default store settings...");
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/api/init-settings", false); // Synchronous for simplicity
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send();
+
+      if (xhr.status === 200) {
+        console.log("🎨 Settings initialized, retrying theme fetch...");
+        // Retry fetching after initialization
+        setTimeout(() => fetchThemeColors(0), 500);
+      } else {
+        console.warn("🎨 Failed to initialize settings");
+        useFallbackColors();
+      }
+    } catch (error) {
+      console.warn("🎨 Error initializing settings:", error);
+      useFallbackColors();
+    }
+  };
+
+  const useFallbackColors = () => {
+    console.log("🎨 Using blue theme fallback colors");
+    const fallbackColors = {
+      primary_color: "#3b82f6",
+      secondary_color: "#1d4ed8",
+      accent_color: "#dbeafe",
+      background_color: "#ffffff",
+      text_color: "#1f2937"
+    };
+    setColors(fallbackColors);
+    // Save fallback to localStorage
+    localStorage.setItem("theme-colors", JSON.stringify(fallbackColors));
   };
 
   // This component doesn't render anything visible
