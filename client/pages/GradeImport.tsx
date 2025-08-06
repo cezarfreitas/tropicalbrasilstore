@@ -570,7 +570,7 @@ export default function GradeImport() {
                       <SelectValue placeholder="Selecionar coluna..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">-- Não mapear --</SelectItem>
+                      <SelectItem value="__NONE__">-- Não mapear --</SelectItem>
                       {csvHeaders.map((header) => (
                         <SelectItem key={header} value={header}>
                           {header}
