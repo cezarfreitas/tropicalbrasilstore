@@ -858,7 +858,7 @@ export default function ProductImport() {
         "35.00",                                 // Preço Base
         "55.90",                                 // Preço de Venda
         "https://exemplo.com/sandalia-xyz.jpg",  // URL da Foto
-        "Calçados Femininos",                    // Grupo de Tamanhos (nome, não ID)
+        "",                                      // Grupo de Tamanhos (OPCIONAL para grade)
         "marrom",                                // Cor
         "XYZ002-MARROM",                         // SKU
         "XYZ002",                                // SKU Pai
