@@ -1125,7 +1125,7 @@ export default function ProductImport() {
               </p>
               <Button variant="outline" onClick={downloadSingleColorGradeTemplate} className="w-full">
                 <Download className="h-4 w-4 mr-2" />
-                Baixar Template
+                Baixar Excel
               </Button>
             </div>
           </div>
