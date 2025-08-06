@@ -29,17 +29,6 @@ export default function Cart() {
   const storeSettings = useGlobalStoreSettings();
   const { customer } = useCustomerAuth();
 
-  // Debug temporário
-  console.log('🛒 Cart Debug:', {
-    totalPrice,
-    customer: customer ? {
-      email: customer.email,
-      minimum_order: customer.minimum_order
-    } : null,
-    storeSettings: storeSettings ? {
-      minimum_order_value: storeSettings.minimum_order_value
-    } : null
-  });
 
   // Empty cart state
   if (items.length === 0) {
