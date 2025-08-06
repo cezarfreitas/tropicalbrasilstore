@@ -406,7 +406,7 @@ export default function ProductImport() {
     } catch (error) {
       toast({
         title: "Erro",
-        description: "Não foi possível processar o arquivo",
+        description: "Não foi poss��vel processar o arquivo",
         variant: "destructive",
       });
     }
@@ -793,20 +793,20 @@ export default function ProductImport() {
         "",                                           // stock_per_variant (deprecated)
       ],
       [
-        "Tênis Nike Air Max",
-        "2",
-        "150.00",
-        "199.90",
-        "https://example.com/nike-air-max.jpg",
-        "2",
-        "preto",
-        "NIKE001-PRETO",
-        "NIKE001",
-        "Tênis esportivo Nike Air Max",
-        "249.90",
-        "Nike", // Marca
-        "Masculino", // Gênero
-        "Tênis", // Tipo
+        "Chinelo Grade Completa",                     // name
+        "Chinelos",                                   // category_id (nome da categoria)
+        "15.00",                                      // base_price
+        "25.90",                                      // sale_price
+        "https://example.com/chinelo-grade.jpg",      // photo_url
+        "",                                           // size_group_id (vazio para grade)
+        "preto",                                      // color
+        "GRADE001-PRETO",                             // sku
+        "GRADE001",                                   // parent_sku
+        "Chinelo vendido por grade completa",         // description
+        "29.90",                                      // suggested_price
+        "Marca ABC",                                  // brand_name
+        "Unissex",                                    // gender_name
+        "Chinelo",                                    // type_name
         "size", // Tipo de Estoque
         "", // Estoque por Grade (vazio para estoque por tamanho)
         "5", // Tam 37
@@ -1326,7 +1326,7 @@ export default function ProductImport() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-semibold mb-3">
-                    Informaç��es Incluídas na Exportaç��o:
+                    Informações Incluídas na Exportaç��o:
                   </h4>
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-center gap-2">
