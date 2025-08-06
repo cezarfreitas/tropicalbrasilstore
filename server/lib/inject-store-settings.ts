@@ -26,8 +26,8 @@ async function getStoreSettings(): Promise<StoreSettings> {
 
   try {
     const [settings] = await db.execute(`
-      SELECT store_name, logo_url, primary_color, secondary_color, 
-             accent_color, background_color, text_color 
+      SELECT store_name, logo_url, primary_color, secondary_color,
+             accent_color, background_color, text_color, minimum_order_value
       FROM store_settings ORDER BY id LIMIT 1
     `);
 
