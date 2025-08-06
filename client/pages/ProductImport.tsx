@@ -406,6 +406,18 @@ export default function ProductImport() {
     }
   };
 
+  // Função para normalizar texto removendo acentos e caracteres especiais
+  const normalizeText = (text: string): string => {
+    return text
+      .toLowerCase()
+      .trim()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove acentos
+      .replace(/[^a-z0-9\s]/g, " ") // Remove caracteres especiais
+      .replace(/\s+/g, " ") // Remove espaços extras
+      .trim();
+  };
+
   const autoMapColumn = (headers: string[], targetField: string): string => {
     const commonMappings: Record<string, string[]> = {
       name: ["nome", "produto", "name", "product_name", "nome do produto"],
