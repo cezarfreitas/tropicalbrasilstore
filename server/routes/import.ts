@@ -657,7 +657,7 @@ async function processGradeImport(data: any[]) {
           ]
         );
         productId = (productResult as any).insertId;
-        console.log(`✅ Produto criado - ID: ${productId}`);
+        console.log(`��� Produto criado - ID: ${productId}`);
       }
 
       // ETAPA 2: CRIAR/ATUALIZAR VARIANTE (1 variante por linha do Excel = 1 cor)
@@ -805,13 +805,15 @@ async function processGradeImport(data: any[]) {
       }
 
       await connection.commit();
-      console.log(`\n🎉 SUCESSO: ${item.name}`);
-      console.log(`   📦 ID: ${productId}`);
-      console.log(`   🎨 Variantes: ${variantsCreated}`);
-      console.log(`   🏷️ Marca: ${item.brand_name || 'Não informada'}`);
-      console.log(`   📸 Imagem: ${photoPath ? 'Baixada' : 'Não fornecida'}`);
-      console.log(`   🌈 Cor: ${item.color}`);
-      console.log(`   📊 Grade: ${item.grade_name || 'Não informada'}`);
+      console.log(`\n🎉 === PROCESSAMENTO CONCLUÍDO COM SUCESSO ===`);
+      console.log(`   ✅ ETAPA 1 - Produto: ${item.name} (ID: ${productId})`);
+      console.log(`   ✅ ETAPA 2 - Variantes: ${variantsCreated} criadas, ${variantsUpdated} atualizadas`);
+      console.log(`   ✅ ETAPA 3 - Grade: ${item.grade_name ? item.grade_name + ' (' + item.grade_stock + ' unidades)' : 'Não processada'}`);
+      console.log(`   📋 Resumo:`);
+      console.log(`      🏷️ Marca: ${item.brand_name || 'Não informada'}`);
+      console.log(`      📸 Imagem principal: ${photoPath ? 'Baixada' : 'Não fornecida'}`);
+      console.log(`      🎨 Cor: ${item.color} (ID: ${colorId})`);
+      console.log(`      🌈 Imagem da cor: ${colorImagePath ? 'Baixada' : 'Não fornecida'}`);
 
       importProgress.success++;
       processedItems++;
