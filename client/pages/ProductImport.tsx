@@ -822,7 +822,7 @@ export default function ProductImport() {
             Importação de Produtos
           </h1>
           <p className="text-muted-foreground">
-            Importe produtos em massa com upload automático de fotos
+            Importe produtos em massa com upload autom��tico de fotos
           </p>
         </div>
         <div className="flex gap-2">
@@ -893,35 +893,54 @@ export default function ProductImport() {
 
           {/* Classificação de Produtos */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">🏷️ Classificação de Produtos</h3>
+            <h3 className="font-semibold text-lg mb-4">🏷️ Classificação de Produtos (Agora por Nome!)</h3>
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg border border-green-200 mb-4">
+              <div className="flex items-start gap-3">
+                <div className="text-2xl">✨</div>
+                <div>
+                  <h4 className="font-semibold text-green-800 mb-2">Novidade: Sistema Inteligente</h4>
+                  <p className="text-sm text-green-700 mb-2">
+                    <strong>Agora você pode usar os nomes diretamente!</strong> Se a marca, gênero ou tipo não existir no sistema, será criado automaticamente.
+                  </p>
+                  <ul className="text-xs text-green-600 space-y-1">
+                    <li>• <strong>Marca:</strong> "Havaianas", "Nike", "Adidas" → Criadas automaticamente se não existirem</li>
+                    <li>• <strong>Gênero:</strong> "Masculino", "Feminino", "Unissex" → Adicionados conforme necessário</li>
+                    <li>• <strong>Tipo:</strong> "Chinelo", "Tênis", "Sandália" → Criados na hora da importação</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
             <div className="grid md:grid-cols-3 gap-4">
               <div className="bg-purple-50 p-3 rounded text-sm">
-                <h5 className="font-semibold text-purple-800 mb-2">Marcas (ID)</h5>
+                <h5 className="font-semibold text-purple-800 mb-2">Marcas Existentes</h5>
                 <ul className="text-purple-700 space-y-1">
-                  <li>6: Havaianas</li>
-                  <li>7: Ipanema</li>
-                  <li>8: Melissa</li>
-                  <li>9: Rider</li>
-                  <li>10: Grendene</li>
+                  <li>• Havaianas</li>
+                  <li>• Ipanema</li>
+                  <li>• Melissa</li>
+                  <li>• Rider</li>
+                  <li>• Grendene</li>
+                  <li className="italic text-purple-600">+ Suas marcas personalizadas</li>
                 </ul>
               </div>
               <div className="bg-orange-50 p-3 rounded text-sm">
-                <h5 className="font-semibold text-orange-800 mb-2">Gêneros (ID)</h5>
+                <h5 className="font-semibold text-orange-800 mb-2">Gêneros Suportados</h5>
                 <ul className="text-orange-700 space-y-1">
-                  <li>8: Masculino</li>
-                  <li>9: Feminino</li>
-                  <li>10: Unissex</li>
-                  <li>11: Infantil</li>
+                  <li>• Masculino</li>
+                  <li>• Feminino</li>
+                  <li>• Unissex</li>
+                  <li>• Infantil</li>
+                  <li className="italic text-orange-600">+ Qualquer novo gênero</li>
                 </ul>
               </div>
               <div className="bg-teal-50 p-3 rounded text-sm">
-                <h5 className="font-semibold text-teal-800 mb-2">Tipos (ID)</h5>
+                <h5 className="font-semibold text-teal-800 mb-2">Tipos de Produto</h5>
                 <ul className="text-teal-700 space-y-1">
-                  <li>11: Chinelo</li>
-                  <li>12: Sandália</li>
-                  <li>13: Tênis</li>
-                  <li>14: Papete</li>
-                  <li>15: Rasteirinha</li>
+                  <li>• Chinelo</li>
+                  <li>• Sandália</li>
+                  <li>• Tênis</li>
+                  <li>• Papete</li>
+                  <li>• Rasteirinha</li>
+                  <li className="italic text-teal-600">+ Novos tipos conforme necessário</li>
                 </ul>
               </div>
             </div>
