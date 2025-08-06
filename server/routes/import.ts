@@ -433,6 +433,29 @@ async function processImport(data: any[]) {
         );
       }
 
+      // Process optional brand, gender, and type by name
+      let brandId = null;
+      let genderId = null;
+      let typeId = null;
+
+      if (firstItem.brand_name && firstItem.brand_name.trim()) {
+        brandId = await processBrand(firstItem.brand_name);
+      } else if (firstItem.brand_id) {
+        brandId = parseInt(firstItem.brand_id);
+      }
+
+      if (firstItem.gender_name && firstItem.gender_name.trim()) {
+        genderId = await processGender(firstItem.gender_name);
+      } else if (firstItem.gender_id) {
+        genderId = parseInt(firstItem.gender_id);
+      }
+
+      if (firstItem.type_name && firstItem.type_name.trim()) {
+        typeId = await processType(firstItem.type_name);
+      } else if (firstItem.type_id) {
+        typeId = parseInt(firstItem.type_id);
+      }
+
       // Check if product already exists (by name + parent_sku or just name)
       let productId: number;
       const searchKey = firstItem.parent_sku || firstItem.name;
