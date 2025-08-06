@@ -1082,6 +1082,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
               <p className="mt-1 sm:mt-2">
                 Sistema de vendas com grades obrigatórias
               </p>
+              <p className="mt-1 sm:mt-2 text-xs text-gray-400">
+                Feito com ❤️ por <span className="font-medium">IDE Negócios Digitais</span>
+              </p>
             </div>
           </div>
         </footer>
