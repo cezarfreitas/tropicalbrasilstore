@@ -44,13 +44,14 @@ const createConnection = () => {
     });
   }
 
-  // Fallback: Use original connection string for development
-  console.log("Using fallback database configuration");
+  // Fallback: Use Tropical Brasil database connection
+  console.log("Using Tropical Brasil database configuration");
   return mysql.createPool({
-    uri: "mysql://mysql:eA1mPCW1xwJE31nJOxZixcHdIB68WwQ0Gqe7wAdRw7FqclRQYfOINf7p9vHAAXSN@5.161.52.206:5435/default",
+    uri: "mysql://tropical:ceb404856425cc1f8472@148.230.78.129:3399/tropical",
     waitForConnections: true,
     connectionLimit: 3,
     queueLimit: 0,
+    charset: "utf8mb4",
   });
 };
 
