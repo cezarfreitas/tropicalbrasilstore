@@ -7,6 +7,35 @@ export const DebugMinimumOrder: React.FC = () => {
   const { customer, isAuthenticated } = useCustomerAuth();
   const storeSettings = useGlobalStoreSettings();
   const [customerData, setCustomerData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const setTestMinimumOrder = async (amount: number) => {
+    if (!customer?.email) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/debug-minimum-order/set-test-minimum/${encodeURIComponent(customer.email)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ minimumOrder: amount })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert(`✅ ${result.message}`);
+        // Recarregar a página para ver a mudança
+        window.location.reload();
+      } else {
+        alert(`❌ Erro: ${result.error}`);
+      }
+    } catch (error) {
+      alert(`❌ Erro: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (customer?.email) {
