@@ -559,11 +559,17 @@ async function processGradeImport(data: any[]) {
 
         // Download main product image if URL provided for existing product
         let photoPath = null;
-        if (item.photo_url) {
-          console.log(`📸 Updating image for existing product: ${item.photo_url}`);
-          photoPath = await downloadImage(item.photo_url, item.name);
-          if (photoPath) {
-            console.log(`✅ Updated image downloaded: ${photoPath}`);
+        if (item.photo_url && item.photo_url.trim()) {
+          console.log(`📸 Atualizando imagem do produto existente: ${item.photo_url}`);
+          try {
+            photoPath = await downloadImage(item.photo_url, item.name);
+            if (photoPath) {
+              console.log(`✅ Imagem atualizada baixada: ${photoPath}`);
+            } else {
+              console.log(`❌ Falha ao baixar imagem atualizada: ${item.photo_url}`);
+            }
+          } catch (error) {
+            console.warn(`⚠️ Erro ao baixar imagem atualizada: ${error.message}`);
           }
         }
 
@@ -694,7 +700,7 @@ async function processGradeImport(data: any[]) {
             console.log(`❌ Falha ao baixar imagem da cor: ${item.color_image_url}`);
           }
         } catch (error) {
-          console.warn(`⚠�� Erro ao baixar imagem da cor: ${error.message}`);
+          console.warn(`⚠️ Erro ao baixar imagem da cor: ${error.message}`);
         }
       } else {
         console.log(`📸 Nenhuma URL de imagem da cor fornecida`);
