@@ -1075,6 +1075,7 @@ export default function ProductImport() {
               <strong>💡 Dicas Importantes:</strong><br/>
               • Se não especificar o "Tipo de Estoque", será usado "grade" por padrão<br/>
               • <strong>Marca, Gênero e Tipo agora aceitam NOMES</strong> - são criados automaticamente se não existirem<br/>
+              • <strong>Para estoque por grade:</strong> especifique o "Nome da Grade Vendida" (ex: "2549") - vá em Grades para ver as disponíveis<br/>
               • Variantes de cor com imagens específicas aparecem automaticamente no catálogo<br/>
               • Use "Vender Sem Estoque = 1" para permitir vendas mesmo sem estoque<br/>
               • Nomes de marcas/gêneros/tipos são case-insensitive (maiúscula/minúscula não importa)
