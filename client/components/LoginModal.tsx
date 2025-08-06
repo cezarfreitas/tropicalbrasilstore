@@ -4,7 +4,12 @@ import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Package, Lock, Phone, Eye, EyeOff, UserPlus } from "lucide-react";
 
@@ -15,7 +20,12 @@ interface LoginModalProps {
   onSwitchToRegister?: () => void;
 }
 
-export function LoginModal({ isOpen, onClose, onSuccess, onSwitchToRegister }: LoginModalProps) {
+export function LoginModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  onSwitchToRegister,
+}: LoginModalProps) {
   const [whatsapp, setWhatsapp] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -105,7 +115,7 @@ export function LoginModal({ isOpen, onClose, onSuccess, onSwitchToRegister }: L
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
-                <DialogHeader>
+        <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <div className="inline-flex items-center justify-center w-8 h-8 bg-primary rounded-lg">
               <Package className="h-4 w-4 text-primary-foreground" />
@@ -123,7 +133,9 @@ export function LoginModal({ isOpen, onClose, onSuccess, onSwitchToRegister }: L
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="modal-whatsapp" className="text-sm">WhatsApp</Label>
+              <Label htmlFor="modal-whatsapp" className="text-sm">
+                WhatsApp
+              </Label>
               <div className="relative">
                 <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -205,11 +217,13 @@ export function LoginModal({ isOpen, onClose, onSuccess, onSwitchToRegister }: L
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">ou</span>
+              <span className="bg-background px-2 text-muted-foreground">
+                ou
+              </span>
             </div>
           </div>
 
-                    {onSwitchToRegister ? (
+          {onSwitchToRegister ? (
             <Button
               variant="outline"
               className="w-full"
