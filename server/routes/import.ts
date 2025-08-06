@@ -417,7 +417,7 @@ router.post("/products-grade", async (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error("❌ Erro ao iniciar importaç��o de grades:", error);
+    console.error("❌ Erro ao iniciar importação de grades:", error);
     res.status(500).json({ error: "Falha ao iniciar importação de grades" });
   }
 });
@@ -568,131 +568,15 @@ async function processGradeImport(data: any[]) {
         console.log("⚠️ Usando categoria padrão");
       }
 
-      let brandId = null, genderId = null, typeId = null;
-
-      // Process optional fields with error handling
-      if (item.brand_name && item.brand_name.trim()) {
-        try {
-          console.log(`🏷️ Processando marca: "${item.brand_name}"`);
-          brandId = await processBrand(item.brand_name);
-          console.log(`✅ Marca processada - ID: ${brandId}`);
-        } catch (error) {
-          console.warn(`⚠️ Aviso: Falha ao processar marca "${item.brand_name}": ${error.message}`);
-        }
-      }
-
-      if (item.gender_name && item.gender_name.trim()) {
-        try {
-          console.log(`👤 Processando gênero: "${item.gender_name}"`);
-          genderId = await processGender(item.gender_name);
-          console.log(`✅ Gênero processado - ID: ${genderId}`);
-        } catch (error) {
-          console.warn(`⚠️ Aviso: Falha ao processar gênero "${item.gender_name}": ${error.message}`);
-        }
-      }
-
-      if (item.type_name && item.type_name.trim()) {
-        try {
-          console.log(`📝 Processando tipo: "${item.type_name}"`);
-          typeId = await processType(item.type_name);
-          console.log(`✅ Tipo processado - ID: ${typeId}`);
-        } catch (error) {
-          console.warn(`⚠️ Aviso: Falha ao processar tipo "${item.type_name}": ${error.message}`);
-        }
-      }
-
-      // Check if product already exists
+      // Criar produto simples sem complicações
       let productId: number;
-      const searchKey = item.parent_sku || item.name;
-      const searchField = item.parent_sku ? "parent_sku" : "name";
 
-      const [existingProduct] = await connection.execute(
-        `SELECT id FROM products WHERE ${searchField} = ?`,
-        [searchKey],
+      const [productResult] = await connection.execute(
+        `INSERT INTO products (name, category_id, base_price, active, stock_type) VALUES (?, ?, ?, ?, ?)`,
+        [item.name, categoryId, parseFloat(item.base_price), true, 'grade']
       );
-
-      if ((existingProduct as any[]).length > 0) {
-        productId = (existingProduct as any[])[0].id;
-
-        // Download main product image if URL provided for existing product
-        let photoPath = null;
-        if (item.photo_url && item.photo_url.trim()) {
-          console.log(`📸 Atualizando imagem do produto existente: ${item.photo_url}`);
-          try {
-            photoPath = await downloadImage(item.photo_url, item.name);
-            if (photoPath) {
-              console.log(`✅ Imagem atualizada baixada: ${photoPath}`);
-            } else {
-              console.log(`❌ Falha ao baixar imagem atualizada: ${item.photo_url}`);
-            }
-          } catch (error) {
-            console.warn(`⚠️ Erro ao baixar imagem atualizada: ${error.message}`);
-          }
-        }
-
-        // Update existing product
-        await connection.execute(
-          `UPDATE products SET
-            name = ?, description = ?, category_id = ?, base_price = ?,
-            sale_price = ?, suggested_price = ?, sku = ?, photo = ?,
-            brand_id = ?, gender_id = ?, type_id = ?, stock_type = ?
-          WHERE id = ?`,
-          [
-            item.name,
-            item.description || null,
-            categoryId,
-            parseFloat(item.base_price),
-            item.sale_price ? parseFloat(item.sale_price) : null,
-            item.suggested_price ? parseFloat(item.suggested_price) : null,
-            item.sku || null,
-            photoPath, // Update photo if new one was downloaded
-            brandId, genderId, typeId,
-            'grade', // Force grade stock type
-            productId,
-          ],
-        );
-      } else {
-        // Download main product image if URL provided
-        let photoPath = null;
-        if (item.photo_url && item.photo_url.trim()) {
-          console.log(`📸 Fazendo download da imagem principal: ${item.photo_url}`);
-          try {
-            photoPath = await downloadImage(item.photo_url, item.name);
-            if (photoPath) {
-              console.log(`✅ Imagem principal baixada com sucesso: ${photoPath}`);
-            } else {
-              console.log(`❌ Falha ao baixar imagem principal: ${item.photo_url}`);
-            }
-          } catch (error) {
-            console.warn(`⚠️ Erro ao baixar imagem principal: ${error.message}`);
-          }
-        } else {
-          console.log(`📸 Nenhuma URL de imagem principal fornecida`);
-        }
-
-        // Create new product with grade stock type
-        const [productResult] = await connection.execute(
-          `INSERT INTO products (
-            name, description, category_id, base_price, sale_price, suggested_price,
-            sku, parent_sku, photo, active, stock_type, brand_id, gender_id, type_id
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          [
-            item.name,
-            item.description || null,
-            categoryId,
-            parseFloat(item.base_price),
-            item.sale_price ? parseFloat(item.sale_price) : null,
-            item.suggested_price ? parseFloat(item.suggested_price) : null,
-            item.sku || null,
-            item.parent_sku || null,
-            photoPath, // Downloaded photo path
-            true,
-            'grade', // Force grade stock type
-            brandId, genderId, typeId,
-          ],
-        );
-        productId = (productResult as any).insertId;
-      }
+      productId = (productResult as any).insertId;
+      console.log(`✅ Produto criado - ID: ${productId}`);
 
       // Process color
       console.log(`🎨 Processando cor: "${item.color}"`);
