@@ -829,7 +829,7 @@ async function processGradeImport(data: any[]) {
             item.color_sale_price ? parseFloat(item.color_sale_price) : null
           ]
         );
-        console.log(`✅ Product_color_variants criado/atualizado`);
+        console.log(`✅ Product_color_variants criado/atualizado com imagem: ${colorImagePath}`);
       } catch (error) {
         console.warn(`⚠��� Erro em product_color_variants: ${error.message}`);
       }
