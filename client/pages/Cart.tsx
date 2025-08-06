@@ -10,7 +10,6 @@ import { useGlobalStoreSettings } from "@/hooks/use-global-store-settings";
 import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { ProductImage } from "@/components/ProductImage";
 import { MinimumOrderIndicator } from "@/components/MinimumOrderIndicator";
-import { DebugMinimumOrder } from "@/components/DebugMinimumOrder";
 import {
   ShoppingCart,
   Minus,
