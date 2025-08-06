@@ -674,39 +674,32 @@ export function StoreLayout({ children }: StoreLayoutProps) {
 
             {/* Active Filters Display */}
             {hasActiveFilters() && (
-              <div className="mt-4 pt-3 border-t border-white/20">
-                <div className="px-2 space-y-3">
+              <div className="mt-3 pt-2 border-t border-white/15">
+                <div className="px-1 space-y-2">
                   {/* Show selected filters */}
                   <div>
-                    <h4 className="text-xs font-bold text-white/90 mb-2">
-                      Filtros Ativos:
+                    <h4 className="text-[10px] font-semibold text-white/70 mb-1 uppercase">
+                      Filtros:
                     </h4>
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                       {selectedColorFilters.length > 0 && (
-                        <div className="text-xs text-white/80">
-                          <span className="font-medium">Cores:</span>{" "}
-                          {selectedColorFilters.length} selecionada
-                          {selectedColorFilters.length > 1 ? "s" : ""}
+                        <div className="text-[10px] text-white/70">
+                          <span className="font-medium">Cores:</span> {selectedColorFilters.length}
                         </div>
                       )}
                       {selectedGenderFilters.length > 0 && (
-                        <div className="text-xs text-white/80">
-                          <span className="font-medium">Gêneros:</span>{" "}
-                          {selectedGenderFilters.length} selecionado
-                          {selectedGenderFilters.length > 1 ? "s" : ""}
+                        <div className="text-[10px] text-white/70">
+                          <span className="font-medium">Gêneros:</span> {selectedGenderFilters.length}
                         </div>
                       )}
                       {selectedTypeFilters.length > 0 && (
-                        <div className="text-xs text-white/80">
-                          <span className="font-medium">Tipos:</span>{" "}
-                          {selectedTypeFilters.length} selecionado
-                          {selectedTypeFilters.length > 1 ? "s" : ""}
+                        <div className="text-[10px] text-white/70">
+                          <span className="font-medium">Tipos:</span> {selectedTypeFilters.length}
                         </div>
                       )}
                       {searchTerm.trim() && (
-                        <div className="text-xs text-white/80">
-                          <span className="font-medium">Busca:</span> "
-                          {searchTerm.trim()}"
+                        <div className="text-[10px] text-white/70 truncate">
+                          <span className="font-medium">Busca:</span> {searchTerm.trim()}
                         </div>
                       )}
                     </div>
@@ -715,9 +708,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                   {/* Clear all button */}
                   <button
                     onClick={clearAllFilters}
-                    className="w-full text-center py-2 px-3 text-xs font-medium text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300 hover:shadow-md border border-white/20 hover:border-white/40"
+                    className="w-full text-center py-1.5 px-2 text-[10px] font-medium text-white/80 hover:text-white bg-white/10 hover:bg-white/15 rounded-md transition-all duration-200"
                   >
-                    🔄 Limpar Todos os Filtros
+                    Limpar Filtros
                   </button>
                 </div>
               </div>
