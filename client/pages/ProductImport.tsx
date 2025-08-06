@@ -754,38 +754,43 @@ export default function ProductImport() {
 
   const downloadTemplate = () => {
     const headers = REQUIRED_FIELDS.map((f) => f.label);
+
+    console.log('📋 Template Completo - Campos:', REQUIRED_FIELDS.map(f => f.key));
+    console.log('📋 Template Completo - Headers:', headers);
+
     const sampleRows = [
       [
-        "Chinelo Havaianas Top",
-        "1",
-        "18.50",
-        "25.90",
-        "https://example.com/havaianas-top.jpg",
-        "1",
-        "azul",
-        "HAV001-AZUL",
-        "HAV001",
-        "Chinelo clássico Havaianas Top",
-        "35.90",
-        "Havaianas", // Marca
-        "Feminino", // Gênero
-        "Chinelo", // Tipo
-        "grade", // Tipo de Estoque
-        "25", // Estoque por Grade
-        "", // Tam 37 (vazio para estoque por grade)
-        "", // Tam 38
-        "", // Tam 39
-        "", // Tam 40
-        "", // Tam 41
-        "", // Tam 42
-        "", // Tam 43
-        "", // Tam 44
-        "HAV001-AZUL-V1", // SKU da Variante
-        "", // Preço da Cor (vazio = usar base_price)
-        "", // Preço Promocional da Cor
-        "https://example.com/havaianas-azul.jpg", // Imagem da Cor
-        "0", // Vender Sem Estoque (0=não, 1=sim)
-        "", // Stock per variant (deprecated)
+        "Chinelo Havaianas Top",                      // name
+        "Chinelos",                                   // category_id (nome da categoria)
+        "18.50",                                      // base_price
+        "25.90",                                      // sale_price
+        "https://example.com/havaianas-top.jpg",      // photo_url
+        "1",                                          // size_group_id
+        "azul",                                       // color
+        "HAV001-AZUL",                                // sku
+        "HAV001",                                     // parent_sku
+        "Chinelo clássico Havaianas Top",             // description
+        "35.90",                                      // suggested_price
+        "Havaianas",                                  // brand_name
+        "Feminino",                                   // gender_name
+        "Chinelo",                                    // type_name
+        "size",                                       // stock_type (size ou grade)
+        "",                                           // grade_name (vazio para stock_type=size)
+        "",                                           // grade_stock (vazio para stock_type=size)
+        "5",                                          // size_37
+        "8",                                          // size_38
+        "12",                                         // size_39
+        "15",                                         // size_40
+        "10",                                         // size_41
+        "6",                                          // size_42
+        "3",                                          // size_43
+        "2",                                          // size_44
+        "HAV001-AZUL-V1",                             // variant_sku
+        "",                                           // color_price (vazio = usar base_price)
+        "",                                           // color_sale_price
+        "https://example.com/havaianas-azul.jpg",     // color_image_url
+        "0",                                          // sell_without_stock (0=não, 1=sim)
+        "",                                           // stock_per_variant (deprecated)
       ],
       [
         "Tênis Nike Air Max",
@@ -1321,7 +1326,7 @@ export default function ProductImport() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-semibold mb-3">
-                    Informações Incluídas na Exportaç��o:
+                    Informaç��es Incluídas na Exportaç��o:
                   </h4>
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-center gap-2">
