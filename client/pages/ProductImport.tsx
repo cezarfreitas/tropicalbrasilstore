@@ -1116,11 +1116,11 @@ export default function ProductImport() {
                 <div className="text-2xl">🎯</div>
                 <div>
                   <h4 className="font-semibold text-green-800">1 Cor + Estoque por Tamanho</h4>
-                  <p className="text-xs text-green-600">Controle individual por grade</p>
+                  <p className="text-xs text-green-600">Venda individual por tamanho</p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
-                Produto com apenas uma cor, mas com estoque específico para cada tamanho (37, 38, 39, etc.)
+                Produto vendido por tamanho individual. Cada tamanho tem seu próprio estoque (ex: 5 pares tam 37, 8 pares tam 38)
               </p>
               <Button variant="outline" onClick={downloadSingleColorTemplate} className="w-full">
                 <Download className="h-4 w-4 mr-2" />
@@ -1133,12 +1133,12 @@ export default function ProductImport() {
               <div className="flex items-center gap-2 mb-3">
                 <div className="text-2xl">📦</div>
                 <div>
-                  <h4 className="font-semibold text-orange-800">1 Cor + Estoque Total</h4>
-                  <p className="text-xs text-orange-600">Estoque por grade completa</p>
+                  <h4 className="font-semibold text-orange-800">1 Cor + Venda por Grade</h4>
+                  <p className="text-xs text-orange-600">Venda de grade completa</p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
-                Produto com uma cor e estoque controlado por grade total (ex: 50 pares distribuídos automaticamente)
+                Produto vendido como grade completa. Cliente compra a grade inteira (ex: 25 grades disponíveis, cada grade tem vários tamanhos)
               </p>
               <Button variant="outline" onClick={downloadSingleColorGradeTemplate} className="w-full">
                 <Download className="h-4 w-4 mr-2" />
@@ -1153,9 +1153,9 @@ export default function ProductImport() {
               <div>
                 <h5 className="font-semibold text-yellow-800 mb-2">💡 Quando usar cada template:</h5>
                 <ul className="text-sm text-yellow-700 space-y-1">
-                  <li><strong>Completo:</strong> Quando você tem produtos com múltiplas cores e quer controlar preços específicos por variante</li>
-                  <li><strong>1 Cor + Tamanho:</strong> Produtos únicos onde você sabe exatamente quantos têm de cada tamanho (ex: tênis importados)</li>
-                  <li><strong>1 Cor + Grade:</strong> Produtos básicos onde você tem um estoque total e o sistema distribui automaticamente (ex: chinelos simples)</li>
+                  <li><strong>Completo:</strong> Produtos com múltiplas cores, preços e tipos de venda diferentes</li>
+                  <li><strong>1 Cor + Tamanho:</strong> Venda individual por tamanho - cliente escolhe tam 37, 38, etc. (ex: sapatos, tênis)</li>
+                  <li><strong>1 Cor + Grade:</strong> Venda por grade completa - cliente compra a grade inteira com todos os tamanhos (ex: atacado)</li>
                 </ul>
               </div>
             </div>
