@@ -58,6 +58,9 @@ export default function Cart() {
             </Link>
           </div>
         </div>
+
+        {/* Debug component - remover após verificação */}
+        <DebugMinimumOrder />
       </StoreLayout>
     );
   }
