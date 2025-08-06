@@ -91,16 +91,16 @@ export function createServer() {
 
   // JSON parsing middleware - skip for multipart uploads
   app.use((req, res, next) => {
-    const contentType = req.headers['content-type'] || '';
+    const contentType = req.headers["content-type"] || "";
 
     // Skip JSON parsing for multipart content
-    if (contentType.includes('multipart/form-data')) {
+    if (contentType.includes("multipart/form-data")) {
       return next();
     }
 
     express.json({
       limit: "50mb",
-      type: ['application/json', 'application/*+json']
+      type: ["application/json", "application/*+json"],
     })(req, res, next);
   });
 
@@ -227,17 +227,21 @@ export function createServer() {
 
   // Error handling middleware for JSON parsing errors
   app.use((error: any, req: any, res: any, next: any) => {
-    if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
-      console.error('JSON Parse Error:', {
+    if (
+      error instanceof SyntaxError &&
+      error.status === 400 &&
+      "body" in error
+    ) {
+      console.error("JSON Parse Error:", {
         url: req.url,
         method: req.method,
-        contentType: req.headers['content-type'],
-        error: error.message
+        contentType: req.headers["content-type"],
+        error: error.message,
       });
 
       return res.status(400).json({
-        error: 'Invalid JSON format',
-        message: 'Request body contains invalid JSON'
+        error: "Invalid JSON format",
+        message: "Request body contains invalid JSON",
       });
     }
     next(error);

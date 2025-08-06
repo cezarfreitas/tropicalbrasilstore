@@ -228,7 +228,9 @@ export default function ProductsWooCommerce() {
       }
       if (mainVariant.image_url) {
         const imageUrl = getImageUrl(mainVariant.image_url);
-        console.log(`✅ Using image_url: ${mainVariant.image_url} -> ${imageUrl}`);
+        console.log(
+          `✅ Using image_url: ${mainVariant.image_url} -> ${imageUrl}`,
+        );
         return imageUrl;
       }
     }
@@ -257,7 +259,9 @@ export default function ProductsWooCommerce() {
       }
       if (firstVariantWithImage.image_url) {
         const imageUrl = getImageUrl(firstVariantWithImage.image_url);
-        console.log(`✅ Using image_url: ${firstVariantWithImage.image_url} -> ${imageUrl}`);
+        console.log(
+          `✅ Using image_url: ${firstVariantWithImage.image_url} -> ${imageUrl}`,
+        );
         return imageUrl;
       }
     }
@@ -506,7 +510,11 @@ export default function ProductsWooCommerce() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("📊 Grades data received:", Array.isArray(data) ? data.length : 0, "items");
+        console.log(
+          "📊 Grades data received:",
+          Array.isArray(data) ? data.length : 0,
+          "items",
+        );
         setGrades(Array.isArray(data) ? data : []);
       } else {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -514,7 +522,7 @@ export default function ProductsWooCommerce() {
     } catch (error: any) {
       console.error("❌ Error fetching grades:", error);
 
-      if (error.name === 'AbortError') {
+      if (error.name === "AbortError") {
         console.log("🕐 Request timed out");
 
         // Retry once on timeout
@@ -1510,7 +1518,9 @@ export default function ProductsWooCommerce() {
                                                 >
                                                   <div className="aspect-square rounded-lg border overflow-hidden bg-gray-50">
                                                     <ProductImage
-                                                      src={getImageUrl(imageUrl)}
+                                                      src={getImageUrl(
+                                                        imageUrl,
+                                                      )}
                                                       alt={`Imagem ${imageIndex + 1}`}
                                                       className="w-full h-full object-cover"
                                                     />

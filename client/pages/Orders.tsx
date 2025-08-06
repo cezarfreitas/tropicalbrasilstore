@@ -110,7 +110,7 @@ export default function Orders() {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<OrderDetails | null>(null);
   const [orderDetailsLoading, setOrderDetailsLoading] = useState(false);
-    const [statusUpdating, setStatusUpdating] = useState<number | null>(null);
+  const [statusUpdating, setStatusUpdating] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
 
   // Search, filter and pagination states
@@ -128,7 +128,7 @@ export default function Orders() {
 
   const { toast } = useToast();
 
-    useEffect(() => {
+  useEffect(() => {
     fetchOrders();
     fetchStats();
   }, []);
@@ -139,9 +139,17 @@ export default function Orders() {
     }, 300); // Debounce search
 
     return () => clearTimeout(timeoutId);
-  }, [searchTerm, statusFilter, dateFilter, sortBy, sortOrder, currentPage, pageSize]);
+  }, [
+    searchTerm,
+    statusFilter,
+    dateFilter,
+    sortBy,
+    sortOrder,
+    currentPage,
+    pageSize,
+  ]);
 
-    const fetchOrders = async () => {
+  const fetchOrders = async () => {
     try {
       const response = await fetch("/api/admin/orders");
       if (response.ok) {
@@ -297,7 +305,7 @@ export default function Orders() {
     } finally {
       setExporting(false);
     }
-    };
+  };
 
   const exportSingleOrder = async (orderId: number) => {
     try {
@@ -495,7 +503,7 @@ export default function Orders() {
             </CardContent>
           </Card>
         </div>
-            )}
+      )}
 
       {/* Compact Filters */}
       <Card>
@@ -534,10 +542,12 @@ export default function Orders() {
               </SelectContent>
             </Select>
 
-                        {/* Date Filter */}
+            {/* Date Filter */}
             <Select
               value={dateFilter || "all"}
-              onValueChange={(value) => setDateFilter(value === "all" ? "" : value)}
+              onValueChange={(value) =>
+                setDateFilter(value === "all" ? "" : value)
+              }
             >
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Período" />
@@ -584,7 +594,7 @@ export default function Orders() {
           <CardTitle>Lista de Pedidos</CardTitle>
         </CardHeader>
         <CardContent>
-                    <Table>
+          <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>
@@ -655,7 +665,7 @@ export default function Orders() {
                   </TableCell>
                   <TableCell>{order.item_count} item(s)</TableCell>
                   <TableCell>{formatCurrency(order.total_amount)}</TableCell>
-                                    <TableCell>{getStatusBadge(order.status)}</TableCell>
+                  <TableCell>{getStatusBadge(order.status)}</TableCell>
                   <TableCell>{formatDate(order.created_at)}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
@@ -670,128 +680,130 @@ export default function Orders() {
                             <Eye className="h-4 w-4" />
                           </Button>
                         </DialogTrigger>
-                      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-                        <DialogHeader>
-                          <DialogTitle>
-                            Detalhes do Pedido #{order.id}
-                          </DialogTitle>
-                        </DialogHeader>
-                        {orderDetailsLoading ? (
-                          <div className="flex items-center justify-center p-8">
-                            <Loader2 className="h-8 w-8 animate-spin" />
-                          </div>
-                        ) : selectedOrder ? (
-                          <div className="space-y-6">
-                            {/* Customer Info */}
-                            <div className="grid grid-cols-2 gap-4">
-                              <div>
-                                <h4 className="font-semibold mb-2">
-                                  Informações do Cliente
-                                </h4>
-                                <div className="space-y-2 text-sm">
-                                  <div className="flex items-center gap-2">
-                                    <Users className="h-4 w-4" />
-                                    {selectedOrder.customer_name}
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <Mail className="h-4 w-4" />
-                                    {selectedOrder.customer_email}
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <Phone className="h-4 w-4" />
-                                    {selectedOrder.customer_whatsapp}
+                        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+                          <DialogHeader>
+                            <DialogTitle>
+                              Detalhes do Pedido #{order.id}
+                            </DialogTitle>
+                          </DialogHeader>
+                          {orderDetailsLoading ? (
+                            <div className="flex items-center justify-center p-8">
+                              <Loader2 className="h-8 w-8 animate-spin" />
+                            </div>
+                          ) : selectedOrder ? (
+                            <div className="space-y-6">
+                              {/* Customer Info */}
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <h4 className="font-semibold mb-2">
+                                    Informações do Cliente
+                                  </h4>
+                                  <div className="space-y-2 text-sm">
+                                    <div className="flex items-center gap-2">
+                                      <Users className="h-4 w-4" />
+                                      {selectedOrder.customer_name}
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <Mail className="h-4 w-4" />
+                                      {selectedOrder.customer_email}
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <Phone className="h-4 w-4" />
+                                      {selectedOrder.customer_whatsapp}
+                                    </div>
                                   </div>
                                 </div>
+                                <div>
+                                  <h4 className="font-semibold mb-2">
+                                    Status do Pedido
+                                  </h4>
+                                  <Select
+                                    value={selectedOrder.status}
+                                    onValueChange={(value) =>
+                                      updateOrderStatus(selectedOrder.id, value)
+                                    }
+                                    disabled={
+                                      statusUpdating === selectedOrder.id
+                                    }
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {Object.entries(statusConfig).map(
+                                        ([value, config]) => (
+                                          <SelectItem key={value} value={value}>
+                                            {config.label}
+                                          </SelectItem>
+                                        ),
+                                      )}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
                               </div>
+
+                              {/* Order Items */}
                               <div>
                                 <h4 className="font-semibold mb-2">
-                                  Status do Pedido
+                                  Itens do Pedido
                                 </h4>
-                                <Select
-                                  value={selectedOrder.status}
-                                  onValueChange={(value) =>
-                                    updateOrderStatus(selectedOrder.id, value)
-                                  }
-                                  disabled={statusUpdating === selectedOrder.id}
-                                >
-                                  <SelectTrigger>
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {Object.entries(statusConfig).map(
-                                      ([value, config]) => (
-                                        <SelectItem key={value} value={value}>
-                                          {config.label}
-                                        </SelectItem>
-                                      ),
-                                    )}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                            </div>
-
-                            {/* Order Items */}
-                            <div>
-                              <h4 className="font-semibold mb-2">
-                                Itens do Pedido
-                              </h4>
-                              <div className="space-y-2">
-                                {selectedOrder.items.map((item) => (
-                                  <div
-                                    key={item.id}
-                                    className="flex items-center justify-between p-3 border rounded-lg"
-                                  >
-                                    <div className="flex items-center gap-3">
-                                      <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
-                                        <Package className="h-6 w-6 text-muted-foreground" />
+                                <div className="space-y-2">
+                                  {selectedOrder.items.map((item) => (
+                                    <div
+                                      key={item.id}
+                                      className="flex items-center justify-between p-3 border rounded-lg"
+                                    >
+                                      <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                                          <Package className="h-6 w-6 text-muted-foreground" />
+                                        </div>
+                                        <div>
+                                          <div className="font-medium">
+                                            {item.product_name}
+                                          </div>
+                                          <div className="text-sm text-muted-foreground">
+                                            {item.product_sku &&
+                                              `SKU: ${item.product_sku}`}
+                                            {item.sku_variant &&
+                                              ` • Variante: ${item.sku_variant}`}
+                                          </div>
+                                          <div className="text-sm text-muted-foreground">
+                                            Grade: {item.grade_name} • Cor:{" "}
+                                            {item.color_name}
+                                            {item.size &&
+                                              ` • Tamanho: ${item.size}`}
+                                          </div>
+                                          <div className="text-sm text-muted-foreground">
+                                            Quantidade: {item.quantity} kit(s)
+                                          </div>
+                                        </div>
                                       </div>
-                                      <div>
+                                      <div className="text-right">
                                         <div className="font-medium">
-                                          {item.product_name}
+                                          {formatCurrency(item.total_price)}
                                         </div>
                                         <div className="text-sm text-muted-foreground">
-                                          {item.product_sku &&
-                                            `SKU: ${item.product_sku}`}
-                                          {item.sku_variant &&
-                                            ` • Variante: ${item.sku_variant}`}
-                                        </div>
-                                        <div className="text-sm text-muted-foreground">
-                                          Grade: {item.grade_name} • Cor:{" "}
-                                          {item.color_name}
-                                          {item.size &&
-                                            ` • Tamanho: ${item.size}`}
-                                        </div>
-                                        <div className="text-sm text-muted-foreground">
-                                          Quantidade: {item.quantity} kit(s)
+                                          {formatCurrency(item.unit_price)} cada
                                         </div>
                                       </div>
                                     </div>
-                                    <div className="text-right">
-                                      <div className="font-medium">
-                                        {formatCurrency(item.total_price)}
-                                      </div>
-                                      <div className="text-sm text-muted-foreground">
-                                        {formatCurrency(item.unit_price)} cada
-                                      </div>
-                                    </div>
-                                  </div>
-                                ))}
+                                  ))}
+                                </div>
                               </div>
-                            </div>
 
-                            {/* Order Summary */}
-                            <div className="border-t pt-4">
-                              <div className="flex justify-between items-center font-semibold text-lg">
-                                <span>Total:</span>
-                                <span>
-                                  {formatCurrency(selectedOrder.total_amount)}
-                                </span>
+                              {/* Order Summary */}
+                              <div className="border-t pt-4">
+                                <div className="flex justify-between items-center font-semibold text-lg">
+                                  <span>Total:</span>
+                                  <span>
+                                    {formatCurrency(selectedOrder.total_amount)}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ) : null}
-                      </DialogContent>
-                                        </Dialog>
+                          ) : null}
+                        </DialogContent>
+                      </Dialog>
 
                       <Button
                         variant="outline"
@@ -827,16 +839,14 @@ export default function Orders() {
               </p>
             </div>
           )}
-                </CardContent>
+        </CardContent>
       </Card>
 
       {/* Edit Order Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              Editar Pedido #{editingOrder?.id}
-            </DialogTitle>
+            <DialogTitle>Editar Pedido #{editingOrder?.id}</DialogTitle>
           </DialogHeader>
           {editingOrder && (
             <EditOrderForm
@@ -859,7 +869,7 @@ export default function Orders() {
 function EditOrderForm({
   order,
   onUpdate,
-  onCancel
+  onCancel,
 }: {
   order: OrderDetails;
   onUpdate: () => void;
@@ -937,7 +947,7 @@ function EditOrderForm({
     } catch (error: any) {
       console.error("❌ Error fetching grades:", error);
 
-      if (error.name === 'AbortError') {
+      if (error.name === "AbortError") {
         console.log("🕐 Request timed out");
 
         // Retry once on timeout
@@ -955,22 +965,36 @@ function EditOrderForm({
     }
   };
 
-  const updateItem = async (itemId: number, quantity: number, unit_price: number) => {
+  const updateItem = async (
+    itemId: number,
+    quantity: number,
+    unit_price: number,
+  ) => {
     try {
-      const response = await fetch(`/api/admin/orders/${order.id}/items/${itemId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/admin/orders/${order.id}/items/${itemId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ quantity, unit_price }),
         },
-        body: JSON.stringify({ quantity, unit_price }),
-      });
+      );
 
       if (response.ok) {
-        setItems(items.map(item =>
-          item.id === itemId
-            ? { ...item, quantity, unit_price, total_price: quantity * unit_price }
-            : item
-        ));
+        setItems(
+          items.map((item) =>
+            item.id === itemId
+              ? {
+                  ...item,
+                  quantity,
+                  unit_price,
+                  total_price: quantity * unit_price,
+                }
+              : item,
+          ),
+        );
         toast({
           title: "Sucesso",
           description: "Item atualizado com sucesso",
@@ -992,12 +1016,15 @@ function EditOrderForm({
     if (!confirm("Tem certeza que deseja remover este item?")) return;
 
     try {
-      const response = await fetch(`/api/admin/orders/${order.id}/items/${itemId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/api/admin/orders/${order.id}/items/${itemId}`,
+        {
+          method: "DELETE",
+        },
+      );
 
       if (response.ok) {
-        setItems(items.filter(item => item.id !== itemId));
+        setItems(items.filter((item) => item.id !== itemId));
         toast({
           title: "Sucesso",
           description: "Item removido com sucesso",
@@ -1045,8 +1072,12 @@ function EditOrderForm({
         <div>
           <h4 className="font-semibold mb-2">Informações do Pedido</h4>
           <div className="space-y-2 text-sm">
-            <div>Status: <Badge>{order.status}</Badge></div>
-            <div>Total: <strong>{formatCurrency(order.total_amount)}</strong></div>
+            <div>
+              Status: <Badge>{order.status}</Badge>
+            </div>
+            <div>
+              Total: <strong>{formatCurrency(order.total_amount)}</strong>
+            </div>
           </div>
         </div>
       </div>
@@ -1055,7 +1086,10 @@ function EditOrderForm({
         <h4 className="font-semibold mb-4">Itens do Pedido</h4>
         <div className="space-y-3">
           {items.map((item) => (
-            <div key={item.id} className="flex items-center gap-4 p-4 border rounded-lg">
+            <div
+              key={item.id}
+              className="flex items-center gap-4 p-4 border rounded-lg"
+            >
               <div className="flex-1">
                 <div className="font-medium">{item.product_name}</div>
                 <div className="text-sm text-muted-foreground">
@@ -1100,7 +1134,9 @@ function EditOrderForm({
 
                 <div className="text-right">
                   <div className="text-xs text-muted-foreground">Total</div>
-                  <div className="font-medium">{formatCurrency(item.total_price)}</div>
+                  <div className="font-medium">
+                    {formatCurrency(item.total_price)}
+                  </div>
                 </div>
 
                 <Button
@@ -1119,15 +1155,16 @@ function EditOrderForm({
 
       <div className="flex justify-between items-center pt-4 border-t">
         <div className="text-lg font-semibold">
-          Total do Pedido: {formatCurrency(items.reduce((sum, item) => sum + item.total_price, 0))}
+          Total do Pedido:{" "}
+          {formatCurrency(
+            items.reduce((sum, item) => sum + item.total_price, 0),
+          )}
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={onCancel}>
             Cancelar
           </Button>
-          <Button onClick={onUpdate}>
-            Salvar Alterações
-          </Button>
+          <Button onClick={onUpdate}>Salvar Alterações</Button>
         </div>
       </div>
     </div>

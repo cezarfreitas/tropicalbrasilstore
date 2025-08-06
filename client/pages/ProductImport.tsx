@@ -100,17 +100,36 @@ const REQUIRED_FIELDS = [
   { key: "size_44", label: "Estoque Tam 44", required: false },
   { key: "variant_sku", label: "SKU da Variante de Cor", required: false },
   { key: "color_price", label: "Preço Específico da Cor", required: false },
-  { key: "color_sale_price", label: "Preço Promocional da Cor", required: false },
-  { key: "color_image_url", label: "Imagem da Variante de Cor", required: false },
-  { key: "sell_without_stock", label: "Vender Sem Estoque (0/1)", required: false },
-  { key: "stock_per_variant", label: "Estoque por Variante (DEPRECATED)", required: false },
+  {
+    key: "color_sale_price",
+    label: "Preço Promocional da Cor",
+    required: false,
+  },
+  {
+    key: "color_image_url",
+    label: "Imagem da Variante de Cor",
+    required: false,
+  },
+  {
+    key: "sell_without_stock",
+    label: "Vender Sem Estoque (0/1)",
+    required: false,
+  },
+  {
+    key: "stock_per_variant",
+    label: "Estoque por Variante (DEPRECATED)",
+    required: false,
+  },
 ];
 
 // Custom fetch function using XMLHttpRequest to avoid FullStory conflicts
-const customFetch = async (url: string, options?: RequestInit): Promise<Response> => {
+const customFetch = async (
+  url: string,
+  options?: RequestInit,
+): Promise<Response> => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    const method = options?.method || 'GET';
+    const method = options?.method || "GET";
 
     console.log("🌐 CustomFetch:", method, url);
     console.log("📦 Body length:", options?.body?.length || 0);
@@ -118,17 +137,24 @@ const customFetch = async (url: string, options?: RequestInit): Promise<Response
     xhr.open(method, url);
 
     // Handle credentials
-    if (options?.credentials === 'include' || options?.credentials === 'same-origin') {
+    if (
+      options?.credentials === "include" ||
+      options?.credentials === "same-origin"
+    ) {
       xhr.withCredentials = true;
     }
 
     // Set default headers
-    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.setRequestHeader("Accept", "application/json");
 
     // Only set Content-Type to JSON if body is not FormData
     // FormData will automatically set the correct multipart/form-data content-type
-    if (method !== 'GET' && method !== 'HEAD' && !(options?.body instanceof FormData)) {
-      xhr.setRequestHeader('Content-Type', 'application/json');
+    if (
+      method !== "GET" &&
+      method !== "HEAD" &&
+      !(options?.body instanceof FormData)
+    ) {
+      xhr.setRequestHeader("Content-Type", "application/json");
     }
 
     // Set custom headers
@@ -141,9 +167,9 @@ const customFetch = async (url: string, options?: RequestInit): Promise<Response
 
     // Handle abort signal
     if (options?.signal) {
-      options.signal.addEventListener('abort', () => {
+      options.signal.addEventListener("abort", () => {
         xhr.abort();
-        reject(new Error('Request aborted'));
+        reject(new Error("Request aborted"));
       });
     }
 
@@ -155,8 +181,8 @@ const customFetch = async (url: string, options?: RequestInit): Promise<Response
       const responseHeaders: Record<string, string> = {};
       const headerText = xhr.getAllResponseHeaders();
       if (headerText) {
-        headerText.split('\r\n').forEach((line) => {
-          const parts = line.split(': ');
+        headerText.split("\r\n").forEach((line) => {
+          const parts = line.split(": ");
           if (parts.length === 2) {
             responseHeaders[parts[0].toLowerCase()] = parts[1];
           }
@@ -228,13 +254,19 @@ export default function ProductImport() {
           fetchSizeGroups(),
           fetchColors(),
           fetchProductCount(),
-          fetchExportStats()
+          fetchExportStats(),
         ]);
 
         // Log any failures but don't block the UI
         results.forEach((result, index) => {
-          const endpoints = ['categories', 'size-groups', 'colors', 'product-count', 'export-stats'];
-          if (result.status === 'rejected') {
+          const endpoints = [
+            "categories",
+            "size-groups",
+            "colors",
+            "product-count",
+            "export-stats",
+          ];
+          if (result.status === "rejected") {
             console.warn(`Failed to fetch ${endpoints[index]}:`, result.reason);
           }
         });
@@ -261,7 +293,10 @@ export default function ProductImport() {
       console.error("Error fetching categories:", error);
       if (retryCount < 2) {
         console.log(`Retrying categories fetch... (${retryCount + 1}/3)`);
-        setTimeout(() => fetchCategories(retryCount + 1), 1000 * (retryCount + 1));
+        setTimeout(
+          () => fetchCategories(retryCount + 1),
+          1000 * (retryCount + 1),
+        );
       } else {
         setCategories([]);
       }
@@ -281,7 +316,10 @@ export default function ProductImport() {
       console.error("Error fetching size groups:", error);
       if (retryCount < 2) {
         console.log(`Retrying size groups fetch... (${retryCount + 1}/3)`);
-        setTimeout(() => fetchSizeGroups(retryCount + 1), 1000 * (retryCount + 1));
+        setTimeout(
+          () => fetchSizeGroups(retryCount + 1),
+          1000 * (retryCount + 1),
+        );
       } else {
         setSizeGroups([]);
       }
@@ -310,12 +348,18 @@ export default function ProductImport() {
 
   const fetchProductCount = async () => {
     try {
-      const response = await customFetch("/api/products-enhanced?page=1&limit=1");
+      const response = await customFetch(
+        "/api/products-enhanced?page=1&limit=1",
+      );
       if (response.ok) {
         const data = await response.json();
         setProductCount(data.pagination?.totalProducts || 0);
       } else {
-        console.error("Error response from products-enhanced:", response.status, response.statusText);
+        console.error(
+          "Error response from products-enhanced:",
+          response.status,
+          response.statusText,
+        );
       }
     } catch (error) {
       console.error("Error fetching product count:", error);
@@ -331,7 +375,11 @@ export default function ProductImport() {
         const data = await response.json();
         setExportStats(data);
       } else {
-        console.error("Error response from export-stats:", response.status, response.statusText);
+        console.error(
+          "Error response from export-stats:",
+          response.status,
+          response.statusText,
+        );
       }
     } catch (error) {
       console.error("Error fetching export stats:", error);
@@ -393,8 +441,10 @@ export default function ProductImport() {
         setColumnMappings(autoMappings);
 
         // Contar quantos campos foram mapeados automaticamente
-        const mappedCount = autoMappings.filter(m => m.csvColumn).length;
-        console.log(`✅ ${mappedCount}/${autoMappings.length} campos mapeados automaticamente`);
+        const mappedCount = autoMappings.filter((m) => m.csvColumn).length;
+        console.log(
+          `✅ ${mappedCount}/${autoMappings.length} campos mapeados automaticamente`,
+        );
 
         toast({
           title: "Arquivo Processado",
@@ -428,26 +478,110 @@ export default function ProductImport() {
     const commonMappings: Record<string, string[]> = {
       name: ["nome", "produto", "name", "product_name", "nome do produto"],
       category_id: ["categoria", "category", "category_id", "cat"],
-      base_price: ["preco_base", "base_price", "preco_custo", "cost_price", "preço base"],
-      sale_price: ["preco_venda", "sale_price", "preco", "price", "valor", "preço de venda"],
-      photo_url: ["foto", "photo", "photo_url", "imagem", "image", "url da foto"],
-      size_group_id: ["grupo_tamanho", "size_group", "tamanhos", "sizes", "grupo de tamanhos"],
+      base_price: [
+        "preco_base",
+        "base_price",
+        "preco_custo",
+        "cost_price",
+        "preço base",
+      ],
+      sale_price: [
+        "preco_venda",
+        "sale_price",
+        "preco",
+        "price",
+        "valor",
+        "preço de venda",
+      ],
+      photo_url: [
+        "foto",
+        "photo",
+        "photo_url",
+        "imagem",
+        "image",
+        "url da foto",
+      ],
+      size_group_id: [
+        "grupo_tamanho",
+        "size_group",
+        "tamanhos",
+        "sizes",
+        "grupo de tamanhos",
+      ],
       color: ["cor", "color", "cores", "colors", "cor (uma por linha)"],
       sku: ["sku", "codigo"],
       parent_sku: ["sku_pai", "parent_sku", "codigo_pai", "sku pai"],
       description: ["descricao", "description", "desc", "descrição"],
-      suggested_price: ["preco_sugerido", "suggested_price", "msrp", "preço sugerido"],
-      brand_name: ["marca", "brand", "brand_name", "nome_marca", "marca (nome)"],
+      suggested_price: [
+        "preco_sugerido",
+        "suggested_price",
+        "msrp",
+        "preço sugerido",
+      ],
+      brand_name: [
+        "marca",
+        "brand",
+        "brand_name",
+        "nome_marca",
+        "marca (nome)",
+      ],
       gender_name: ["genero", "gender", "gender_name", "sexo", "gênero (nome)"],
-      type_name: ["tipo", "type", "type_name", "categoria_tipo", "tipo de produto (nome)"],
-      stock_type: ["tipo_estoque", "stock_type", "estoque_tipo", "tipo de estoque (grade/size)", "tipo de estoque"],
-      grade_name: ["nome_grade", "grade_name", "grade", "grade_vendida", "nome da grade vendida"],
-      grade_stock: ["estoque_grade", "grade_stock", "estoque_total", "estoque por grade"],
-      variant_sku: ["sku_variante", "variant_sku", "sku_cor", "sku da variante de cor"],
-      color_price: ["preco_cor", "color_price", "preco_variante", "preço específico da cor"],
-      color_sale_price: ["preco_promocional_cor", "color_sale_price", "preço promocional da cor"],
-      color_image_url: ["imagem_cor", "color_image", "foto_variante", "imagem da variante de cor"],
-      sell_without_stock: ["vender_sem_estoque", "sell_without_stock", "vender sem estoque (0/1)", "vender sem estoque"],
+      type_name: [
+        "tipo",
+        "type",
+        "type_name",
+        "categoria_tipo",
+        "tipo de produto (nome)",
+      ],
+      stock_type: [
+        "tipo_estoque",
+        "stock_type",
+        "estoque_tipo",
+        "tipo de estoque (grade/size)",
+        "tipo de estoque",
+      ],
+      grade_name: [
+        "nome_grade",
+        "grade_name",
+        "grade",
+        "grade_vendida",
+        "nome da grade vendida",
+      ],
+      grade_stock: [
+        "estoque_grade",
+        "grade_stock",
+        "estoque_total",
+        "estoque por grade",
+      ],
+      variant_sku: [
+        "sku_variante",
+        "variant_sku",
+        "sku_cor",
+        "sku da variante de cor",
+      ],
+      color_price: [
+        "preco_cor",
+        "color_price",
+        "preco_variante",
+        "preço específico da cor",
+      ],
+      color_sale_price: [
+        "preco_promocional_cor",
+        "color_sale_price",
+        "preço promocional da cor",
+      ],
+      color_image_url: [
+        "imagem_cor",
+        "color_image",
+        "foto_variante",
+        "imagem da variante de cor",
+      ],
+      sell_without_stock: [
+        "vender_sem_estoque",
+        "sell_without_stock",
+        "vender sem estoque (0/1)",
+        "vender sem estoque",
+      ],
       size_37: ["tam_37", "size_37", "37", "tamanho_37", "estoque tam 37"],
       size_38: ["tam_38", "size_38", "38", "tamanho_38", "estoque tam 38"],
       size_39: ["tam_39", "size_39", "39", "tamanho_39", "estoque tam 39"],
@@ -456,7 +590,14 @@ export default function ProductImport() {
       size_42: ["tam_42", "size_42", "42", "tamanho_42", "estoque tam 42"],
       size_43: ["tam_43", "size_43", "43", "tamanho_43", "estoque tam 43"],
       size_44: ["tam_44", "size_44", "44", "tamanho_44", "estoque tam 44"],
-      stock_per_variant: ["estoque", "stock", "quantity", "qtd", "estoque por variante (deprecated)", "estoque por variante"],
+      stock_per_variant: [
+        "estoque",
+        "stock",
+        "quantity",
+        "qtd",
+        "estoque por variante (deprecated)",
+        "estoque por variante",
+      ],
     };
 
     const possibleHeaders = commonMappings[targetField] || [];
@@ -468,7 +609,9 @@ export default function ProductImport() {
       const possible = normalizedPossibles[i];
       const index = normalizedHeaders.findIndex((h) => h === possible);
       if (index !== -1) {
-        console.log(`🎯 Mapeamento exato: "${headers[index]}" -> ${targetField}`);
+        console.log(
+          `🎯 Mapeamento exato: "${headers[index]}" -> ${targetField}`,
+        );
         return headers[index];
       }
     }
@@ -476,11 +619,13 @@ export default function ProductImport() {
     // Se não encontrar correspondência exata, buscar por inclusão
     for (let i = 0; i < normalizedPossibles.length; i++) {
       const possible = normalizedPossibles[i];
-      const index = normalizedHeaders.findIndex((h) =>
-        h.includes(possible) || possible.includes(h)
+      const index = normalizedHeaders.findIndex(
+        (h) => h.includes(possible) || possible.includes(h),
       );
       if (index !== -1) {
-        console.log(`🎯 Mapeamento por inclusão: "${headers[index]}" -> ${targetField}`);
+        console.log(
+          `🎯 Mapeamento por inclusão: "${headers[index]}" -> ${targetField}`,
+        );
         return headers[index];
       }
     }
@@ -495,8 +640,14 @@ export default function ProductImport() {
     const requiredMappings = columnMappings.filter((m) => m.required);
     const missingMappings = requiredMappings.filter((m) => !m.csvColumn);
 
-    console.log("🔸 Required mappings:", requiredMappings.map(m => m.targetField));
-    console.log("❌ Missing mappings:", missingMappings.map(m => m.targetField));
+    console.log(
+      "🔸 Required mappings:",
+      requiredMappings.map((m) => m.targetField),
+    );
+    console.log(
+      "❌ Missing mappings:",
+      missingMappings.map((m) => m.targetField),
+    );
 
     if (missingMappings.length > 0) {
       toast({
@@ -559,7 +710,9 @@ export default function ProductImport() {
       columnMappings.forEach((mapping) => {
         if (mapping.csvColumn && mapping.csvColumn in row) {
           mappedData[mapping.targetField] = row[mapping.csvColumn];
-          console.log(`  📋 ${mapping.csvColumn} -> ${mapping.targetField}: ${row[mapping.csvColumn]}`);
+          console.log(
+            `  📋 ${mapping.csvColumn} -> ${mapping.targetField}: ${row[mapping.csvColumn]}`,
+          );
         }
       });
 
@@ -589,7 +742,11 @@ export default function ProductImport() {
         console.log("📤 Enviando batch único com", batches[0].length, "itens");
         console.log("📋 Sample data:", JSON.stringify(batches[0][0], null, 2));
         console.log("📊 Full batch[0]:", JSON.stringify(batches[0], null, 2));
-        console.log("📊 Tipo de batches[0]:", typeof batches[0], Array.isArray(batches[0]));
+        console.log(
+          "📊 Tipo de batches[0]:",
+          typeof batches[0],
+          Array.isArray(batches[0]),
+        );
 
         // Teste de serialização
         const payload = {
@@ -599,12 +756,18 @@ export default function ProductImport() {
         console.log("📦 Payload antes de stringify:", payload);
 
         const jsonPayload = JSON.stringify(payload);
-        console.log("📄 JSON serializado (primeiros 500 chars):", jsonPayload.substring(0, 500));
+        console.log(
+          "📄 JSON serializado (primeiros 500 chars):",
+          jsonPayload.substring(0, 500),
+        );
 
         // Teste de parsing de volta
         try {
           const parsed = JSON.parse(jsonPayload);
-          console.log("✅ JSON parse test passou. Data é array?", Array.isArray(parsed.data));
+          console.log(
+            "✅ JSON parse test passou. Data é array?",
+            Array.isArray(parsed.data),
+          );
         } catch (e) {
           console.error("❌ JSON parse test falhou:", e);
         }
@@ -621,7 +784,11 @@ export default function ProductImport() {
             body: jsonPayload,
           });
 
-          console.log("🧪 Fetch nativo result:", testResponse.status, testResponse.statusText);
+          console.log(
+            "🧪 Fetch nativo result:",
+            testResponse.status,
+            testResponse.statusText,
+          );
           const testText = await testResponse.text();
           console.log("🧪 Fetch nativo response:", testText);
 
@@ -645,7 +812,11 @@ export default function ProductImport() {
           body: jsonPayload,
         });
 
-        console.log("📥 Resposta do servidor:", response.status, response.statusText);
+        console.log(
+          "📥 Resposta do servidor:",
+          response.status,
+          response.statusText,
+        );
 
         if (response.ok) {
           console.log("✅ Importação iniciada com sucesso");
@@ -653,7 +824,9 @@ export default function ProductImport() {
         } else {
           const errorText = await response.text();
           console.error("❌ Erro na resposta:", errorText);
-          throw new Error(`Erro ao iniciar importação: ${response.status} - ${errorText}`);
+          throw new Error(
+            `Erro ao iniciar importação: ${response.status} - ${errorText}`,
+          );
         }
       } else {
         // Multiple batches - use batch processing
@@ -682,16 +855,19 @@ export default function ProductImport() {
 
         // Send remaining batches
         for (let i = 1; i < batches.length; i++) {
-          const batchResponse = await customFetch("/api/import/products-batch", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const batchResponse = await customFetch(
+            "/api/import/products-batch",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                data: batches[i],
+                batchNumber: i + 1,
+              }),
             },
-            body: JSON.stringify({
-              data: batches[i],
-              batchNumber: i + 1,
-            }),
-          });
+          );
 
           if (!batchResponse.ok) {
             throw new Error(`Erro ao enviar lote ${i + 1}`);
@@ -699,12 +875,15 @@ export default function ProductImport() {
         }
 
         // Start processing all batches
-        const startResponse = await customFetch("/api/import/start-batch-processing", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        const startResponse = await customFetch(
+          "/api/import/start-batch-processing",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
           },
-        });
+        );
 
         if (startResponse.ok) {
           toast({
@@ -755,75 +934,78 @@ export default function ProductImport() {
   const downloadTemplate = () => {
     const headers = REQUIRED_FIELDS.map((f) => f.label);
 
-    console.log('📋 Template Completo - Campos:', REQUIRED_FIELDS.map(f => f.key));
-    console.log('📋 Template Completo - Headers:', headers);
+    console.log(
+      "📋 Template Completo - Campos:",
+      REQUIRED_FIELDS.map((f) => f.key),
+    );
+    console.log("📋 Template Completo - Headers:", headers);
 
     const sampleRows = [
       [
-        "Chinelo Havaianas Top",                      // name
-        "Chinelos",                                   // category_id (nome da categoria)
-        "18.50",                                      // base_price
-        "25.90",                                      // sale_price
-        "https://example.com/havaianas-top.jpg",      // photo_url
-        "1",                                          // size_group_id
-        "azul",                                       // color
-        "HAV001-AZUL",                                // sku
-        "HAV001",                                     // parent_sku
-        "Chinelo clássico Havaianas Top",             // description
-        "35.90",                                      // suggested_price
-        "Havaianas",                                  // brand_name
-        "Feminino",                                   // gender_name
-        "Chinelo",                                    // type_name
-        "size",                                       // stock_type (size ou grade)
-        "",                                           // grade_name (vazio para stock_type=size)
-        "",                                           // grade_stock (vazio para stock_type=size)
-        "5",                                          // size_37
-        "8",                                          // size_38
-        "12",                                         // size_39
-        "15",                                         // size_40
-        "10",                                         // size_41
-        "6",                                          // size_42
-        "3",                                          // size_43
-        "2",                                          // size_44
-        "HAV001-AZUL-V1",                             // variant_sku
-        "",                                           // color_price (vazio = usar base_price)
-        "",                                           // color_sale_price
-        "https://example.com/havaianas-azul.jpg",     // color_image_url
-        "0",                                          // sell_without_stock (0=não, 1=sim)
-        "",                                           // stock_per_variant (deprecated)
+        "Chinelo Havaianas Top", // name
+        "Chinelos", // category_id (nome da categoria)
+        "18.50", // base_price
+        "25.90", // sale_price
+        "https://example.com/havaianas-top.jpg", // photo_url
+        "1", // size_group_id
+        "azul", // color
+        "HAV001-AZUL", // sku
+        "HAV001", // parent_sku
+        "Chinelo clássico Havaianas Top", // description
+        "35.90", // suggested_price
+        "Havaianas", // brand_name
+        "Feminino", // gender_name
+        "Chinelo", // type_name
+        "size", // stock_type (size ou grade)
+        "", // grade_name (vazio para stock_type=size)
+        "", // grade_stock (vazio para stock_type=size)
+        "5", // size_37
+        "8", // size_38
+        "12", // size_39
+        "15", // size_40
+        "10", // size_41
+        "6", // size_42
+        "3", // size_43
+        "2", // size_44
+        "HAV001-AZUL-V1", // variant_sku
+        "", // color_price (vazio = usar base_price)
+        "", // color_sale_price
+        "https://example.com/havaianas-azul.jpg", // color_image_url
+        "0", // sell_without_stock (0=não, 1=sim)
+        "", // stock_per_variant (deprecated)
       ],
       [
-        "Chinelo Grade Completa",                     // name
-        "Chinelos",                                   // category_id (nome da categoria)
-        "15.00",                                      // base_price
-        "25.90",                                      // sale_price
-        "https://example.com/chinelo-grade.jpg",      // photo_url
-        "",                                           // size_group_id (vazio para grade)
-        "preto",                                      // color
-        "GRADE001-PRETO",                             // sku
-        "GRADE001",                                   // parent_sku
-        "Chinelo vendido por grade completa",         // description
-        "29.90",                                      // suggested_price
-        "Marca ABC",                                  // brand_name
-        "Unissex",                                    // gender_name
-        "Chinelo",                                    // type_name
-        "grade",                                      // stock_type (grade ou size)
-        "2549",                                       // grade_name (nome da grade)
-        "25",                                         // grade_stock (estoque da grade)
-        "",                                           // size_37 (vazio para grade)
-        "",                                           // size_38 (vazio para grade)
-        "",                                           // size_39 (vazio para grade)
-        "",                                           // size_40 (vazio para grade)
-        "",                                           // size_41 (vazio para grade)
-        "",                                           // size_42 (vazio para grade)
-        "",                                           // size_43 (vazio para grade)
-        "",                                           // size_44 (vazio para grade)
-        "GRADE001-PRETO-V1",                          // variant_sku
-        "",                                           // color_price
-        "",                                           // color_sale_price
+        "Chinelo Grade Completa", // name
+        "Chinelos", // category_id (nome da categoria)
+        "15.00", // base_price
+        "25.90", // sale_price
+        "https://example.com/chinelo-grade.jpg", // photo_url
+        "", // size_group_id (vazio para grade)
+        "preto", // color
+        "GRADE001-PRETO", // sku
+        "GRADE001", // parent_sku
+        "Chinelo vendido por grade completa", // description
+        "29.90", // suggested_price
+        "Marca ABC", // brand_name
+        "Unissex", // gender_name
+        "Chinelo", // type_name
+        "grade", // stock_type (grade ou size)
+        "2549", // grade_name (nome da grade)
+        "25", // grade_stock (estoque da grade)
+        "", // size_37 (vazio para grade)
+        "", // size_38 (vazio para grade)
+        "", // size_39 (vazio para grade)
+        "", // size_40 (vazio para grade)
+        "", // size_41 (vazio para grade)
+        "", // size_42 (vazio para grade)
+        "", // size_43 (vazio para grade)
+        "", // size_44 (vazio para grade)
+        "GRADE001-PRETO-V1", // variant_sku
+        "", // color_price
+        "", // color_sale_price
         "https://example.com/chinelo-grade-preto.jpg", // color_image_url
-        "0",                                          // sell_without_stock
-        "",                                           // stock_per_variant (deprecated)
+        "0", // sell_without_stock
+        "", // stock_per_variant (deprecated)
       ],
       [
         "Chinelo Havaianas Top",
@@ -863,7 +1045,8 @@ export default function ProductImport() {
 
     toast({
       title: "✅ Template baixado!",
-      description: "Template completo com exemplos de estoque por TAMANHO e por GRADE. Preencha e faça upload.",
+      description:
+        "Template completo com exemplos de estoque por TAMANHO e por GRADE. Preencha e faça upload.",
     });
   };
 
@@ -904,7 +1087,7 @@ export default function ProductImport() {
         "https://example.com/tenis-abc-preto.jpg", // Imagem da Variante de Cor
         "0", // Vender Sem Estoque (0=não, 1=sim)
         "", // Stock per variant (campo legado)
-      ]
+      ],
     ];
 
     downloadCSVFile("template_1_cor_multiplas_grades.csv", headers, sampleRows);
@@ -913,62 +1096,62 @@ export default function ProductImport() {
   // Template para produto com 1 cor usando estoque por grade (não por tamanho)
   const downloadSingleColorGradeTemplate = () => {
     // Para grade, excluir campos de tamanho específicos
-    const gradeFields = REQUIRED_FIELDS.filter(field =>
-      !field.key.startsWith('size_') // Remove size_37, size_38, etc.
+    const gradeFields = REQUIRED_FIELDS.filter(
+      (field) => !field.key.startsWith("size_"), // Remove size_37, size_38, etc.
     );
     const headers = gradeFields.map((f) => f.label);
 
     const sampleRows = [
       [
-        "Chinelo ABC Grade Completa",              // name - Nome do Produto
-        "Chinelos",                                // category_id - Categoria
-        "15.00",                                   // base_price - Preço Base
-        "25.90",                                   // sale_price - Preço de Venda
-        "https://exemplo.com/chinelo-abc.jpg",     // photo_url - URL da Foto
-        "",                                        // size_group_id - Grupo de Tamanhos (OPCIONAL para grade)
-        "preto",                                   // color - Cor
-        "ABC001-PRETO",                           // sku - SKU
-        "ABC001",                                 // parent_sku - SKU Pai
+        "Chinelo ABC Grade Completa", // name - Nome do Produto
+        "Chinelos", // category_id - Categoria
+        "15.00", // base_price - Preço Base
+        "25.90", // sale_price - Preço de Venda
+        "https://exemplo.com/chinelo-abc.jpg", // photo_url - URL da Foto
+        "", // size_group_id - Grupo de Tamanhos (OPCIONAL para grade)
+        "preto", // color - Cor
+        "ABC001-PRETO", // sku - SKU
+        "ABC001", // parent_sku - SKU Pai
         "Chinelo ABC vendido por grade completa", // description - Descrição
-        "29.90",                                  // suggested_price - Preço Sugerido
-        "ABC",                                    // brand_name - Marca (Nome)
-        "Unissex",                               // gender_name - Gênero (Nome)
-        "Chinelo",                               // type_name - Tipo de Produto (Nome)
-        "grade",                                 // stock_type - Tipo de Estoque (grade/size)
-        "2549",                                  // grade_name - Nome da Grade Vendida
-        "30",                                    // grade_stock - Estoque por Grade
-        "ABC001-PRETO-GRADE",                    // variant_sku - SKU da Variante de Cor
-        "",                                      // color_price - Preço Específico da Cor
-        "",                                      // color_sale_price - Preço Promocional da Cor
+        "29.90", // suggested_price - Preço Sugerido
+        "ABC", // brand_name - Marca (Nome)
+        "Unissex", // gender_name - Gênero (Nome)
+        "Chinelo", // type_name - Tipo de Produto (Nome)
+        "grade", // stock_type - Tipo de Estoque (grade/size)
+        "2549", // grade_name - Nome da Grade Vendida
+        "30", // grade_stock - Estoque por Grade
+        "ABC001-PRETO-GRADE", // variant_sku - SKU da Variante de Cor
+        "", // color_price - Preço Específico da Cor
+        "", // color_sale_price - Preço Promocional da Cor
         "https://exemplo.com/chinelo-abc-preto.jpg", // color_image_url - Imagem da Variante de Cor
-        "0",                                     // sell_without_stock - Vender Sem Estoque
-        ""                                       // stock_per_variant - Stock per variant (DEPRECATED)
+        "0", // sell_without_stock - Vender Sem Estoque
+        "", // stock_per_variant - Stock per variant (DEPRECATED)
       ],
       [
-        "Sandália XYZ Grade Premium",             // name - Nome do Produto
-        "Sandálias",                             // category_id - Categoria
-        "35.00",                                 // base_price - Preço Base
-        "55.90",                                 // sale_price - Preço de Venda
-        "https://exemplo.com/sandalia-xyz.jpg",  // photo_url - URL da Foto
-        "",                                      // size_group_id - Grupo de Tamanhos (OPCIONAL para grade)
-        "marrom",                                // color - Cor
-        "XYZ002-MARROM",                         // sku - SKU
-        "XYZ002",                                // parent_sku - SKU Pai
+        "Sandália XYZ Grade Premium", // name - Nome do Produto
+        "Sandálias", // category_id - Categoria
+        "35.00", // base_price - Preço Base
+        "55.90", // sale_price - Preço de Venda
+        "https://exemplo.com/sandalia-xyz.jpg", // photo_url - URL da Foto
+        "", // size_group_id - Grupo de Tamanhos (OPCIONAL para grade)
+        "marrom", // color - Cor
+        "XYZ002-MARROM", // sku - SKU
+        "XYZ002", // parent_sku - SKU Pai
         "Sandália XYZ premium vendida por grade", // description - Descrição
-        "65.90",                                 // suggested_price - Preço Sugerido
-        "XYZ Premium",                           // brand_name - Marca (Nome)
-        "Feminino",                              // gender_name - Gênero (Nome)
-        "Sandália",                              // type_name - Tipo de Produto (Nome)
-        "grade",                                 // stock_type - Tipo de Estoque (grade/size)
-        "2550",                                  // grade_name - Nome da Grade Vendida
-        "15",                                    // grade_stock - Estoque por Grade
-        "XYZ002-MARROM-GRADE",                   // variant_sku - SKU da Variante de Cor
-        "49.90",                                 // color_price - Preço Específico da Cor
-        "45.90",                                 // color_sale_price - Preço Promocional da Cor
+        "65.90", // suggested_price - Preço Sugerido
+        "XYZ Premium", // brand_name - Marca (Nome)
+        "Feminino", // gender_name - Gênero (Nome)
+        "Sandália", // type_name - Tipo de Produto (Nome)
+        "grade", // stock_type - Tipo de Estoque (grade/size)
+        "2550", // grade_name - Nome da Grade Vendida
+        "15", // grade_stock - Estoque por Grade
+        "XYZ002-MARROM-GRADE", // variant_sku - SKU da Variante de Cor
+        "49.90", // color_price - Preço Específico da Cor
+        "45.90", // color_sale_price - Preço Promocional da Cor
         "https://exemplo.com/sandalia-xyz-marrom.jpg", // color_image_url - Imagem da Variante de Cor
-        "0",                                     // sell_without_stock - Vender Sem Estoque
-        ""                                       // stock_per_variant - Stock per variant (DEPRECATED)
-      ]
+        "0", // sell_without_stock - Vender Sem Estoque
+        "", // stock_per_variant - Stock per variant (DEPRECATED)
+      ],
     ];
 
     // Gerar tanto Excel quanto CSV para debug
@@ -981,7 +1164,11 @@ export default function ProductImport() {
   };
 
   // Função auxiliar para download do CSV
-  const downloadCSVFile = (filename: string, headers: string[], rows: string[][]) => {
+  const downloadCSVFile = (
+    filename: string,
+    headers: string[],
+    rows: string[][],
+  ) => {
     const csvContent =
       headers.join(",") +
       "\n" +
@@ -997,7 +1184,11 @@ export default function ProductImport() {
   };
 
   // Função auxiliar para download do Excel
-  const downloadExcelFile = (filename: string, headers: string[], rows: string[][]) => {
+  const downloadExcelFile = (
+    filename: string,
+    headers: string[],
+    rows: string[][],
+  ) => {
     // Criar dados para o Excel
     const worksheetData = [headers, ...rows];
 
@@ -1009,11 +1200,11 @@ export default function ProductImport() {
     const colWidths = headers.map((header, index) => {
       const maxLength = Math.max(
         header.length,
-        ...rows.map(row => String(row[index] || "").length)
+        ...rows.map((row) => String(row[index] || "").length),
       );
       return { wch: Math.min(Math.max(maxLength, 15), 40) };
     });
-    worksheet['!cols'] = colWidths;
+    worksheet["!cols"] = colWidths;
 
     // Estilizar cabeçalho
     const headerStyle = {
@@ -1024,8 +1215,8 @@ export default function ProductImport() {
         top: { style: "thin", color: { rgb: "000000" } },
         bottom: { style: "thin", color: { rgb: "000000" } },
         left: { style: "thin", color: { rgb: "000000" } },
-        right: { style: "thin", color: { rgb: "000000" } }
-      }
+        right: { style: "thin", color: { rgb: "000000" } },
+      },
     };
 
     // Estilo para dados
@@ -1035,8 +1226,8 @@ export default function ProductImport() {
         top: { style: "thin", color: { rgb: "CCCCCC" } },
         bottom: { style: "thin", color: { rgb: "CCCCCC" } },
         left: { style: "thin", color: { rgb: "CCCCCC" } },
-        right: { style: "thin", color: { rgb: "CCCCCC" } }
-      }
+        right: { style: "thin", color: { rgb: "CCCCCC" } },
+      },
     };
 
     // Aplicar estilo aos headers
@@ -1049,7 +1240,10 @@ export default function ProductImport() {
     // Aplicar estilo aos dados
     rows.forEach((row, rowIndex) => {
       row.forEach((_, colIndex) => {
-        const cellAddress = XLSX.utils.encode_cell({ r: rowIndex + 1, c: colIndex });
+        const cellAddress = XLSX.utils.encode_cell({
+          r: rowIndex + 1,
+          c: colIndex,
+        });
         if (!worksheet[cellAddress]) worksheet[cellAddress] = {};
         worksheet[cellAddress].s = dataStyle;
       });
@@ -1059,8 +1253,13 @@ export default function ProductImport() {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Produtos por Grade");
 
     // Gerar arquivo Excel
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+    const blob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
 
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -1187,16 +1386,26 @@ export default function ProductImport() {
                   🎯 Estoque por Grade
                 </h4>
                 <p className="text-sm text-muted-foreground">
-                  Configure <code>Tipo de Estoque = "grade"</code> e use <code>Estoque por Grade</code>
+                  Configure <code>Tipo de Estoque = "grade"</code> e use{" "}
+                  <code>Estoque por Grade</code>
                 </p>
                 <div className="bg-blue-50 p-3 rounded text-sm">
-                  <strong>Exemplo:</strong><br/>
-                  • Tipo de Estoque: <code>grade</code><br/>
-                  • Nome da Grade Vendida: <code>2549</code> (nome da grade criada)<br/>
-                  • Estoque por Grade: <code>25</code> (grades completas)<br/>
-                  • Grupo de Tamanhos: pode ficar <strong>vazio</strong> (opcional para grade)<br/>
-                  • <strong>IMPORTANTE:</strong> Deixe todos os campos "Estoque Tam XX" vazios<br/>
-                  <em>→ Resultado: 25 grades completas para venda (sem controle por tamanho)</em>
+                  <strong>Exemplo:</strong>
+                  <br />• Tipo de Estoque: <code>grade</code>
+                  <br />• Nome da Grade Vendida: <code>2549</code> (nome da
+                  grade criada)
+                  <br />• Estoque por Grade: <code>25</code> (grades completas)
+                  <br />• Grupo de Tamanhos: pode ficar <strong>
+                    vazio
+                  </strong>{" "}
+                  (opcional para grade)
+                  <br />• <strong>IMPORTANTE:</strong> Deixe todos os campos
+                  "Estoque Tam XX" vazios
+                  <br />
+                  <em>
+                    → Resultado: 25 grades completas para venda (sem controle
+                    por tamanho)
+                  </em>
                 </div>
               </div>
 
@@ -1206,20 +1415,21 @@ export default function ProductImport() {
                   📏 Estoque por Tamanho
                 </h4>
                 <p className="text-sm text-muted-foreground">
-                  Configure <code>Tipo de Estoque = "size"</code> e use os campos <code>Estoque Tam XX</code>
+                  Configure <code>Tipo de Estoque = "size"</code> e use os
+                  campos <code>Estoque Tam XX</code>
                 </p>
                 <div className="bg-green-50 p-3 rounded text-sm">
-                  <strong>Exemplo:</strong><br/>
-                  • Tipo de Estoque: <code>size</code><br/>
-                  • Estoque Tam 37: <code>5</code> pares<br/>
-                  • Estoque Tam 38: <code>8</code> pares<br/>
-                  • Estoque Tam 39: <code>3</code> pares<br/>
+                  <strong>Exemplo:</strong>
+                  <br />• Tipo de Estoque: <code>size</code>
+                  <br />• Estoque Tam 37: <code>5</code> pares
+                  <br />• Estoque Tam 38: <code>8</code> pares
+                  <br />• Estoque Tam 39: <code>3</code> pares
+                  <br />
                   <em>→ Resultado: Venda individual por tamanho específico</em>
                 </div>
               </div>
             </div>
           </div>
-
         </CardContent>
       </Card>
 
@@ -1241,14 +1451,23 @@ export default function ProductImport() {
               <div className="flex items-center gap-2 mb-3">
                 <div className="text-2xl">📋</div>
                 <div>
-                  <h4 className="font-semibold text-blue-800">Template Completo</h4>
-                  <p className="text-xs text-blue-600">Múltiplas cores e variações</p>
+                  <h4 className="font-semibold text-blue-800">
+                    Template Completo
+                  </h4>
+                  <p className="text-xs text-blue-600">
+                    Múltiplas cores e variações
+                  </p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
-                Template com todos os recursos: múltiplas cores, variações de pre��o e estoque por tamanho ou grade
+                Template com todos os recursos: múltiplas cores, variações de
+                pre��o e estoque por tamanho ou grade
               </p>
-              <Button variant="outline" onClick={downloadTemplate} className="w-full">
+              <Button
+                variant="outline"
+                onClick={downloadTemplate}
+                className="w-full"
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Baixar Completo
               </Button>
@@ -1259,14 +1478,23 @@ export default function ProductImport() {
               <div className="flex items-center gap-2 mb-3">
                 <div className="text-2xl">🎯</div>
                 <div>
-                  <h4 className="font-semibold text-green-800">1 Cor + Estoque por Tamanho</h4>
-                  <p className="text-xs text-green-600">Venda individual por tamanho</p>
+                  <h4 className="font-semibold text-green-800">
+                    1 Cor + Estoque por Tamanho
+                  </h4>
+                  <p className="text-xs text-green-600">
+                    Venda individual por tamanho
+                  </p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
-                Produto vendido por tamanho individual. Cada tamanho tem seu próprio estoque (ex: 5 pares tam 37, 8 pares tam 38)
+                Produto vendido por tamanho individual. Cada tamanho tem seu
+                próprio estoque (ex: 5 pares tam 37, 8 pares tam 38)
               </p>
-              <Button variant="outline" onClick={downloadSingleColorTemplate} className="w-full">
+              <Button
+                variant="outline"
+                onClick={downloadSingleColorTemplate}
+                className="w-full"
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Baixar Template
               </Button>
@@ -1277,15 +1505,27 @@ export default function ProductImport() {
               <div className="flex items-center gap-2 mb-3">
                 <div className="text-2xl">📦</div>
                 <div>
-                  <h4 className="font-semibold text-orange-800">1 Cor + Venda por Grade</h4>
-                  <p className="text-xs text-orange-600">Venda de grade completa</p>
+                  <h4 className="font-semibold text-orange-800">
+                    1 Cor + Venda por Grade
+                  </h4>
+                  <p className="text-xs text-orange-600">
+                    Venda de grade completa
+                  </p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
-                Produto vendido como grade completa. Especifique qual grade vendida usar e quantas estão disponíveis (ex: Grade "2549" com 25 unidades).
-                <strong className="text-orange-700 block mt-1">📊 Arquivo Excel organizado - sem campos de tamanho!</strong>
+                Produto vendido como grade completa. Especifique qual grade
+                vendida usar e quantas estão disponíveis (ex: Grade "2549" com
+                25 unidades).
+                <strong className="text-orange-700 block mt-1">
+                  📊 Arquivo Excel organizado - sem campos de tamanho!
+                </strong>
               </p>
-              <Button variant="outline" onClick={downloadSingleColorGradeTemplate} className="w-full">
+              <Button
+                variant="outline"
+                onClick={downloadSingleColorGradeTemplate}
+                className="w-full"
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Baixar Excel
               </Button>
@@ -1296,11 +1536,24 @@ export default function ProductImport() {
             <div className="flex items-start gap-3">
               <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
               <div>
-                <h5 className="font-semibold text-yellow-800 mb-2">💡 Quando usar cada template:</h5>
+                <h5 className="font-semibold text-yellow-800 mb-2">
+                  💡 Quando usar cada template:
+                </h5>
                 <ul className="text-sm text-yellow-700 space-y-1">
-                  <li><strong>Completo:</strong> Produtos com múltiplas cores, preços e tipos de venda diferentes</li>
-                  <li><strong>1 Cor + Tamanho:</strong> Venda individual por tamanho - cliente escolhe tam 37, 38, etc. (ex: sapatos, tênis)</li>
-                  <li><strong>1 Cor + Grade:</strong> Venda por grade completa - especifique qual grade usar. Cliente compra a grade inteira (ex: atacado)</li>
+                  <li>
+                    <strong>Completo:</strong> Produtos com múltiplas cores,
+                    preços e tipos de venda diferentes
+                  </li>
+                  <li>
+                    <strong>1 Cor + Tamanho:</strong> Venda individual por
+                    tamanho - cliente escolhe tam 37, 38, etc. (ex: sapatos,
+                    tênis)
+                  </li>
+                  <li>
+                    <strong>1 Cor + Grade:</strong> Venda por grade completa -
+                    especifique qual grade usar. Cliente compra a grade inteira
+                    (ex: atacado)
+                  </li>
                 </ul>
               </div>
             </div>
@@ -1538,32 +1791,70 @@ export default function ProductImport() {
                   </h4>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <h5 className="font-semibold text-blue-800 mb-2">Obrigatórios:</h5>
+                      <h5 className="font-semibold text-blue-800 mb-2">
+                        Obrigatórios:
+                      </h5>
                       <ul className="text-sm text-blue-700 space-y-1">
-                        <li>• <strong>Nome:</strong> Nome do produto</li>
-                        <li>• <strong>Categoria:</strong> ID da categoria</li>
-                        <li>• <strong>Preço Base:</strong> Preço de custo</li>
-                        <li>• <strong>Grupo de Tamanhos:</strong> ID do grupo</li>
-                        <li>• <strong>Cor:</strong> Uma cor por linha</li>
+                        <li>
+                          • <strong>Nome:</strong> Nome do produto
+                        </li>
+                        <li>
+                          • <strong>Categoria:</strong> ID da categoria
+                        </li>
+                        <li>
+                          • <strong>Preço Base:</strong> Preço de custo
+                        </li>
+                        <li>
+                          • <strong>Grupo de Tamanhos:</strong> ID do grupo
+                        </li>
+                        <li>
+                          • <strong>Cor:</strong> Uma cor por linha
+                        </li>
                       </ul>
                     </div>
                     <div>
-                      <h5 className="font-semibold text-blue-800 mb-2">Classificação (Opcional):</h5>
+                      <h5 className="font-semibold text-blue-800 mb-2">
+                        Classificação (Opcional):
+                      </h5>
                       <ul className="text-sm text-blue-700 space-y-1">
-                        <li>• <strong>Marca (Nome):</strong> "Havaianas", "Nike", "Adidas"...</li>
-                        <li>• <strong>Gênero (Nome):</strong> "Masculino", "Feminino", "Unissex"</li>
-                        <li>• <strong>Tipo (Nome):</strong> "Chinelo", "Sandália", "Tênis"...</li>
-                        <li>• <strong>SKU Pai:</strong> Agrupa variantes</li>
+                        <li>
+                          • <strong>Marca (Nome):</strong> "Havaianas", "Nike",
+                          "Adidas"...
+                        </li>
+                        <li>
+                          • <strong>Gênero (Nome):</strong> "Masculino",
+                          "Feminino", "Unissex"
+                        </li>
+                        <li>
+                          • <strong>Tipo (Nome):</strong> "Chinelo", "Sandália",
+                          "Tênis"...
+                        </li>
+                        <li>
+                          • <strong>SKU Pai:</strong> Agrupa variantes
+                        </li>
                       </ul>
                     </div>
                   </div>
                   <div className="mt-4 pt-3 border-t border-blue-200">
-                    <h5 className="font-semibold text-blue-800 mb-2">Variantes de Cor (Avançado):</h5>
+                    <h5 className="font-semibold text-blue-800 mb-2">
+                      Variantes de Cor (Avançado):
+                    </h5>
                     <ul className="text-sm text-blue-700 space-y-1">
-                      <li>• <strong>SKU da Variante:</strong> SKU específico da cor</li>
-                      <li>• <strong>Preço da Cor:</strong> Preço único para esta cor</li>
-                      <li>• <strong>Imagem da Cor:</strong> Foto específica da variante</li>
-                      <li>• <strong>Vender Sem Estoque:</strong> 0=não, 1=sim</li>
+                      <li>
+                        • <strong>SKU da Variante:</strong> SKU específico da
+                        cor
+                      </li>
+                      <li>
+                        • <strong>Preço da Cor:</strong> Preço único para esta
+                        cor
+                      </li>
+                      <li>
+                        • <strong>Imagem da Cor:</strong> Foto específica da
+                        variante
+                      </li>
+                      <li>
+                        • <strong>Vender Sem Estoque:</strong> 0=não, 1=sim
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -1730,91 +2021,99 @@ export default function ProductImport() {
                 </div>
               )}
 
-              {!isImporting && (importData.length > 0 || importProgress.errorDetails?.length > 0) && (
-                <div className="space-y-4">
-                  <h4 className="font-semibold">Resultados da Importação</h4>
+              {!isImporting &&
+                (importData.length > 0 ||
+                  importProgress.errorDetails?.length > 0) && (
+                  <div className="space-y-4">
+                    <h4 className="font-semibold">Resultados da Importação</h4>
 
-                  {/* Show error details if available */}
-                  {importProgress.errorDetails && importProgress.errorDetails.length > 0 && (
-                    <div className="space-y-4">
-                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                        <h5 className="font-medium text-red-900 mb-3">
-                          Detalhes dos Erros ({importProgress.errorDetails.length} erros encontrados)
-                        </h5>
-                        <div className="max-h-96 overflow-y-auto">
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead>Linha</TableHead>
-                                <TableHead>Produto</TableHead>
-                                <TableHead>Erro</TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {importProgress.errorDetails.map((errorDetail, index) => (
-                                <TableRow key={index}>
-                                  <TableCell>{errorDetail.row}</TableCell>
-                                  <TableCell className="max-w-xs truncate">
-                                    {errorDetail.productName}
-                                  </TableCell>
-                                  <TableCell className="text-red-600 text-sm">
-                                    {errorDetail.error}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
+                    {/* Show error details if available */}
+                    {importProgress.errorDetails &&
+                      importProgress.errorDetails.length > 0 && (
+                        <div className="space-y-4">
+                          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <h5 className="font-medium text-red-900 mb-3">
+                              Detalhes dos Erros (
+                              {importProgress.errorDetails.length} erros
+                              encontrados)
+                            </h5>
+                            <div className="max-h-96 overflow-y-auto">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Linha</TableHead>
+                                    <TableHead>Produto</TableHead>
+                                    <TableHead>Erro</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  {importProgress.errorDetails.map(
+                                    (errorDetail, index) => (
+                                      <TableRow key={index}>
+                                        <TableCell>{errorDetail.row}</TableCell>
+                                        <TableCell className="max-w-xs truncate">
+                                          {errorDetail.productName}
+                                        </TableCell>
+                                        <TableCell className="text-red-600 text-sm">
+                                          {errorDetail.error}
+                                        </TableCell>
+                                      </TableRow>
+                                    ),
+                                  )}
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  )}
+                      )}
 
-                  {/* Show import data table if available */}
-                  {importData.length > 0 && (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Linha</TableHead>
-                          <TableHead>Produto</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead>Erro</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {importData.slice(0, 50).map((item) => (
-                          <TableRow key={item.row}>
-                            <TableCell>{item.row}</TableCell>
-                            <TableCell>{item.data.name}</TableCell>
-                            <TableCell>
-                              <Badge
-                                variant={
-                                  item.status === "success"
-                                    ? "default"
-                                    : item.status === "error"
-                                      ? "destructive"
-                                      : "secondary"
-                                }
-                              >
-                                {item.status === "success" && "Sucesso"}
-                                {item.status === "error" && "Erro"}
-                                {item.status === "pending" && "Pendente"}
-                                {item.status === "processing" && "Processando"}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              {item.error && (
-                                <span className="text-sm text-red-600">
-                                  {item.error}
-                                </span>
-                              )}
-                            </TableCell>
+                    {/* Show import data table if available */}
+                    {importData.length > 0 && (
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Linha</TableHead>
+                            <TableHead>Produto</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Erro</TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  )}
-                </div>
-              )}
+                        </TableHeader>
+                        <TableBody>
+                          {importData.slice(0, 50).map((item) => (
+                            <TableRow key={item.row}>
+                              <TableCell>{item.row}</TableCell>
+                              <TableCell>{item.data.name}</TableCell>
+                              <TableCell>
+                                <Badge
+                                  variant={
+                                    item.status === "success"
+                                      ? "default"
+                                      : item.status === "error"
+                                        ? "destructive"
+                                        : "secondary"
+                                  }
+                                >
+                                  {item.status === "success" && "Sucesso"}
+                                  {item.status === "error" && "Erro"}
+                                  {item.status === "pending" && "Pendente"}
+                                  {item.status === "processing" &&
+                                    "Processando"}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                {item.error && (
+                                  <span className="text-sm text-red-600">
+                                    {item.error}
+                                  </span>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    )}
+                  </div>
+                )}
             </CardContent>
           </Card>
         </TabsContent>

@@ -293,7 +293,7 @@ export default function ProductsEnhanced() {
     } catch (error: any) {
       console.error("❌ Error fetching grades:", error);
 
-      if (error.name === 'AbortError') {
+      if (error.name === "AbortError") {
         console.log("🕐 Request timed out");
 
         // Retry once on timeout
@@ -1511,7 +1511,8 @@ export default function ProductsEnhanced() {
                                                 alt={`Variante ${getSizeFromVariant(variant)}`}
                                                 className="w-full h-16 object-cover rounded border"
                                                 onError={(e) => {
-                                                  e.currentTarget.src = "/placeholder.svg";
+                                                  e.currentTarget.src =
+                                                    "/placeholder.svg";
                                                 }}
                                               />
                                             </div>
