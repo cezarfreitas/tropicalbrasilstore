@@ -492,7 +492,8 @@ async function processGradeImport(data: any[]) {
         throw new Error("Missing required grade fields: name, category_id, base_price, color, grade_name, grade_stock");
       }
 
-      // Process optional brand, gender, and type by name
+      // Process required category and optional brand, gender, and type by name
+      const categoryId = await processCategory(item.category_id);
       let brandId = null, genderId = null, typeId = null;
 
       if (item.brand_name && item.brand_name.trim()) {
