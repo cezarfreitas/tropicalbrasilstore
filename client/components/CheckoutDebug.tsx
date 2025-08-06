@@ -91,7 +91,7 @@ export function CheckoutDebug() {
               <strong>Auth Status:</strong> {isAuthenticated ? "Logado" : "Não logado"}
             </div>
             <div>
-              <strong>Valor Mínimo Calculado:</strong> R$ {minimumOrderValue.toFixed(2)}
+              <strong>Valor Mínimo Calculado:</strong> {formatCurrency(minimumOrderValue)}
             </div>
           </div>
 
