@@ -78,7 +78,7 @@ export function LoginModal({ isOpen, onClose, onSuccess, onSwitchToRegister }: L
     if (result.success) {
       toast({
         title: "Login realizado com sucesso!",
-        description: "Bem-vindo de volta à Chinelos Store.",
+        description: "Bem-vindo de volta à Tropical Brasil Sandálias.",
       });
 
       resetForm();
