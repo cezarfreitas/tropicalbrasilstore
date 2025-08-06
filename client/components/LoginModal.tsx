@@ -116,9 +116,14 @@ export function LoginModal({ isOpen, onClose, onSuccess, onSwitchToRegister }: L
 
         <div className="space-y-6">
           <div className="text-center">
-            <p className="text-sm text-muted-foreground">
-              Entre para ver preços e fazer pedidos
-            </p>
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
+              <p className="text-sm font-medium text-blue-700 mb-2">
+                🔐 Acesso Exclusivo para Clientes
+              </p>
+              <p className="text-xs text-blue-600">
+                Entre para acessar preços especiais e fazer pedidos com facilidade
+              </p>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
