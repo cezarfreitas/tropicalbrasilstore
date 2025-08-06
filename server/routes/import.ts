@@ -405,6 +405,9 @@ router.post("/start-batch-processing", async (req, res) => {
 });
 
 async function processImport(data: any[]) {
+  console.log("🔄 Iniciando processamento de", data.length, "itens");
+  console.log("📋 Sample item:", JSON.stringify(data[0], null, 2));
+
   const connection = await db.getConnection();
 
   // Group data by product identifier (name + parent_sku or just name)
