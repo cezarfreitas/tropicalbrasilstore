@@ -502,34 +502,34 @@ export function StoreLayout({ children }: StoreLayoutProps) {
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col bg-gradient-to-b from-primary to-primary/95 border-r border-primary/20 shadow-xl w-64 min-h-screen">
         {/* Sidebar Header */}
-        <div className="border-b border-white/10 bg-gradient-to-r from-primary to-primary/90 p-3">
+        <div className="border-b border-white/10 p-2">
           <Link
             to="/loja"
             className="flex items-center justify-center group"
             aria-label="Ir para página inicial"
           >
             <LogoDisplay
-              size="w-44 h-24"
-              className="flex-shrink-0 transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
+              size="w-36 h-16"
+              className="flex-shrink-0 transition-all duration-200 group-hover:scale-105"
               showText={true}
             />
           </Link>
         </div>
 
         {/* Quick Actions */}
-        <div className="px-4 py-3 border-b border-white/10 bg-white/5">
-          <div className="grid grid-cols-3 gap-3 mb-3">
+        <div className="px-3 py-2 border-b border-white/10">
+          <div className="grid grid-cols-3 gap-2 mb-2">
             {/* User Menu */}
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-1">
               <div className="relative">
                 {isAuthenticated ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="ghost"
-                        className="w-12 h-12 p-0 rounded-xl bg-white/10 hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-lg border border-white/20 hover:border-white/40 backdrop-blur-sm"
+                        className="w-10 h-10 p-0 rounded-lg bg-white/10 hover:bg-white/15 transition-all duration-200"
                       >
-                        <User className="h-5 w-5 text-white" />
+                        <User className="h-4 w-4 text-white" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
@@ -576,27 +576,27 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 ) : (
                   <Button
                     variant="ghost"
-                    className="w-12 h-12 p-0 rounded-xl bg-white/10 hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-lg border border-white/20 hover:border-white/40 backdrop-blur-sm"
+                    className="w-10 h-10 p-0 rounded-lg bg-white/10 hover:bg-white/15 transition-all duration-200"
                     onClick={() => setLoginModalOpen(true)}
                   >
-                    <LogIn className="h-5 w-5 text-white" />
+                    <LogIn className="h-4 w-4 text-white" />
                   </Button>
                 )}
               </div>
-              <span className="text-xs text-white/80 font-medium text-center">
+              <span className="text-[10px] text-white/70">
                 {isAuthenticated ? "Conta" : "Entrar"}
               </span>
             </div>
 
             {/* Cart */}
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-1">
               <div className="relative">
                 <Button
                   variant="ghost"
-                  className="w-12 h-12 p-0 rounded-xl bg-white/10 hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-lg border border-white/20 hover:border-white/40 backdrop-blur-sm"
+                  className="w-10 h-10 p-0 rounded-lg bg-white/10 hover:bg-white/15 transition-all duration-200"
                   onClick={() => setCartOpen(true)}
                 >
-                  <ShoppingCart className="h-5 w-5 text-white" />
+                  <ShoppingCart className="h-4 w-4 text-white" />
                 </Button>
                 {totalItems > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 text-white animate-pulse border-2 border-white shadow-xl font-bold">
