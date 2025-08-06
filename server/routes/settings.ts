@@ -163,6 +163,7 @@ async function createDefaultSettings() {
       "01234-567",
       15.0,
       150.0,
+      0.0,
       JSON.stringify(["pix", "credit_card", "debit_card"]),
       "@chinelos",
       "facebook.com/chinelos",
