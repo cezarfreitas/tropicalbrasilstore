@@ -107,9 +107,39 @@ export default function Settings() {
         ? "Network error - check if the server is running and accessible"
         : errorMessage;
 
+      // Set default settings as fallback
+      console.log("🔄 Setting default fallback settings...");
+      setSettings({
+        store_name: "Chinelos Store",
+        logo_url: "",
+        primary_color: "#1d4ed8",
+        secondary_color: "#3b82f6",
+        accent_color: "#60a5fa",
+        background_color: "#ffffff",
+        text_color: "#000000",
+        address: "",
+        phone: "",
+        email: "",
+        postal_code: "",
+        shipping_fee: 0,
+        free_shipping_threshold: 0,
+        payment_methods: ["pix"],
+        pix_key: "",
+        bank_account: "",
+        instagram_url: "",
+        whatsapp_url: "",
+        facebook_url: "",
+        website_url: "",
+        notification_settings: {
+          new_order: true,
+          low_stock: true,
+          customer_registration: true,
+        },
+      });
+
       toast({
         title: "Erro ao carregar configurações",
-        description: errorDetails,
+        description: `${errorDetails}. Usando configurações padrão.`,
         variant: "destructive",
       });
     } finally {
