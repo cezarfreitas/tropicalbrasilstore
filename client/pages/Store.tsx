@@ -47,6 +47,9 @@ function Store() {
   // Login modal
   const [showLoginModal, setShowLoginModal] = useState(false);
 
+  // Sorting state
+  const [sortBy, setSortBy] = useState("name-asc");
+
   // Debug products data - focus on missing images
   useEffect(() => {
     if (products && products.length > 0) {
