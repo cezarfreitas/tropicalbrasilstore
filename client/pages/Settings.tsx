@@ -93,6 +93,56 @@ export default function Settings() {
     }
   };
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const forceRefreshStore = async () => {
+    setRefreshing(true);
+    try {
+      // Clear cache
+      await fetch("/api/clear-cache", { method: "POST" });
+
+      // Refresh settings
+      const response = await fetch("/api/settings");
+      if (response.ok) {
+        const freshSettings = await response.json();
+
+        // Update global settings
+        if (window.__STORE_SETTINGS__) {
+          window.__STORE_SETTINGS__ = {
+            store_name: freshSettings.store_name,
+            logo_url: freshSettings.logo_url,
+            primary_color: freshSettings.primary_color,
+            secondary_color: freshSettings.secondary_color,
+            accent_color: freshSettings.accent_color,
+            background_color: freshSettings.background_color,
+            text_color: freshSettings.text_color,
+          };
+        }
+
+        // Trigger all refresh events
+        window.dispatchEvent(new CustomEvent("storeSettingsLoaded", {
+          detail: window.__STORE_SETTINGS__
+        }));
+        window.dispatchEvent(new CustomEvent("settingsRefresh"));
+        window.dispatchEvent(new CustomEvent("themeRefresh"));
+
+        toast({
+          title: "Loja Atualizada",
+          description: "As configurações foram sincronizadas com a loja",
+        });
+      }
+    } catch (error) {
+      console.error("Error refreshing store:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível atualizar a loja",
+        variant: "destructive",
+      });
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   const saveSettings = async () => {
     if (!settings) return;
 
@@ -385,7 +435,7 @@ export default function Settings() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
           <p className="mt-2 text-sm text-muted-foreground">
-            Carregando configurações...
+            Carregando configuraç��es...
           </p>
         </div>
       </div>
