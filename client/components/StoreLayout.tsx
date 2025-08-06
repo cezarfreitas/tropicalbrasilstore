@@ -34,6 +34,7 @@ import {
   getGlobalStoreSettings,
 } from "@/hooks/use-global-store-settings";
 import { DynamicTitle } from "@/components/DynamicTitle";
+import { MinimumOrderIndicator } from "@/components/MinimumOrderIndicator";
 import {
   DropdownMenu,
   DropdownMenuContent,
