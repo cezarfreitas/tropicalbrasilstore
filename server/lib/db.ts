@@ -8,12 +8,10 @@ const createConnection = () => {
     waitForConnections: true,
     connectionLimit: 10, // Increased from 3 to 10
     queueLimit: 50, // Increased from 0 to 50
-    acquireTimeout: 8000, // 8 second timeout for acquiring connections
-    timeout: 10000, // 10 second timeout for queries
     charset: "utf8mb4",
-    // Add reconnection settings
-    reconnect: true,
-    idleTimeout: 300000, // 5 minutes
+    // Use proper MySQL2 pool options
+    acquireTimeout: 8000, // Time to wait for connection
+    idleTimeout: 300000, // 5 minutes idle timeout
     maxIdle: 5, // Maximum idle connections
   });
 };
