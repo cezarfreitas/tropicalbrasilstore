@@ -626,32 +626,56 @@ async function processGradeImport(data: any[]) {
       }
 
       // Process color
-      const colorId = await processColor(item.color);
+      console.log(`🎨 Processando cor: "${item.color}"`);
+      let colorId;
+      try {
+        colorId = await processColor(item.color);
+        console.log(`✅ Cor processada - ID: ${colorId}`);
+      } catch (error) {
+        console.error(`❌ Erro ao processar cor "${item.color}":`, error);
+        throw new Error(`Falha ao processar cor: ${error.message}`);
+      }
 
       // Create or update grade
+      console.log(`📊 Processando grade: "${item.grade_name}"`);
       let gradeId;
-      const [gradeResult] = await connection.execute(
-        `SELECT id FROM grade_vendida WHERE name = ? LIMIT 1`,
-        [item.grade_name]
-      );
-
-      if ((gradeResult as any[]).length === 0) {
-        // Create new grade
-        const [newGrade] = await connection.execute(
-          `INSERT INTO grade_vendida (name, description, active) VALUES (?, ?, ?)`,
-          [item.grade_name, `Grade automática: ${item.grade_name}`, 1]
+      try {
+        const [gradeResult] = await connection.execute(
+          `SELECT id FROM grade_vendida WHERE name = ? LIMIT 1`,
+          [item.grade_name]
         );
-        gradeId = (newGrade as any).insertId;
-      } else {
-        gradeId = (gradeResult as any[])[0].id;
+
+        if ((gradeResult as any[]).length === 0) {
+          // Create new grade
+          console.log(`➕ Criando nova grade: "${item.grade_name}"`);
+          const [newGrade] = await connection.execute(
+            `INSERT INTO grade_vendida (name, description, active) VALUES (?, ?, ?)`,
+            [item.grade_name, `Grade automática: ${item.grade_name}`, 1]
+          );
+          gradeId = (newGrade as any).insertId;
+          console.log(`✅ Grade criada - ID: ${gradeId}`);
+        } else {
+          gradeId = (gradeResult as any[])[0].id;
+          console.log(`✅ Grade encontrada - ID: ${gradeId}`);
+        }
+      } catch (error) {
+        console.error(`❌ Erro ao processar grade "${item.grade_name}":`, error);
+        throw new Error(`Falha ao processar grade: ${error.message}`);
       }
 
       // Create/update product-color-grade relationship with stock
-      await connection.execute(
-        `INSERT INTO product_color_grades (product_id, color_id, grade_id, stock_quantity)
-         VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE stock_quantity = VALUES(stock_quantity)`,
-        [productId, colorId, gradeId, parseInt(item.grade_stock)]
-      );
+      console.log(`🔗 Criando relação produto-cor-grade (Produto: ${productId}, Cor: ${colorId}, Grade: ${gradeId}, Estoque: ${item.grade_stock})`);
+      try {
+        await connection.execute(
+          `INSERT INTO product_color_grades (product_id, color_id, grade_id, stock_quantity)
+           VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE stock_quantity = VALUES(stock_quantity)`,
+          [productId, colorId, gradeId, parseInt(item.grade_stock)]
+        );
+        console.log(`✅ Relação produto-cor-grade criada/atualizada`);
+      } catch (error) {
+        console.error(`❌ Erro ao criar relação produto-cor-grade:`, error);
+        throw new Error(`Falha ao criar relação produto-cor-grade: ${error.message}`);
+      }
 
       // IMPORTANTE: Criar variantes individuais para que o sistema reconheça as cores
       // Para grades, precisamos criar variantes base (sem tamanho específico)
