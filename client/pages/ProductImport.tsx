@@ -487,7 +487,7 @@ export default function ProductImport() {
 
         if (startResponse.ok) {
           toast({
-            title: "Importaç��o Iniciada",
+            title: "Importação Iniciada",
             description: `Processando ${fullImportData.length} produtos...`,
           });
           pollImportProgress();
@@ -542,6 +542,9 @@ export default function ProductImport() {
         "HAV001",
         "Chinelo clássico Havaianas Top",
         "35.90",
+        "6", // Marca (Havaianas)
+        "9", // Gênero (Feminino)
+        "11", // Tipo (Chinelo)
         "grade", // Tipo de Estoque
         "25", // Estoque por Grade
         "", // Tam 37 (vazio para estoque por grade)
@@ -552,6 +555,11 @@ export default function ProductImport() {
         "", // Tam 42
         "", // Tam 43
         "", // Tam 44
+        "HAV001-AZUL-V1", // SKU da Variante
+        "", // Preço da Cor (vazio = usar base_price)
+        "", // Preço Promocional da Cor
+        "https://example.com/havaianas-azul.jpg", // Imagem da Cor
+        "0", // Vender Sem Estoque (0=não, 1=sim)
         "", // Stock per variant (deprecated)
       ],
       [
@@ -566,6 +574,9 @@ export default function ProductImport() {
         "NIKE001",
         "Tênis esportivo Nike Air Max",
         "249.90",
+        "9", // Marca (Rider)
+        "8", // Gênero (Masculino)
+        "13", // Tipo (Tênis)
         "size", // Tipo de Estoque
         "", // Estoque por Grade (vazio para estoque por tamanho)
         "5", // Tam 37
@@ -576,6 +587,11 @@ export default function ProductImport() {
         "4", // Tam 42
         "2", // Tam 43
         "1", // Tam 44
+        "NIKE001-PRETO-V1", // SKU da Variante
+        "", // Preço da Cor
+        "", // Preço Promocional da Cor
+        "https://example.com/nike-preto.jpg", // Imagem da Cor
+        "0", // Vender Sem Estoque
         "100",
       ],
       [
@@ -585,14 +601,17 @@ export default function ProductImport() {
         "25.90",
         "https://example.com/havaianas-top.jpg",
         "1",
-        "preto",
-        "HAV001-PRETO",
+        "dourado",
+        "HAV001-DOURADO",
         "HAV001",
-        "Chinelo clássico Havaianas Top",
-        "35.90",
+        "Chinelo clássico Havaianas Top - Edição Especial",
+        "45.90",
+        "6", // Marca (Havaianas)
+        "9", // Gênero (Feminino)
+        "11", // Tipo (Chinelo)
         "grade", // Tipo de Estoque
-        "30", // Estoque por Grade (diferente da primeira cor)
-        "", // Tam 37 (vazio para estoque por grade)
+        "15", // Estoque por Grade (menor por ser edição especial)
+        "", // Tam 37
         "", // Tam 38
         "", // Tam 39
         "", // Tam 40
@@ -600,6 +619,11 @@ export default function ProductImport() {
         "", // Tam 42
         "", // Tam 43
         "", // Tam 44
+        "HAV001-DOURADO-ESPECIAL", // SKU da Variante
+        "35.90", // Preço específico da cor dourada (premium)
+        "29.90", // Preço promocional
+        "https://example.com/havaianas-dourado.jpg", // Imagem específica
+        "1", // Vender Sem Estoque (permitir pré-venda)
         "", // Stock per variant (deprecated)
       ],
     ];
