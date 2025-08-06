@@ -548,11 +548,16 @@ export default function ProductImport() {
     const fullImportData: ImportRow[] = csvData.map((row, index) => {
       const mappedData: Record<string, any> = {};
 
+      console.log(`🔄 Mapeando linha ${index + 1}:`, row);
+
       columnMappings.forEach((mapping) => {
         if (mapping.csvColumn && mapping.csvColumn in row) {
           mappedData[mapping.targetField] = row[mapping.csvColumn];
+          console.log(`  📋 ${mapping.csvColumn} -> ${mapping.targetField}: ${row[mapping.csvColumn]}`);
         }
       });
+
+      console.log(`✅ Dados mapeados da linha ${index + 1}:`, mappedData);
 
       return {
         row: index + 1,
