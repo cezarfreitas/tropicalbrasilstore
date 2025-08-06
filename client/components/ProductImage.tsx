@@ -12,6 +12,7 @@ interface ProductImageProps {
   sizes?: string;
   // Optional product data for automatic image selection
   product?: {
+    id?: number;
     photo?: string;
     color_variants?: Array<{
       image_url?: string;
@@ -21,7 +22,7 @@ interface ProductImageProps {
     available_colors?: Array<{
       image_url?: string;
       name?: string;
-    }>;
+    }> | any; // Allow any type to handle malformed data gracefully
   };
 }
 
