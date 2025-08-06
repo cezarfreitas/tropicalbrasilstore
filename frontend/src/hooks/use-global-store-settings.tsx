@@ -90,7 +90,10 @@ export function useGlobalStoreSettings() {
     queryKey: ["global-store-settings"],
     queryFn: async () => {
       try {
-        const response = await api.get<{ success: boolean; data: StoreSettings }>("/api/settings");
+        const response = await api.get<{
+          success: boolean;
+          data: StoreSettings;
+        }>("/api/settings");
         return response.data;
       } catch (error) {
         console.error("Failed to fetch store settings:", error);

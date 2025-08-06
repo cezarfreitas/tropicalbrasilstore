@@ -39,11 +39,12 @@ export function DynamicTitle({ suffix = "" }: DynamicTitleProps) {
         document.title = fullTitle;
 
         console.log(`Dynamic title updated to: ${fullTitle}`);
-
       } catch (error) {
         console.error("Error in DynamicTitle:", error);
         // Final fallback
-        const fallbackTitle = suffix ? `${suffix} - Tropical Brasil B2B` : "Tropical Brasil B2B";
+        const fallbackTitle = suffix
+          ? `${suffix} - Tropical Brasil B2B`
+          : "Tropical Brasil B2B";
         document.title = fallbackTitle;
       }
     };
