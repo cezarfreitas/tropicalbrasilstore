@@ -230,7 +230,7 @@ export default function CustomerRegister() {
 
         <div className="text-center mt-6">
           <p className="text-sm text-gray-500">
-            © 2024 Chinelos Store. Todos os direitos reservados.
+            © 2024 Tropical Brasil Sandálias. Todos os direitos reservados.
           </p>
         </div>
       </div>
