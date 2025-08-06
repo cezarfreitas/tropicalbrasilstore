@@ -9,7 +9,14 @@ import { useCustomerAuth } from "@/hooks/use-customer-auth";
 import { useProducts } from "@/hooks/use-products";
 import { LoginModal } from "@/components/LoginModal";
 import { DynamicTitle } from "@/components/DynamicTitle";
-import { Package, AlertCircle, Search, ArrowUpDown, Grid3X3, Grid2X2 } from "lucide-react";
+import {
+  Package,
+  AlertCircle,
+  Search,
+  ArrowUpDown,
+  Grid3X3,
+  Grid2X2,
+} from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -133,7 +140,11 @@ function Store() {
       case "price-desc":
         return sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
       case "newest":
-        return sorted.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime());
+        return sorted.sort(
+          (a, b) =>
+            new Date(b.created_at || 0).getTime() -
+            new Date(a.created_at || 0).getTime(),
+        );
       default:
         return sorted;
     }
@@ -156,12 +167,21 @@ function Store() {
                   <>
                     {pagination ? (
                       <>
-                        <span className="text-primary font-semibold">{filteredProducts.length}</span> de{" "}
-                        <span className="text-primary font-semibold">{pagination.totalItems}</span> produtos
+                        <span className="text-primary font-semibold">
+                          {filteredProducts.length}
+                        </span>{" "}
+                        de{" "}
+                        <span className="text-primary font-semibold">
+                          {pagination.totalItems}
+                        </span>{" "}
+                        produtos
                       </>
                     ) : (
                       <>
-                        <span className="text-primary font-semibold">{filteredProducts.length}</span> produtos encontrados
+                        <span className="text-primary font-semibold">
+                          {filteredProducts.length}
+                        </span>{" "}
+                        produtos encontrados
                       </>
                     )}
                   </>
