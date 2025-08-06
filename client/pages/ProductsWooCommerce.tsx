@@ -82,6 +82,11 @@ interface ColorVariant {
   active: boolean;
   is_main_catalog?: boolean; // Indica se é a variante principal do catálogo
   grade_ids: number[]; // Multiple grades per variant
+  grade_stocks?: Array<{
+    grade_id: number;
+    stock_quantity: number;
+    grade_name: string;
+  }>; // Grade stock quantities
   size_stocks: SizeStock[];
   color_name?: string;
   hex_code?: string;
