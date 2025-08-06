@@ -279,7 +279,7 @@ export function SimpleProductCard({
                   className="ml-2 p-1.5 bg-primary hover:bg-primary/90 text-white rounded-md transition-colors duration-200 flex-shrink-0"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onProductClick(product.id);
+                    handleProductClick();
                   }}
                   title="Adicionar ao carrinho"
                 >
