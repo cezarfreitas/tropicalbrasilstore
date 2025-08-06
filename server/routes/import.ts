@@ -579,7 +579,7 @@ async function processGradeImport(data: any[]) {
             const [newBrand] = await connection.execute("INSERT INTO brands (name) VALUES (?)", [item.brand_name.trim()]);
             brandId = (newBrand as any).insertId;
           }
-          console.log(`✅ Marca: ${item.brand_name} - ID: ${brandId}`);
+          console.log(`��� Marca: ${item.brand_name} - ID: ${brandId}`);
         } catch (error) {
           console.warn(`⚠️ Erro na marca: ${error.message}`);
         }
@@ -653,22 +653,26 @@ async function processGradeImport(data: any[]) {
         console.log(`✅ Produto criado - ID: ${productId}`);
       }
 
-      // Criar cor simples
+      // ETAPA 2: CRIAR/ATUALIZAR VARIANTE (1 variante por linha do Excel = 1 cor)
+      console.log(`\n🔸 ETAPA 2: PROCESSANDO VARIANTE DA COR ${item.color}`);
+
+      // 2.1: Criar/encontrar cor
       let colorId;
       const [existingColor] = await connection.execute("SELECT id FROM colors WHERE LOWER(name) = LOWER(?) LIMIT 1", [item.color]);
       if ((existingColor as any[]).length > 0) {
         colorId = (existingColor as any[])[0].id;
+        console.log(`✅ Cor existente: ${item.color} - ID: ${colorId}`);
       } else {
         const [newColor] = await connection.execute("INSERT INTO colors (name, hex_code) VALUES (?, ?)", [item.color, '#000000']);
         colorId = (newColor as any).insertId;
+        console.log(`✅ Cor criada: ${item.color} - ID: ${colorId}`);
       }
-      console.log(`✅ Cor: ${item.color} - ID: ${colorId}`);
 
-      // Download da imagem da cor se fornecida
+      // 2.2: Download da imagem da cor se fornecida
       let colorImagePath = null;
       if (item.color_image_url && item.color_image_url.trim()) {
         try {
-          console.log(`🎨 Baixando imagem da cor: ${item.color_image_url}`);
+          console.log(`📸 Baixando imagem da cor: ${item.color_image_url}`);
           colorImagePath = await downloadImage(item.color_image_url, `${item.name}_${item.color}`);
           if (colorImagePath) {
             console.log(`✅ Imagem da cor baixada: ${colorImagePath}`);
@@ -678,9 +682,10 @@ async function processGradeImport(data: any[]) {
         }
       }
 
-      // Criar variantes básicas (tamanhos 37-44)
+      // 2.3: Criar/atualizar variantes de COR para todos os tamanhos (37-44)
       const sizes = ['37', '38', '39', '40', '41', '42', '43', '44'];
       let variantsCreated = 0;
+      let variantsUpdated = 0;
 
       for (const sizeValue of sizes) {
         try {
@@ -694,20 +699,46 @@ async function processGradeImport(data: any[]) {
             sizeId = (newSize as any).insertId;
           }
 
-          // Criar variante com imagem da cor
-          await connection.execute(
-            "INSERT IGNORE INTO product_variants (product_id, size_id, color_id, stock, image_url) VALUES (?, ?, ?, ?, ?)",
-            [productId, sizeId, colorId, 0, colorImagePath]
+          // Verificar se variante já existe
+          const [existingVariant] = await connection.execute(
+            "SELECT id FROM product_variants WHERE product_id = ? AND size_id = ? AND color_id = ? LIMIT 1",
+            [productId, sizeId, colorId]
           );
-          variantsCreated++;
+
+          if ((existingVariant as any[]).length > 0) {
+            // Variante existe - ATUALIZAR
+            await connection.execute(
+              "UPDATE product_variants SET image_url = ?, price_override = ? WHERE id = ?",
+              [
+                colorImagePath,
+                item.color_price ? parseFloat(item.color_price) : null,
+                (existingVariant as any[])[0].id
+              ]
+            );
+            variantsUpdated++;
+          } else {
+            // Variante não existe - CRIAR
+            await connection.execute(
+              "INSERT INTO product_variants (product_id, size_id, color_id, stock, image_url, price_override) VALUES (?, ?, ?, ?, ?, ?)",
+              [
+                productId,
+                sizeId,
+                colorId,
+                0, // Estoque controlado pela grade
+                colorImagePath,
+                item.color_price ? parseFloat(item.color_price) : null
+              ]
+            );
+            variantsCreated++;
+          }
         } catch (error) {
-          console.warn(`⚠️ Erro no tamanho ${sizeValue}:`, error.message);
+          console.warn(`⚠️ Erro na variante tamanho ${sizeValue}:`, error.message);
         }
       }
 
-      console.log(`✅ ${variantsCreated} variantes criadas`);
+      console.log(`✅ Variantes: ${variantsCreated} criadas, ${variantsUpdated} atualizadas`);
 
-      // IMPORTANTE: Criar entrada na tabela product_color_variants para que o sistema reconheça as cores
+      // 2.4: Criar/atualizar entrada na tabela product_color_variants (para reconhecimento)
       try {
         await connection.execute(
           `INSERT INTO product_color_variants (product_id, color_id, image_url, price_override, sale_price)
@@ -724,14 +755,17 @@ async function processGradeImport(data: any[]) {
             item.color_sale_price ? parseFloat(item.color_sale_price) : null
           ]
         );
-        console.log(`✅ Entrada product_color_variants criada`);
+        console.log(`✅ Product_color_variants criado/atualizado`);
       } catch (error) {
         console.warn(`⚠️ Erro em product_color_variants: ${error.message}`);
       }
 
-      // CRÍTICO: Criar ou encontrar grade e relação product_color_grades
+      // ETAPA 3: CRIAR/ATUALIZAR GRADE DA VARIANTE
       if (item.grade_name && item.grade_stock) {
+        console.log(`\n🔸 ETAPA 3: PROCESSANDO GRADE ${item.grade_name}`);
+
         try {
+          // 3.1: Criar/encontrar grade
           let gradeId;
           const [existingGrade] = await connection.execute(
             "SELECT id FROM grade_vendida WHERE name = ? LIMIT 1",
@@ -750,16 +784,16 @@ async function processGradeImport(data: any[]) {
             console.log(`✅ Grade criada: ${item.grade_name} - ID: ${gradeId}`);
           }
 
-          // Criar relação produto-cor-grade com estoque
+          // 3.2: Criar/atualizar relação produto-cor-grade com estoque
           await connection.execute(
             `INSERT INTO product_color_grades (product_id, color_id, grade_id, stock_quantity)
              VALUES (?, ?, ?, ?)
-             ON DUPLICATE KEY UPDATE stock_quantity = VALUES(stock_quantity)`,
+             ON DUPLICATE KEY UPDATE stock_quantity = stock_quantity + VALUES(stock_quantity)`,
             [productId, colorId, gradeId, parseInt(item.grade_stock)]
           );
-          console.log(`✅ Relação produto-cor-grade criada (Estoque: ${item.grade_stock})`);
+          console.log(`✅ Grade da variante: Produto ${productId} + Cor ${colorId} + Grade ${gradeId} = ${item.grade_stock} unidades`);
         } catch (error) {
-          console.warn(`⚠️ Erro na grade: ${error.message}`);
+          console.warn(`⚠️ Erro na grade da variante: ${error.message}`);
         }
       }
 
