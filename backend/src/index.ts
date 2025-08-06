@@ -4,6 +4,7 @@ import helmet from "helmet";
 import compression from "compression";
 import path from "path";
 import { fileURLToPath } from "url";
+import { settingsRouter } from "./routes/settings";
 
 // Environment setup
 const __filename = fileURLToPath(import.meta.url);
