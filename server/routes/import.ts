@@ -916,7 +916,21 @@ async function processGradeImport(data: any[]) {
   connection.release();
   importProgress.isRunning = false;
   importProgress.current = "";
-  console.log("📦 Processamento de grades concluído!");
+
+  console.log(`\n🏁 === PROCESSAMENTO DE GRADES CONCLUÍDO ===`);
+  console.log(`📊 Total processado: ${processedItems}/${data.length}`);
+  console.log(`✅ Sucessos: ${importProgress.success}`);
+  console.log(`❌ Erros: ${importProgress.errors}`);
+  console.log(`📈 Taxa de sucesso: ${((importProgress.success / data.length) * 100).toFixed(1)}%`);
+
+  if (importProgress.errors > 0) {
+    console.log(`\n⚠️ Detalhes dos erros:`);
+    importProgress.errorDetails.forEach((error, index) => {
+      console.log(`   ${index + 1}. Linha ${error.row} (${error.productName}): ${error.error}`);
+    });
+  }
+
+  console.log(`🎯 Importação de grades finalizada em: ${new Date().toISOString()}\n`);
 }
 
 async function processImport(data: any[]) {
