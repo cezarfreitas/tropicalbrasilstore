@@ -1018,28 +1018,28 @@ export default function ProductDetail() {
             {/* Add to Cart Section */}
             {canAddToCart() && (
               <div className="border-t pt-3">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-gray-700">
                     Quantidade:
                   </label>
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center border border-gray-300 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center border border-gray-300 rounded">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="h-9 w-9 p-0 rounded-l-lg"
+                        className="h-7 w-7 p-0 rounded-l"
                       >
-                        <Minus className="h-4 w-4" />
+                        <Minus className="h-3 w-3" />
                       </Button>
-                      <span className="w-12 text-center text-sm font-semibold border-x">
+                      <span className="w-10 text-center text-xs font-semibold border-x">
                         {quantity}
                       </span>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setQuantity(quantity + 1)}
-                        className="h-9 w-9 p-0 rounded-r-lg"
+                        className="h-7 w-7 p-0 rounded-r"
                       >
                         <Plus className="h-3 w-3" />
                       </Button>
