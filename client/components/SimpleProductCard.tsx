@@ -230,18 +230,14 @@ export function SimpleProductCard({
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-[8px] font-bold text-white">
-                          {color.name?.charAt(0)?.toUpperCase()}
-                        </span>
-                      </div>
+                      <div className="w-full h-full rounded-full"></div>
                     )}
                   </div>
                 ))}
                 {/* Show count if more than 3 colors */}
                 {product.available_colors.length > 3 && (
-                  <div className="w-5 h-5 rounded-full bg-gray-800/80 border border-white shadow-sm flex items-center justify-center">
-                    <span className="text-[8px] font-bold text-white">
+                  <div className="w-4 h-4 rounded-full bg-gray-800/80 border border-white flex items-center justify-center">
+                    <span className="text-[7px] font-bold text-white">
                       +{product.available_colors.length - 3}
                     </span>
                   </div>
