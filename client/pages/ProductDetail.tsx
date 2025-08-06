@@ -366,6 +366,21 @@ export default function ProductDetail() {
   };
 
   const getAvailableColors = (productData = product) => {
+    // First try to use available_colors if it exists (from API)
+    if (productData?.available_colors && productData.available_colors.length > 0) {
+      return productData.available_colors.filter((color) => {
+        // If product has variants, check if this color has stock
+        if (productData.variants && productData.variants.length > 0) {
+          const hasStock = productData.variants.some((variant) =>
+            variant.color_id === color.id && (variant.stock > 0 || productData.sell_without_stock)
+          );
+          return hasStock;
+        }
+        return true; // If no variants, show all colors
+      });
+    }
+
+    // Fallback to building from variants
     if (!productData?.variants) return [];
 
     const colorMap = new Map();
