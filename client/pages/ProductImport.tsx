@@ -575,6 +575,9 @@ export default function ProductImport() {
 
       if (batches.length === 1) {
         // Single batch - use original method
+        console.log("📤 Enviando batch único com", batches[0].length, "itens");
+        console.log("📋 Sample data:", JSON.stringify(batches[0][0], null, 2));
+
         const response = await customFetch("/api/import/products", {
           method: "POST",
           headers: {
@@ -586,10 +589,15 @@ export default function ProductImport() {
           }),
         });
 
+        console.log("📥 Resposta do servidor:", response.status, response.statusText);
+
         if (response.ok) {
+          console.log("✅ Importação iniciada com sucesso");
           pollImportProgress();
         } else {
-          throw new Error("Erro ao iniciar importação");
+          const errorText = await response.text();
+          console.error("❌ Erro na resposta:", errorText);
+          throw new Error(`Erro ao iniciar importação: ${response.status} - ${errorText}`);
         }
       } else {
         // Multiple batches - use batch processing
