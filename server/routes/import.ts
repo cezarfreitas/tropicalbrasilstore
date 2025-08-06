@@ -677,69 +677,99 @@ async function processGradeImport(data: any[]) {
         throw new Error(`Falha ao criar relação produto-cor-grade: ${error.message}`);
       }
 
-      // IMPORTANTE: Criar variantes individuais para que o sistema reconheça as cores
-      // Para grades, precisamos criar variantes base (sem tamanho específico)
+      // CRÍTICO: Criar variantes individuais para que o sistema reconheça as cores
+      // Para grades, precisamos criar variantes para cada tamanho (estoque controlado pela grade)
       // Isso permite que a loja mostre as cores disponíveis
+      console.log(`🔧 === CRIANDO VARIANTES DE COR ===`);
 
       // Download color variant image if provided
       let colorImagePath = null;
-      if (item.color_image_url) {
-        console.log(`📸 Downloading color image: ${item.color_image_url}`);
-        colorImagePath = await downloadImage(item.color_image_url, `${item.name}_${item.color}`);
-        if (colorImagePath) {
-          console.log(`✅ Color image downloaded: ${colorImagePath}`);
-        } else {
-          console.log(`❌ Failed to download color image: ${item.color_image_url}`);
+      if (item.color_image_url && item.color_image_url.trim()) {
+        console.log(`📸 Fazendo download da imagem da cor: ${item.color_image_url}`);
+        try {
+          colorImagePath = await downloadImage(item.color_image_url, `${item.name}_${item.color}`);
+          if (colorImagePath) {
+            console.log(`✅ Imagem da cor baixada com sucesso: ${colorImagePath}`);
+          } else {
+            console.log(`❌ Falha ao baixar imagem da cor: ${item.color_image_url}`);
+          }
+        } catch (error) {
+          console.warn(`⚠️ Erro ao baixar imagem da cor: ${error.message}`);
         }
+      } else {
+        console.log(`📸 Nenhuma URL de imagem da cor fornecida`);
       }
 
       // Get default sizes para criar variantes base (mesmo que controladas por grade)
+      console.log(`👟 Buscando tamanhos padrão para criar variantes...`);
       const [defaultSizes] = await connection.execute(
         "SELECT id, size FROM sizes WHERE size IN ('37', '38', '39', '40', '41', '42', '43', '44') ORDER BY size"
       );
 
-      console.log(`📦 Criando ${(defaultSizes as any[]).length} variantes para cor ${item.color}`);
-
-      // Criar uma variante para cada tamanho padrão (estoque controlado pela grade)
-      for (const size of defaultSizes as any[]) {
-        await connection.execute(
-          `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override, image_url)
-           VALUES (?, ?, ?, ?, ?, ?)
-           ON DUPLICATE KEY UPDATE
-           stock = VALUES(stock),
-           price_override = VALUES(price_override),
-           image_url = VALUES(image_url)`,
-          [
-            productId,
-            size.id,
-            colorId,
-            0, // Estoque = 0 pois é controlado pela grade
-            item.color_price ? parseFloat(item.color_price) : null,
-            colorImagePath // Use downloaded image path
-          ]
-        );
+      if ((defaultSizes as any[]).length === 0) {
+        console.error(`❌ CRÍTICO: Nenhum tamanho padrão encontrado! Variantes NÃO serão criadas!`);
+        throw new Error("Tamanhos padrão não encontrados no banco de dados");
       }
 
-      console.log(`🎨 Variantes criadas com imagem: ${colorImagePath ? 'SIM' : 'NÃO'}`);
+      console.log(`📦 Criando ${(defaultSizes as any[]).length} variantes para cor "${item.color}"`);
+      console.log(`📦 Tamanhos disponíveis: ${(defaultSizes as any[]).map(s => s.size).join(', ')}`);
 
-      // Criar entrada específica na tabela product_color_variants para identificação rápida
-      await connection.execute(
-        `INSERT INTO product_color_variants (product_id, color_id, color_hex, image_url, price_override, sale_price)
-         VALUES (?, ?, ?, ?, ?, ?)
-         ON DUPLICATE KEY UPDATE
-         color_hex = VALUES(color_hex),
-         image_url = VALUES(image_url),
-         price_override = VALUES(price_override),
-         sale_price = VALUES(sale_price)`,
-        [
-          productId,
-          colorId,
-          null, // color_hex pode ser null por enquanto
-          colorImagePath,
-          item.color_price ? parseFloat(item.color_price) : null,
-          item.color_sale_price ? parseFloat(item.color_sale_price) : null
-        ]
-      );
+      // Criar uma variante para cada tamanho padrão (estoque controlado pela grade)
+      let variantsCreated = 0;
+      for (const size of defaultSizes as any[]) {
+        try {
+          console.log(`   ➕ Criando variante: Tamanho ${size.size} (ID: ${size.id})`);
+          await connection.execute(
+            `INSERT INTO product_variants (product_id, size_id, color_id, stock, price_override, image_url)
+             VALUES (?, ?, ?, ?, ?, ?)
+             ON DUPLICATE KEY UPDATE
+             stock = VALUES(stock),
+             price_override = VALUES(price_override),
+             image_url = VALUES(image_url)`,
+            [
+              productId,
+              size.id,
+              colorId,
+              0, // Estoque = 0 pois é controlado pela grade
+              item.color_price ? parseFloat(item.color_price) : null,
+              colorImagePath // Use downloaded image path
+            ]
+          );
+          variantsCreated++;
+          console.log(`     ✅ Variante criada: Produto ${productId} | Tamanho ${size.size} | Cor ${colorId}`);
+        } catch (error) {
+          console.error(`     ❌ Erro ao criar variante para tamanho ${size.size}:`, error);
+          throw new Error(`Falha ao criar variante para tamanho ${size.size}: ${error.message}`);
+        }
+      }
+
+      console.log(`🎨 ✅ ${variantsCreated} variantes criadas com sucesso! Imagem: ${colorImagePath ? 'SIM' : 'NÃO'}`);
+
+      // CRÍTICO: Criar entrada específica na tabela product_color_variants para identificação rápida
+      console.log(`🎨 Criando entrada na tabela product_color_variants...`);
+      try {
+        await connection.execute(
+          `INSERT INTO product_color_variants (product_id, color_id, color_hex, image_url, price_override, sale_price)
+           VALUES (?, ?, ?, ?, ?, ?)
+           ON DUPLICATE KEY UPDATE
+           color_hex = VALUES(color_hex),
+           image_url = VALUES(image_url),
+           price_override = VALUES(price_override),
+           sale_price = VALUES(sale_price)`,
+          [
+            productId,
+            colorId,
+            null, // color_hex pode ser null por enquanto
+            colorImagePath,
+            item.color_price ? parseFloat(item.color_price) : null,
+            item.color_sale_price ? parseFloat(item.color_sale_price) : null
+          ]
+        );
+        console.log(`✅ Entrada criada em product_color_variants`);
+      } catch (error) {
+        console.error(`❌ Erro ao criar entrada em product_color_variants:`, error);
+        throw new Error(`Falha ao criar entrada em product_color_variants: ${error.message}`);
+      }
 
       await connection.commit();
       console.log(`✅ Produto grade criado com sucesso: ${item.name}`);
