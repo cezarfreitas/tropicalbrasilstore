@@ -1098,7 +1098,7 @@ export default function ProductDetail() {
             {suggestedProducts.map((suggestedProduct) => (
               <Card
                 key={suggestedProduct.id}
-                className="group cursor-pointer hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-primary/40 rounded-xl overflow-hidden bg-white hover:-translate-y-1"
+                className="group cursor-pointer hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-gray-300 rounded-lg overflow-hidden bg-white"
               >
                 <Link to={`/loja/produto/${suggestedProduct.id}`}>
                   <CardContent className="p-0">
