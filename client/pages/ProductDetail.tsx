@@ -843,14 +843,14 @@ export default function ProductDetail() {
                           setSelectedImageIndex(0);
                         }
                       }}
-                      className={`flex items-center gap-1.5 p-1.5 rounded-lg transition-all ${
+                      className={`flex items-center gap-1 p-1 rounded transition-all duration-200 ${
                         selectedColor === color.id
-                          ? "bg-primary/10 border-2 border-primary"
+                          ? "bg-primary/10 border border-primary"
                           : "bg-gray-50 border border-gray-200 hover:bg-gray-100"
                       }`}
                     >
                       {/* Color Thumbnail */}
-                      <div className="w-8 h-8 rounded-lg border border-gray-200 overflow-hidden bg-gray-100">
+                      <div className="w-6 h-6 rounded border border-gray-200 overflow-hidden bg-gray-100">
                         {color.image_url ? (
                           <ProductImage
                             src={getImageUrl(color.image_url)}
