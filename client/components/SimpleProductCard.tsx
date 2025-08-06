@@ -47,6 +47,9 @@ export function SimpleProductCard({
 
   // If no image available from listing API, try to fetch from individual product API
   useEffect(() => {
+    let isMounted = true;
+    let abortController: AbortController | null = null;
+
     const hasAnyImage = !!(
       product.photo ||
       (product.available_colors &&
@@ -55,12 +58,18 @@ export function SimpleProductCard({
 
     if (!hasAnyImage && !enhancedProductData) {
       const fetchEnhancedData = async (retries = 2) => {
+        if (!isMounted) return;
+
         try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+          abortController = new AbortController();
+          const timeoutId = setTimeout(() => {
+            if (abortController && isMounted) {
+              abortController.abort();
+            }
+          }, 8000); // Reduced timeout to 8s
 
           const response = await fetch(`/api/store/products/${product.id}`, {
-            signal: controller.signal,
+            signal: abortController.signal,
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
@@ -69,29 +78,44 @@ export function SimpleProductCard({
 
           clearTimeout(timeoutId);
 
+          if (!isMounted) return;
+
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
 
           const data = await response.json();
-          if (data.variants && data.variants.length > 0) {
+          if (isMounted && data.variants && data.variants.length > 0) {
             setEnhancedProductData(data);
           }
-        } catch (error) {
-          if (retries > 0 && (error.name === 'AbortError' || error.message.includes('fetch'))) {
-            console.warn(`Retrying fetch for product ${product.id}, attempts left: ${retries}`);
-            setTimeout(() => fetchEnhancedData(retries - 1), 1000);
-          } else {
-            console.warn(
-              `Failed to fetch enhanced data for product ${product.id}:`,
-              error.message || error
-            );
+        } catch (error: any) {
+          if (!isMounted) return;
+
+          // Handle AbortError silently if component is unmounted
+          if (error.name === 'AbortError') {
+            return;
+          }
+
+          if (retries > 0 && error.message.includes('fetch')) {
+            setTimeout(() => {
+              if (isMounted) {
+                fetchEnhancedData(retries - 1);
+              }
+            }, 1000);
           }
         }
       };
 
       fetchEnhancedData();
     }
+
+    // Cleanup function
+    return () => {
+      isMounted = false;
+      if (abortController) {
+        abortController.abort();
+      }
+    };
   }, [
     product.id,
     product.photo,
