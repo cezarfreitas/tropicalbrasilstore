@@ -1096,6 +1096,7 @@ export default function ProductImport() {
                   • Tipo de Estoque: <code>grade</code><br/>
                   • Nome da Grade Vendida: <code>2549</code> (nome da grade criada)<br/>
                   • Estoque por Grade: <code>25</code> (grades completas)<br/>
+                  • Grupo de Tamanhos: pode ficar <strong>vazio</strong> (opcional para grade)<br/>
                   • <strong>IMPORTANTE:</strong> Deixe todos os campos "Estoque Tam XX" vazios<br/>
                   <em>→ Resultado: 25 grades completas para venda (sem controle por tamanho)</em>
                 </div>
