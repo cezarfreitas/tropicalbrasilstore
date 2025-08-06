@@ -3,7 +3,8 @@ import { ShoppingCart, Target, CheckCircle } from 'lucide-react';
 
 interface MinimumOrderIndicatorProps {
   currentValue: number;
-  minimumValue: number;
+  customerMinimumValue?: number;
+  globalMinimumValue?: number;
   currency?: string;
 }
 
