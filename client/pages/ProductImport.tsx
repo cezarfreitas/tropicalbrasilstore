@@ -408,6 +408,7 @@ export default function ProductImport() {
       gender_name: ["genero", "gender", "gender_name", "sexo"],
       type_name: ["tipo", "type", "type_name", "categoria_tipo"],
       stock_type: ["tipo_estoque", "stock_type", "estoque_tipo"],
+      grade_name: ["nome_grade", "grade_name", "grade", "grade_vendida"],
       grade_stock: ["estoque_grade", "grade_stock", "estoque_total"],
       variant_sku: ["sku_variante", "variant_sku", "sku_cor"],
       color_price: ["preco_cor", "color_price", "preco_variante"],
@@ -1103,7 +1104,7 @@ export default function ProductImport() {
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
-                Template com todos os recursos: múltiplas cores, variações de preço e estoque por tamanho ou grade
+                Template com todos os recursos: múltiplas cores, variações de pre��o e estoque por tamanho ou grade
               </p>
               <Button variant="outline" onClick={downloadTemplate} className="w-full">
                 <Download className="h-4 w-4 mr-2" />
