@@ -1319,17 +1319,17 @@ export function StoreLayout({ children }: StoreLayoutProps) {
           />
 
           {/* Cart Drawer - from right side */}
-          <div className="fixed top-0 right-0 h-screen w-96 max-w-[90vw] bg-white z-50 shadow-2xl animate-in slide-in-from-right duration-300 border-l border-gray-200">
+          <div className="fixed top-0 right-0 h-screen w-80 max-w-[90vw] bg-white z-50 shadow-xl animate-in slide-in-from-right duration-200 border-l border-gray-200">
             {/* Drawer Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary/5 to-primary/10">
+            <div className="flex items-center justify-between p-3 border-b">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                  <ShoppingCart className="h-5 w-5 text-primary" />
+                <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                  <ShoppingCart className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900">Carrinho</h2>
+                  <h2 className="text-base font-bold text-gray-900">Carrinho</h2>
                   {totalItems > 0 && (
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs text-gray-600">
                       {items.length}{" "}
                       {items.length === 1 ? "produto" : "produtos"} •{" "}
                       {totalItems} {totalItems === 1 ? "item" : "itens"}
@@ -1341,9 +1341,9 @@ export function StoreLayout({ children }: StoreLayoutProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => setCartOpen(false)}
-                className="h-9 w-9 p-0 rounded-full hover:bg-gray-100 transition-colors"
+                className="h-8 w-8 p-0 rounded-full hover:bg-gray-100 transition-colors duration-200"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </Button>
             </div>
 
@@ -1351,11 +1351,11 @@ export function StoreLayout({ children }: StoreLayoutProps) {
             <div className="flex flex-col h-full">
               <div className="flex-1 overflow-y-auto">
                 {items.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-                    <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                      <ShoppingCart className="h-10 w-10 text-gray-400" />
+                  <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                      <ShoppingCart className="h-8 w-8 text-gray-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <h3 className="text-base font-semibold text-gray-900 mb-1.5">
                       Seu carrinho está vazio
                     </h3>
                     <p className="text-gray-500 text-sm mb-6">
