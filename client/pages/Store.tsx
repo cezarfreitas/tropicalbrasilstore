@@ -116,11 +116,7 @@ function Store() {
       <DynamicTitle />
       <div className="w-full px-4 lg:px-6 py-3 lg:py-4 space-y-3 lg:space-y-4">
         {/* Store Title */}
-        <StoreTitle
-          className="mb-6 lg:mb-8"
-          size="xl"
-          showSubtitle={true}
-        />
+        <StoreTitle className="mb-6 lg:mb-8" size="xl" showSubtitle={true} />
         {/* Search Results Indicator */}
         {searchTerm && (
           <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">

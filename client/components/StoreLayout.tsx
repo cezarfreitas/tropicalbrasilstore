@@ -317,7 +317,8 @@ export function StoreLayout({ children }: StoreLayoutProps) {
     const storeName =
       storeSettings?.store_name ||
       getGlobalStoreSettings()?.store_name ||
-      (typeof window !== 'undefined' && window.__STORE_SETTINGS__?.store_name) ||
+      (typeof window !== "undefined" &&
+        window.__STORE_SETTINGS__?.store_name) ||
       "Tropical Brasil Sandálias";
 
     if (logoUrl) {
