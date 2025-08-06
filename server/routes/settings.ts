@@ -138,10 +138,12 @@ async function ensureSettingsTableAndColumns() {
       try {
         await db.execute(`
           ALTER TABLE store_settings
-          ADD COLUMN minimum_order_value DECIMAL(10, 2) DEFAULT 0.00
+          ADD COLUMN minimum_order_value DECIMAL(10, 2) DEFAULT 50.00
         `);
+        console.log("✓ minimum_order_value column added to store_settings table");
       } catch (e) {
         // Column probably already exists, ignore error
+        console.log("ℹ️ minimum_order_value column already exists in store_settings table");
       }
     }
   } catch (error) {
