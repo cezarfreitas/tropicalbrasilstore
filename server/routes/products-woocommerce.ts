@@ -215,13 +215,16 @@ router.get("/:id", async (req, res) => {
       );
       variant.size_stocks = sizeStocks;
 
-      // Get grades for this product-color combination
+      // Get grades for this product-color combination with stock quantities
       const [gradeRows] = await db.execute(
-        `SELECT grade_id FROM product_color_grades
-         WHERE product_id = ? AND color_id = ?`,
+        `SELECT pcg.grade_id, pcg.stock_quantity, gv.name as grade_name
+         FROM product_color_grades pcg
+         LEFT JOIN grade_vendida gv ON pcg.grade_id = gv.id
+         WHERE pcg.product_id = ? AND pcg.color_id = ?`,
         [req.params.id, variant.color_id],
       );
       variant.grade_ids = (gradeRows as any[]).map((row) => row.grade_id);
+      variant.grade_stocks = gradeRows; // Include full grade info with stock quantities
 
       // Get images for this variant
       const [imageRows] = await db.execute(
