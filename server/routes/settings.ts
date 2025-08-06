@@ -94,6 +94,7 @@ async function ensureSettingsTableAndColumns() {
           postal_code VARCHAR(20),
           shipping_fee DECIMAL(10, 2) DEFAULT 15.00,
           free_shipping_threshold DECIMAL(10, 2) DEFAULT 150.00,
+          minimum_order_value DECIMAL(10, 2) DEFAULT 0.00,
           payment_methods JSON,
           social_instagram VARCHAR(255),
           social_facebook VARCHAR(255),
