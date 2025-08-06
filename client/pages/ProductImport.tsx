@@ -817,7 +817,7 @@ export default function ProductImport() {
       ]
     ];
 
-    downloadCSVFile("template_1_cor_estoque_grade.csv", headers, sampleRows);
+    downloadExcelFile("template_1_cor_estoque_grade.xlsx", headers, sampleRows);
   };
 
   // Função auxiliar para download do CSV
