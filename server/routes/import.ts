@@ -803,16 +803,27 @@ async function processGradeImport(data: any[]) {
 
       // 2.4: Criar/atualizar entrada na tabela product_color_variants (para reconhecimento)
       try {
+        const [colorResult] = await connection.execute("SELECT name FROM colors WHERE id = ?", [colorId]);
+        const colorName = (colorResult as any[])[0]?.name || 'Cor';
+        const variantName = `${item.name} - ${colorName}`;
+        const variantSku = item.variant_sku || `${item.sku || 'PROD'}-${colorName}`;
+
+        console.log(`📝 Criando product_color_variants: "${variantName}" com imagem: ${colorImagePath}`);
+
         await connection.execute(
-          `INSERT INTO product_color_variants (product_id, color_id, image_url, price_override, sale_price)
-           VALUES (?, ?, ?, ?, ?)
+          `INSERT INTO product_color_variants (product_id, color_id, variant_name, variant_sku, image_url, price, sale_price)
+           VALUES (?, ?, ?, ?, ?, ?, ?)
            ON DUPLICATE KEY UPDATE
+           variant_name = VALUES(variant_name),
+           variant_sku = VALUES(variant_sku),
            image_url = VALUES(image_url),
-           price_override = VALUES(price_override),
+           price = VALUES(price),
            sale_price = VALUES(sale_price)`,
           [
             productId,
             colorId,
+            variantName,
+            variantSku,
             colorImagePath,
             item.color_price ? parseFloat(item.color_price) : null,
             item.color_sale_price ? parseFloat(item.color_sale_price) : null
